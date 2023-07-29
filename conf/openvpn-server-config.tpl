@@ -31,7 +31,7 @@ verb {{ .OVConfigLogV }}
 
 topology subnet
 
-client-config-dir /etc/openvpn/staticclients
+client-config-dir /etc/openvpn/ccd
 
 {{ .RedirectGW }}
 
