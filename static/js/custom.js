@@ -26,3 +26,12 @@ $(function() {
   //});
   //window.location.reload();
 })
+
+
+$('.btn-warning').on('click', function () {
+  return confirm('Are you sure?');
+});
+
+$('.btn-danger').on('click', function () {
+  return confirm('Are you sure?');
+});
