@@ -25,6 +25,14 @@ if ! grep -qs "^sessionname=" /opt/openvpn-gui/conf/app.conf; then
     echo "sessionname=beegosession_$i" >> /opt/openvpn-gui/conf/app.conf
 fi
 
+# Set site name
+if ! grep -qs "^sitename=" /opt/openvpn-gui/conf/app.conf; then
+    if [[ -n $SITE_NAME ]]; then
+        echo "" >> /opt/openvpn-gui/conf/app.conf
+        echo "sitename=${SITE_NAME}" >> /opt/openvpn-gui/conf/app.conf
+    fi
+fi
+
 # Start the OpenVPN GUI
 echo "Starting openvpn-ui!"
 ./openvpn-ui
