@@ -18,6 +18,13 @@ pwd
 echo "db dir contents:"
 ls -lrt
 
+# Set random session ID
+if [[ ! grep -qs "^sessionname=" /opt/openvpn-gui/conf/app.conf ]]; then
+    i=$((1 + $RANDOM % 1000))
+    echo "" >> /opt/openvpn-gui/conf/app.conf
+    echo "sessionname=beegosession_$i" >> /opt/openvpn-gui/conf/app.conf
+fi
+
 # Start the OpenVPN GUI
 echo "Starting openvpn-ui!"
 ./openvpn-ui

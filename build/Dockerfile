@@ -20,7 +20,7 @@ ADD openvpn-ui.tar.gz /opt/openvpn-gui/
 RUN rm -f /opt/openvpn-gui/data.db
 ADD assets/app.conf /opt/openvpn-gui/conf/app.conf
 
-ADD assets/patch_app_conf.sh /opt/scripts/patch_app_conf.sh
-RUN /opt/scripts/patch_app_conf.sh
+# ADD assets/patch_app_conf.sh /opt/scripts/patch_app_conf.sh
+# RUN /opt/scripts/patch_app_conf.sh
 
 CMD /opt/start.sh
