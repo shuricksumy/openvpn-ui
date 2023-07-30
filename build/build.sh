@@ -6,6 +6,6 @@ PKGFILE=openvpn-ui.tar.gz
 
 cp -f ../$PKGFILE ./
 
-docker build -t d3vilh/openvpn-ui .
+docker build -t shuricksumy/openvpn-ui . --push --no-cache
 
 rm -f $PKGFILE

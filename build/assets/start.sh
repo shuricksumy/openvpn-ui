@@ -8,19 +8,6 @@ OVDIR=/etc/openvpn
 # Change to the /opt directory
 cd /opt/
 
-# If the provisioned file does not exist in the OpenVPN directory, prepare the certificates and create the provisioned file
-if [ ! -f $OVDIR/.provisioned ]; then
-  echo "Preparing certificates"
-  mkdir -p $OVDIR
-  # Generate CA and server certificates 
-  ./scripts/generate_ca_and_server_certs.sh
-  # Uncomment the following line to generate a 2048-bit Diffie-Hellman key
-  #openssl dhparam -dsaparam -out $OVDIR/dh2048.pem 2048
-  # Create the provisioned file
-  touch $OVDIR/.provisioned
-  echo "Provisioning complete"
-fi
-
 # Change to the OpenVPN GUI directory
 cd /opt/openvpn-gui
 
