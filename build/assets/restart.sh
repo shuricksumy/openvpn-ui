@@ -3,7 +3,8 @@
 set -e
 
 # Get the container ID for ^openvpn$
-CONTAINER_ID=$(curl --unix-socket /var/run/docker.sock "http://v1.40/containers/json?filters=%7B%22name%22%3A%5B%22%5Eopenvpn$%22%5D%7D" | grep '"Id":' | cut -d '"' -f 4)
+# Use env var to specify OPENVPN_SERVER_DOCKER_NAME
+CONTAINER_ID=$(curl --unix-socket /var/run/docker.sock "http://v1.40/containers/json?filters=%7B%22name%22%3A%5B%22%5E${OPENVPN_SERVER_DOCKER_NAME}$%22%5D%7D" | grep '"Id":' | cut -d '"' -f 4)
 
 # Restart the container
 curl --unix-socket /var/run/docker.sock -X POST "http://v1.40/containers/$CONTAINER_ID/restart"
