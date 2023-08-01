@@ -9,9 +9,10 @@
   <div class="box-header with-border">
     <h3 class="box-title">Last 200 lines of OpenVPN log</h3>
   </div>
-  <pre style="font-size: 13px;line-height: 1.4em;">
-{{ range $i, $line := .logs }}{{$line}}
-{{ end }}</pre>
+  <pre style="font-size: 11px;line-height: 1.4em; background-color: #F6F4EB;">
+    {{ range $i, $line := .logs }}{{$line}}
+    {{ end }}
+  </pre>
 </div>
 <!-- /.box -->
 {{end}}
