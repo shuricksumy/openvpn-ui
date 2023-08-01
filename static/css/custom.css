@@ -19,3 +19,15 @@
   white-space: initial;
   display: block;
 }
+
+.my-textarea {
+  width: 100%;
+  padding: 10px 20px;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background-color: #F6F4EB;
+  font-size: 12px;
+  resize: vertical;
+  font-family: 'Roboto', sans-serif;
+}
