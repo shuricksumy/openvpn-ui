@@ -9,10 +9,13 @@
   <div class="box-header with-border">
     <h3 class="box-title">Last 500 lines of OpenVPN log</h3>
   </div>
-  <pre style="font-size: 11px;line-height: 1.4em; background-color: #F6F4EB;">
+ <!-- 
+<pre style="font-size: 11px;line-height: 1.4em; background-color: #F6F4EB; overflow-y:auto; overflow-x:auto; height: 50pc;"> 
+ -->
+  <pre><code class="language-ovpnlog" style="font-size: 11px;line-height: 1.4em;height: 45pc;">
     {{ range $i, $line := .logs }}{{$line}}
     {{ end }}
-  </pre>
+  </code></pre>
 </div>
 <!-- /.box -->
 {{end}}
