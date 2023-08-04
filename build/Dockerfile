@@ -1,4 +1,4 @@
-FROM debian:latest
+FROM debian:stable
 WORKDIR /opt
 EXPOSE 8080
 
