@@ -2,7 +2,7 @@ FROM debian:stable
 WORKDIR /opt
 EXPOSE 8080
 
-RUN apt-get update && apt-get install -y curl
+RUN apt-get update && apt-get install -y curl bzip2
 
 ADD assets/start.sh /opt/start.sh
 ADD assets/generate_ca_and_server_certs.sh /opt/scripts/generate_ca_and_server_certs.sh
