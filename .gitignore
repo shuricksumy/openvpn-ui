@@ -1,3 +1,5 @@
 .idea
 data.db
 .DS_Store
+openvpn-ui
+openvpn-ui.tar.gz

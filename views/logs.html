@@ -9,14 +9,33 @@
   <div class="box-header with-border">
     <h3 class="box-title">Last 500 lines of OpenVPN log</h3>
   </div>
-  {{template "common/alert.html" .}}
- <!-- 
-<pre style="font-size: 11px;line-height: 1.4em; background-color: #F6F4EB; overflow-y:auto; overflow-x:auto; height: 50pc;"> 
- -->
-  <pre><code class="language-ovpnlog" style="font-size: 11px;line-height: 1.4em;height: 45pc;">
+
+  <form role="form">
+    <div class="box-body">
+
+      <div class="form-group" >
+        <!-- <label for="Logs">Last 500 lines of OpenVPN log</label> -->
+        <textarea type="text" class="form-control my-textarea" name="Logs" 
+          id="Logs" spellcheck="false" rows="15">
+
     {{ range $i, $line := .logs }}{{$line}}
     {{ end }}
-  </code></pre>
+
+        </textarea>
+      </div>
+
+    </div>
+    <!-- /.box-body -->
+   </form>
+
 </div>
+
+
+<script>
+    ed = createEditor("Logs", "750px", "clouds_midnight", "ovpn", true);
+
+</script>
+
 <!-- /.box -->
 {{end}}
+
