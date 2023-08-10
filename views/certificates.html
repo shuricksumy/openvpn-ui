@@ -1,0 +1,268 @@
+{{ template "layout/base.html" . }}
+
+{{define "head"}}
+<title>OpenVPN - Certificates</title>
+{{end}}
+
+{{define "body"}}
+
+<div class="box box-primary">
+  <div class="box-header with-border">
+  <a class="btn btn-primary bg-light-blue-gradient btn-sm btn120" data-toggle="collapse" href="#newCert" role="button"  aria-expanded="false"
+           aria-controls="newCert" style="margin-left: 0.5%;">Create New Certificate</a>
+  </div>
+  <!-- /.box-header -->
+  <!-- form start -->
+  {{template "common/alert.html" .}}
+  <div id="newCert" class="collapse">
+   <form role="form" action="{{urlfor "CertificatesController.Post"}}" method="post">
+    <div class="box-body">
+
+   <div class="form-row">
+    
+        <div class="form-group col-md-4 {{if field_error_exist .validation "Name" }}has-error{{end}}">
+            <label for="Name">Name*</label>
+            <input type="text" class="form-control" placeholder="Enter name" id="Name" name="Name" required>
+            <span class="help-block">Common name of the certificate.&nbsp;&nbsp;&nbsp;<span>
+        </div>
+
+        <div class="form-group col-md-4">
+            <label for="passphrase">Passphrase (Optional)</label>
+            <div class="input-group">
+                 <input type="password" class="form-control pwd" placeholder="Enter Password"  id="passphrase" name="passphrase">
+                 <span class="input-group-btn">
+                    <button class="btn btn-default reveal" type="button"><i class="glyphicon glyphicon-eye-open"></i></button>
+                 </span>
+            </div>
+            <span class="help-block">Passphrase is used for privte key protection.&nbsp;&nbsp;&nbsp;</span>
+        </div>
+
+       <div class="form-group col-md-4">
+            <label for="staticip">Static IP (Optional)</label>
+            <input type="text" class="form-control" placeholder="Enter Static IP" id="staticip" 
+               name="staticip" pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$">
+            <span class="help-block">Client Static IP used as a local Client IP for subnet split.</span>
+       </div>
+
+   </div>
+
+    <span class="help-block"> {{template "common/fvalid.html" field_error_message .validation "Name" }}</span>
+    </div>
+    <!-- /.box-body -->
+
+    <div class="box-footer">
+      <button type="submit" class="btn btn-primary btn-sm bg-light-blue-gradient btn80" style="margin-right: 23px; float: right;">Create</button>
+    </div>
+  </form>
+ </div>
+</div>
+
+
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="box box-primary">
+      <div class="box-header with-border">
+        <h3 class="box-title">Clients certificates</h3>
+
+      </div>
+      <!-- /.box-header -->
+
+      <div class="box-body">
+        <!--if .ovstatus -->
+        <div class="table-responsive">
+         <table class="table no-margin table-striped">
+            <thead>
+            <tr>
+              <th style="width:15%">Name</th>
+              <th style="width:5%">State</th>
+              <th style="width:20%">Static IP</th>
+              <th style="width:10%">Expiration</th>
+              <!-- <th>Revocation</th> -->
+              <th style="width:40%">Serial</th>
+              <!-- <th>Details</th> -->
+              <th class="textcenter" style="width:5%">Actions</th>
+              <th class="textcenter" style="width:5%">Details</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {{range .certificates}}
+              <tr>
+
+                  <!-- 1 sell -->
+                  {{if eq .EntryType "V"}}
+                  <td>
+                    <a href="{{urlfor "CertificatesController.Download" ":key" .Details.Name}}" class="btn btn-primary btn-sm btn-block bg-light-blue-gradient" title="Download">
+                      {{ .Details.CN }}.ovpn
+                    </a>
+                  </td>
+                  {{else}}
+                  <td>
+                    <a href="" class="btn btn-default btn-sm disabled btn-block" title="Download">
+                      {{ .Details.CN }}
+                    </a>
+                  </td>
+                  {{end}}
+
+                   <!-- 2 sell -->
+                  {{if eq .EntryType "V"}}
+                    <td>
+                      <button type="button" class="btn btn-success btn-sm bg-green-gradient" data-toggle="modal" data-target="#popup-{{ .Details.CN }}">
+                          <span class="glyphicon glyphicon-info-sign">
+                      </button>
+                    </td>
+                  {{else if eq .EntryType "R"}}
+                    <td>
+                       <button type="button" class="btn btn-warning btn-sm bg-yellow-gradient" data-toggle="modal" data-target="#popup-{{ .Details.CN }}">
+                            <span class="glyphicon glyphicon-info-sign">
+                        </button>
+                    </td>
+                   {{else}}
+                     <td>
+                         <button type="button" class="btn btn-danger btn-sm bg-red" data-toggle="modal" data-target="#popup-{{ .Details.CN }}">
+                            <span class="glyphicon glyphicon-info-sign">
+                        </button>
+                     </td>
+                   {{end}}
+
+                    <!-- 3 sell -->
+                    <td>
+                      {{ .Details.LocalIP }}
+                    </td>
+
+                   <!-- 4 sell -->
+                  {{if eq .EntryType "V"}}
+                    <td>
+                      <span class="btn btn-success btn-xs bg-olive">{{ dateformat .ExpirationT "2006-01-02 15:04"}}</span>
+                    </td>
+                  {{else if eq .EntryType "R"}}
+                    <td>
+                      <span class="btn btn-warning btn-xs bg-yellow-gradient">{{ dateformat .RevocationT "2006-01-02 15:04"}}</span>
+                    </td>
+                  {{else}}
+                    <td>
+                      <span class="btn btn-default btn-xs bg-gray">{{ dateformat .ExpirationT "2006-01-02 15:04"}}</span>
+                    </td>
+                  {{end}}
+
+
+                    <!-- 5 sell -->
+                     <td>
+                      {{ .Serial }}
+                     </td>
+
+                <!--    <td>
+                      <span class="label label-warning">CN: {{ .Details.CN }}</span>
+                      Comented until bypass of client email to DB will be implemented 
+                      <span class="label label-warning">Email: {{ .Details.Email }}</span>
+                    </td> -->
+
+                   <!-- 6 sell -->
+                  {{if eq .EntryType "V"}}
+                    <td class="textcenter">
+                      <a href="{{urlfor "CertificatesController.Revoke" ":key" .Details.Name}}" data-title="Revoke certificates ?" class="btn btn-warning btn-sm bg-yellow-gradient btn80" title="Revoke">Revoke</a>
+                    </td>
+                  {{else if eq .EntryType "R"}}
+                    <td class="textcenter">
+                      <a href="{{urlfor "CertificatesController.Burn" ":key" .Details.CN ":serial" .Serial}}" data-title="Remove certificates ?" class="btn btn-danger btn-sm bg-red-gradient btn80" title="Burn">Remove</a>
+                    </td>
+                  {{else}}
+                    <td>
+                      <a href="" class="btn btn-default btn-sm disabled btn-block" title="Fix">Fix manualy</a>
+                    </td>
+                  {{end}}
+
+
+                  <!-- 7 sell -->
+                  {{if eq .EntryType "V"}}
+                    <td class="textcenter">
+                      <button  id="openModalEditClient" data-target="#editClientModal" data-client-name="{{ .Details.CN }}" class="btn btn-primary btn-sm edit-button bg-light-blue-gradient btn80" title="Edit">Edit</button>
+                    </td>
+                  {{else}}
+                    <td class="textcenter">
+                      <button  id="openModalEditClient" data-target="#editClientModal" data-client-name="{{ .Details.CN }}" class="btn btn-default btn-sm edit-button btn80" title="Edit">Edit</button>
+                    </td>
+                  {{end}}
+
+                  </tr>
+
+                  <div id="popup-{{ .Details.CN }}" class="modal fade popupinfo" role="dialog">
+                             <span class="param-name">Name:</span><span class="param-value"> {{ .Details.CN }}</span><br>
+                             <span class="param-name">Type:</span><span class="param-value"> {{ .EntryType }}</span><br>
+                             <span class="param-name">Status:</span><span class="param-value">{{if eq .EntryType "V"}}  Active {{else if eq .EntryType "R"}} Revoked {{else}} Unknown {{end}}</span><br>
+                             <span class="param-name">Serial:</span><span class="param-value"> {{ .Serial }}</span><br>
+                             <span class="param-name">IP Address:</span><span class="param-value"> {{ .Details.LocalIP }}</span><br>
+                             <span class="param-name">Expiration Date:</span><span class="param-value"> {{ dateformat .ExpirationT "2006-01-02 15:04"}}</span><br>
+                             <span class="param-name">Revoke Date:</span><span class="param-value"> {{if ne .Revocation ""}} {{ dateformat .RevocationT "2006-01-02 15:04"}} {{else}} none {{end}}</span><br>
+                             <!-- Copy button -->
+                             <button class="btn btn-primary copy-btn bg-light-blue-gradient btn80" data-dismiss="modal">Copy</button>
+                             <!-- Close button -->
+                             <div class="close-btn" data-dismiss="modal">&times;</div>
+                  </div>
+            {{end}}
+            </tbody>
+          </table>
+        </div>
+       </div>
+        <!-- /.table-responsive -->
+      </div>
+      <!--else
+          Fix your configuration
+      end-->
+
+     <!--
+      <div class="box-footer clearfix">
+        
+      </div>
+      -->
+
+      <!--
+      <div class="box-footer clearfix">
+        <a href="javascript:void(0)" class="btn btn-sm btn-info btn-flat pull-left">Place New Order</a>
+        <a href="javascript:void(0)" class="btn btn-sm btn-default btn-flat pull-right">View All Orders</a>
+      </div>
+    -->
+      <!-- /.box-footer -->
+    </div>
+    <!-- /.box -->
+  </div>
+
+  <div class="box box-danger">
+    <div class="box-header with-border">
+      <h3 class="box-title">Restart OpenVPN</h3>
+    </div>
+    <!-- /.box-header -->
+    <!-- <div class="box-body">
+      <span id="helpBlock" class="help-block">If you are revoking Certificate, don't forget to restart your OpenVPN container to disconnect all active client sessions and make revocation to take the effect.<br/></span>
+    </div> -->
+    <div class="box-footer" style="float: right;">
+        <table>
+         <tr>
+           <td style= "margin-right: 5px; vertical-align: bottom;"><i>If you are revoking Certificate, don't forget to restart your OpenVPN container.
+                 Restart can take up to the 7 seconds. &nbsp;&nbsp;</i></td>
+           <td><a href="{{urlfor "CertificatesController.Restart"}}" class="btn btn-danger btn-sm bg-red-gradient btn150" data-title="Restart OpenVPN container?" 
+             title="Restart OpenVPN container" style="margin-right: 23px;">Restart OpenVPN Server</a></td>
+          </tr>
+        </table>
+    </div>
+    <div class="box-footer clearfix">
+    </div>
+    <!--
+    <div class="box-footer clearfix">
+      <a href="javascript:void(0)" class="btn btn-sm btn-info btn-flat pull-left">Place New Order</a>
+      <a href="javascript:void(0)" class="btn btn-sm btn-default btn-flat pull-right">View All Orders</a>
+    </div>
+  -->
+    <!-- /.box-footer -->
+  </div>
+
+
+
+</div>
+
+<!-- Add an empty modal container -->
+<div id="modal-edit-client"></div>
+
+{{end}}

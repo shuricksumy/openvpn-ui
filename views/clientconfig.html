@@ -1,0 +1,45 @@
+{{ template "layout/base.html" . }}
+
+{{define "head"}}
+<title>OpenVPN - Client Settings</title>
+{{end}}
+
+{{define "body"}}
+<div class="box box-primary">
+  <!-- <div class="box-header with-border">
+    <h3 class="box-title">Server Configuration</h3>
+  </div> ->>
+  <!-- /.box-header -->
+  <!-- form start -->
+  {{template "common/alert.html" .}}
+  <form role="form" action="{{urlfor "OVConfigController.Post"}}" method="post">
+    <div class="box-body">
+
+      <div class="form-group" >
+        <label for="name">client-template.txt</label>
+        <textarea type="text" class="form-control my-textarea" name="ClientTemplate" 
+          id="ClientTemplate" spellcheck="false" rows="15">{{ .ClientTemplate }}</textarea>
+        <span id="helpBlock" class="help-block">This is a user config template file. It was generated according to server setting. 
+          The beckup file of previous version will be saved before new aon be applied.
+        </span>
+      </div>
+
+       {{ .xsrfdata }}
+      </div>
+     <div class="box-footer">
+       <button type="submit" class="btn btn-primary bg-light-blue-gradient btn80">Save</button>
+     </div>
+        <!-- /.box-body -->
+   </form>
+
+</div>
+<!-- /.box -->
+{{end}}
+
+
+<script>
+    createEditor("ClientTemplate", "600px", "clouds_midnight", "space", false)
+</script>
+
+
+

@@ -1,0 +1,122 @@
+.info-box-number2{
+  font-weight:bold;
+  font-size:18px;
+}
+
+.info-box-text2{
+  display:block;
+  font-size:18px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis
+}
+
+.info-box-number3{
+  font-weight:bold;
+  font-size:11px;
+  overflow: visible;
+  word-wrap: break-word;
+  white-space: initial;
+  display: block;
+}
+
+.my-textarea {
+  width: 100%;
+  padding: 10px 20px;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background-color: #F6F4EB;
+  font-size: 12px;
+  resize: vertical;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Custom CSS for the popup window */
+.popupinfo {
+ display: none;
+ position: absolute;
+ top: 50%; /* Center the popup vertically */
+ left: 50%; /* Center the popup horizontally */
+ transform: translate(-50%, -50%); /* Center the popup both vertically and horizontally */
+ max-width: 350px; /* Limit the popup width */
+ max-height: 300px; /* Set the maximum height for the popup */
+ font-size: 14px;
+ text-align: left; /* Align the text to the left */
+ //white-space: pre-line; /* Preserve line breaks in the popup content */
+ padding: 8px;
+ background-color: #F6F4EB; /* Light blue background */
+ color: #333;
+ border: 1px solid #007bff; /* Blue border */
+ border-radius: 4px;
+ box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Style for parameter names */
+.popupinfo .param-name {
+ font-weight: bold;
+ color: #555; /* Dark gray color for parameter names */
+}
+
+/* Style for close button */
+.popupinfo .close-btn {
+ position: absolute;
+ top: 0px;
+ right: 0px;
+ font-size: 32px;
+ width: 42px;
+ height: 42px;
+ padding: 0px;
+ text-align: center;
+ cursor: pointer;
+ color: #FF0000; /* Blue color for the close button */
+ border-radius: 50%; /* Make it round */
+ background-color: #F6F4EB; /* Match the popup background */
+}
+
+.popupinfo .copy-btn {
+ margin-top: 8px;
+ cursor: pointer;
+ position: absolute;
+ bottom: 10px; /* Set desired distance from the bottom of the popup */
+ right: 8px; /* Set desired distance from the right side of the popup */
+}
+
+/* Apply custom CSS style for the modal width and textarea width */
+.modal {
+ position: fixed;
+ width: 100%;
+ height: 100%;
+}
+
+.custom-modal-dialog {
+ position: relative;
+ width: 700px; 
+ max-width: 100%;
+ height: 100%;
+ background-color: transparent;
+}
+
+.btn24 {
+ min-width: 24px;
+}
+
+.btn80 {
+ min-width: 80px;
+}
+
+.btn120 {
+ min-width: 120px;
+}
+
+.btn100 {
+ min-width: 100px;
+}
+
+.btn150 {
+ min-width: 150px;
+}
+
+.textcenter {
+ text-align: center;
+}
