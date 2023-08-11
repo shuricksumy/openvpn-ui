@@ -15,31 +15,34 @@
   <form role="form" action="{{urlfor "SettingsController.Login"}}" method="post">
     <div class="box-body">
       <div class="form-group">
-        <label for="name">Profile</label>
+        <label for="Profile">Profile</label>
         <input type="text" class="form-control" id="Profile" disabled
           value=" {{ .Settings.Profile }} ">
       </div>
 
       <div class="form-group">
-        <label for="name">Management interface address</label>
+        <label for="MIAddress">Management interface address</label>
         <input type="text" class="form-control" id="MIAddress" name="MIAddress" placeholder="Enter address"
           value="{{ .Settings.MIAddress }}">
       </div>
 
       <div class="form-group">
-        <label for="name">Management interface network</label>
+        <label for="MINetwork">Management interface network</label>
         <input type="text" class="form-control" id="MINetwork" name="MINetwork" placeholder="Enter network name" disabled
           value="{{ .Settings.MINetwork }}">
       </div>
 
       <div class="form-group">
-        <label for="name">Server Address (external)</label>
-        <input type="text" class="form-control" id="ServerAddress" name="ServerAddress" placeholder="Enter server address" disabled
-          value="{{ .Settings.ServerAddress }}">
+        <label for="Theme">Theme</label>
+        <select class="form-control" id="Theme" name="Theme">
+            <option value="blue" {{if eq .Settings.Theme "blue"}}selected{{end}}>Blue</option>
+            <option value="midnight" {{if eq .Settings.Theme "midnight"}}selected{{end}}>Midnight</option>
+            <option value="black" {{if eq .Settings.Theme "other"}}selected{{end}}>Black</option>
+        </select>
       </div>
 
       <div class="form-group">
-        <label for="name">Server Name</label>
+        <label for="ServerName">Server Name</label>
         <input type="text" class="form-control" id="ServerName" name="ServerName" placeholder="Enter server Name"
           value="{{ .Settings.ServerName }}">
       </div>

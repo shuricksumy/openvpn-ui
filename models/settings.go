@@ -17,7 +17,7 @@ type Settings struct {
 
 	OVConfigPath string `orm:"size(64);unique" form:"OVConfigPath" valid:"Required;"`
 
-	ServerAddress     string `orm:"size(64);unique" form:"ServerAddress" valid:"Required;"`
+	Theme             string `orm:"size(64);unique" form:"Theme" valid:"Required;"`
 	ServerName        string `orm:"size(64);unique" form:"ServerName" valid:"Required;"`
 
 	Created time.Time `orm:"auto_now_add;type(datetime)"`

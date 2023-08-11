@@ -80,6 +80,9 @@ func (c *BaseController) SetParams() {
 	for k, v := range input {
 		c.Data["Params"].(map[string]string)[k] = v[0]
 	}
+	settings := models.Settings{Profile: "default"}
+	_ = settings.Read("Profile")
+	c.Data["Settings"] = &settings
 }
 
 type BreadCrumbs struct {

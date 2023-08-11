@@ -71,7 +71,7 @@
       <div class="box-body">
         <!--if .ovstatus -->
         <div class="table-responsive">
-         <table class="table no-margin table-striped">
+         <table class="table no-margin">
             <thead>
             <tr>
               <th style="width:15%">Name</th>
@@ -189,6 +189,7 @@
                   </tr>
 
                   <div id="popup-{{ .Details.CN }}" class="modal fade popupinfo" role="dialog">
+                      <div class="box box-primary bodypop">
                              <span class="param-name">Name:</span><span class="param-value"> {{ .Details.CN }}</span><br>
                              <span class="param-name">Type:</span><span class="param-value"> {{ .EntryType }}</span><br>
                              <span class="param-name">Status:</span><span class="param-value">{{if eq .EntryType "V"}}  Active {{else if eq .EntryType "R"}} Revoked {{else}} Unknown {{end}}</span><br>
@@ -200,6 +201,7 @@
                              <button class="btn btn-primary copy-btn bg-light-blue-gradient btn80" data-dismiss="modal">Copy</button>
                              <!-- Close button -->
                              <div class="close-btn" data-dismiss="modal">&times;</div>
+                     </div>
                   </div>
             {{end}}
             </tbody>

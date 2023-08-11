@@ -72,7 +72,7 @@ func CreateDefaultSettings() (*Settings, error) {
 	if err != nil {
 		return nil, err
 	}
-	serverAddress, err := web.AppConfig.String("OpenVpnServerAddress")
+	theme, err := web.AppConfig.String("Theme")
 	if err != nil {
 		return nil, err
 	}
@@ -89,7 +89,7 @@ func CreateDefaultSettings() (*Settings, error) {
 		Profile:           "default",
 		MIAddress:         miAddress,
 		MINetwork:         miNetwork,
-		ServerAddress:     serverAddress,
+		Theme:             theme,
 		ServerName:        serverName,
 		OVConfigPath:      ovConfigPath,
 	}

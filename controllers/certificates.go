@@ -12,6 +12,7 @@ import (
 	"github.com/d3vilh/openvpn-server-config/client/config"
 	"github.com/d3vilh/openvpn-ui/lib"
 	"github.com/d3vilh/openvpn-ui/state"
+	"github.com/d3vilh/openvpn-ui/models"
 )
 
 type NewCertParams struct {
@@ -30,6 +31,9 @@ func (c *CertificatesController) NestPrepare() {
 		c.Ctx.Redirect(302, c.LoginPath())
 		return
 	}
+	settings := models.Settings{Profile: "default"}
+	settings.Read("Profile")
+	c.Data["Settings"] = &settings
 	c.Data["breadcrumbs"] = &BreadCrumbs{
 		Title: "Certificates",
 	}

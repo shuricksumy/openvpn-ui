@@ -41,22 +41,33 @@
  transform: translate(-50%, -50%); /* Center the popup both vertically and horizontally */
  max-width: 350px; /* Limit the popup width */
  max-height: 300px; /* Set the maximum height for the popup */
+
+}
+
+.popupinfo .bodypop {
+ position: absolute;
+ height: 100%;
  font-size: 14px;
  text-align: left; /* Align the text to the left */
- //white-space: pre-line; /* Preserve line breaks in the popup content */
  padding: 8px;
- background-color: #F6F4EB; /* Light blue background */
  color: #333;
- border: 1px solid #007bff; /* Blue border */
  border-radius: 4px;
  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+
 /* Style for parameter names */
 .popupinfo .param-name {
  font-weight: bold;
- color: #555; /* Dark gray color for parameter names */
+ color: #999; /* Dark gray color for parameter names */
 }
+
+
+/* Style for parameter names */
+.popupinfo .param-value {
+ color: #aaa; /* Dark gray color for parameter names */
+}
+
 
 /* Style for close button */
 .popupinfo .close-btn {
@@ -69,9 +80,7 @@
  padding: 0px;
  text-align: center;
  cursor: pointer;
- color: #FF0000; /* Blue color for the close button */
  border-radius: 50%; /* Make it round */
- background-color: #F6F4EB; /* Match the popup background */
 }
 
 .popupinfo .copy-btn {
