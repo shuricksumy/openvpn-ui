@@ -25,6 +25,6 @@
 </div>
 
 <script>
-   createEditor("client_data", "300px", "clouds_midnight", "space", false)
+   createEditor("client_data", "300px", {{if eq .Settings.Theme "midnight"}}"clouds_midnight"{{else}}"clouds"{{end}}, "space", false)
 </script>
 

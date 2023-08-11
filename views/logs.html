@@ -32,7 +32,8 @@
 
 
 <script>
-    ed = createEditor("Logs", "750px", "clouds_midnight", "ovpn", true);
+    //createEditor("Logs", "750px", "clouds_midnight", "ovpn", true);
+    createEditor("Logs", "750px", {{if eq .Settings.Theme "midnight"}}"clouds_midnight"{{else}}"clouds"{{end}}, "ovpn", true);
 
 </script>
 

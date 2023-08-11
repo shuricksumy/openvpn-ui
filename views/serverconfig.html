@@ -37,7 +37,7 @@
 {{end}}
 
 <script>
-    createEditor("ServerConfig", "600px", "clouds_midnight", "space", false)
+    createEditor("ServerConfig", "600px", {{if eq .Settings.Theme "midnight"}}"clouds_midnight"{{else}}"clouds"{{end}}, "space", false)
 </script>
 
 
