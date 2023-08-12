@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/beego/beego/v2/server/web"
-	"github.com/d3vilh/openvpn-ui/lib"
+	"github.com/shuricksumy/openvpn-ui/lib"
 )
 
 type LoginController struct {

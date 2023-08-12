@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/beego/beego/v2/core/logs"
-	"github.com/d3vilh/openvpn-ui/models"
+	"github.com/shuricksumy/openvpn-ui/models"
 	"github.com/beego/beego/v2/server/web"
 )
 

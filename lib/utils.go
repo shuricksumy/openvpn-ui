@@ -12,7 +12,7 @@ import (
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/core/validation"
 	"github.com/beego/beego/v2/server/web"
-	"github.com/d3vilh/openvpn-ui/state"
+	"github.com/shuricksumy/openvpn-ui/state"
 )
 
 // CreateValidationMap ranslates validation structure to map

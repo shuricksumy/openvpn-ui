@@ -8,8 +8,8 @@ import (
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
 	mi "github.com/d3vilh/openvpn-server-config/server/mi"
-	"github.com/d3vilh/openvpn-ui/lib"
-	"github.com/d3vilh/openvpn-ui/state"
+	"github.com/shuricksumy/openvpn-ui/lib"
+	"github.com/shuricksumy/openvpn-ui/state"
 )
 
 type ServerConfigController struct {

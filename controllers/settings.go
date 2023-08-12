@@ -6,8 +6,8 @@ import (
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-	"github.com/d3vilh/openvpn-ui/models"
-	"github.com/d3vilh/openvpn-ui/state"
+	"github.com/shuricksumy/openvpn-ui/models"
+	"github.com/shuricksumy/openvpn-ui/state"
 )
 
 type SettingsController struct {

@@ -9,7 +9,7 @@ package routers
 
 import (
 	"github.com/beego/beego/v2/server/web"
-	"github.com/d3vilh/openvpn-ui/controllers"
+	"github.com/shuricksumy/openvpn-ui/controllers"
 )
 
 func Init(configDir string) {

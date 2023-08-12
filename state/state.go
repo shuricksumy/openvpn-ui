@@ -1,5 +1,5 @@
 package state
 
-import "github.com/d3vilh/openvpn-ui/models"
+import "github.com/shuricksumy/openvpn-ui/models"
 
 var GlobalCfg models.Settings

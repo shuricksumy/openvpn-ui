@@ -2,7 +2,7 @@
 
 export GOPATH=`pwd`
 
-cd ./src/github.com/d3vilh/openvpn-ui
+cd ./src/github.com/shuricksumy/openvpn-ui
 
 cd ./build
 ./build.sh
