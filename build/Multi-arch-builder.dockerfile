@@ -12,6 +12,5 @@ RUN git clone https://github.com/shuricksumy/openvpn-ui ./
 # Uncomment for a multi-arch buildx of the develop branch
 # RUN git clone -b develop --single-branch https://github.com/bnhf/pivpn-tap-web-ui
 
-#RUN export GOPATH=/go/ && go install github.com/beego/bee@latest
+RUN export GOPATH=/go/ && go install github.com/beego/bee@latest
 
-RUN export GOPATH=/go/ && go install github.com/beego/beego/v2@v2.1.1
