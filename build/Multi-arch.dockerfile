@@ -44,7 +44,8 @@ RUN apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/openvpn-ui.tar.gz /opt/openvpn-gui/
-RUN rm -f /opt/openvpn-gui/data.db
+RUN tar -zxf /opt/openvpn-gui/openvpn-ui.tar.gz --directory /opt/openvpn-gui/
+RUN rm -f /opt/openvpn-gui/openvpn-ui.tar.gz /opt/openvpn-gui/data.db
 COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/app.conf /opt/openvpn-gui/conf/app.conf
 
 
