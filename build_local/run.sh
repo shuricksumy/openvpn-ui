@@ -8,8 +8,8 @@ export OPENVPN_ADMIN_PASSWORD=admin # Leave this default as-is and update on fir
 export OVDIR=/etc/openvpn
 
 rm $GOPATH/bin/openvpn-ui
-cd ./src/github.com/d3vilh/openvpn-ui
-rm ./data.db
+cd ./src/github.com/shuricksumy/openvpn-ui
+#rm ./data.db
 rm ./openvpn-ui
 
 go mod tidy

@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/beego/beego/v2/core/logs"
-	mi "github.com/d3vilh/openvpn-server-config/server/mi"
+	mi "github.com/shuricksumy/openvpn-ui/pkg/openvpn-server-config/server/mi"
 	"github.com/shuricksumy/openvpn-ui/lib"
 	"github.com/shuricksumy/openvpn-ui/state"
 )

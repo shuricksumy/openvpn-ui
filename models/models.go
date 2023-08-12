@@ -7,7 +7,7 @@ import (
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-	"github.com/d3vilh/openvpn-server-config/server/config"
+	"github.com/shuricksumy/openvpn-ui/pkg/openvpn-server-config/server/config"
 	"gopkg.in/hlandau/passlib.v1"
 )
 
