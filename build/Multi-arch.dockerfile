@@ -19,7 +19,7 @@ WORKDIR /go/src/github.com/d3vilh/openvpn-ui
 
 #RUN go mod tidy && /root/go/bin/bee pack -mod=readonly -exr='^vendor|^data.db|^build|^README.md|^docs|^README_ORIGINAL.md|^screenshots'
 
-RUN export GOPATH=/go/ && go mod tidy && /go/bin/bee pack -exr='^vendor|^data.db|^build|^README.md|^docs|^README_ORIGINAL.md|^screenshots'
+RUN export GOPATH=/go/ && go mod tidy && /go/bin/bee update && /go/bin/bee pack -exr='^vendor|^data.db|^build|^README.md|^docs|^README_ORIGINAL.md|^screenshots'
 #-mod=readonly
 
 FROM debian:stable
