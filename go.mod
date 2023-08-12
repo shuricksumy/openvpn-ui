@@ -7,6 +7,7 @@ require (
 	github.com/cloudfoundry/gosigar v1.3.17
 	github.com/go-ldap/ldap/v3 v3.4.5
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
+	github.com/sirupsen/logrus v1.9.3
 	gopkg.in/hlandau/passlib.v1 v1.0.11
 )
 
@@ -26,7 +27,6 @@ require (
 	github.com/prometheus/common v0.44.0 // indirect
 	github.com/prometheus/procfs v0.11.0 // indirect
 	github.com/shiena/ansicolor v0.0.0-20230509054315-a9deabde6e02 // indirect
-	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	golang.org/x/crypto v0.11.0 // indirect
 	golang.org/x/net v0.12.0 // indirect

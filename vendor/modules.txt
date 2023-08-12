@@ -32,11 +32,6 @@ github.com/cespare/xxhash/v2
 ## explicit; go 1.20
 github.com/cloudfoundry/gosigar
 github.com/cloudfoundry/gosigar/sys/windows
-# github.com/d3vilh/openvpn-server-config v0.2.0
-## explicit
-github.com/d3vilh/openvpn-server-config/client/config
-github.com/d3vilh/openvpn-server-config/server/config
-github.com/d3vilh/openvpn-server-config/server/mi
 # github.com/go-asn1-ber/asn1-ber v1.5.4
 ## explicit; go 1.13
 github.com/go-asn1-ber/asn1-ber
