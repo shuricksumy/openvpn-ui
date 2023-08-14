@@ -725,10 +725,14 @@ function installOpenVPN() {
 	# Install the latest version of easy-rsa from source, if not already installed.
 	if [[ ! -f ${OVPN_PATH}/easy-rsa/SERVER_NAME_GENERATED ]]; then
 		local version="3.1.5"
-		wget -O ~/easy-rsa.tgz https://github.com/OpenVPN/easy-rsa/releases/download/v${version}/EasyRSA-${version}.tgz
+		local easyrsa_file_name="EasyRSA-${version}.tgz"
+
+		if [[ ! -f ~/${easyrsa_file_name} ]]; then
+			wget -O ~/${easyrsa_file_name} https://github.com/OpenVPN/easy-rsa/releases/download/v${version}/${easyrsa_file_name}
+		fi
+
 		mkdir -p ${OVPN_PATH}/easy-rsa
-		tar xzf ~/easy-rsa.tgz --strip-components=1 --no-same-owner --directory ${OVPN_PATH}/easy-rsa
-		rm -f ~/easy-rsa.tgz
+		tar xzf ~/${easyrsa_file_name} --strip-components=1 --no-same-owner --directory ${OVPN_PATH}/easy-rsa
 
 		cd ${OVPN_PATH}/easy-rsa/ || return
 		case $CERT_TYPE in
