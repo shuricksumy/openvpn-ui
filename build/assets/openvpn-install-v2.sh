@@ -1277,6 +1277,7 @@ function geberateOpenVPNFile() {
 	# Generates the custom client.ovpn
 	cp ${OVPN_PATH}/client-template.txt "$homeDir/$CLIENT.ovpn"
 	{
+		echo ""
 		echo "<ca>"
 		cat "${OVPN_PATH}/easy-rsa/pki/ca.crt"
 		echo "</ca>"
