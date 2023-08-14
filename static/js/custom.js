@@ -33,7 +33,11 @@ $(function() {
     type: 'red',
     icon: 'fa fa-warning',
     title: 'font-awesome',
+    theme: 'bootstrap',
     columnClass: 'small',
+    animateFromElement: false,
+    animation: 'RotateXR',
+    closeAnimation: 'rotateXR',
     buttons: {
         Confirm: {
             btnClass: 'btn-red bg-red-gradient btn80',
@@ -52,6 +56,10 @@ $(function() {
     icon: 'fa fa-warning',
     title: 'font-awesome',
     columnClass: 'small',
+    theme: 'bootstrap',
+    animateFromElement: false,
+    animation: 'RotateXR',
+    closeAnimation: 'rotateXR',
     buttons: {
         Confirm: {
             btnClass: 'btn-orange bg-yellow-gradient btn80',
