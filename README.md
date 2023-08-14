@@ -1,12 +1,15 @@
 # OpenVPN WEB UI
 
 - There is the original [README.md](https://github.com/shuricksumy/openvpn-ui/blob/my_main/README_ORIGINAL.md) file
-- The project was cloned from https://github.com/d3vilh/openvpn-ui  - big thanks for a great job
+- The project was cloned from [https://github.com/d3vilh/openvpn-ui](https://github.com/d3vilh/openvpn-ui)  - big thanks for a great job
 - The Docker builder with the Server part is here [**OPENVPN-SERVER-DOCKER**](https://github.com/shuricksumy/openvpn-server-docker)
 
-## Updates:
+![Status page](screenshots/2.png?raw=true)
+
+## Updates
+
 - updated all config files and scripts to use `/etc/openvpn/easy-rsa` path
-- added the script from https://github.com/shuricksumy/openvpn-install as the main script for generating new clients
+- added the script from [openvpn-install](https://github.com/shuricksumy/openvpn-install) as the main script for generating new clients
 - added UI improvements:
   - now user can configure `server.conf` and `client-template` files as plain text
   - new table with certificates
@@ -14,18 +17,23 @@
   - improved visual part of the log viewer
   - updated client generation and .ovpn file generation
   - added confirmation to Revoke or Delete clients
+  - added 4 tabs for Application, Server, Cliemt config and System utils
+  - added backuping/downloading of all ovpn directory
 - added Docker env variables and improved run-script:
   - disabled auto-provisioning of OpenVPN server part - now wait for a readily configured server
   - added env vars:
-  ```
+
+  ```bash
   SITE_NAME='Server 1' # The name of the server - displayed on UI. Default value "Admin"
   OPENVPN_SERVER_DOCKER_NAME="vpnserver1" # The name of the Docker container to restart
   OPENVPN_MANAGEMENT_ADDRESS="IP:PORT" # The preconfigured address to connect OpenVPN manager
   ```
   
 ## Example docker-compose file
+
 ### It's only UI part - full configuration will be here soon [TODO]
-```docker-compose
+
+```docker
 version: '3'
 
 networks:
@@ -60,7 +68,9 @@ services:
          - ./openvpn/easy-rsa:/etc/openvpn/easy-rsa
          - ./openvpn/openvpn1/db:/opt/openvpn-gui-tap/db
 ```
+
 ## Screenshots
+
 ![Status page](screenshots/2.png?raw=true)
 ![Status page](screenshots/3.png?raw=true)
 ![Status page](screenshots/4.png?raw=true)
