@@ -61,14 +61,12 @@ services:
          - ./openvpn/openvpn1/db:/opt/openvpn-gui-tap/db
 ```
 ## Screenshots
-<img src="https://github.com/shuricksumy/openvpn-ui/blob/my_main/screenshots/1.png" alt="OpenVPN-UI Login screen" width="1000" border="1" />
-
-<img src="https://github.com/shuricksumy/openvpn-ui/blob/my_main/screenshots/2.png" alt="OpenVPN-UI Login screen" width="1000" border="1" />
-
-<img src="https://github.com/shuricksumy/openvpn-ui/blob/my_main/screenshots/3.png" alt="OpenVPN-UI Login screen" width="1000" border="1" />
-
-<img src="https://github.com/shuricksumy/openvpn-ui/blob/my_main/screenshots/4.png" alt="OpenVPN-UI Login screen" width="1000" border="1" />
-
-<img src="https://github.com/shuricksumy/openvpn-ui/blob/my_main/screenshots/5.png" alt="OpenVPN-UI Login screen" width="1000" border="1" />
-
-<img src="https://github.com/shuricksumy/openvpn-ui/blob/my_main/screenshots/6.png" alt="OpenVPN-UI Login screen" width="1000" border="1" />
+![Status page](screenshots/2.png?raw=true)
+![Status page](screenshots/3.png?raw=true)
+![Status page](screenshots/4.png?raw=true)
+![Status page](screenshots/5.png?raw=true)
+![Status page](screenshots/6.png?raw=true)
+![Status page](screenshots/7.png?raw=true)
+![Status page](screenshots/8.png?raw=true)
+![Status page](screenshots/9.png?raw=true)
+![Status page](screenshots/10.png?raw=true)
