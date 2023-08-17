@@ -50,7 +50,6 @@
  font-size: 14px;
  text-align: left; /* Align the text to the left */
  padding: 8px;
- color: #333;
  border-radius: 4px;
  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
@@ -59,13 +58,11 @@
 /* Style for parameter names */
 .popupinfo .param-name {
  font-weight: bold;
- color: #999; /* Dark gray color for parameter names */
 }
 
 
 /* Style for parameter names */
 .popupinfo .param-value {
- color: #aaa; /* Dark gray color for parameter names */
 }
 
 
