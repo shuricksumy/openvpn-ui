@@ -24,6 +24,7 @@ func Init(configDir string) {
 	web.Router("/logs", &controllers.LogsController{})
 
 	web.Include(&controllers.CertificatesController{ConfigDir: configDir})
+	web.Include(&controllers.ClientsController{ConfigDir: configDir})
 
 	web.Include(&controllers.SystemController{})
 

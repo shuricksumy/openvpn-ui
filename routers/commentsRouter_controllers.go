@@ -125,4 +125,12 @@ func init() {
 				Router:           `/ov/system/backup`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
+
+	web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"] =
+		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"],
+			web.ControllerComments{
+				Method:           "Get",
+				Router:           `/routes`,
+				AllowHTTPMethods: []string{"get"},
+				Params:           nil})
 }

@@ -9,10 +9,10 @@ import (
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/core/validation"
 	"github.com/beego/beego/v2/server/web"
-	"github.com/shuricksumy/openvpn-ui/pkg/openvpn-server-config/client/config"
 	"github.com/shuricksumy/openvpn-ui/lib"
-	"github.com/shuricksumy/openvpn-ui/state"
 	"github.com/shuricksumy/openvpn-ui/models"
+	"github.com/shuricksumy/openvpn-ui/pkg/openvpn-server-config/client/config"
+	"github.com/shuricksumy/openvpn-ui/state"
 )
 
 type NewCertParams struct {
@@ -35,7 +35,7 @@ func (c *CertificatesController) NestPrepare() {
 	settings.Read("Profile")
 	c.Data["Settings"] = &settings
 	c.Data["breadcrumbs"] = &BreadCrumbs{
-		Title: "Certificates",
+		Title: "Clients Certificates",
 	}
 }
 
