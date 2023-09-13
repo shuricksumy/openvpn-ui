@@ -3,3 +3,6 @@ data.db
 .DS_Store
 openvpn-ui
 openvpn-ui.tar.gz
+build_local/bin
+build_local/pkg
+build_local/src
