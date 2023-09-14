@@ -33,7 +33,7 @@ get_next_ip() {
 # => true/flase
 valid_ipv4() {
 echo $1 | grep -E -o "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\
-\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)" && return 
+\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?$)" && return 
 }
 
 # returns the ip part of an CIDR
@@ -84,78 +84,95 @@ cidr_default_gw_2() {
   int_to_ip4 $((broadcast - 1))
 }
 
-
 # ======================================================================
 
-OVDIR="/etc/openvpn"
-USERDiR="${OVDIR}/ccd"
-JSON="clientDetails.json"
+# OVDIR="/etc/openvpn"
+# USERDiR="${OVDIR}/ccd"
+# JSON="clientDetails.json"
+
+if [ -z $JSON ]; then
+    exit 1
+fi
+
 TIMESTAMP=$(date +%F_%T)
 
 IFS=','
 Clients=$(cat ${OVDIR}/${JSON} | jq -c 'map(.ClientName)' | sed 's/[][]//g'| sed 's/["]//g')
 
-# echo "$Clients"
-i=0
 for client in ${Clients[*]}; do
-    i=$((i+1))
-    echo "--------------"
+    fileToSave=${USERDiR}/${client}
     echo "Client: $client"
     clientDetails=$(cat ${OVDIR}/${JSON} | jq -c ".[] | select( any(.; .ClientName == \"$client\") )")
-    # echo "$clientDetails"
+
     IFS=','
     ClientSelectedRoutes=$(echo "$clientDetails" | jq -c ".RouteListSelected" | sed 's/[][]//g' | sed 's/["]//g')
-    # echo "$ClientSelectedRoutes"
-    echo "  FILE_$i: # Automatic generated client settings file - $TIMESTAMP"
+
     
+    ####
+    echo "# Automatic generated client settings file - $TIMESTAMP" > ${fileToSave}
+    ####
+
     staticIP=$(echo "$clientDetails" | jq -c ".StaticIP" | sed 's/["]//g')
-    # isIPValid="$(is_IP_valid $staticIP)"
-    # echo "StaticIP: $staticIP"
-    if [ ! $(valid_ipv4 "$staticIP") ]; then 
-        echo ">>>>> StaticIP IP is invalid: $staticIP"
-        continue
+    if [[ $(valid_ipv4 "$staticIP") ]]; then 
+        nextIP=$(get_next_ip $staticIP)
+
+        ####
+        echo "ifconfig-push $staticIP $nextIP" >> ${fileToSave}
+        ####
     fi
-    nextIP=$(get_next_ip $staticIP)
-    echo "  FILE_$i: ifconfig-push $staticIP $nextIP"
 
     isRouter=$(echo "$clientDetails" | jq -c ".IsRouter")
-    thisRouterSubnet=$(echo "$clientDetails" | jq -c ".RouterSubnet" | sed 's/["]//g')
-    thisRouterMask=$(echo "$clientDetails" | jq -c ".RouterMask" | sed 's/["]//g')
-    if [ ! $(valid_ipv4 "$thisRouterSubnet") ]; then 
-        echo ">>>>> ThisRouterSubnet IP is invalid: $thisRouterSubnet"
-        continue
-    fi
-    if [ ! $(valid_ipv4 "$thisRouterMask") ]; then 
-        echo ">>>>> ThisRouterMask IP is invalid: $thisRouterMask"
-        continue
-    fi
-    # echo "IsRouter: $isRouter"
-    # echo "--"
-    if [[ $isRouter -eq "true" ]]; then
-        echo "  FILE_$i: iroute ${thisRouterSubnet} ${thisRouterMask}"
-    fi
-    echo "  "
+    if [[ $isRouter == "true" ]]; then
 
+        thisRouterSubnet=$(echo "$clientDetails" | jq -c ".RouterSubnet" | sed 's/["]//g')
+        thisRouterMask=$(echo "$clientDetails" | jq -c ".RouterMask" | sed 's/["]//g')
+
+        isParamOK=true
+
+        if [ $thisRouterMask == "" || $thisRouterSubnet == "" ]; then
+            echo ">>>>> Network/Mask is empty"
+            isParamOK=false
+        fi
+
+        if [ ! $(valid_ipv4 "$thisRouterSubnet") ]; then 
+            echo ">>>>> ThisRouterSubnet IP is invalid: $thisRouterSubnet"
+            isParamOK=false
+        fi
+        if [ ! $(valid_ipv4 "$thisRouterMask") ]; then 
+            echo ">>>>> ThisRouterMask IP is invalid: $thisRouterMask"
+            isParamOK=false
+        fi
+
+        if [ $isParamOK == true ]; then
+            ####
+            echo "iroute ${thisRouterSubnet} ${thisRouterMask}" >> ${fileToSave}
+            ####
+        fi
+    fi
+    ####
+    echo "  " >> ${fileToSave}
+    ####
 
     isRouteDefault=$(echo "$clientDetails" | jq -c ".IsRouteDefault")
-    # echo "IsRouteDefault: $isRouteDefault"
-    if [[ $isRouteDefault -eq "true" ]]; then
-        echo "  FILE_$i: # Set VPN as default route"
-        echo "  FILE_$i: push \"redirect-gateway def1\""
+    if [[ $isRouteDefault == "true" ]]; then
+        ####
+        echo "# Set VPN as default route" >> ${fileToSave}
+        echo "push \"redirect-gateway def1\"" >> ${fileToSave}
+        ####
     else
-        echo "  FILE_$i: # Set VPN as default route"
-        echo "  FILE_$i: # push \"redirect-gateway def1\""
+        ####
+        echo "# Set VPN as default route" >> ${fileToSave}
+        echo "# push \"redirect-gateway def1\"" >> ${fileToSave}
+        ####
     fi
-    echo "  "
-
-
-    
+    ####
+    echo "  " >> ${fileToSave}
+    ####
 
     for route in ${ClientSelectedRoutes[*]}; do
-        # echo "  ROUTE: $route"
         routeClient=$(cat ${OVDIR}/${JSON} | jq -c ".[] | select( any(.; .ClientName == \"$route\") )")
-        # echo "ROUTE CLIENT: $routeClient"
         routerSubnet=$(echo "$routeClient" | jq -c ".RouterSubnet" | sed 's/["]//g')
+
         if [ ! $(valid_ipv4 "$routerSubnet") ]; then 
             echo ">>>>> RouterSubnet IP is invalid: $routerSubnet"
             continue
@@ -166,12 +183,10 @@ for client in ${Clients[*]}; do
             continue
         fi
         description=$(echo "$routeClient" | jq -c ".Description" | sed 's/["]//g')
-        echo "  FILE_$i: # Route to ${route} [${description}] device internal subnet"
-        echo "  FILE_$i: push \"route ${routerSubnet} ${routerMask}\""
-        # echo "  RouterSubnet: $routerSubnet"
-        # echo "  RouterMask: $routerMask"
-        # echo "  Description: $description"
-        # echo "  --"
+        
+        ####
+        echo "# Route to ${route} [${description}] device internal subnet" >> ${fileToSave}
+        echo "push \"route ${routerSubnet} ${routerMask}\"" >> ${fileToSave}
+        ####
     done
 done
-echo "--------------"

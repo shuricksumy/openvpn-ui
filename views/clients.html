@@ -111,10 +111,41 @@
     <!-- /.box -->
   </div>
 
+  <div class="box box-warning">
+    <div class="box-header with-border">
+      <h3 class="box-title">Apply Clients Configuration</h3>
+    </div>
+    
+    <!-- /.box-header -->
+    <!-- <div class="box-body">
+      <span id="helpBlock" class="help-block">If you are revoking Certificate, don't forget to restart your OpenVPN container to disconnect all active client sessions and make revocation to take the effect.<br/></span>
+    </div> -->
+    <div class="box-footer" style="float: right;">
+        <table>
+         <tr>
+           <td style= "margin-right: 5px; vertical-align: bottom;"><i>If you finish working on clients details, 
+            do not forget to apply these changes for ALL clients. &nbsp;&nbsp;</i></td>
+           <td><a href="{{urlfor "ClientsController.UpdateFiles"}}" class="btn btn-warning btn-sm bg-yellow-gradient btn150" data-title="Update ALL Clients?" 
+             title="Apply Clients Configuration" style="margin-right: 23px;">Apply Configurations</a></td>
+          </tr>
+        </table>
+    </div>
+    <div class="box-footer clearfix">
+    </div>
+    <!--
+    <div class="box-footer clearfix">
+      <a href="javascript:void(0)" class="btn btn-sm btn-info btn-flat pull-left">Place New Order</a>
+      <a href="javascript:void(0)" class="btn btn-sm btn-default btn-flat pull-right">View All Orders</a>
+    </div>
+  -->
+    <!-- /.box-footer -->
+  </div>
+
   <div class="box box-danger">
     <div class="box-header with-border">
       <h3 class="box-title">Restart OpenVPN</h3>
     </div>
+    
     <!-- /.box-header -->
     <!-- <div class="box-body">
       <span id="helpBlock" class="help-block">If you are revoking Certificate, don't forget to restart your OpenVPN container to disconnect all active client sessions and make revocation to take the effect.<br/></span>
@@ -139,7 +170,6 @@
   -->
     <!-- /.box-footer -->
   </div>
-
 
 
 </div>

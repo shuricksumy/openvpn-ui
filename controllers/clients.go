@@ -8,6 +8,7 @@ import (
 	"github.com/beego/beego/v2/server/web"
 	"github.com/shuricksumy/openvpn-ui/lib"
 	"github.com/shuricksumy/openvpn-ui/models"
+	mi "github.com/shuricksumy/openvpn-ui/pkg/openvpn-server-config/server/mi"
 	"github.com/shuricksumy/openvpn-ui/state"
 )
 
@@ -21,6 +22,7 @@ func (c *ClientsController) NestPrepare() {
 		c.Ctx.Redirect(302, c.LoginPath())
 		return
 	}
+
 	settings := models.Settings{Profile: "default"}
 	settings.Read("Profile")
 	c.Data["Settings"] = &settings
@@ -134,6 +136,34 @@ func (c *ClientsController) SaveClientDetailsData() {
 		// Redirect to the main page after successful file save.
 		flash.Success("Settings are saved for " + string(client.ClientName) + " to file.")
 		flash.Store(&c.Controller)
+	}
+
+	c.TplName = "clients.html"
+	c.showClients()
+}
+
+// @router /clients/updatefiles [get]
+func (c *ClientsController) UpdateFiles() {
+	flash := web.NewFlash()
+	wasError := false
+
+	//update files
+	err_save := lib.GenerateClientsFileToFS()
+	if err_save != nil {
+		logs.Error(err_save)
+		flash.Error("ERROR SAVING CLIENTS TO FS !")
+		flash.Store(&c.Controller)
+		wasError = true
+	}
+
+	if !wasError {
+		// Redirect to the main page after successful file save.
+		flash.Success("Clients were updated. Please restart OPENVPN server!")
+		flash.Store(&c.Controller)
+		client := mi.NewClient(state.GlobalCfg.MINetwork, state.GlobalCfg.MIAddress)
+		if err := client.Signal("SIGTERM"); err != nil {
+			flash.Warning("Config has been updated but OpenVPN server was NOT reloaded: " + err.Error())
+		}
 	}
 
 	c.TplName = "clients.html"

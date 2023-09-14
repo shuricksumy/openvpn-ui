@@ -5,9 +5,11 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"os/exec"
 	"strings"
 
 	"github.com/beego/beego/v2/core/logs"
+	"github.com/shuricksumy/openvpn-ui/state"
 )
 
 // Structure for using on WEB
@@ -297,4 +299,18 @@ func SaveJsonFile(clientDetails []*ClientDetails, pathJson string) error {
 		return err
 	}
 	return os.WriteFile(pathJson, file, 0644)
+}
+
+func GenerateClientsFileToFS() error {
+	cmd := exec.Command("/bin/bash", "-c",
+		"cd /opt/scripts/ && export OVDIR='/etc/openvpn' && export USERDiR=\"${OVDIR}/ccd\" && "+
+			"export JSON='clientDetails.json' && ./createClientFilesFromJSON.sh")
+	cmd.Dir = state.GlobalCfg.OVConfigPath
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		logs.Debug(string(output))
+		logs.Error(err)
+		return err
+	}
+	return nil
 }

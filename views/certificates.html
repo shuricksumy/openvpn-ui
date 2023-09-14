@@ -162,7 +162,7 @@
                    <!-- 6 sell -->
                   {{if eq .EntryType "V"}}
                     <td class="textcenter">
-                      <a href="{{urlfor "CertificatesController.Revoke" ":key" .Details.Name}}" data-title="Revoke certificates ?" class="btn btn-warning btn-sm bg-yellow-gradient btn80" title="Revoke">Revoke</a>
+                      <a href="{{urlfor "CertificatesController.Revoke" ":key" .Details.Name}}" data-title="Disable access for user?" class="btn btn-warning btn-sm bg-yellow-gradient btn80" title="Revoke">Revoke</a>
                     </td>
                   {{else if eq .EntryType "R"}}
                     <td class="textcenter">
