@@ -25,7 +25,7 @@ $(function() {
   //  alert( "Handler for .click() called." );
   //});
   //window.location.reload();
-})
+});
 
 $(function() {
  $('a.btn-danger').confirm({
@@ -73,62 +73,88 @@ $(function() {
    });
 })
 
+// FUNCTION EDIT CLIENT DETAILS POPUP RAW TEXT EDITOR
 $(function() {
-  $(document).ready(function () {
-    $(".edit-button").on("click", function () {
-        var clientName = $(this).data("client-name");
-        showModalWithData(clientName);
+    $(document).ready(function () {
+        $("button#openModalEditClientRaw").on("click", function () {
+            var clientName = $(this).data("client-name");
+            showModalWithData(clientName);
+        });
     });
+
+    function showModalWithData(clientName) {
+        // Make an AJAX request to get the data for the client
+        $.post("/certificates/render_modal", {"client-name": clientName}, function (data) {
+            // Update the modal content with the retrieved data
+            $("#modal-edit-client-raw").html(data);
+            // Show the modal
+            $("#editClientModalRaw").modal("show");
+        }).fail(function () {
+            alert("Error loading data for the client.");
+        }).always(function() {
+            // Show the modal
+            $("#editClientModalRaw").modal("show");
+        });
+    }
 });
 
-function showModalWithData(clientName) {
-    // Make an AJAX request to get the data for the client
-    $.post("/certificates/render_modal", {"client-name": clientName}, function (data) {
-        // Update the modal content with the retrieved data
-        $("#modal-edit-client").html(data);
-        // Show the modal
-        $("#editClientModal").modal("show");
-      }).fail(function () {
-        alert("Error loading data for the client.");
-      }).always(function() {
-        // Show the modal
-        $("#editClientModal").modal("show");
+// FUNCTION EDIT CLIENT DETAILS POPUP FORM WITH ROUTES
+$(function() {
+    $(document).ready(function () {
+        $("button#openModalEditClientDetails").on("click", function () {
+            var clientName = $(this).data("client-name");
+            showModalWithDataClientDetials(clientName);
+        });
+    }); $()
+
+    function showModalWithDataClientDetials(clientName) {
+        // Make an AJAX request to get the data for the client
+        $.post("/clients/render_modal", {"client-name": clientName}, function (data) {
+            // Update the modal content with the retrieved data
+            $("#modal-edit-client-details").html(data);
+            // Show the modal
+            $("#editClientDetailsModal").modal("show");
+        }).fail(function () {
+            alert("Error loading data for the client.");
+        }).always(function() {
+            // Show the modal
+            $("#editClienDetailstModal").modal("show");
+        });
+    }
+});
+
+$(document).ready(function() {
+    // Use $(document).on() to bind the click event to dynamically added elements
+    $(document).on('click', '[data-popup-target]', function() {
+        var targetId = $(this).data('popup-target');
+        var targetPopup = $('#' + targetId);
+
+        // Show the popup
+        targetPopup.show();
+
+        // Hide the popup after 5 seconds
+        setTimeout(function() {
+            targetPopup.hide();
+        }, 5000);
     });
-}
-})
-
-    $(document).ready(function() {
-        // Use $(document).on() to bind the click event to dynamically added elements
-        $(document).on('click', '[data-popup-target]', function() {
-            var targetId = $(this).data('popup-target');
-            var targetPopup = $('#' + targetId);
-
-            // Show the popup
-            targetPopup.show();
-
-            // Hide the popup after 5 seconds
-            setTimeout(function() {
-                targetPopup.hide();
-            }, 5000);
-        });
 
 
-        // Copy the content to the clipboard when the Copy button is clicked
-        $('.copy-btn').on('click', function () {
-            var $popupContent = $(this).siblings('.param-name');
-            var content = $popupContent.map(function () {
-                return $(this).text() + $(this).next().text() + '\n';
-            }).get().join('');
+    // Copy the content to the clipboard when the Copy button is clicked
+    $('.copy-btn').on('click', function () {
+        var $popupContent = $(this).siblings('.param-name');
+        var content = $popupContent.map(function () {
+            return $(this).text() + $(this).next().text() + '\n';
+        }).get().join('');
 
-            // Create a temporary textarea to copy the content to the clipboard
-            var $tempTextArea = $('<textarea>').val(content).css('position', 'absolute').css('left', '-9999px');
-            $('body').append($tempTextArea);
-            $tempTextArea.select();
-            document.execCommand('copy');
-            $tempTextArea.remove();
-        });
-  });
+        // Create a temporary textarea to copy the content to the clipboard
+        var $tempTextArea = $('<textarea>').val(content).css('position', 'absolute').css('left', '-9999px');
+        $('body').append($tempTextArea);
+        $tempTextArea.select();
+        document.execCommand('copy');
+        $tempTextArea.remove();
+    });
 
+});
 
 function createEditor(name, size, theme, mode, readonly) {
     // find the textarea

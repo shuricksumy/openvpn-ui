@@ -178,11 +178,11 @@
                   <!-- 7 sell -->
                   {{if eq .EntryType "V"}}
                     <td class="textcenter">
-                      <button  id="openModalEditClient" data-target="#editClientModal" data-client-name="{{ .Details.CN }}" class="btn btn-primary btn-sm edit-button bg-light-blue-gradient btn80" title="Edit">Edit</button>
+                      <button  id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .Details.CN }}" class="btn btn-primary btn-sm edit-button bg-light-blue-gradient btn80" title="Edit">Edit</button>
                     </td>
                   {{else}}
                     <td class="textcenter">
-                      <button  id="openModalEditClient" data-target="#editClientModal" data-client-name="{{ .Details.CN }}" class="btn btn-default btn-sm edit-button btn80" title="Edit">Edit</button>
+                      <button  id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .Details.CN }}" class="btn btn-default btn-sm edit-button btn80" title="Edit">Edit</button>
                     </td>
                   {{end}}
 
@@ -265,6 +265,6 @@
 </div>
 
 <!-- Add an empty modal container -->
-<div id="modal-edit-client"></div>
+<div id="modal-edit-client-raw"></div>
 
 {{end}}

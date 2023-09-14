@@ -14,7 +14,7 @@
 
       </div>
       <!-- /.box-header -->
-
+      {{template "common/alert.html" .}}
       <div class="box-body">
         <!--if .ovstatus -->
         <div class="table-responsive">
@@ -30,7 +30,7 @@
               <!-- <th>Details</th> -->
               <th class="textcenter" style="width:15%">Router Subnet</th>
               <th class="textcenter" style="width:15%">Route List</th>
-              <th class="textcenter" style="width:5%">Action</th>
+              <th class="textcenter" style="width:5%">Details</th>
               <th></th>
             </tr>
             </thead>
@@ -77,8 +77,8 @@
                   </td>
 
                   <!-- 8 sell -->
-                  <td>
-                    {{ .CSRFToken }}
+                  <td class="textcenter">
+                      <button  id="openModalEditClientDetails" data-target="#editClientDetailsModal" data-client-name="{{ .ClientName }}" class="btn btn-primary btn-sm edit-button bg-light-blue-gradient btn80" title="Edit">Edit</button>
                   </td>
 
                   </tr>
@@ -145,6 +145,6 @@
 </div>
 
 <!-- Add an empty modal container -->
-<div id="modal-edit-client"></div>
+<div id="modal-edit-client-details"></div>
 
 {{end}}

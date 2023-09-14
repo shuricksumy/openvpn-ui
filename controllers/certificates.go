@@ -169,7 +169,7 @@ func (c *CertificatesController) RenderModal() {
 	c.Data["ClientData"] = string(data)
 
 	c.Layout = ""
-	c.TplName = "modal.html"
+	c.TplName = "modalClientRaw.html"
 	//c.Render()
 	c.showCerts()
 }

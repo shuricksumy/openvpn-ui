@@ -2,6 +2,7 @@ package lib
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -11,29 +12,16 @@ import (
 
 // Structure for using on WEB
 type ClientDetails struct {
-	ClientName          string
-	StaticIP            string
-	IsRouteDefault      bool
-	IsRouter            bool
-	RouterSubnet        string
-	RouterMask          string
-	Description         string
-	RouteList           []string
-	RouteListUnselected []string
-	CSRFToken           string
-}
-
-// Structure to read/write as JSON file
-type ClientDetailsJSON struct {
-	ClientName     string   `json:"ClientName"`
-	StaticIP       string   `json:"StaticIP"`
-	IsRouteDefault bool     `json:"IsRouteDefault"`
-	IsRouter       bool     `json:"IsRouter"`
-	RouterSubnet   string   `json:"RouterSubnet"`
-	RouterMask     string   `json:"RouterMask"`
-	Description    string   `json:"Description"`
-	RouteList      []string `json:"RouteList"`
-	CSRFToken      string   `json:"CSRFToken"`
+	ClientName          string   `form:"client_name" 		 json:"ClientName"`
+	StaticIP            string   `form:"static_ip" 			 json:"StaticIP"`
+	IsRouteDefault      bool     `form:"is_route_default" 	 json:"IsRouteDefault"`
+	IsRouter            bool     `form:"is_router" 			 json:"IsRouter"`
+	RouterSubnet        string   `form:"router_subnet"		 json:"RouterSubnet"`
+	RouterMask          string   `form:"router_mask" 		 json:"RouterMask"`
+	Description         string   `form:"description" 		 json:"Description"`
+	RouteList           []string `form:"route_list_selected"  json:"RouteListSelected"`
+	RouteListUnselected []string `form:"route_list_unselected" json:"RouteListUnSelected"`
+	CSRFToken           string   `form:"csrftoken" 			 json:"CSRFToken"`
 }
 
 // Structure to read easy-rsa index file
@@ -90,33 +78,13 @@ func ReadJSONClientsDetailsFile(path string) ([]*ClientDetails, error) {
 
 	clientsDetails := make([]*ClientDetails, 0)
 
-	text, err := os.ReadFile(path)
+	// Open our jsonFile
+	byteValue, err := os.ReadFile(path)
 	if err != nil {
 		return clientsDetails, err
 	}
 
-	lines := strings.Split(trim(string(text)), "\n")
-
-	for _, line := range lines {
-		var clientJson ClientDetailsJSON = parseJSON(line)
-
-		c := &ClientDetails{
-			ClientName:          clientJson.ClientName,
-			StaticIP:            clientJson.StaticIP,
-			IsRouteDefault:      clientJson.IsRouteDefault, //bool
-			IsRouter:            clientJson.IsRouter,       //bool
-			RouterSubnet:        clientJson.RouterSubnet,
-			RouterMask:          clientJson.RouterMask,
-			Description:         clientJson.Description,
-			RouteList:           clientJson.RouteList, //list
-			RouteListUnselected: []string{},           //empty - filled up for html only
-			CSRFToken:           clientJson.CSRFToken,
-		}
-		// for i, cc := range clientJson.RouteList {
-		// 	logs.Error(i, "ROUTER: ", cc)
-		// }
-		clientsDetails = append(clientsDetails, c)
-	}
+	json.Unmarshal(byteValue, &clientsDetails)
 
 	return clientsDetails, nil
 }
@@ -195,9 +163,9 @@ func parseClientIP(d string) string {
 }
 
 // Parse JSON file
-func parseJSON(jline string) ClientDetailsJSON {
+func parseJSON(jline string) ClientDetails {
 	jbyte := []byte(jline)
-	var clientsDetails ClientDetailsJSON
+	var clientsDetails ClientDetails
 	json.Unmarshal(jbyte, &clientsDetails)
 	return clientsDetails
 }
@@ -260,7 +228,7 @@ func CombineSelectedRouters(selected []string, all []string) []string {
 	return resultRoute
 }
 
-//Populate unselected routers only by valid values
+// Populate unselected routers only by valid values
 func CombineUnSelectedRouters(selected []string, all []string, clientName string) []string {
 	var resultNewRoute []string
 	for _, route := range all {
@@ -289,4 +257,44 @@ func UpdateRoutersToActual(clients []*ClientDetails, allRouters []string) []*Cli
 		client.RouteListUnselected = nonSelectedRouters
 	}
 	return clients
+}
+
+// Get Client from list
+func GetClientFromStructure(clients []*ClientDetails, clientName string) (ClientDetails, error) {
+	for _, client := range clients {
+		if client.ClientName == clientName {
+			return *client, nil
+		}
+	}
+	var emptyClient ClientDetails
+	return emptyClient, errors.New("Not Found client")
+}
+
+// compile new client from web
+func UpdateClientsDetails(clientsDetails []*ClientDetails, client ClientDetails) ([]*ClientDetails, error) {
+	newClientsDetails := make([]*ClientDetails, 0)
+
+	for _, c := range clientsDetails {
+		if c.ClientName == client.ClientName {
+			if c.CSRFToken == client.CSRFToken {
+				client.CSRFToken = GenRandomString(32)
+				newClientsDetails = append(newClientsDetails, &client)
+				continue
+			} else {
+				return newClientsDetails, errors.New("FILE WAS MODIFIED DURING YOUR OPPERATION - TRY AGAIN")
+			}
+		}
+		c.CSRFToken = GenRandomString(32)
+		newClientsDetails = append(newClientsDetails, c)
+	}
+
+	return newClientsDetails, nil
+}
+
+func SaveJsonFile(clientDetails []*ClientDetails, pathJson string) error {
+	file, err := json.MarshalIndent(clientDetails, "", " ")
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(pathJson, file, 0644)
 }

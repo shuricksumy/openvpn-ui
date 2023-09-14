@@ -1,0 +1,88 @@
+<!-- views/modal.tpl -->
+
+<!-- Initialize the plugin: -->
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#route_list_selected').multiselect({
+            buttonWidth: '400px',
+            includeSelectAllOption: true,
+            enableFiltering: true,
+            selectedClass: "active multiselect-active-item-fallback",
+        });
+    });
+    $(document).ready(function() {
+        $('#is_route_default').multiselect();
+    });
+    $(document).ready(function() {
+        $('#is_router').multiselect();
+    });
+</script>
+
+<div class="modal fade" id="editClientDetailsModal" role="dialog">
+    <div class="modal-dialog custom-modal-dialog"> <!-- Apply custom CSS style for the modal width -->
+        <div class="modal-content box box-primary">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Edit config for user<font color="#dd4b39" face="Verdana" size="+1"><strong> {{.ClientName}} </strong></font></h4>
+            </div>
+            <div class="modal-body">
+                <form id="editForm" action="/clients/save_details_data" method="post">
+                    <div class="form-group">
+                        <input type="hidden" name="client_name" id="client_name" value="{{.ClientName}}">
+                        <input name="static_ip" value="{{.StaticIP}}">
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row">
+                            <label for="is_route_default" class="col-sm-4 col-form-label">Set VPN network as defult route:</label>
+                            <select name="is_route_default" id="is_route_default">
+                                {{if .IsRouteDefault}}
+                                    <option value="true" selected="selected">True</option>
+                                    <option value="false" >False</option>
+                                {{else}}
+                                    <option value="true">True</option>
+                                    <option value="false" selected="selected">False</option>
+                                {{end}}
+                            </select>
+                        </div>
+                        <div class="row">
+                            <label for="is_router" class="col-sm-4 col-form-label">Is this client Router:</label>
+                            <select name="is_router" id="is_router">
+                                {{if .IsRouter}}
+                                    <option value="true" selected="selected">True</option>
+                                    <option value="false" >False</option>
+                                {{else}}
+                                    <option value="true">True</option>
+                                    <option value="false" selected="selected">False</option>
+                                {{end}}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <input name="router_subnet" value="{{.RouterSubnet}}">
+                        <input name="router_mask" value="{{.RouterMask}}">
+                        <input name="description" value="{{.Description}}">
+                        <input name="csrftoken" value="{{.CSRFToken}}">
+                    </div>    
+
+                    <div class="form-group">
+                        <select name="route_list_selected" id="route_list_selected" multiple="multiple">
+                            {{range  $val := .RouteListSelected}}
+                                <option value="{{ $val }}" selected="selected">{{ $val }}</option>
+                            {{end}}
+                            {{range  $val := .RouteListUnselected}}
+                                <option value="{{ $val }}">{{ $val }}</option>
+                            {{end}}
+                        </select>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn80" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary bg-light-blue-gradient btn80">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
