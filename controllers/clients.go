@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"path/filepath"
 	"strings"
 
 	"github.com/beego/beego/v2/core/logs"
@@ -112,7 +113,8 @@ func (c *ClientsController) SaveClientDetailsData() {
 
 	if !wasError {
 		// Redirect to the main page after successful file save.
-		flash.Success("Settings are saved for " + string(client.ClientName) + " to file.")
+		flash.Success("Settings are saved for " + string(client.ClientName) + " to file. " +
+			"Do not forget to [Apply Configuration] for all clients at the end.")
 		flash.Store(&c.Controller)
 	}
 
@@ -148,13 +150,37 @@ func (c *ClientsController) UpdateFiles() {
 	c.showClients()
 }
 
-// @router /certificates/restart [get]
+// @router /clients/restart [get]
 func (c *ClientsController) Restart() {
 	lib.Restart()
 	c.Redirect(c.URLFor("ClientsController.Get"), 302)
 	// return
 }
 
+// @router /clients/save_client_data [post]
+func (c *ClientsController) SaveClientRawData() {
+	flash := web.NewFlash()
+	clientName := c.GetString("client_name")
+	clientData := c.GetString("client_data")
+
+	// Save the data to the client-name.txt file.
+	destPathClientConfig := filepath.Join(state.GlobalCfg.OVConfigPath, "ccd", clientName)
+	err := lib.RawSaveToFile(destPathClientConfig, clientData)
+	if err != nil {
+		logs.Error(err)
+		flash.Error("Cannot save " + clientName + " file !")
+		flash.Store(&c.Controller)
+		return
+	}
+
+	// Redirect to the main page after successful file save.
+	flash.Success("Settings are saved for " + clientName + " to file.")
+	flash.Store(&c.Controller)
+
+	c.TplName = "clients.html"
+	c.showClients()
+
+}
 func trim(s string) string {
 	return strings.Trim(strings.Trim(s, "\r\n"), "\n")
 }

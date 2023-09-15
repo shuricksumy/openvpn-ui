@@ -3,7 +3,6 @@ package lib
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -149,7 +148,7 @@ func parseClientName(d string) string {
 			case "CN":
 				return fields[1]
 			default:
-				logs.Warn(fmt.Sprintf("Undefined entry: %s", line))
+				// logs.Warn(fmt.Sprintf("Undefined entry: %s", line))
 			}
 		}
 	}
@@ -166,7 +165,7 @@ func parseClientIP(d string) string {
 			case "LocalIP":
 				return fields[1]
 			default:
-				logs.Warn(fmt.Sprintf("Undefined entry: %s", line))
+				// logs.Warn(fmt.Sprintf("Undefined entry: %s", line))
 			}
 		}
 	}

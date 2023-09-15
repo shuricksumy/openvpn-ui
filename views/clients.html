@@ -31,6 +31,7 @@
               <th class="textcenter" style="width:15%">Router Subnet</th>
               <th class="textcenter" style="width:15%">Route List</th>
               <th class="textcenter" style="width:5%">Details</th>
+              <th class="textcenter" style="width:5%">File</th>
               <th></th>
             </tr>
             </thead>
@@ -80,7 +81,9 @@
                   <td class="textcenter">
                       <button  id="openModalEditClientDetails" data-target="#editClientDetailsModal" data-client-name="{{ .ClientName }}" class="btn btn-primary btn-sm edit-button bg-light-blue-gradient btn80" title="Edit">Edit</button>
                   </td>
-
+                  <td class="textcenter">
+                    <button  id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .ClientName }}" class="btn btn-primary btn-sm edit-button bg-light-blue-gradient btn80" title="Edit">Edit</button>
+                  </td>
                   </tr>
 
             {{end}}
@@ -176,5 +179,6 @@
 
 <!-- Add an empty modal container -->
 <div id="modal-edit-client-details"></div>
+<div id="modal-edit-client-raw"></div>
 
 {{end}}

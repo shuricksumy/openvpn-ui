@@ -76,13 +76,13 @@
             <tr>
               <th style="width:15%">Name</th>
               <th style="width:5%">State</th>
-              <th style="width:35%">Description</th>
+              <th style="width:40%">Description</th>
               <th style="width:10%">Expiration</th>
               <!-- <th>Revocation</th> -->
               <th style="width:20%">Serial</th>
               <!-- <th>Details</th> -->
               <th class="textcenter" style="width:5%">Actions</th>
-              <th class="textcenter" style="width:5%">File</th>
+
               <th class="textcenter" style="width:5%">Details</th>
               <th></th>
             </tr>
@@ -163,11 +163,14 @@
                    <!-- 6 sell -->
                   {{if eq .EntryType "V"}}
                     <td class="textcenter">
-                      <a href="{{urlfor "CertificatesController.Revoke" ":key" .Details.Name}}" data-title="Disable access for user?" class="btn btn-warning btn-sm bg-yellow-gradient btn80" title="Revoke">Revoke</a>
+                      <a href="{{urlfor "CertificatesController.Revoke" ":key" .Details.CN}}" data-title="Disable access for user?" class="btn btn-warning btn-sm bg-yellow-gradient btn80" title="Revoke">Revoke</a>
+                      <!-- <a href="{{urlfor "CertificatesController.Renew" ":key" .Details.CN ":serial" .Serial}}" data-title="Restore certificates?" class="btn btn-warning btn-sm bg-yellow-gradient btn80" title="Burn">Renew</a> -->
                     </td>
                   {{else if eq .EntryType "R"}}
                     <td class="textcenter">
                       <a href="{{urlfor "CertificatesController.Burn" ":key" .Details.CN ":serial" .Serial}}" data-title="Remove certificates ?" class="btn btn-danger btn-sm bg-red-gradient btn80" title="Burn">Remove</a>
+                      <a href="{{urlfor "CertificatesController.UnRevoke" ":key" .Details.CN}}" data-title="Restore access for user?" class="btn btn-warning btn-sm bg-yellow-gradient btn80" title="Revoke">UNRevoke</a>
+                      <!-- <a href="{{urlfor "CertificatesController.Renew" ":key" .Details.CN ":serial" .Serial}}" data-title="Restore certificates?" class="btn btn-warning btn-sm bg-yellow-gradient btn80" title="Burn">Renew</a> -->
                     </td>
                   {{else}}
                     <td>
@@ -179,15 +182,9 @@
                   <!-- 7 sell -->
                   {{if eq .EntryType "V"}}
                     <td class="textcenter">
-                      <button  id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .Details.CN }}" class="btn btn-primary btn-sm edit-button bg-light-blue-gradient btn80" title="Edit">Edit</button>
-                    </td>
-                    <td class="textcenter">
                       <button  id="openModalEditClientDetails" data-target="#editClientDetailsModal" data-client-name="{{ .Details.CN }}" class="btn btn-primary btn-sm edit-button bg-light-blue-gradient btn80" title="Edit">Edit</button>
                     </td>
                   {{else}}
-                    <td class="textcenter">
-                      <button  id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .Details.CN }}" class="btn btn-default btn-sm edit-button btn80" title="Edit">Edit</button>
-                    </td>
                     <td class="textcenter">
                       <button  id="openModalEditClientDetails" data-target="#editClientDetailsModal" data-client-name="{{ .Details.CN }}" class="btn btn-default btn-sm edit-button btn80" title="Edit">Edit</button>
                     </td>
@@ -198,6 +195,7 @@
                   <div id="popup-{{ .Details.CN }}" class="modal fade popupinfo" role="dialog">
                       <div class="box box-primary bodypop">
                              <span class="param-name">Name:</span><span class="param-value"> {{ .Details.CN }}</span><br>
+                             <span class="param-name">Description:</span><span class="param-value"> {{ .Details.Description }}</span><br>
                              <span class="param-name">Type:</span><span class="param-value"> {{ .EntryType }}</span><br>
                              <span class="param-name">Status:</span><span class="param-value">{{if eq .EntryType "V"}}  Active {{else if eq .EntryType "R"}} Revoked {{else}} Unknown {{end}}</span><br>
                              <span class="param-name">Serial:</span><span class="param-value"> {{ .Serial }}</span><br>
@@ -272,7 +270,6 @@
 </div>
 
 <!-- Add an empty modal container -->
-<div id="modal-edit-client-raw"></div>
 <div id="modal-edit-client-details"></div>
 
 

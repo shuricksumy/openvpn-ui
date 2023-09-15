@@ -131,6 +131,22 @@ func (c *CertificatesController) Revoke() {
 	c.showCerts()
 }
 
+// @router /certificates/unrevoke/:key [get]
+func (c *CertificatesController) UnRevoke() {
+	c.TplName = "certificates.html"
+	flash := web.NewFlash()
+	name := c.GetString(":key")
+	if err := lib.UnRevokeCertificate(name); err != nil {
+		logs.Error(err)
+		flash.Error(err.Error())
+		flash.Store(&c.Controller)
+	} else {
+		flash.Warning("Success! Certificate for the name \"" + name + "\" has been UNrevoked")
+		flash.Store(&c.Controller)
+	}
+	c.showCerts()
+}
+
 // @router /certificates/restart [get]
 func (c *CertificatesController) Restart() {
 	lib.Restart()
@@ -179,29 +195,21 @@ func (c *CertificatesController) RenderModal() {
 	c.showCerts()
 }
 
-// @router /certificates/save_client_data [post]
-func (c *CertificatesController) SaveClientData() {
-	flash := web.NewFlash()
-	clientName := c.GetString("client_name")
-	clientData := c.GetString("client_data")
-
-	// Save the data to the client-name.txt file.
-	destPathClientConfig := filepath.Join(state.GlobalCfg.OVConfigPath, "ccd", clientName)
-	err := lib.RawSaveToFile(destPathClientConfig, clientData)
-	if err != nil {
-		logs.Error(err)
-		flash.Error("Cannot save " + clientName + " file !")
-		flash.Store(&c.Controller)
-		return
-	}
-
-	// Redirect to the main page after successful file save.
-	flash.Success("Settings are saved for " + clientName + " to file.")
-	flash.Store(&c.Controller)
-
+// @router /certificates/revoke/:key [get]
+func (c *CertificatesController) Renew() {
 	c.TplName = "certificates.html"
+	flash := web.NewFlash()
+	name := c.GetString(":key")
+	serial := c.GetString(":serial")
+	if err := lib.RenewCertificate(name, serial); err != nil {
+		logs.Error(err)
+		flash.Error(err.Error())
+		flash.Store(&c.Controller)
+	} else {
+		flash.Success("Success! Certificate for the name \"" + name + "\"  and \"" + serial + "\" has been renewed")
+		flash.Store(&c.Controller)
+	}
 	c.showCerts()
-
 }
 
 func validateCertParams(cert NewCertParams) map[string]map[string]string {

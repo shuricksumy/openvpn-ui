@@ -724,7 +724,7 @@ function installOpenVPN() {
 
 	# Install the latest version of easy-rsa from source, if not already installed.
 	if [[ ! -f ${OVPN_PATH}/easy-rsa/SERVER_NAME_GENERATED ]]; then
-		local version="3.1.5"
+		local version="3.1.6"
 		local easyrsa_file_name="EasyRSA-${version}.tgz"
 
 		if [[ ! -f ~/${easyrsa_file_name} ]]; then
@@ -1348,6 +1348,55 @@ function revokeClient() {
 	echo "Certificate for client $CLIENT revoked."
 }
 
+function unRevokeClient() {
+	NUMBEROFCLIENTS=$(tail -n +2 ${OVPN_PATH}/easy-rsa/pki/index.txt | grep -c "^R")
+	if [[ $NUMBEROFCLIENTS == '0' ]]; then
+		echo ""
+		echo "You have no existing clients!"
+		exit 1
+	fi
+
+	echo ""
+	echo "Select the existing client certificate you want to revoke"
+	tail -n +2 ${OVPN_PATH}/easy-rsa/pki/index.txt | grep "^R" | cut -d '=' -f 2 | nl -s ') '
+	until [[ $CLIENTNUMBER -ge 1 && $CLIENTNUMBER -le $NUMBEROFCLIENTS ]]; do
+		if [[ $CLIENTNUMBER == '1' ]]; then
+			read -rp "Select one client [1]: " CLIENTNUMBER
+		else
+			read -rp "Select one client [1-$NUMBEROFCLIENTS]: " CLIENTNUMBER
+		fi
+	done
+	CLIENT=$(tail -n +2 ${OVPN_PATH}/easy-rsa/pki/index.txt   | grep "^R" | cut -d '=' -f 2 | sed -n "$CLIENTNUMBER"p | cut -d "/" -f 1)
+	exp_time=$(tail -n +2 ${OVPN_PATH}/easy-rsa/pki/index.txt | grep "^R" | awk "NR==$CLIENTNUMBER" | awk '{print $2}')
+	rev_time=$(tail -n +2 ${OVPN_PATH}/easy-rsa/pki/index.txt | grep "^R" | awk "NR==$CLIENTNUMBER" | awk '{print $3}')
+	serial=$(tail -n +2 ${OVPN_PATH}/easy-rsa/pki/index.txt   | grep "^R" | awk "NR==$CLIENTNUMBER" | awk '{print $4}')
+	data=$(tail -n +2 ${OVPN_PATH}/easy-rsa/pki/index.txt     | grep "^R" | awk "NR==$CLIENTNUMBER" | awk '{print $5}')
+	details=$(tail -n +2 ${OVPN_PATH}/easy-rsa/pki/index.txt  | grep "^R" | awk "NR==$CLIENTNUMBER" | awk '{print $6}')
+
+	## TODO REMOVE R->V and revoke time
+	sed -i "/${serial}/d" ${OVPN_PATH}/easy-rsa/pki/index.txt
+    echo -e "V\t$exp_time\t\t$serial\t$data\t$details" >> ${OVPN_PATH}/easy-rsa/pki/index.txt
+	
+	## DO MAGIC
+	cd ${OVPN_PATH}/easy-rsa/ || return
+
+	EASYRSA_CRL_DAYS=3650 ./easyrsa gen-crl
+	rm -f ${OVPN_PATH}/crl.pem
+	cp ${OVPN_PATH}/easy-rsa/pki/crl.pem ${OVPN_PATH}/crl.pem
+	chmod 644 ${OVPN_PATH}/crl.pem
+
+	cp ${OVPN_PATH}/easy-rsa/pki/index.txt{,.bk}
+
+	cp  ${OVPN_PATH}/easy-rsa/pki/revoked/certs_by_serial/$serial.crt   ${OVPN_PATH}/easy-rsa/pki/issued/$CLIENT.crt
+    mv  ${OVPN_PATH}/easy-rsa/pki/revoked/certs_by_serial/$serial.crt   ${OVPN_PATH}/easy-rsa/pki/certs_by_serial/$serial.pem
+    mv  ${OVPN_PATH}/easy-rsa/pki/revoked/private_by_serial/$serial.key ${OVPN_PATH}/easy-rsa/pki/private/$CLIENT.key
+	mv  ${OVPN_PATH}/easy-rsa/pki/revoked/reqs_by_serial/$serial.req    ${OVPN_PATH}/easy-rsa/pki/reqs/$CLIENT.req
+
+	echo ""
+	echo "Certificate for client $CLIENT unRevoked."
+}
+
+
 function removeUnbound() {
 	# Remove OpenVPN-related config
 	sed -i '/include: \/etc\/unbound\/openvpn.conf/d' /etc/unbound/unbound.conf
@@ -1469,10 +1518,11 @@ function manageMenu() {
 	echo "What do you want to do?"
 	echo "   1) Add a new user"
 	echo "   2) Revoke existing user"
-	echo "   3) Remove OpenVPN"
-	echo "   4) Exit"
-	until [[ $MENU_OPTION =~ ^[1-4]$ ]]; do
-		read -rp "Select an option [1-4]: " MENU_OPTION
+	echo "   3) UNrevoke existing user"
+	echo "   4) Remove OpenVPN"
+	echo "   5) Exit"
+	until [[ $MENU_OPTION =~ ^[1-5]$ ]]; do
+		read -rp "Select an option [1-5]: " MENU_OPTION
 	done
 
 	case $MENU_OPTION in
@@ -1483,9 +1533,12 @@ function manageMenu() {
 		revokeClient
 		;;
 	3)
-		removeOpenVPN
+		unRevokeClient
 		;;
 	4)
+		removeOpenVPN
+		;;
+	5)
 		exit 0
 		;;
 	esac

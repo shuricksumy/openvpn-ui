@@ -194,7 +194,7 @@ func parseDetails(d string) *Details {
 			case "LocalIP":
 				details.LocalIP = fields[1]
 			default:
-				logs.Warn(fmt.Sprintf("Undefined entry: %s", line))
+				// logs.Debug(fmt.Sprintf("Undefined entry: %s", line))
 			}
 		}
 		if details.CN != "" {
@@ -297,11 +297,43 @@ func RevokeCertificate(name string) error {
 	return nil
 }
 
+func UnRevokeCertificate(name string) error {
+	cmd := exec.Command("/bin/bash", "-c",
+		fmt.Sprintf(
+			"cd /opt/scripts/ && "+
+				"export KEY_NAME=%s &&"+
+				"./unRevoke.sh %s", name, name))
+	cmd.Dir = state.GlobalCfg.OVConfigPath
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		logs.Debug(string(output))
+		logs.Error(err)
+		return err
+	}
+	return nil
+}
+
 func BurnCertificate(CN string, serial string) error {
 	cmd := exec.Command("/bin/bash", "-c",
 		fmt.Sprintf(
 			"cd /opt/scripts/ && "+
 				"./rmcert.sh %s %s", CN, serial))
+	cmd.Dir = state.GlobalCfg.OVConfigPath
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		logs.Debug(string(output))
+		logs.Error(err)
+		return err
+	}
+	return nil
+}
+
+func RenewCertificate(name string, serial string) error {
+	cmd := exec.Command("/bin/bash", "-c",
+		fmt.Sprintf(
+			"cd /opt/scripts/ && "+
+				"export KEY_NAME=%s &&"+
+				"./renew.sh %s %s", name, name, serial))
 	cmd.Dir = state.GlobalCfg.OVConfigPath
 	output, err := cmd.CombinedOutput()
 	if err != nil {
