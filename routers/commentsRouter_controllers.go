@@ -157,4 +157,13 @@ func init() {
 				Router:           `/clients/updatefiles`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
+
+	web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"] =
+		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"],
+			web.ControllerComments{
+				Method:           "Restart",
+				Router:           `/clients/restart`,
+				AllowHTTPMethods: []string{"get"},
+				Params:           nil})
+
 }

@@ -6,6 +6,9 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
+	"reflect"
+	"sort"
 	"strings"
 
 	"github.com/beego/beego/v2/core/logs"
@@ -25,6 +28,12 @@ type ClientDetails struct {
 	RouteListUnselected []string `form:"route_list_unselected" json:"RouteListUnSelected"`
 	CSRFToken           string   `form:"csrftoken" 			 json:"CSRFToken"`
 }
+
+type NameSorterClientDetails []*ClientDetails
+
+func (a NameSorterClientDetails) Len() int           { return len(a) }
+func (a NameSorterClientDetails) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a NameSorterClientDetails) Less(i, j int) bool { return a[i].ClientName < a[j].ClientName }
 
 // Structure to read easy-rsa index file
 type Client struct {
@@ -293,7 +302,52 @@ func UpdateClientsDetails(clientsDetails []*ClientDetails, client ClientDetails)
 	return newClientsDetails, nil
 }
 
+func GetClientsDetailsFromFile() ([]*ClientDetails, error) {
+	//get clientsDetails from file
+	pathIndex := filepath.Join(state.GlobalCfg.OVConfigPath, "easy-rsa/pki/index.txt")
+	pathJson := filepath.Join(state.GlobalCfg.OVConfigPath, "clientDetails.json")
+	clientsDetails, err := GetClientsDetails(pathIndex, pathJson)
+	if err != nil {
+		return clientsDetails, err
+	}
+
+	sort.Sort(NameSorterClientDetails(clientsDetails))
+	return clientsDetails, nil
+}
+
+func AddClientToJsonFile(client ClientDetails) error {
+	wasError := false
+	//get clientsDetails from file
+	clientsDetails, err_read := GetClientsDetailsFromFile()
+	if err_read != nil {
+		wasError = true
+		logs.Error(err_read)
+		logs.Error("ERROR WHILE READING CLIENTS FROM FILE !")
+	}
+
+	newClientDetails, err_upd := UpdateClientsDetails(clientsDetails, client)
+	if err_upd != nil {
+		wasError = true
+		logs.Error(err_upd)
+		logs.Error("FILE WAS MODIFIED DURING YOU UPDATE - TRY AGAIN")
+	}
+
+	if !wasError {
+		pathJson := filepath.Join(state.GlobalCfg.OVConfigPath, "clientDetails.json")
+		err_save := SaveJsonFile(newClientDetails, pathJson)
+		if err_save != nil {
+			logs.Error(err_save)
+			logs.Error("FILE WAS NOT SAVE")
+			return errors.New("FILE WAS NOT SAVE")
+		}
+		return nil
+	}
+
+	return errors.New("Something goes wrong :(")
+}
+
 func SaveJsonFile(clientDetails []*ClientDetails, pathJson string) error {
+	sort.Sort(NameSorterClientDetails(clientDetails))
 	file, err := json.MarshalIndent(clientDetails, "", " ")
 	if err != nil {
 		return err
@@ -302,9 +356,7 @@ func SaveJsonFile(clientDetails []*ClientDetails, pathJson string) error {
 }
 
 func GenerateClientsFileToFS() error {
-	cmd := exec.Command("/bin/bash", "-c",
-		"cd /opt/scripts/ && export OVDIR='/etc/openvpn' && export USERDiR=\"${OVDIR}/ccd\" && "+
-			"export JSON='clientDetails.json' && ./createClientFilesFromJSON.sh")
+	cmd := exec.Command("/bin/bash", "-c", " cd /opt/scripts/ && ./createClientFilesFromJSON.sh")
 	cmd.Dir = state.GlobalCfg.OVConfigPath
 	output, err := cmd.CombinedOutput()
 	if err != nil {
@@ -313,4 +365,10 @@ func GenerateClientsFileToFS() error {
 		return err
 	}
 	return nil
+}
+
+func GetClientDetailsFieldValue(clientName string, fieldName string) string {
+	allClients, _ := GetClientsDetailsFromFile()
+	client, _ := GetClientFromStructure(allClients, clientName)
+	return reflect.ValueOf(&client).Elem().FieldByName(fieldName).String()
 }

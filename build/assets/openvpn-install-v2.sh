@@ -1216,19 +1216,13 @@ function newClient() {
 	else
 		cd ${OVPN_PATH}/easy-rsa/ || return
 
-		if [[ -z ${CLIENT_IP} ]]; then
-			CLIENT_IP=random
-		fi
-
 		case $PASS in
 		1)
 			./easyrsa --batch build-client-full "$CLIENT" nopass
-			sed -i'.bak' "$ s/$/\/name=${CLIENT}\/LocalIP=${CLIENT_IP}/" ${OVPN_PATH}/easy-rsa/pki/index.txt
 			;;
 		2)
 			echo "⚠️ You will be asked for the client password below ⚠️"
 			./easyrsa --batch --passout=pass:${CL_PASS} build-client-full "$CLIENT"
-			sed -i'.bak' "$ s/$/\/name=${CLIENT}\/LocalIP=${CLIENT_IP}/" ${OVPN_PATH}/easy-rsa/pki/index.txt
 			;;
 		esac
 		echo "Client $CLIENT added."

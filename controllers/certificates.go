@@ -16,9 +16,9 @@ import (
 )
 
 type NewCertParams struct {
-	Name       string `form:"Name" valid:"Required;"`
-	Staticip   string `form:"staticip"`
-	Passphrase string `form:"passphrase"`
+	Name        string `form:"Name" valid:"Required;"`
+	Description string `form:"description"`
+	Passphrase  string `form:"passphrase"`
 }
 
 type CertificatesController struct {
@@ -80,6 +80,7 @@ func (c *CertificatesController) showCerts() {
 		flash.Store(&c.Controller)
 
 	}
+	logs.Error(">>>>>>>>>>>>>>>>>>>>>>>>>>>", lib.GetClientDetailsFieldValue("alex", "Description"))
 	lib.Dump(certs)
 	c.Data["certificates"] = &certs
 }
@@ -97,11 +98,15 @@ func (c *CertificatesController) Post() {
 		if vMap := validateCertParams(cParams); vMap != nil {
 			c.Data["validation"] = vMap
 		} else {
-			if err := lib.CreateCertificate(cParams.Name, cParams.Staticip, cParams.Passphrase); err != nil {
+			if err := lib.CreateCertificate(cParams.Name, cParams.Passphrase); err != nil {
 				logs.Error(err)
 				flash.Error(err.Error())
 				flash.Store(&c.Controller)
 			} else {
+				err_save_json := AddDescriptionToFile(cParams.Name, cParams.Description)
+				if err_save_json != nil {
+					flash.Warning("Certificate for the name \"" + cParams.Name + "\" has been created. But Description was not saved")
+				}
 				flash.Success("Success! Certificate for the name \"" + cParams.Name + "\" has been created")
 				flash.Store(&c.Controller)
 			}
@@ -117,8 +122,8 @@ func (c *CertificatesController) Revoke() {
 	name := c.GetString(":key")
 	if err := lib.RevokeCertificate(name); err != nil {
 		logs.Error(err)
-		//flash.Error(err.Error())
-		//flash.Store(&c.Controller)
+		flash.Error(err.Error())
+		flash.Store(&c.Controller)
 	} else {
 		flash.Warning("Success! Certificate for the name \"" + name + "\" has been revoked")
 		flash.Store(&c.Controller)
@@ -255,4 +260,22 @@ func SaveToFile(tplPath string, c config.Config, destPath string) error {
 	}
 
 	return lib.RawSaveToFile(destPath, str)
+}
+
+func AddDescriptionToFile(clientName string, description string) error {
+
+	newClient := lib.ClientDetails{
+		ClientName:     clientName,
+		StaticIP:       "",
+		IsRouteDefault: false,
+		IsRouter:       false,
+		RouterSubnet:   "",
+		RouterMask:     "",
+		Description:    description,
+		RouteList:      []string{},
+		CSRFToken:      "",
+	}
+
+	return lib.AddClientToJsonFile(newClient)
+
 }

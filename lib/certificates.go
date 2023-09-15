@@ -43,6 +43,7 @@ type Details struct {
 	OrganisationUnit string
 	Email            string
 	LocalIP          string
+	Description      string
 }
 
 func ReadCerts(path string) ([]*Cert, error) {
@@ -64,28 +65,28 @@ func ReadCerts(path string) ([]*Cert, error) {
 		ff := strings.Fields(trim(line))
 
 		if ff[0] == "V" {
-		    if len(ff) == 5 {
-			    continue
-		    }else{
-			    return certs,
-				fmt.Errorf("V-validator: Incorrect number of lines - file 'index.txt'. Error in %d-line: \n%s\n. Expected %d, found %d",
-					i, line, 5, len(ff))
-		    }
+			if len(ff) == 5 {
+				continue
+			} else {
+				return certs,
+					fmt.Errorf("V-validator: Incorrect number of lines - file 'index.txt'. Error in %d-line: \n%s\n. Expected %d, found %d",
+						i, line, 5, len(ff))
+			}
 		}
 
 		if ff[0] == "R" {
-		    if len(ff) == 6 {
-			continue
-		    }else{
-			return certs,
-				fmt.Errorf("R-validator: Incorrect number of lines - file 'index.txt'. Error in %d-line: \n%s\n. Expected %d, found %d",
-					i, line, 6, len(ff))
-		    }
+			if len(ff) == 6 {
+				continue
+			} else {
+				return certs,
+					fmt.Errorf("R-validator: Incorrect number of lines - file 'index.txt'. Error in %d-line: \n%s\n. Expected %d, found %d",
+						i, line, 6, len(ff))
+			}
 		}
 
 		if len(ff) == 5 {
 			continue
-		}else{
+		} else {
 			return certs,
 				fmt.Errorf("Other: Incorrect number of lines - file 'index.txt'. Error in %d-line: \n%s\n. Expected %d, found %d",
 					i, line, 5, len(ff))
@@ -99,50 +100,50 @@ func ReadCerts(path string) ([]*Cert, error) {
 		}
 
 		fields := strings.Fields(trim(line))
-			//strings.Split(trim(line), "\t")
+		//strings.Split(trim(line), "\t")
 		// if cert is valid
 		if fields[0] == "V" {
-		    expT, _ := time.Parse("060102150405Z", fields[1])
-		    revT, _ := time.Parse("060102150405Z", fields[1])
-		    c := &Cert{
-			EntryType:   fields[0],
-			Expiration:  fields[1],
-			ExpirationT: expT,
-			Revocation:  fields[1],
-			RevocationT: revT,
-			Serial:      fields[2],
-			FileName:    fields[3],
-			Details:     parseDetails(fields[4]),
-		    }
-		    certs = append(certs, c)
+			expT, _ := time.Parse("060102150405Z", fields[1])
+			revT, _ := time.Parse("060102150405Z", fields[1])
+			c := &Cert{
+				EntryType:   fields[0],
+				Expiration:  fields[1],
+				ExpirationT: expT,
+				Revocation:  fields[1],
+				RevocationT: revT,
+				Serial:      fields[2],
+				FileName:    fields[3],
+				Details:     parseDetails(fields[4]),
+			}
+			certs = append(certs, c)
 		} else if fields[0] == "R" {
-		    expT, _ := time.Parse("060102150405Z", fields[1])
-		    revT, _ := time.Parse("060102150405Z", fields[2])
-		    c := &Cert{
-			EntryType:   fields[0],
-			Expiration:  fields[1],
-			ExpirationT: expT,
-			Revocation:  fields[2],
-			RevocationT: revT,
-			Serial:      fields[3],
-			FileName:    fields[4],
-			Details:     parseDetails(fields[5]),
-		    }
-		    certs = append(certs, c)
+			expT, _ := time.Parse("060102150405Z", fields[1])
+			revT, _ := time.Parse("060102150405Z", fields[2])
+			c := &Cert{
+				EntryType:   fields[0],
+				Expiration:  fields[1],
+				ExpirationT: expT,
+				Revocation:  fields[2],
+				RevocationT: revT,
+				Serial:      fields[3],
+				FileName:    fields[4],
+				Details:     parseDetails(fields[5]),
+			}
+			certs = append(certs, c)
 		} else {
-		    expT, _ := time.Parse("060102150405Z", fields[1])
-		    revT, _ := time.Parse("060102150405Z", fields[1])
-		    c := &Cert{
-			EntryType:   fields[0],
-			Expiration:  fields[1],
-			ExpirationT: expT,
-			Revocation:  fields[1],
-			RevocationT: revT,
-			Serial:      fields[2],
-			FileName:    fields[3],
-			Details:     parseDetails(fields[4]),
-		    }
-		    certs = append(certs, c)
+			expT, _ := time.Parse("060102150405Z", fields[1])
+			revT, _ := time.Parse("060102150405Z", fields[1])
+			c := &Cert{
+				EntryType:   fields[0],
+				Expiration:  fields[1],
+				ExpirationT: expT,
+				Revocation:  fields[1],
+				RevocationT: revT,
+				Serial:      fields[2],
+				FileName:    fields[3],
+				Details:     parseDetails(fields[4]),
+			}
+			certs = append(certs, c)
 		}
 	}
 
@@ -160,11 +161,9 @@ func ReadCerts(path string) ([]*Cert, error) {
 	sort.Sort(NameSorter(certs_r))
 	sort.Sort(NameSorter(certs_err))
 
-
 	certsSorted = append(certsSorted, certs_v...)
 	certsSorted = append(certsSorted, certs_r...)
 	certsSorted = append(certsSorted, certs_err...)
-
 
 	return certsSorted, nil
 }
@@ -198,6 +197,9 @@ func parseDetails(d string) *Details {
 				logs.Warn(fmt.Sprintf("Undefined entry: %s", line))
 			}
 		}
+		if details.CN != "" {
+			details.Description = GetClientDetailsFieldValue(details.CN, "Description")
+		}
 	}
 	return details
 }
@@ -206,14 +208,10 @@ func trim(s string) string {
 	return strings.Trim(strings.Trim(s, "\r\n"), "\n")
 }
 
-func CreateCertificate(name string, staticip string, passphrase string) error {
+func CreateCertificate(name string, passphrase string) error {
 	path := filepath.Join(state.GlobalCfg.OVConfigPath, "easy-rsa/pki/index.txt")
-	haveip := false
 	pass := false
 	existsError := errors.New("Error! There is already a valid or invalid certificate for the name \"" + name + "\"")
-	if staticip != "" {
-		haveip = true
-	}
 	if passphrase != "" {
 		pass = true
 	}
@@ -231,8 +229,7 @@ func CreateCertificate(name string, staticip string, passphrase string) error {
 		}
 	}
 	if !pass {
-		if !exists && !haveip {
-			staticip = "not.defined"
+		if !exists {
 			cmd := exec.Command("/bin/bash", "-c",
 				fmt.Sprintf(
 					"cd /opt/scripts/ && export DOCKER_COMMAND=3 && "+
@@ -247,47 +244,14 @@ func CreateCertificate(name string, staticip string, passphrase string) error {
 			}
 			return nil
 		}
-		if !exists && haveip {
-			cmd := exec.Command("/bin/bash", "-c",
-				fmt.Sprintf(
-					"cd /opt/scripts/ && export DOCKER_COMMAND=3 && "+
-						"export CLIENT=%s && export PASS=1 && "+
-						"export CLIENT_IP=%s  && ./openvpn-install-v2.sh && "+
-						"echo 'ifconfig-push %s 255.255.255.0' > "+state.GlobalCfg.OVConfigPath+"/ccd/%s", name, staticip, staticip, name))
-			cmd.Dir = state.GlobalCfg.OVConfigPath
-			output, err := cmd.CombinedOutput()
-			if err != nil {
-				logs.Debug(string(output))
-				logs.Error(err)
-				return err
-			}
-			return nil
-		}
 		return existsError
 	} else {
-		if !exists && !haveip {
-			staticip = "not.defined"
+		if !exists {
 			cmd := exec.Command("/bin/bash", "-c",
 				fmt.Sprintf(
 					"cd /opt/scripts/ && export DOCKER_COMMAND=3 && "+
 						"export CLIENT=%s && export PASS=2 && export CL_PASS=%s && "+
 						"./openvpn-install-v2.sh", name, passphrase))
-			cmd.Dir = state.GlobalCfg.OVConfigPath
-			output, err := cmd.CombinedOutput()
-			if err != nil {
-				logs.Debug(string(output))
-				logs.Error(err)
-				return err
-			}
-			return nil
-		}
-		if !exists && haveip {
-			cmd := exec.Command("/bin/bash", "-c",
-				fmt.Sprintf(
-					"cd /opt/scripts/ && export DOCKER_COMMAND=3 && "+
-						"export CLIENT=%s && export PASS=2 && export CL_PASS=%s && "+
-						"export CLIENT_IP=%s  && ./openvpn-install-v2.sh && "+
-						"echo 'ifconfig-push %s 255.255.255.0' > "+state.GlobalCfg.OVConfigPath+"/ccd/%s", name, passphrase, staticip, staticip, name))
 			cmd.Dir = state.GlobalCfg.OVConfigPath
 			output, err := cmd.CombinedOutput()
 			if err != nil {

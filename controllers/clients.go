@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"path/filepath"
 	"strings"
 
 	"github.com/beego/beego/v2/core/logs"
@@ -41,7 +40,7 @@ func (c *ClientsController) showClients() {
 	flash := web.NewFlash()
 
 	//get clientsDetails from file
-	clientsDetails, err_read := GetClientsDetailsFromFile(c)
+	clientsDetails, err_read := lib.GetClientsDetailsFromFile()
 	if err_read != nil {
 		logs.Error(err_read)
 		flash.Error("ERROR WHILE READING CLIENTS FROM FILE !")
@@ -58,7 +57,7 @@ func (c *ClientsController) RenderModal() {
 	clientName := c.GetString("client-name")
 
 	//get clientsDetails from file
-	clientsDetails, err_read := GetClientsDetailsFromFile(c)
+	clientsDetails, err_read := lib.GetClientsDetailsFromFile()
 	if err_read != nil {
 		logs.Error(err_read)
 		flash.Error("ERROR WHILE READING CLIENTS FROM FILE !")
@@ -93,15 +92,6 @@ func (c *ClientsController) SaveClientDetailsData() {
 	flash := web.NewFlash()
 	wasError := false
 
-	//get clientsDetails from file
-	clientsDetails, err_read := GetClientsDetailsFromFile(c)
-	if err_read != nil {
-		wasError = true
-		logs.Error(err_read)
-		flash.Error("ERROR WHILE READING CLIENTS FROM FILE !")
-		flash.Store(&c.Controller)
-	}
-
 	//get cleint detais from web form
 	client := &lib.ClientDetails{}
 	err_parse := c.ParseForm(client)
@@ -111,25 +101,13 @@ func (c *ClientsController) SaveClientDetailsData() {
 		flash.Error("ERROR PARSING !")
 		flash.Store(&c.Controller)
 	}
-	logs.Error("LOGGG22: ", client)
 
-	newClientDetails, err_upd := lib.UpdateClientsDetails(clientsDetails, *client)
-	if err_upd != nil {
+	err_save := lib.AddClientToJsonFile(*client)
+	if err_save != nil {
 		wasError = true
-		logs.Error(err_upd)
-		flash.Error("FILE WAS MODIFIED DURING YOU UPDATE - TRY AGAIN")
+		logs.Error(err_save)
+		flash.Error("ERROR SAVINF TO JSON FILE !")
 		flash.Store(&c.Controller)
-	}
-	logs.Error("LOGGG11: ", newClientDetails)
-	if !wasError {
-		pathJson := filepath.Join(state.GlobalCfg.OVConfigPath, "clientDetails.json")
-		err_save := lib.SaveJsonFile(newClientDetails, pathJson)
-		if err_save != nil {
-			wasError = true
-			logs.Error(err_save)
-			flash.Error("FILE WAS NOT SAVE")
-			flash.Store(&c.Controller)
-		}
 	}
 
 	if !wasError {
@@ -170,18 +148,13 @@ func (c *ClientsController) UpdateFiles() {
 	c.showClients()
 }
 
-func trim(s string) string {
-	return strings.Trim(strings.Trim(s, "\r\n"), "\n")
+// @router /certificates/restart [get]
+func (c *ClientsController) Restart() {
+	lib.Restart()
+	c.Redirect(c.URLFor("ClientsController.Get"), 302)
+	// return
 }
 
-func GetClientsDetailsFromFile(c *ClientsController) ([]*lib.ClientDetails, error) {
-	//get clientsDetails from file
-	pathIndex := filepath.Join(state.GlobalCfg.OVConfigPath, "easy-rsa/pki/index.txt")
-	pathJson := filepath.Join(state.GlobalCfg.OVConfigPath, "clientDetails.json")
-	clientsDetails, err := lib.GetClientsDetails(pathIndex, pathJson)
-	if err != nil {
-		return clientsDetails, err
-	}
-
-	return clientsDetails, nil
+func trim(s string) string {
+	return strings.Trim(strings.Trim(s, "\r\n"), "\n")
 }

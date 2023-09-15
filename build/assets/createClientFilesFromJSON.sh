@@ -86,9 +86,9 @@ cidr_default_gw_2() {
 
 # ======================================================================
 
-# OVDIR="/etc/openvpn"
-# USERDiR="${OVDIR}/ccd"
-# JSON="clientDetails.json"
+OVDIR="/etc/openvpn"
+USERDiR="${OVDIR}/ccd"
+JSON="clientDetails.json"
 
 if [ -z $JSON ]; then
     exit 1
