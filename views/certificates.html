@@ -95,7 +95,7 @@
                   <!-- 1 sell -->
                   {{if eq .EntryType "V"}}
                   <td>
-                    <a href="{{urlfor "CertificatesController.Download" ":key" .Details.Name}}" class="btn btn-primary btn-sm btn-block bg-light-blue-gradient" title="Download">
+                    <a href="{{urlfor "CertificatesController.Download" ":key" .Details.CN}}" class="btn btn-primary btn-sm btn-block bg-light-blue-gradient" title="Download">
                       {{ .Details.CN }}.ovpn
                     </a>
                   </td>

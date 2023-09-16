@@ -42,7 +42,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:CertificatesController"],
 			web.ControllerComments{
 				Method:           "Download",
-				Router:           `/certificates/:key`,
+				Router:           `/certificates/ovpn/:key`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
 

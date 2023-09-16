@@ -1310,7 +1310,7 @@ function geberateOpenVPNFile() {
 	} >>"$homeDir/$CLIENT.ovpn"
 
 	echo ""
-	echo "The configuration file has been written to $homeDir/$CLIENT.ovpn."
+	echo "The configuration file has been written to $homeDir/$CLIENT.ovpn"
 	echo "Download the .ovpn file and import it in your OpenVPN client."
 }
 

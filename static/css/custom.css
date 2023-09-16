@@ -96,6 +96,23 @@
 }
 
 .custom-modal-dialog {
+  position: relative;
+  width: 700px; 
+  max-width: 100%;
+  height: 90%;
+  background-color: transparent;
+ }
+ 
+ .custom-modal-dialog-form .label {
+  font-size: 95%;
+  padding: 0.2em 0.2em 0.3em;
+ }
+
+ .custom-modal-dialog-form input[type=checkbox] {
+  margin: 30px 10px 0;
+ }
+
+.custom-modal-dialog-form {
  position: relative;
  width: 700px; 
  max-width: 100%;
@@ -125,4 +142,9 @@
 
 .textcenter {
  text-align: center;
+}
+
+.row-flex {
+  display: flex;
+  flex-wrap: wrap;
 }
