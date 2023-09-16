@@ -108,7 +108,7 @@
   padding: 0.2em 0.2em 0.3em;
  }
 
- .custom-modal-dialog-form input[type=checkbox] {
+ .custom-modal-dialog-form .mychekbox input[type=checkbox] {
   margin: 30px 10px 0;
  }
 
