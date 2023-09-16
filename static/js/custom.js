@@ -40,7 +40,7 @@ $(function() {
     closeAnimation: 'rotateXR',
     buttons: {
         Confirm: {
-            btnClass: 'btn-red bg-red-gradient btn80',
+            btnClass: 'btn-red bg-red-gradient btn80 myspiner',
             action: function(){location.href = this.$target.attr('href');}
         },
         Cancel: {
@@ -62,7 +62,7 @@ $(function() {
     closeAnimation: 'rotateXR',
     buttons: {
         Confirm: {
-            btnClass: 'btn-orange bg-yellow-gradient btn80',
+            btnClass: 'btn-orange bg-yellow-gradient btn80 setloader myspiner',
             action: function(){location.href = this.$target.attr('href');}
         },
         Cancel: {
@@ -84,7 +84,7 @@ $(function() {
 
     function showModalWithData(clientName) {
         // Make an AJAX request to get the data for the client
-        $.post("/certificates/render_modal", {"client-name": clientName}, function (data) {
+        $.post("/clients/render_modal_raw", {"client-name": clientName}, function (data) {
             // Update the modal content with the retrieved data
             $("#modal-edit-client-raw").html(data);
             // Show the modal
@@ -193,4 +193,23 @@ $(".reveal").on('click',function() {
     } else {
         $pwd.attr('type', 'password');
     }
+});
+
+jQuery(function(){
+    $(document).on("click", ".myspiner", function() {
+      $("#overlay").fadeIn(300);　
+    });
+  
+  $('.myspiner').click(function(){
+    $.ajax({
+      type: 'GET',
+      success: function(data){
+        console.log(data);
+      }
+    }).done(function() {
+      setTimeout(function(){
+        $("#overlay").fadeOut(300);
+      },500);
+    });
+  });	
 });

@@ -88,6 +88,39 @@ func (c *ClientsController) RenderModal() {
 	c.showClients()
 }
 
+// @router /clients/render_modal_raw/ [post]
+func (c *ClientsController) RenderModalRaw() {
+	flash := web.NewFlash()
+	clientName := c.GetString("client-name")
+
+	// Load data from the client-name.txt file.
+	destPathClientConfig := filepath.Join(state.GlobalCfg.OVConfigPath, "ccd", clientName)
+	data, err := lib.RawReadFile(destPathClientConfig)
+	if err != nil {
+		logs.Error(err)
+		flash.Error("Cannot read " + clientName + " file !")
+		flash.Store(&c.Controller)
+	}
+
+	// Pass the client name and data to the modal template for rendering.
+	c.Data["ClientName"] = clientName
+	c.Data["ClientData"] = string(data)
+
+	clients, err_get := lib.GetClientsDetailsFromFile()
+	clientJSON, err_get := lib.GetClientFromStructure(clients, clientName)
+	if err_get != nil {
+		logs.Error(err_get)
+		flash.Error("Cannot read " + clientName + " file !")
+		flash.Store(&c.Controller)
+	}
+	c.Data["ClientJSON"] = clientJSON
+
+	c.Layout = ""
+	c.TplName = "modalClientRaw.html"
+	c.Render()
+	c.showClients()
+}
+
 // @router /clients/save_details_data [post]
 func (c *ClientsController) SaveClientDetailsData() {
 	flash := web.NewFlash()
@@ -181,6 +214,7 @@ func (c *ClientsController) SaveClientRawData() {
 	c.showClients()
 
 }
+
 func trim(s string) string {
 	return strings.Trim(strings.Trim(s, "\r\n"), "\n")
 }

@@ -171,30 +171,6 @@ func (c *CertificatesController) Burn() {
 	c.showCerts()
 }
 
-// @router /certificates/render_modal/ [post]
-func (c *CertificatesController) RenderModal() {
-	flash := web.NewFlash()
-	clientName := c.GetString("client-name")
-
-	// Load data from the client-name.txt file.
-	destPathClientConfig := filepath.Join(state.GlobalCfg.OVConfigPath, "ccd", clientName)
-	data, err := lib.RawReadFile(destPathClientConfig)
-	if err != nil {
-		logs.Error(err)
-		flash.Error("Cannot read " + clientName + " file !")
-		flash.Store(&c.Controller)
-	}
-
-	// Pass the client name and data to the modal template for rendering.
-	c.Data["ClientName"] = clientName
-	c.Data["ClientData"] = string(data)
-
-	c.Layout = ""
-	c.TplName = "modalClientRaw.html"
-	//c.Render()
-	c.showCerts()
-}
-
 // @router /certificates/revoke/:key [get]
 func (c *CertificatesController) Renew() {
 	c.TplName = "certificates.html"
@@ -210,6 +186,31 @@ func (c *CertificatesController) Renew() {
 		flash.Store(&c.Controller)
 	}
 	c.showCerts()
+}
+
+// @router /certificates/save_client_data [post]
+func (c *CertificatesController) SaveClientRawData() {
+	flash := web.NewFlash()
+	clientName := c.GetString("client_name")
+	clientData := c.GetString("client_data")
+
+	// Save the data to the client-name.txt file.
+	destPathClientConfig := filepath.Join(state.GlobalCfg.OVConfigPath, "ccd", clientName)
+	err := lib.RawSaveToFile(destPathClientConfig, clientData)
+	if err != nil {
+		logs.Error(err)
+		flash.Error("Cannot save " + clientName + " file !")
+		flash.Store(&c.Controller)
+		return
+	}
+
+	// Redirect to the main page after successful file save.
+	flash.Success("Settings are saved for " + clientName + " to file.")
+	flash.Store(&c.Controller)
+
+	c.TplName = "certificates.html"
+	c.showCerts()
+
 }
 
 func validateCertParams(cert NewCertParams) map[string]map[string]string {

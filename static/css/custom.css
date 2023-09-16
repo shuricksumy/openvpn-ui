@@ -108,8 +108,8 @@
   padding: 0.2em 0.2em 0.3em;
  }
 
- .custom-modal-dialog-form .mychekbox input[type=checkbox] {
-  margin: 30px 10px 0;
+ .custom-modal-dialog-form label.my-label{
+  margin: 0px 8px 0;
  }
 
 .custom-modal-dialog-form {
@@ -123,6 +123,10 @@
 .btn24 {
  min-width: 24px;
 }
+
+.btn40 {
+  min-width: 40px;
+ }
 
 .btn80 {
  min-width: 80px;
@@ -147,4 +151,36 @@
 .row-flex {
   display: flex;
   flex-wrap: wrap;
+}
+
+#overlay{	
+  position: fixed;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  height:100%;
+  display: none;
+  background: rgba(0,0,0,0.6);
+}
+.cv-spinner {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+}
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px #ddd solid;
+  border-top: 4px #2e93e6 solid;
+  border-radius: 50%;
+  animation: sp-anime 0.8s infinite linear;
+}
+@keyframes sp-anime {
+  100% { 
+    transform: rotate(360deg); 
+  }
+}
+.is-hide{
+  display:none;
 }

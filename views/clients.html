@@ -6,12 +6,32 @@
 
 {{define "body"}}
 
+<div class="box box-warning">
+  <div class="box-header with-border">
+    <h3 class="box-title">Apply Clients Configuration</h3>
+  </div>
+  <div class="box-footer" style="float: right;">
+      <table>
+       <tr>
+         <td style= "margin-right: 5px; vertical-align: bottom;"><i>If you finish working on clients details, 
+          do not forget to apply these changes for ALL clients. &nbsp;&nbsp;</i></td>
+         <td><a href="{{urlfor "ClientsController.UpdateFiles"}}" class="btn btn-warning btn-sm bg-yellow-gradient btn150"
+          data-title="Update ALL Clients?" 
+           title="Apply Clients Configuration" style="margin-right: 23px;">Apply Configurations</a></td>
+        </tr>
+      </table>
+  </div>
+  <div class="box-footer clearfix">
+  </div>
+  <!-- /.box-footer -->
+</div>
+
+
 <div class="row">
   <div class="col-md-12">
     <div class="box box-primary">
       <div class="box-header with-border">
         <h3 class="box-title">Clients details</h3>
-
       </div>
       <!-- /.box-header -->
       {{template "common/alert.html" .}}
@@ -21,17 +41,16 @@
          <table class="table no-margin">
             <thead>
             <tr>
-              <th style="width:15%">ClientName</th>
+              <th style="width:8%">Client Name</th>
+              <th style="width:2%">Route</th>
               <th style="width:5%">StaticIP</th>
-              <th style="width:5%">DefRoute</th>
               <th style="width:5%">IsRouter</th>
               <!-- <th>Revocation</th> -->
-              <th style="width:35%">Description</th>
+              <!-- <th style="width:15%">Router Subnet</th> -->
               <!-- <th>Details</th> -->
-              <th class="textcenter" style="width:15%">Router Subnet</th>
-              <th class="textcenter" style="width:15%">Route List</th>
-              <th class="textcenter" style="width:5%">Details</th>
-              <th class="textcenter" style="width:5%">File</th>
+              <th class="textcenter" style="width:30%">Description</th>
+              <th class="textcenter" style="width:40%">Route List</th>
+              <th class="textcenter" style="width:10%">File</th>
               <th></th>
             </tr>
             </thead>
@@ -42,49 +61,65 @@
 
                   <!-- 1 sell -->
                   <td>
-                    {{ .ClientName }}
+                       <button id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .ClientName }}" 
+                       class="btn btn-primary btn-sm btn-block bg-olive" title="Edit">{{ .ClientName }}</button>
                   </td>
 
                   <!-- 2 sell -->
                   <td>
-                  {{ .StaticIP }}
+                    {{ if .IsRouteDefault }}
+                      <span class="btn btn-xs bg-green">{{ .IsRouteDefault }}</span>
+                    {{else}}
+                      <span class="btn btn-xs bg-gray">{{ .IsRouteDefault }}</span>
+                    {{end}}
                   </td>
 
                   <!-- 3 sell -->
                   <td>
-                    {{ .IsRouteDefault }}
-                  </td>
-
-                  <!-- 4 sell -->
-                  <td>
-                    {{ .IsRouter }}
+                    {{ if ne .StaticIP "" }}
+                      <span class="btn btn-xs bg-green btn80">{{ .StaticIP }}</span>
+                    {{else}}
+                      <span class="btn btn-xs bg-gray btn80">random</span>
+                    {{end}}
                   </td>
 
 
                   <!-- 5 sell -->
                   <td>
-                  {{ .Description }}
+                    {{ if .IsRouter }}
+                      <span class="btn btn-xs bg-orange btn80">{{ .RouterSubnet }}</span>
+                      <span class="btn btn-xs bg-orange btn80">{{ .RouterMask }}</span>
+                    {{else}}
+                      <span class="btn btn-xs bg-gray btn80">-</span>
+                    {{end}}
                   </td>
 
                   <!-- 6 sell -->
                   <td>
-                    {{ .RouterSubnet }} / {{ .RouterMask }}
+                    {{ .Description }}
                   </td>
 
 
                   <!-- 7 sell -->
                   <td>
-                    {{ .RouteList }} vs {{ .RouteListUnselected }}
+                    {{range  $val := .RouteList}}
+                      <span class="btn btn-xs bg-green bnt24">{{ $val }}</span>
+                    {{end}}
+                    {{range  $val := .RouteListUnselected}}
+                      <span class="btn btn-xs bg-gray bnt24">{{ $val }}</span>
+                    {{end}}
                   </td>
 
                   <!-- 8 sell -->
                   <td class="textcenter">
-                      <button  id="openModalEditClientDetails" data-target="#editClientDetailsModal" data-client-name="{{ .ClientName }}" class="btn btn-primary btn-sm edit-button bg-light-blue-gradient btn80" title="Edit">Edit</button>
+                    <div class="btn-group" role="group">
+                        <button  id="openModalEditClientDetails" data-target="#editClientDetailsModal" data-client-name="{{ .ClientName }}"
+                        class="btn btn-sm bg-light-blue-gradient btn80" title="Edit">Edit</button>
+                        <!-- <button id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .ClientName }}" 
+                        class="btn btn-sm bg-light-blue-gradient btn40" title="Edit">Raw</button> -->
+                    </div>
                   </td>
-                  <td class="textcenter">
-                    <button  id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .ClientName }}" class="btn btn-primary btn-sm edit-button bg-light-blue-gradient btn80" title="Edit">Edit</button>
-                  </td>
-                  </tr>
+                </tr>
 
             {{end}}
             </tbody>
@@ -112,36 +147,6 @@
       <!-- /.box-footer -->
     </div>
     <!-- /.box -->
-  </div>
-
-  <div class="box box-warning">
-    <div class="box-header with-border">
-      <h3 class="box-title">Apply Clients Configuration</h3>
-    </div>
-    
-    <!-- /.box-header -->
-    <!-- <div class="box-body">
-      <span id="helpBlock" class="help-block">If you are revoking Certificate, don't forget to restart your OpenVPN container to disconnect all active client sessions and make revocation to take the effect.<br/></span>
-    </div> -->
-    <div class="box-footer" style="float: right;">
-        <table>
-         <tr>
-           <td style= "margin-right: 5px; vertical-align: bottom;"><i>If you finish working on clients details, 
-            do not forget to apply these changes for ALL clients. &nbsp;&nbsp;</i></td>
-           <td><a href="{{urlfor "ClientsController.UpdateFiles"}}" class="btn btn-warning btn-sm bg-yellow-gradient btn150" data-title="Update ALL Clients?" 
-             title="Apply Clients Configuration" style="margin-right: 23px;">Apply Configurations</a></td>
-          </tr>
-        </table>
-    </div>
-    <div class="box-footer clearfix">
-    </div>
-    <!--
-    <div class="box-footer clearfix">
-      <a href="javascript:void(0)" class="btn btn-sm btn-info btn-flat pull-left">Place New Order</a>
-      <a href="javascript:void(0)" class="btn btn-sm btn-default btn-flat pull-right">View All Orders</a>
-    </div>
-  -->
-    <!-- /.box-footer -->
   </div>
 
   <div class="box box-danger">
@@ -177,8 +182,17 @@
 
 </div>
 
+<script type="text/javascript">
+  var actionURL="/clients/save_client_data" 
+</script>
+
 <!-- Add an empty modal container -->
 <div id="modal-edit-client-details"></div>
 <div id="modal-edit-client-raw"></div>
 
+<div id="overlay">
+  <div class="cv-spinner">
+    <span class="spinner"></span>
+  </div>
+</div>
 {{end}}

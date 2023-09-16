@@ -4,10 +4,14 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $('#route_list_selected').multiselect({
-            buttonWidth: '160px',
+            buttonWidth: '200px',
+            maxHeight: 150,
             includeSelectAllOption: true,
+            inheritClass: true,
+            selectedClass: "active multiselect-active-item-fallback",
+            // buttonContainer: '<div class="col-sm-4"</div>',
+            // selectedClass: 'form-control',
             // enableFiltering: true,
-            //selectedClass: "active multiselect-active-item-fallback",
         });
 
         var cb = $('#is_router').is(':checked');
@@ -19,8 +23,25 @@
             $('#router_subnet').prop('disabled', !cb);
             $('#router_mask').prop('disabled', !cb);
         });
+
+        options = {html:true, trigger:'hover'};
+        $('[data-toggle="popover"]').popover(options);
+
     });
 </script>
+<style> 
+.popover-title{
+    /* background: #ffff99; */
+    color: black;
+    font-weight: 800;
+}
+
+.popover-content{
+    /* background: #ffff99; */
+    color: rgb(30, 30, 30);
+    font-weight: 100;
+}
+</style>
 
 <div class="modal fade" id="editClientDetailsModal" role="dialog">
     <div class="modal-dialog custom-modal-dialog-form"> <!-- Apply custom CSS style for the modal width -->
@@ -43,20 +64,74 @@
                                 <div class="form-check mychekbox">
                                     <input name="is_route_default" id="is_route_default" class="form-check-input" type="checkbox" value="true" 
                                         {{if .IsRouteDefault}} checked {{else}} {{end}}>
-                                    <label class="form-check-label" for="is_route_default">
-                                        Use as default route
+                                    <label class="form-check-label my-label" for="is_route_default">
+                                        Use as default route &nbsp;
+                                        <span class="glyphicon glyphicon-info-sign" data-toggle="popover" data-placement="bottom" data-content="Set if want to send all trafic via VPN network."></span>
                                     </label>
                                 </div>
-                            </div>
-                            
-                            <div class="col-sm-4">
-                                <label class="form-check-label" for="static_ip">Static IP:</label>
+                                <label class="form-check-label" for="static_ip">
+                                    Static IP: &nbsp;
+                                    <span class="glyphicon glyphicon-info-sign" data-toggle="popover" data-html="true" data-placement="bottom"
+                                    title=" It's static client IP. Wor Windows clients use next pairs:"  data-content="
+                                            [  1,  2] [  5,  6] [  9, 10]<br>
+                                            [ 13, 14] [ 17, 18] [ 21, 22]<br>
+                                            [ 25, 26] [ 29, 30] [ 33, 34]<br> 
+                                            [ 37, 38] [ 41, 42] [ 45, 46]<br> 
+                                            [ 49, 50] [ 53, 54] [ 57, 58]<br>
+                                            [ 61, 62] [ 65, 66] [ 69, 70]<br>
+                                            [ 73, 74] [ 77, 78] [ 81, 82]<br> 
+                                            [ 85, 86] [ 89, 90] [ 93, 94]<br>
+                                            [ 97, 98] [101,102] [105,106]<br>
+                                            [109,110] [113,114] [117,118]<br>
+                                            [121,122] [125,126] [129,130]<br>
+                                            [133,134] [137,138] [141,142]<br>
+                                            [145,146] [149,150] [153,154]<br>
+                                            [157,158] [161,162] [165,166]<br>
+                                            [169,170] [173,174] [177,178]<br>
+                                            [181,182] [185,186] [189,190]<br>
+                                            [193,194] [197,198] [201,202]<br>
+                                            [205,206] [209,210] [213,214]<br>
+                                            [217,218] [221,222] [225,226]<br>
+                                            [229,230] [233,234] [237,238]<br>
+                                            [241,242] [245,246] [249,250]<br>
+                                            [253,254]">
+                                    </span>
+                                </label>
                                 <input class="form-control" name="static_ip" value="{{.StaticIP}}" pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" 
                                     placeholder="Enter Static IP">
                             </div>
 
+                            
                             <div class="col-sm-4">
-                                <label class="form-check-label" for="route_list_selected">Routes:</label>
+                                <div class="form-check mychekbox">
+                                    <input name="is_router" id="is_router" class="form-check-input" type="checkbox" value="true" 
+                                        {{if .IsRouter}} checked {{else}} {{end}}>
+                                    <label class="form-check-label my-label" for="is_router">
+                                        Device is router  &nbsp;
+                                        <span class="glyphicon glyphicon-info-sign" data-toggle="popover" data-placement="bottom" 
+                                        data-content="Set if client is router with own internal subnet."></span>
+                                    </label>
+                                </div>
+   
+                                <label class="form-check-label" for="router_subnet">
+                                    Subnet:  &nbsp;
+                                    <span class="glyphicon glyphicon-info-sign" data-toggle="popover" data-placement="bottom" 
+                                    data-content="Specify Router internal Subnet and Mask"></span>
+                                </label>
+                                <input class="form-control" id="router_subnet" name="router_subnet" value="{{.RouterSubnet}}" pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" 
+                                placeholder="Enter Subnet: x.x.x.x">
+
+                                <!-- <label class="form-check-label" for="router_mask">Mask:</label> -->
+                                <input class="form-control" id="router_mask" name="router_mask" value="{{.RouterMask}}" pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" 
+                                placeholder="Enter Subnet Mask: x.x.x.x">
+                            </div>
+
+
+                            <div class="col-sm-4">
+                                <label class="form-check-label" for="route_list_selected">
+                                    Routes: &nbsp;
+                                    <span class="glyphicon glyphicon-info-sign" data-toggle="popover" data-placement="bottom" data-content="Select devices you want to have access to their internal networks."></span>
+                                </label>
                                 <select class="form-control" name="route_list_selected" id="route_list_selected" multiple="multiple">
                                     {{range  $val := .RouteListSelected}}
                                         <option value="{{ $val }}" selected="selected">{{ $val }}</option>
@@ -70,38 +145,13 @@
                     </div>
 
                     <div class="panel-body">
-                        <div class="form-row">
-                            <div class="col-sm-4">
-                                <div class="form-check mychekbox">
-                                    <input name="is_router" id="is_router" class="form-check-input" type="checkbox" value="true" 
-                                        {{if .IsRouter}} checked {{else}} {{end}}>
-                                    <label class="form-check-label" for="is_router">
-                                        Device is router
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-4">
-                                <label class="form-check-label" for="router_subnet">Subnet:</label>
-                                <input class="form-control" id="router_subnet" name="router_subnet" value="{{.RouterSubnet}}" pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" 
-                                placeholder="Enter Subnet: x.x.x.x">
-
-                                <!-- <label class="form-check-label" for="router_mask">Mask:</label> -->
-                                <input class="form-control" id="router_mask" name="router_mask" value="{{.RouterMask}}" pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" 
-                                placeholder="Enter Subnet Mask: x.x.x.x">
-                            </div>
-
-                            <div class="col-sm-4"></div>
-
-                        </div>
-                    </div>
-
-                    <div class="panel-body">
-                        <div class="col-sm-12">
+                        <div class="col-sm-8">
                                 <label class="form-check-label" for="description">Description:</label>
                                 <input class="form-control" id="description" name="description" 
                                 placeholder="Add some important notes here" value="{{.Description}}">
                         </div>
+                        <div class="col-sm-4"></div>
+
                     </div>
                        
 

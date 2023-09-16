@@ -311,6 +311,7 @@ func GetClientsDetailsFromFile() ([]*ClientDetails, error) {
 	}
 
 	sort.Sort(NameSorterClientDetails(clientsDetails))
+
 	return clientsDetails, nil
 }
 
