@@ -15,6 +15,8 @@ ADD assets/rmcert.sh /opt/scripts/rmcert.sh
 ADD assets/rmclient.sh /opt/scripts/rmclient.sh
 ADD assets/createClientFilesFromJSON.sh /opt/scripts/createClientFilesFromJSON.sh
 ADD assets/renew.sh /opt/scripts/renew.sh
+ADD assets/unRevoke.sh /opt/scripts/unRevoke.sh
+
 
 RUN /opt/scripts/install_pkg.sh
 
