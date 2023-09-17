@@ -109,7 +109,7 @@
  }
 
  .custom-modal-dialog-form label.my-label{
-  margin: 0px 8px 0;
+  margin: 0px 8px 3px;
  }
 
 .custom-modal-dialog-form {
@@ -183,4 +183,28 @@
 }
 .is-hide{
   display:none;
+}
+
+.left-icon-holder {
+  position:relative;
+  margin-left: 30px;
+}
+.left-icon-holder .fa {
+  position:absolute;
+  line-height: 24px;
+  top:50%;
+  margin-top: -12px; /* Half of line height to keep left middle postion of container */
+  left: 10px;
+}
+
+.right-icon-holder {
+  position:relative;
+  margin-right: 30px;
+}
+.right-icon-holder .fa {
+  position:absolute;
+  line-height: 24px;
+  top:50%;
+  margin-top: -12px; /* Half of line height to keep left middle postion of container */
+  right: 10px;
 }

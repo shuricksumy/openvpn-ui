@@ -42,7 +42,7 @@
             <thead>
             <tr>
               <th style="width:8%">Client Name</th>
-              <th style="width:2%">Route</th>
+              <th style="width:2%">AllRoute</th>
               <th style="width:5%">StaticIP</th>
               <th style="width:5%">IsRouter</th>
               <!-- <th>Revocation</th> -->
@@ -62,7 +62,9 @@
                   <!-- 1 sell -->
                   <td>
                        <button id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .ClientName }}" 
-                       class="btn btn-primary btn-sm btn-block light-blue-gradient" title="Edit">{{ .ClientName }}</button>
+                        class="btn btn-primary btn-sm btn-block light-blue-gradient right-icon-holder" 
+                        title="{{ .ClientName }}">{{ .ClientName }}<i class="fa fa-edit"></i>
+                      </button>
                   </td>
 
                   <!-- 2 sell -->
@@ -87,8 +89,8 @@
                   <!-- 5 sell -->
                   <td>
                     {{ if .IsRouter }}
-                      <span class="btn btn-xs bg-orange btn80">{{ .RouterSubnet }}</span>
-                      <span class="btn btn-xs bg-orange btn80">{{ .RouterMask }}</span>
+                      <span class="btn btn-xs bg-purple btn80">{{ .RouterSubnet }}</span>
+                      <!-- <span class="btn btn-xs bg-purple btn80">{{ .RouterMask }}</span> -->
                     {{else}}
                       <span class="btn btn-xs bg-gray btn80">-</span>
                     {{end}}
@@ -114,7 +116,7 @@
                   <td class="textcenter">
                     <div class="btn-group" role="group">
                         <button  id="openModalEditClientDetails" data-target="#editClientDetailsModal" data-client-name="{{ .ClientName }}"
-                        class="btn btn-sm bg-light-blue-gradient btn80" title="Edit">Edit</button>
+                        class="btn btn-primary btn-sm bg-light-blue-gradient btn80" title="Edit">Edit</button>
                         <!-- <button id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .ClientName }}" 
                         class="btn btn-sm bg-light-blue-gradient btn40" title="Edit">Raw</button> -->
                     </div>

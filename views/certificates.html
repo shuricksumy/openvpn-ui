@@ -74,16 +74,16 @@
          <table class="table no-margin">
             <thead>
             <tr>
-              <th style="width:10%">Name</th>
+              <th style="width:15%">Name</th>
               <th style="width:5%">State</th>
-              <th style="width:40%">Description</th>
+              <th style="width:50%">Description</th>
               <th style="width:10%">Expiration</th>
               <!-- <th>Revocation</th> -->
-              <th style="width:25%">Serial</th>
+              <!-- <th style="width:20%">Serial</th> -->
               <!-- <th>Details</th> -->
-              <th class="textcenter" style="width:5%">Actions</th>
+              <th class="textcenter" style="width:10%">Actions</th>
 
-              <th class="textcenter" style="width:5%">Details</th>
+              <th class="textcenter" style="width:10%">Details</th>
               <th></th>
             </tr>
             </thead>
@@ -95,8 +95,9 @@
                   <!-- 1 sell -->
                   {{if eq .EntryType "V"}}
                   <td>
-                    <a href="{{urlfor "CertificatesController.Download" ":key" .Details.CN}}" class="btn btn-primary btn-sm btn-block bg-light-blue-gradient" title="Download">
-                      {{ .Details.CN }}.ovpn
+                    <a href="{{urlfor "CertificatesController.Download" ":key" .Details.CN}}" 
+                      class="btn btn-primary btn-sm btn-block bg-light-blue-gradient right-icon-holder" title="{{ .Details.CN }}">
+                      {{ .Details.CN }}.ovpn<i class="fa fa-download"></i>
                     </a>
                   </td>
                   {{else}}
@@ -110,19 +111,22 @@
                    <!-- 2 sell -->
                   {{if eq .EntryType "V"}}
                     <td>
-                      <button type="button" class="btn btn-success btn-sm bg-green-gradient" data-toggle="modal" data-target="#popup-{{ .Details.CN }}">
+                      <button type="button" class="btn btn-success btn-sm bg-green-gradient" 
+                        data-toggle="modal" data-target="#popup-{{ .Details.CN }}">
                           <span class="glyphicon glyphicon-info-sign">
                       </button>
                     </td>
                   {{else if eq .EntryType "R"}}
                     <td>
-                       <button type="button" class="btn btn-warning btn-sm bg-yellow-gradient" data-toggle="modal" data-target="#popup-{{ .Details.CN }}">
+                       <button type="button" class="btn btn-warning btn-sm bg-yellow-gradient" 
+                        data-toggle="modal" data-target="#popup-{{ .Details.CN }}">
                             <span class="glyphicon glyphicon-info-sign">
                         </button>
                     </td>
                    {{else}}
                      <td>
-                         <button type="button" class="btn btn-danger btn-sm bg-red" data-toggle="modal" data-target="#popup-{{ .Details.CN }}">
+                         <button type="button" class="btn btn-danger btn-sm bg-red" 
+                          data-toggle="modal" data-target="#popup-{{ .Details.CN }}">
                             <span class="glyphicon glyphicon-info-sign">
                         </button>
                      </td>
@@ -139,9 +143,9 @@
                     </td>
 
                     <!-- 5 sell -->
-                     <td>
+                     <!-- <td>
                       {{ .Serial }}
-                     </td>
+                     </td> -->
 
                 <!--    <td>
                       <span class="label label-warning">CN: {{ .Details.CN }}</span>
