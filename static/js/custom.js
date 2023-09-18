@@ -71,7 +71,30 @@ $(function() {
         },
     }
    });
+
+   $('button.form-to-confirm').confirm({
+    content: "Confirm, if you are 100% sure.",
+    type: 'red',
+    icon: 'fa fa-warning',
+    title: 'font-awesome',
+    columnClass: 'small',
+    theme: 'bootstrap',
+    animateFromElement: false,
+    animation: 'RotateXR',
+    closeAnimation: 'rotateXR',
+    buttons: {
+        Confirm: {
+            btnClass: 'btn-primary bg-light-blue-gradient btn80 setloader myspiner',
+            action: function(){  $('#form-to-confirm').submit(); }
+        },
+        Cancel: {
+            btnClass: 'btn80',
+            action: function(){}
+        },
+    }
+   });
 })
+
 
 // FUNCTION EDIT CLIENT DETAILS POPUP RAW TEXT EDITOR
 $(function() {
@@ -197,7 +220,7 @@ $(".reveal").on('click',function() {
 
 jQuery(function(){
     $(document).on("click", ".myspiner", function() {
-      $("#overlay").fadeIn(300);　
+      $("#overlay").fadeIn(300);
     });
   
   $('.myspiner').click(function(){

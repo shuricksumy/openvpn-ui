@@ -6,6 +6,8 @@
 
 {{define "body"}}
 
+{{template "common/alert.html" .}}
+
 <div class="box box-danger">
   <div class="box-header with-border">
     <h3 class="box-title">Restart OpenVPN</h3>
@@ -51,3 +53,9 @@
 </div>
 
 {{end}}
+
+<div id="overlay">
+  <div class="cv-spinner">
+    <span class="spinner"></span>
+  </div>
+</div>
