@@ -6,30 +6,25 @@
 
 {{define "body"}}
 
+
+<!-- /.box-header -->
+{{template "common/alert.html" .}}
+
 <div class="box box-warning">
   <div class="box-header with-border">
-    <h3 class="box-title">Apply Clients Configuration</h3>
+    <table>
+      <tr>
+        <td class="col-md-1 text-right">
+          <i>If you finish working on clients details, do not forget to apply these changes for ALL clients and restart server. &nbsp;&nbsp;</i>
+          <a href="{{urlfor "ClientsController.UpdateFiles"}}" class="btn btn-warning btn-sm bg-yellow-gradient btn150"
+          data-title="Update ALL Clients?" title="Apply Clients Configuration" style="margin-right: 23px;">Apply Configurations</a>
+          <a href="{{urlfor "ClientsController.Restart"}}" class="btn btn-danger btn-sm bg-red-gradient btn150" data-title="Restart OpenVPN container?" 
+                title="Restart OpenVPN container" style="margin-right: 23px;">Restart OpenVPN Server</a>
+        </td>
+      </tr>
+    </table>
   </div>
-  <div class="box-footer" style="float: right;">
-      <table>
-       <tr>
-         <td style= "margin-right: 5px; vertical-align: bottom;"><i>If you finish working on clients details, 
-          do not forget to apply these changes for ALL clients and restart server. &nbsp;&nbsp;</i></td>
-         <td><a href="{{urlfor "ClientsController.UpdateFiles"}}" class="btn btn-warning btn-sm bg-yellow-gradient btn150"
-          data-title="Update ALL Clients?" 
-           title="Apply Clients Configuration" style="margin-right: 23px;">Apply Configurations</a>
-           <a href="{{urlfor "ClientsController.Restart"}}" class="btn btn-danger btn-sm bg-red-gradient btn150" 
-           data-title="Restart OpenVPN container?" 
-           title="Restart OpenVPN container" style="margin-right: 23px;">Restart OpenVPN Server</a>
-          </td>
-        </tr>
-      </table>
-  </div>
-  <div class="box-footer clearfix">
-  </div>
-  <!-- /.box-footer -->
 </div>
-
 
 <div class="row">
   <div class="col-md-12">
@@ -37,8 +32,7 @@
       <div class="box-header with-border">
         <h3 class="box-title">Clients details</h3>
       </div>
-      <!-- /.box-header -->
-      {{template "common/alert.html" .}}
+
       <div class="box-body">
         <!--if .ovstatus -->
         <div class="table-responsive">

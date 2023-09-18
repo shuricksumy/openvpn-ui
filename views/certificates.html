@@ -6,20 +6,22 @@
 
 {{define "body"}}
 
+{{template "common/alert.html" .}}
+
 <div class="box box-primary">
   <div class="box-header with-border">
     <table>
       <tr>
         <td class="col-md-1 text-left"><a class="btn btn-primary bg-light-blue-gradient btn-sm btn120" data-toggle="collapse" href="#newCert" role="button"  aria-expanded="false"
                 aria-controls="newCert" style="margin-left: 0.5%;">Create New Certificate</a></td>
-        <td class="col-md-1 text-right">Restart server after revocation:&nbsp;&nbsp;&nbsp;<a href="{{urlfor "CertificatesController.Restart"}}" class="btn btn-danger btn-sm bg-red-gradient btn150" data-title="Restart OpenVPN container?" 
+        <td class="col-md-1 text-right"><i>Restart server after revocation:&nbsp;&nbsp;&nbsp;</i><a href="{{urlfor "CertificatesController.Restart"}}" class="btn btn-danger btn-sm bg-red-gradient btn150" data-title="Restart OpenVPN container?" 
                 title="Restart OpenVPN container" style="margin-right: 23px;">Restart OpenVPN Server</a></td>
       </tr>
     </table>
   </div>
   <!-- /.box-header -->
   <!-- form start -->
-  {{template "common/alert.html" .}}
+
   <div id="newCert" class="collapse">
    <form role="form" action="{{urlfor "CertificatesController.Post"}}" method="post">
     <div class="box-body">
