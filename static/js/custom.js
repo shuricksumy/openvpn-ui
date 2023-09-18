@@ -31,7 +31,7 @@ $(function() {
  $('a.btn-danger').confirm({
     content: "Are you sure? This cannot be reverted.",
     type: 'red',
-    icon: 'fa fa-warning',
+    icon: 'fa fa-hand-o-right',
     title: 'font-awesome',
     theme: 'bootstrap',
     columnClass: 'small',
@@ -53,7 +53,7 @@ $(function() {
   $('a.btn-warning').confirm({
     content: "Confirm, if you are 100% sure.",
     type: 'orange',
-    icon: 'fa fa-warning',
+    icon: 'fa fa-hand-o-right',
     title: 'font-awesome',
     columnClass: 'small',
     theme: 'bootstrap',
@@ -74,8 +74,8 @@ $(function() {
 
    $('button.form-to-confirm').confirm({
     content: "Confirm, if you are 100% sure.",
-    type: 'red',
-    icon: 'fa fa-warning',
+    type: 'blue',
+    icon: 'fa fa-hand-o-right',
     title: 'font-awesome',
     columnClass: 'small',
     theme: 'bootstrap',

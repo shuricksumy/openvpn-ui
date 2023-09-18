@@ -23,7 +23,7 @@
   <!-- form start -->
 
   <div id="newCert" class="collapse">
-   <form role="form" action="{{urlfor "CertificatesController.Post"}}" method="post">
+   <form id="form-to-confirm" role="form" action="{{urlfor "CertificatesController.Post"}}" method="post">
     <div class="box-body">
 
    <div class="form-row">
@@ -59,8 +59,8 @@
     <!-- /.box-body -->
 
     <div class="box-footer">
-      <button type="submit" class="btn btn-primary btn-sm bg-light-blue-gradient btn80" 
-        style="margin-right: 23px; float: right;">Create</button>
+      <button type="submit" class="btn btn-primary btn-sm bg-light-blue-gradient btn80 form-to-confirm" 
+        style="margin-right: 23px; float: right;" data-title="Create new client?">Create</button>
     </div>
   </form>
  </div>
