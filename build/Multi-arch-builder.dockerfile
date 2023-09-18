@@ -4,7 +4,7 @@ FROM debian:stable
 ARG TARGETPLATFORM
 
 
-RUN apt-get update && apt-get install golang-go git curl bzip2 wget -y
+RUN apt-get update && apt-get install golang-go git curl bzip2 wget jq -y
 RUN apt-get remove golang-go -y
 
 RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then wget https://go.dev/dl/go1.21.1.linux-amd64.tar.gz && tar -C /usr/local/ -xzf go1.21.1.linux-amd64.tar.gz; fi
