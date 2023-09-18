@@ -15,6 +15,10 @@
         <a href="{{urlfor "SettingsController.Get"}}">App Settings</a>
       </li>
 
+      <li {{if compare .RouterPattern "/ov/system"}}class="active"{{end}}>
+        <a href="{{urlfor "SystemController.Get"}}">System Utils</a>
+      </li>
+
       <li {{if compare .RouterPattern "/ov/serverconfig"}}class="active"{{end}}>
         <a href="{{urlfor "ServerConfigController.Get"}}">Server Config</a>
       </li>
@@ -22,17 +26,26 @@
       <li {{if compare .RouterPattern "/ov/clientconfig"}}class="active"{{end}}>
         <a href="{{urlfor "ClientConfigController.Get"}}">Client Config</a>
       </li>
-
-      <li {{if compare .RouterPattern "/ov/system"}}class="active"{{end}}>
-        <a href="{{urlfor "SystemController.Get"}}">System Utils</a>
-      </li>
-
     </ul>
   </li>
 
-  <li {{if compare .RouterPattern "/certificates"}}class="active"{{end}}>
-    <a href="{{urlfor "CertificatesController.Get"}}">Certificates</a>
-  </li>
+  <li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+      Clients <span class="caret"></span>
+    </a>
+
+    <ul class="dropdown-menu" role="menu">
+
+      <li {{if compare .RouterPattern "/clients"}}class="active"{{end}}>
+        <a href="{{urlfor "ClientsController.Get"}}">Details</a>
+      </li>
+
+      <li {{if compare .RouterPattern "/certificates"}}class="active"{{end}}>
+        <a href="{{urlfor "CertificatesController.Get"}}">Certificates</a>
+      </li>
+    
+    </ul>  
+  </li>  
 
   <li {{if compare .RouterPattern "/logs"}}class="active"{{end}}>
     <a href="{{urlfor "LogsController.Get"}}">Logs</a>

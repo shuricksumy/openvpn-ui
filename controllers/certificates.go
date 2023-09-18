@@ -9,16 +9,16 @@ import (
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/core/validation"
 	"github.com/beego/beego/v2/server/web"
-	"github.com/shuricksumy/openvpn-ui/pkg/openvpn-server-config/client/config"
 	"github.com/shuricksumy/openvpn-ui/lib"
-	"github.com/shuricksumy/openvpn-ui/state"
 	"github.com/shuricksumy/openvpn-ui/models"
+	"github.com/shuricksumy/openvpn-ui/pkg/openvpn-server-config/client/config"
+	"github.com/shuricksumy/openvpn-ui/state"
 )
 
 type NewCertParams struct {
-	Name       string `form:"Name" valid:"Required;"`
-	Staticip   string `form:"staticip"`
-	Passphrase string `form:"passphrase"`
+	Name        string `form:"Name" valid:"Required;"`
+	Description string `form:"description"`
+	Passphrase  string `form:"passphrase"`
 }
 
 type CertificatesController struct {
@@ -35,7 +35,7 @@ func (c *CertificatesController) NestPrepare() {
 	settings.Read("Profile")
 	c.Data["Settings"] = &settings
 	c.Data["breadcrumbs"] = &BreadCrumbs{
-		Title: "Certificates",
+		Title: "Clients Certificates",
 	}
 }
 
@@ -80,6 +80,7 @@ func (c *CertificatesController) showCerts() {
 		flash.Store(&c.Controller)
 
 	}
+	logs.Error(">>>>>>>>>>>>>>>>>>>>>>>>>>>", lib.GetClientDetailsFieldValue("alex", "Description"))
 	lib.Dump(certs)
 	c.Data["certificates"] = &certs
 }
@@ -97,11 +98,15 @@ func (c *CertificatesController) Post() {
 		if vMap := validateCertParams(cParams); vMap != nil {
 			c.Data["validation"] = vMap
 		} else {
-			if err := lib.CreateCertificate(cParams.Name, cParams.Staticip, cParams.Passphrase); err != nil {
+			if err := lib.CreateCertificate(cParams.Name, cParams.Passphrase); err != nil {
 				logs.Error(err)
 				flash.Error(err.Error())
 				flash.Store(&c.Controller)
 			} else {
+				err_save_json := AddDescriptionToFile(cParams.Name, cParams.Description)
+				if err_save_json != nil {
+					flash.Warning("Certificate for the name \"" + cParams.Name + "\" has been created. But Description was not saved")
+				}
 				flash.Success("Success! Certificate for the name \"" + cParams.Name + "\" has been created")
 				flash.Store(&c.Controller)
 			}
@@ -117,10 +122,26 @@ func (c *CertificatesController) Revoke() {
 	name := c.GetString(":key")
 	if err := lib.RevokeCertificate(name); err != nil {
 		logs.Error(err)
-		//flash.Error(err.Error())
-		//flash.Store(&c.Controller)
+		flash.Error(err.Error())
+		flash.Store(&c.Controller)
 	} else {
 		flash.Warning("Success! Certificate for the name \"" + name + "\" has been revoked")
+		flash.Store(&c.Controller)
+	}
+	c.showCerts()
+}
+
+// @router /certificates/unrevoke/:key [get]
+func (c *CertificatesController) UnRevoke() {
+	c.TplName = "certificates.html"
+	flash := web.NewFlash()
+	name := c.GetString(":key")
+	if err := lib.UnRevokeCertificate(name); err != nil {
+		logs.Error(err)
+		flash.Error(err.Error())
+		flash.Store(&c.Controller)
+	} else {
+		flash.Warning("Success! Certificate for the name \"" + name + "\" has been UNrevoked")
 		flash.Store(&c.Controller)
 	}
 	c.showCerts()
@@ -150,32 +171,25 @@ func (c *CertificatesController) Burn() {
 	c.showCerts()
 }
 
-// @router /certificates/render_modal/ [post]
-func (c *CertificatesController) RenderModal() {
+// @router /certificates/revoke/:key [get]
+func (c *CertificatesController) Renew() {
+	c.TplName = "certificates.html"
 	flash := web.NewFlash()
-	clientName := c.GetString("client-name")
-
-	// Load data from the client-name.txt file.
-	destPathClientConfig := filepath.Join(state.GlobalCfg.OVConfigPath, "ccd", clientName)
-	data, err := lib.RawReadFile(destPathClientConfig)
-	if err != nil {
+	name := c.GetString(":key")
+	serial := c.GetString(":serial")
+	if err := lib.RenewCertificate(name, serial); err != nil {
 		logs.Error(err)
-		flash.Error("Cannot read " + clientName + " file !")
+		flash.Error(err.Error())
+		flash.Store(&c.Controller)
+	} else {
+		flash.Success("Success! Certificate for the name \"" + name + "\"  and \"" + serial + "\" has been renewed")
 		flash.Store(&c.Controller)
 	}
-
-	// Pass the client name and data to the modal template for rendering.
-	c.Data["ClientName"] = clientName
-	c.Data["ClientData"] = string(data)
-
-	c.Layout = ""
-	c.TplName = "modal.html"
-	//c.Render()
 	c.showCerts()
 }
 
 // @router /certificates/save_client_data [post]
-func (c *CertificatesController) SaveClientData() {
+func (c *CertificatesController) SaveClientRawData() {
 	flash := web.NewFlash()
 	clientName := c.GetString("client_name")
 	clientData := c.GetString("client_data")
@@ -255,4 +269,22 @@ func SaveToFile(tplPath string, c config.Config, destPath string) error {
 	}
 
 	return lib.RawSaveToFile(destPath, str)
+}
+
+func AddDescriptionToFile(clientName string, description string) error {
+
+	newClient := lib.ClientDetails{
+		ClientName:     clientName,
+		StaticIP:       "",
+		IsRouteDefault: false,
+		IsRouter:       false,
+		RouterSubnet:   "",
+		RouterMask:     "",
+		Description:    description,
+		RouteList:      []string{},
+		CSRFToken:      "",
+	}
+
+	return lib.AddClientToJsonFile(newClient)
+
 }

@@ -6,16 +6,24 @@
 
 {{define "body"}}
 
+{{template "common/alert.html" .}}  
+
 <div class="box box-primary">
   <div class="box-header with-border">
-  <a class="btn btn-primary bg-light-blue-gradient btn-sm btn120" data-toggle="collapse" href="#newCert" role="button"  aria-expanded="false"
-           aria-controls="newCert" style="margin-left: 0.5%;">Create New Certificate</a>
+    <table>
+      <tr>
+        <td class="col-md-1 text-left"><a class="btn btn-primary bg-light-blue-gradient btn-sm btn120" data-toggle="collapse" href="#newCert" role="button"  aria-expanded="false"
+                aria-controls="newCert" style="margin-left: 0.5%;">Create New Certificate</a></td>
+        <td class="col-md-1 text-right"><i>Restart server after revocation:&nbsp;&nbsp;&nbsp;</i><a href="{{urlfor "CertificatesController.Restart"}}" class="btn btn-danger btn-sm bg-red-gradient btn150" data-title="Restart OpenVPN container?" 
+                title="Restart OpenVPN container" style="margin-right: 23px;">Restart OpenVPN Server</a></td>
+      </tr>
+    </table>
   </div>
   <!-- /.box-header -->
   <!-- form start -->
-  {{template "common/alert.html" .}}
+
   <div id="newCert" class="collapse">
-   <form role="form" action="{{urlfor "CertificatesController.Post"}}" method="post">
+   <form id="form-to-confirm" role="form" action="{{urlfor "CertificatesController.Post"}}" method="post">
     <div class="box-body">
 
    <div class="form-row">
@@ -38,9 +46,9 @@
         </div>
 
        <div class="form-group col-md-4">
-            <label for="staticip">Static IP (Optional)</label>
-            <input type="text" class="form-control" placeholder="Enter Static IP" id="staticip" 
-               name="staticip" pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$">
+            <label for="description">Description (Optional)</label>
+            <input type="text" class="form-control" placeholder="Add description" id="description" 
+               name="description">
             <span class="help-block">Client Static IP used as a local Client IP for subnet split.</span>
        </div>
 
@@ -51,7 +59,8 @@
     <!-- /.box-body -->
 
     <div class="box-footer">
-      <button type="submit" class="btn btn-primary btn-sm bg-light-blue-gradient btn80" style="margin-right: 23px; float: right;">Create</button>
+      <button type="submit" class="btn btn-primary btn-sm bg-light-blue-gradient btn80 form-to-confirm" 
+        style="margin-right: 23px; float: right;" data-title="Create new client?">Create</button>
     </div>
   </form>
  </div>
@@ -76,13 +85,14 @@
             <tr>
               <th style="width:15%">Name</th>
               <th style="width:5%">State</th>
-              <th style="width:20%">Static IP</th>
+              <th style="width:50%">Description</th>
               <th style="width:10%">Expiration</th>
               <!-- <th>Revocation</th> -->
-              <th style="width:40%">Serial</th>
+              <!-- <th style="width:20%">Serial</th> -->
               <!-- <th>Details</th> -->
-              <th class="textcenter" style="width:5%">Actions</th>
-              <th class="textcenter" style="width:5%">Details</th>
+              <th class="textcenter" style="width:10%">Actions</th>
+
+              <th class="textcenter" style="width:10%">Details</th>
               <th></th>
             </tr>
             </thead>
@@ -94,8 +104,9 @@
                   <!-- 1 sell -->
                   {{if eq .EntryType "V"}}
                   <td>
-                    <a href="{{urlfor "CertificatesController.Download" ":key" .Details.Name}}" class="btn btn-primary btn-sm btn-block bg-light-blue-gradient" title="Download">
-                      {{ .Details.CN }}.ovpn
+                    <a href="{{urlfor "CertificatesController.Download" ":key" .Details.CN}}" 
+                      class="btn btn-primary btn-sm btn-block bg-light-blue-gradient right-icon-holder" title="{{ .Details.CN }}">
+                      {{ .Details.CN }}.ovpn<i class="fa fa-download"></i>
                     </a>
                   </td>
                   {{else}}
@@ -109,19 +120,22 @@
                    <!-- 2 sell -->
                   {{if eq .EntryType "V"}}
                     <td>
-                      <button type="button" class="btn btn-success btn-sm bg-green-gradient" data-toggle="modal" data-target="#popup-{{ .Details.CN }}">
+                      <button type="button" class="btn btn-success btn-sm bg-green-gradient" 
+                        data-toggle="modal" data-target="#popup-{{ .Details.CN }}">
                           <span class="glyphicon glyphicon-info-sign">
                       </button>
                     </td>
                   {{else if eq .EntryType "R"}}
                     <td>
-                       <button type="button" class="btn btn-warning btn-sm bg-yellow-gradient" data-toggle="modal" data-target="#popup-{{ .Details.CN }}">
+                       <button type="button" class="btn btn-warning btn-sm bg-yellow-gradient" 
+                        data-toggle="modal" data-target="#popup-{{ .Details.CN }}">
                             <span class="glyphicon glyphicon-info-sign">
                         </button>
                     </td>
                    {{else}}
                      <td>
-                         <button type="button" class="btn btn-danger btn-sm bg-red" data-toggle="modal" data-target="#popup-{{ .Details.CN }}">
+                         <button type="button" class="btn btn-danger btn-sm bg-red" 
+                          data-toggle="modal" data-target="#popup-{{ .Details.CN }}">
                             <span class="glyphicon glyphicon-info-sign">
                         </button>
                      </td>
@@ -129,29 +143,18 @@
 
                     <!-- 3 sell -->
                     <td>
-                      {{ .Details.LocalIP }}
+                      {{ .Details.Description }}
                     </td>
 
                    <!-- 4 sell -->
-                  {{if eq .EntryType "V"}}
-                    <td>
-                      <span class="btn btn-success btn-xs bg-olive">{{ dateformat .ExpirationT "2006-01-02 15:04"}}</span>
+                    <td class="my-centered">
+                      <span class="btn btn-xs bg-gray">{{ dateformat .ExpirationT "2006-01-02 15:04"}}</span>
                     </td>
-                  {{else if eq .EntryType "R"}}
-                    <td>
-                      <span class="btn btn-warning btn-xs bg-yellow-gradient">{{ dateformat .RevocationT "2006-01-02 15:04"}}</span>
-                    </td>
-                  {{else}}
-                    <td>
-                      <span class="btn btn-default btn-xs bg-gray">{{ dateformat .ExpirationT "2006-01-02 15:04"}}</span>
-                    </td>
-                  {{end}}
-
 
                     <!-- 5 sell -->
-                     <td>
+                     <!-- <td>
                       {{ .Serial }}
-                     </td>
+                     </td> -->
 
                 <!--    <td>
                       <span class="label label-warning">CN: {{ .Details.CN }}</span>
@@ -162,11 +165,21 @@
                    <!-- 6 sell -->
                   {{if eq .EntryType "V"}}
                     <td class="textcenter">
-                      <a href="{{urlfor "CertificatesController.Revoke" ":key" .Details.Name}}" data-title="Revoke certificates ?" class="btn btn-warning btn-sm bg-yellow-gradient btn80" title="Revoke">Revoke</a>
+                      <a href="{{urlfor "CertificatesController.Revoke" ":key" .Details.CN}}" data-title="Disable access for user?" 
+                        class="btn btn-warning btn-sm bg-yellow-gradient btn80" title="Revoke">Revoke</a>
+                      <!-- <a href="{{urlfor "CertificatesController.Renew" ":key" .Details.CN ":serial" .Serial}}" 
+                          data-title="Restore certificates?" class="btn btn-warning btn-sm bg-yellow-gradient btn80" title="Burn">Renew</a> -->
                     </td>
                   {{else if eq .EntryType "R"}}
                     <td class="textcenter">
-                      <a href="{{urlfor "CertificatesController.Burn" ":key" .Details.CN ":serial" .Serial}}" data-title="Remove certificates ?" class="btn btn-danger btn-sm bg-red-gradient btn80" title="Burn">Remove</a>
+                      <div class="btn-group" role="group">
+                          <a href="{{urlfor "CertificatesController.Burn" ":key" .Details.CN ":serial" .Serial}}" 
+                            data-title="Remove certificates ?" class="btn btn-danger btn-sm bg-red-gradient btn40" title="Remove">RM</a>
+                          <a href="{{urlfor "CertificatesController.UnRevoke" ":key" .Details.CN}}" style="border-color: #d73925;"
+                            data-title="Restore access for user?" class="btn btn-warning btn-sm bg-green-gradient btn40" title="UNRevoke">UN</a>
+                          <!-- <a href="{{urlfor "CertificatesController.Renew" ":key" .Details.CN ":serial" .Serial}}" 
+                            data-title="Restore certificates?" class="btn btn-warning btn-sm bg-yellow-gradient btn80" title="Burn">Renew</a> -->
+                      </div>
                     </td>
                   {{else}}
                     <td>
@@ -178,11 +191,13 @@
                   <!-- 7 sell -->
                   {{if eq .EntryType "V"}}
                     <td class="textcenter">
-                      <button  id="openModalEditClient" data-target="#editClientModal" data-client-name="{{ .Details.CN }}" class="btn btn-primary btn-sm edit-button bg-light-blue-gradient btn80" title="Edit">Edit</button>
+                      <button  id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .Details.CN }}" 
+                        class="btn btn-primary btn-sm edit-button bg-light-blue-gradient btn80" title="Edit">Edit</button>
                     </td>
                   {{else}}
                     <td class="textcenter">
-                      <button  id="openModalEditClient" data-target="#editClientModal" data-client-name="{{ .Details.CN }}" class="btn btn-default btn-sm edit-button btn80" title="Edit">Edit</button>
+                      <button  id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .Details.CN }}"  
+                        class="btn btn-default btn-sm edit-button btn80" title="Edit">Edit</button>
                     </td>
                   {{end}}
 
@@ -191,12 +206,16 @@
                   <div id="popup-{{ .Details.CN }}" class="modal fade popupinfo" role="dialog">
                       <div class="box box-primary bodypop">
                              <span class="param-name">Name:</span><span class="param-value"> {{ .Details.CN }}</span><br>
+                             <span class="param-name">Description:</span><span class="param-value"> {{ .Details.Description }}</span><br>
                              <span class="param-name">Type:</span><span class="param-value"> {{ .EntryType }}</span><br>
-                             <span class="param-name">Status:</span><span class="param-value">{{if eq .EntryType "V"}}  Active {{else if eq .EntryType "R"}} Revoked {{else}} Unknown {{end}}</span><br>
+                             <span class="param-name">Status:</span><span class="param-value">
+                                {{if eq .EntryType "V"}}  Active {{else if eq .EntryType "R"}} Revoked {{else}} Unknown {{end}}</span><br>
                              <span class="param-name">Serial:</span><span class="param-value"> {{ .Serial }}</span><br>
                              <span class="param-name">IP Address:</span><span class="param-value"> {{ .Details.LocalIP }}</span><br>
-                             <span class="param-name">Expiration Date:</span><span class="param-value"> {{ dateformat .ExpirationT "2006-01-02 15:04"}}</span><br>
-                             <span class="param-name">Revoke Date:</span><span class="param-value"> {{if ne .Revocation ""}} {{ dateformat .RevocationT "2006-01-02 15:04"}} {{else}} none {{end}}</span><br>
+                             <span class="param-name">Expiration Date:</span><span class="param-value">
+                                {{ dateformat .ExpirationT "2006-01-02 15:04"}}</span><br>
+                             <span class="param-name">Revoke Date:</span><span class="param-value">
+                                {{if ne .Revocation ""}} {{ dateformat .RevocationT "2006-01-02 15:04"}} {{else}} none {{end}}</span><br>
                              <!-- Copy button -->
                              <button class="btn btn-primary copy-btn bg-light-blue-gradient btn80" data-dismiss="modal">Copy</button>
                              <!-- Close button -->
@@ -231,40 +250,18 @@
     <!-- /.box -->
   </div>
 
-  <div class="box box-danger">
-    <div class="box-header with-border">
-      <h3 class="box-title">Restart OpenVPN</h3>
-    </div>
-    <!-- /.box-header -->
-    <!-- <div class="box-body">
-      <span id="helpBlock" class="help-block">If you are revoking Certificate, don't forget to restart your OpenVPN container to disconnect all active client sessions and make revocation to take the effect.<br/></span>
-    </div> -->
-    <div class="box-footer" style="float: right;">
-        <table>
-         <tr>
-           <td style= "margin-right: 5px; vertical-align: bottom;"><i>If you are revoking Certificate, don't forget to restart your OpenVPN container.
-                 Restart can take up to the 7 seconds. &nbsp;&nbsp;</i></td>
-           <td><a href="{{urlfor "CertificatesController.Restart"}}" class="btn btn-danger btn-sm bg-red-gradient btn150" data-title="Restart OpenVPN container?" 
-             title="Restart OpenVPN container" style="margin-right: 23px;">Restart OpenVPN Server</a></td>
-          </tr>
-        </table>
-    </div>
-    <div class="box-footer clearfix">
-    </div>
-    <!--
-    <div class="box-footer clearfix">
-      <a href="javascript:void(0)" class="btn btn-sm btn-info btn-flat pull-left">Place New Order</a>
-      <a href="javascript:void(0)" class="btn btn-sm btn-default btn-flat pull-right">View All Orders</a>
-    </div>
-  -->
-    <!-- /.box-footer -->
-  </div>
-
-
-
 </div>
 
+<script type="text/javascript">
+  var actionURL="/certificates/save_client_data" 
+</script>
 <!-- Add an empty modal container -->
-<div id="modal-edit-client"></div>
-
+<div id="modal-edit-client-raw"></div>
 {{end}}
+
+
+<div id="overlay">
+  <div class="cv-spinner">
+    <span class="spinner"></span>
+  </div>
+</div>

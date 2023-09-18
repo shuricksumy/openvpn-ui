@@ -38,6 +38,9 @@ COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/install_pk
 COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/restart.sh /opt/scripts/restart.sh
 COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/rmcert.sh /opt/scripts/rmcert.sh
 COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/rmclient.sh /opt/scripts/rmclient.sh
+COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/createClientFilesFromJSON.sh /opt/scripts/createClientFilesFromJSON.sh
+COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/renew.sh /opt/scripts/renew.sh
+COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/unRevoke.sh /opt/scripts/unRevoke.sh
 
 RUN /opt/scripts/install_pkg.sh
 

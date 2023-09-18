@@ -5,14 +5,16 @@
 {{end}}
 
 {{define "body"}}
+
+{{template "common/alert.html" .}}
+
 <div class="box box-primary">
   <!-- <div class="box-header with-border">
     <h3 class="box-title">Server Configuration</h3>
   </div> ->>
   <!-- /.box-header -->
   <!-- form start -->
-  {{template "common/alert.html" .}}
-  <form role="form" action="{{urlfor "OVConfigController.Post"}}" method="post">
+  <form id="form-to-confirm" role="form" action="{{urlfor "OVConfigController.Post"}}" method="post">
     <div class="box-body">
 
       <div class="form-group" >
@@ -27,15 +29,22 @@
        {{ .xsrfdata }}
       </div>
      <div class="box-footer">
-       <button type="submit" class="btn btn-primary bg-light-blue-gradient btn80">Save</button>
+       <button type="submit" class="btn btn-primary bg-light-blue-gradient btn80 form-to-confirm"
+       data-title="Update tamplte for clients?">Save</button>
      </div>
         <!-- /.box-body -->
    </form>
 
 </div>
 <!-- /.box -->
+
 {{end}}
 
+<div id="overlay">
+  <div class="cv-spinner">
+    <span class="spinner"></span>
+  </div>
+</div>
 
 <script>
     createEditor("ClientTemplate", "600px", {{if eq .Settings.Theme "midnight"}}"clouds_midnight"{{else}}"clouds"{{end}}, "space", false)
