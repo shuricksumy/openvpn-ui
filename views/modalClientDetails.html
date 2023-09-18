@@ -38,6 +38,10 @@
     });
 </script>
 <style> 
+.mychekbox-md{
+    margin-top: 10px;
+}
+
 .popover-title{
     /* background: #ffff99; */
     color: black;
@@ -76,24 +80,11 @@ pre.mypre {
                     <div class="panel-body">
                         <div class="form-row">
                             <div class="col-sm-4">
-                                <div class="form-check mychekbox">
-                                    <input name="is_route_default" id="is_route_default" class="form-check-input" type="checkbox" value="true" 
-                                        {{if .IsRouteDefault}} checked {{else}} {{end}}>
-                                    <label class="form-check-label my-label" for="is_route_default">
-                                        Use as default route &nbsp;
-                                        <span class="glyphicon glyphicon-info-sign" data-toggle="popover" data-placement="bottom" 
-                                        data-content="Set if want to send all trafic via VPN network."></span>
-                                    </label>
-                                </div>
-                                <!-- <label class="form-check-label" for="static_ip">
-                                    Static IP: &nbsp;
-                                    
-                                </label> -->
-                
-                                <input class="form-control" name="static_ip" value="{{.StaticIP}}" 
-                                pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" 
-                                    placeholder="Enter Static IP">
-
+                                
+                                <label class="form-check-label" for="static_ip">
+                                    Static IP: &nbsp;    
+                                </label>
+                                <!-- <span>About static IP address.&nbsp;</span> -->
                                 <span class="glyphicon glyphicon-info-sign" data-toggle="popover" data-html="true" data-placement="bottom"
                                     title=" It's a static client IP. Wor Windows clients use next pairs:"  data-content="
                                             <pre class='mypre'>[  1,  2] [  5,  6] [  9, 10]</pre>
@@ -119,7 +110,23 @@ pre.mypre {
                                             <pre class='mypre'>[241,242] [245,246] [249,250]</pre>
                                             <pre class='mypre'>[253,254]</pre>">
                                 </span>
-                                <span>&nbsp; About static IP address.</span>
+
+                
+                                <input class="form-control" name="static_ip" value="{{.StaticIP}}" 
+                                pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" 
+                                    placeholder="Enter Static IP">
+
+                                <div class="form-check mychekbox mychekbox-md">
+                                    <input name="is_route_default" id="is_route_default" class="form-check-input" type="checkbox" value="true" 
+                                        {{if .IsRouteDefault}} checked {{else}} {{end}}>
+                                    <label class="form-check-label my-label" for="is_route_default">
+                                        Use as default route &nbsp;
+                                        <span class="glyphicon glyphicon-info-sign" data-toggle="popover" data-placement="bottom" 
+                                        data-content="Set if want to send all trafic via VPN network."></span>
+                                    </label>
+                                </div>
+
+                                
                             </div>
 
                             
