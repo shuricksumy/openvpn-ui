@@ -27,7 +27,7 @@ WORKDIR /opt
 EXPOSE 8080
 
 
-RUN apt-get update && apt-get install -y curl bzip2
+RUN apt-get update && apt-get install -y curl bzip2 jq
 
 COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/start.sh /opt/start.sh
 COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/generate_ca_and_server_certs.sh /opt/scripts/generate_ca_and_server_certs.sh
