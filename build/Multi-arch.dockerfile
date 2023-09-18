@@ -1,6 +1,6 @@
 FROM shuricksumy/builder:latest
 
-#RUN apt-get update && apt-get install golang-go git curl bzip2 -y
+#RUN apt-get update && apt-get install golang-go git curl bzip2 jq -y
 
 ENV PATH="$PATH:/usr/local/go/bin"
 RUN export PATH="$PATH:/usr/local/go/bin"; echo $PATH
