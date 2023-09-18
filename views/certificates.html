@@ -51,7 +51,8 @@
     <!-- /.box-body -->
 
     <div class="box-footer">
-      <button type="submit" class="btn btn-primary btn-sm bg-light-blue-gradient btn80" style="margin-right: 23px; float: right;">Create</button>
+      <button type="submit" class="btn btn-primary btn-sm bg-light-blue-gradient btn80" 
+        style="margin-right: 23px; float: right;">Create</button>
     </div>
   </form>
  </div>
@@ -138,7 +139,7 @@
                     </td>
 
                    <!-- 4 sell -->
-                    <td>
+                    <td class="my-centered">
                       <span class="btn btn-xs bg-gray">{{ dateformat .ExpirationT "2006-01-02 15:04"}}</span>
                     </td>
 
@@ -156,15 +157,20 @@
                    <!-- 6 sell -->
                   {{if eq .EntryType "V"}}
                     <td class="textcenter">
-                      <a href="{{urlfor "CertificatesController.Revoke" ":key" .Details.CN}}" data-title="Disable access for user?" class="btn btn-warning btn-sm bg-yellow-gradient btn80" title="Revoke">Revoke</a>
-                      <!-- <a href="{{urlfor "CertificatesController.Renew" ":key" .Details.CN ":serial" .Serial}}" data-title="Restore certificates?" class="btn btn-warning btn-sm bg-yellow-gradient btn80" title="Burn">Renew</a> -->
+                      <a href="{{urlfor "CertificatesController.Revoke" ":key" .Details.CN}}" data-title="Disable access for user?" 
+                        class="btn btn-warning btn-sm bg-yellow-gradient btn80" title="Revoke">Revoke</a>
+                      <!-- <a href="{{urlfor "CertificatesController.Renew" ":key" .Details.CN ":serial" .Serial}}" 
+                          data-title="Restore certificates?" class="btn btn-warning btn-sm bg-yellow-gradient btn80" title="Burn">Renew</a> -->
                     </td>
                   {{else if eq .EntryType "R"}}
                     <td class="textcenter">
                       <div class="btn-group" role="group">
-                          <a href="{{urlfor "CertificatesController.Burn" ":key" .Details.CN ":serial" .Serial}}" data-title="Remove certificates ?" class="btn btn-danger btn-sm bg-red-gradient btn40" title="Burn">RM</a>
-                          <a href="{{urlfor "CertificatesController.UnRevoke" ":key" .Details.CN}}" data-title="Restore access for user?" class="btn btn-warning btn-sm bg-yellow-gradient btn40" title="Revoke">UN</a>
-                          <!-- <a href="{{urlfor "CertificatesController.Renew" ":key" .Details.CN ":serial" .Serial}}" data-title="Restore certificates?" class="btn btn-warning btn-sm bg-yellow-gradient btn80" title="Burn">Renew</a> -->
+                          <a href="{{urlfor "CertificatesController.Burn" ":key" .Details.CN ":serial" .Serial}}" 
+                            data-title="Remove certificates ?" class="btn btn-danger btn-sm bg-red-gradient btn40" title="Remove">RM</a>
+                          <a href="{{urlfor "CertificatesController.UnRevoke" ":key" .Details.CN}}" style="border-color: #d73925;"
+                            data-title="Restore access for user?" class="btn btn-warning btn-sm bg-green-gradient btn40" title="UNRevoke">UN</a>
+                          <!-- <a href="{{urlfor "CertificatesController.Renew" ":key" .Details.CN ":serial" .Serial}}" 
+                            data-title="Restore certificates?" class="btn btn-warning btn-sm bg-yellow-gradient btn80" title="Burn">Renew</a> -->
                       </div>
                     </td>
                   {{else}}
@@ -177,11 +183,13 @@
                   <!-- 7 sell -->
                   {{if eq .EntryType "V"}}
                     <td class="textcenter">
-                      <button  id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .Details.CN }}" class="btn btn-primary btn-sm edit-button bg-light-blue-gradient btn80" title="Edit">Edit</button>
+                      <button  id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .Details.CN }}" 
+                        class="btn btn-primary btn-sm edit-button bg-light-blue-gradient btn80" title="Edit">Edit</button>
                     </td>
                   {{else}}
                     <td class="textcenter">
-                      <button  id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .Details.CN }}"  class="btn btn-default btn-sm edit-button btn80" title="Edit">Edit</button>
+                      <button  id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .Details.CN }}"  
+                        class="btn btn-default btn-sm edit-button btn80" title="Edit">Edit</button>
                     </td>
                   {{end}}
 
@@ -192,11 +200,14 @@
                              <span class="param-name">Name:</span><span class="param-value"> {{ .Details.CN }}</span><br>
                              <span class="param-name">Description:</span><span class="param-value"> {{ .Details.Description }}</span><br>
                              <span class="param-name">Type:</span><span class="param-value"> {{ .EntryType }}</span><br>
-                             <span class="param-name">Status:</span><span class="param-value">{{if eq .EntryType "V"}}  Active {{else if eq .EntryType "R"}} Revoked {{else}} Unknown {{end}}</span><br>
+                             <span class="param-name">Status:</span><span class="param-value">
+                                {{if eq .EntryType "V"}}  Active {{else if eq .EntryType "R"}} Revoked {{else}} Unknown {{end}}</span><br>
                              <span class="param-name">Serial:</span><span class="param-value"> {{ .Serial }}</span><br>
                              <span class="param-name">IP Address:</span><span class="param-value"> {{ .Details.LocalIP }}</span><br>
-                             <span class="param-name">Expiration Date:</span><span class="param-value"> {{ dateformat .ExpirationT "2006-01-02 15:04"}}</span><br>
-                             <span class="param-name">Revoke Date:</span><span class="param-value"> {{if ne .Revocation ""}} {{ dateformat .RevocationT "2006-01-02 15:04"}} {{else}} none {{end}}</span><br>
+                             <span class="param-name">Expiration Date:</span><span class="param-value">
+                                {{ dateformat .ExpirationT "2006-01-02 15:04"}}</span><br>
+                             <span class="param-name">Revoke Date:</span><span class="param-value">
+                                {{if ne .Revocation ""}} {{ dateformat .RevocationT "2006-01-02 15:04"}} {{else}} none {{end}}</span><br>
                              <!-- Copy button -->
                              <button class="btn btn-primary copy-btn bg-light-blue-gradient btn80" data-dismiss="modal">Copy</button>
                              <!-- Close button -->

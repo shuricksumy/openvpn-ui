@@ -208,3 +208,16 @@
   margin-top: -12px; /* Half of line height to keep left middle postion of container */
   right: 10px;
 }
+
+td.my-centered{
+  /* text-align: center; */
+  vertical-align: middle !important;
+}
+
+td.first-cap{
+  text-transform: capitalize;
+}
+
+td.txt-smaller{
+  font-size: smaller !important;
+}

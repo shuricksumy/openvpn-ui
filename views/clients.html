@@ -41,16 +41,16 @@
          <table class="table no-margin">
             <thead>
             <tr>
-              <th style="width:8%">Client Name</th>
-              <th style="width:2%">AllRoute</th>
-              <th style="width:5%">StaticIP</th>
+              <th style="width:5%">Client Name</th>
+              <th style="width:2%">DefR</th>
+              <th style="width:5%">Static IP</th>
               <th style="width:5%">IsRouter</th>
               <!-- <th>Revocation</th> -->
               <!-- <th style="width:15%">Router Subnet</th> -->
               <!-- <th>Details</th> -->
               <th class="textcenter" style="width:30%">Description</th>
-              <th class="textcenter" style="width:40%">Route List</th>
-              <th class="textcenter" style="width:10%">File</th>
+              <th class="textcenter" style="width:50%">Route List</th>
+              <th class="textcenter" style="width:3%">File</th>
               <th></th>
             </tr>
             </thead>
@@ -60,7 +60,7 @@
               <tr>
 
                   <!-- 1 sell -->
-                  <td>
+                  <td class="my-centered">
                        <button id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .ClientName }}" 
                         class="btn btn-primary btn-sm btn-block light-blue-gradient right-icon-holder" 
                         title="{{ .ClientName }}">{{ .ClientName }}<i class="fa fa-edit"></i>
@@ -68,16 +68,16 @@
                   </td>
 
                   <!-- 2 sell -->
-                  <td>
+                  <td class="my-centered first-cap">
                     {{ if .IsRouteDefault }}
-                      <span class="btn btn-xs bg-green">{{ .IsRouteDefault }}</span>
+                      <span class="btn btn-xs bg-green btn40">{{ .IsRouteDefault }}</span>
                     {{else}}
-                      <span class="btn btn-xs bg-gray">{{ .IsRouteDefault }}</span>
+                      <span class="btn btn-xs bg-gray btn40">{{ .IsRouteDefault }}</span>
                     {{end}}
                   </td>
 
                   <!-- 3 sell -->
-                  <td>
+                  <td class="my-centered">
                     {{ if ne .StaticIP "" }}
                       <span class="btn btn-xs bg-green btn80">{{ .StaticIP }}</span>
                     {{else}}
@@ -87,7 +87,7 @@
 
 
                   <!-- 5 sell -->
-                  <td>
+                  <td class="my-centered">
                     {{ if .IsRouter }}
                       <span class="btn btn-xs bg-purple btn80">{{ .RouterSubnet }}</span>
                       <!-- <span class="btn btn-xs bg-purple btn80">{{ .RouterMask }}</span> -->
@@ -97,13 +97,13 @@
                   </td>
 
                   <!-- 6 sell -->
-                  <td>
+                  <td class="my-centered first-cap txt-smaller">
                     {{ .Description }}
                   </td>
 
 
                   <!-- 7 sell -->
-                  <td>
+                  <td class="my-centered">
                     {{range  $val := .RouteList}}
                       <span class="btn btn-xs bg-green bnt24">{{ $val }}</span>
                     {{end}}
@@ -113,7 +113,7 @@
                   </td>
 
                   <!-- 8 sell -->
-                  <td class="textcenter">
+                  <td class="textcenter my-centered">
                     <div class="btn-group" role="group">
                         <button  id="openModalEditClientDetails" data-target="#editClientDetailsModal" data-client-name="{{ .ClientName }}"
                         class="btn btn-primary btn-sm bg-light-blue-gradient btn80" title="Edit">Edit</button>

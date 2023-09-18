@@ -243,12 +243,20 @@ func CombineUnSelectedRouters(selected []string, all []string, clientName string
 	var resultNewRoute []string
 	for _, route := range all {
 		var routeExist bool = false
+
+		// skip in selected list
 		for _, r := range selected {
 			// if not selected or not itself
-			if route == r || route == clientName {
+			if route == r {
 				routeExist = true
 			}
 		}
+
+		// skip itself
+		if route == clientName {
+			routeExist = true
+		}
+
 		if !routeExist {
 			resultNewRoute = append(resultNewRoute, route)
 		}

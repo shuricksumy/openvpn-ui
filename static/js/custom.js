@@ -29,7 +29,7 @@ $(function() {
 
 $(function() {
  $('a.btn-danger').confirm({
-    content: "This cannot be reverted and will affect all users.",
+    content: "Are you sure? This cannot be reverted.",
     type: 'red',
     icon: 'fa fa-warning',
     title: 'font-awesome',
@@ -51,7 +51,7 @@ $(function() {
    });
 
   $('a.btn-warning').confirm({
-    content: "This can not be restored back.",
+    content: "Confirm, if you are 100% sure.",
     type: 'orange',
     icon: 'fa fa-warning',
     title: 'font-awesome',
