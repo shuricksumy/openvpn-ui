@@ -17,38 +17,44 @@
         <div class="modal-content box box-primary">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Edit config for user<font color="#dd4b39" face="Verdana" size="+1"><strong> {{.ClientName}} </strong></font></h4>
+                <h4 class="modal-title">Edit config for user<font face="Verdana" size="+1"><strong> {{.ClientName}} </strong></font></h4>
             </div>
             <div class="modal-body">
-                <div class="form-group mylables">
-                    <span class="btn btn-xs bg-orange btn150">Currently configured:</span>
-                </div>
-                <div class="form-group mylables">
-                    <span class="btn btn-xs bg-gray"><b>VPN route is default:</b></span>
-                    <span class="btn btn-xs bg-gray">{{.ClientJSON.IsRouteDefault}}</span>
-                    {{if ne .ClientJSON.StaticIP ""}}
-                        <span class="btn btn-xs bg-gray"><b>StaticIP:</b></span>
-                        <span class="btn btn-xs bg-gray">{{.ClientJSON.StaticIP}}</span>
-                    {{end}}
-                    <span class="btn btn-xs bg-gray"><b>IsRouter:</b></span>
-                    <span class="btn btn-xs bg-gray">{{.ClientJSON.IsRouter}}</span>
-                    {{ if .ClientJSON.IsRouter}}
-                        <span class="btn btn-xs bg-gray">{{.ClientJSON.RouterSubnet}}/{{.ClientJSON.RouterMask}}</span>
-                    {{end}}
-                </div>
-                <div class="form-group mylables">
-                    <span class="btn btn-xs bg-gray"><b>Route list:</b></span>
-                    {{range  $val := .ClientJSON.RouteList}}
-                        <span class="btn btn-xs bg-gray">{{$val}}</span>
-                    {{end}}
-                </div>
+                <div>
+                    <div class="form-group mylables">
+                        {{if not .IsMD5Valid }}
+                            <span class="btn btn-xs bg-red" style="min-width: 100%;">Currently configured but not applied:</span>
+                        {{else}}
+                            <span class="btn btn-xs bg-green" style="min-width: 100%;">Currently configured:</span>
+                        {{end}}
+                    </div>
 
+                    <div class="form-group mylables">
+                        <span class="btn btn-xs bg-gray"><b>VPN route is default:</b></span>
+                        <span class="btn btn-xs bg-gray">{{.ClientJSON.IsRouteDefault}}</span>
+                        {{if ne .ClientJSON.StaticIP ""}}
+                            <span class="btn btn-xs bg-gray"><b>StaticIP:</b></span>
+                            <span class="btn btn-xs bg-gray">{{.ClientJSON.StaticIP}}</span>
+                        {{end}}
+                        <span class="btn btn-xs bg-gray"><b>IsRouter:</b></span>
+                        <span class="btn btn-xs bg-gray">{{.ClientJSON.IsRouter}}</span>
+                        {{ if .ClientJSON.IsRouter}}
+                            <span class="btn btn-xs bg-gray">{{.ClientJSON.RouterSubnet}}/{{.ClientJSON.RouterMask}}</span>
+                        {{end}}
+                    </div>
+                    <div class="form-group mylables">
+                        <span class="btn btn-xs bg-gray"><b>Route list:</b></span>
+                        {{range  $val := .ClientJSON.RouteList}}
+                            <span class="btn btn-xs bg-gray">{{$val}}</span>
+                        {{end}}
+                    </div>
+                </div>
                 <!-- // Action URL is passed by JS -->
                 <form id="editForm" action="" method="post">
                     <input type="hidden" name="client_name" value="{{.ClientName}}">
                     <div class="form-group">
                         <div class="form-group mylables">
-                            <span class="btn btn-xs bg-green btn150">Actual client config:</span>
+                            <span class="btn btn-xs bg-green" style="min-width: 100%;">Actual client config:</span>
                         </div>
                         <!-- Apply custom CSS style for the textarea width -->
                         <textarea class="form-control custom-textarea my-textarea" rows="15" name="client_data" style="resize: vertical;">{{.ClientData}}</textarea>

@@ -16,16 +16,17 @@ import (
 
 // Structure for using on WEB
 type ClientDetails struct {
-	ClientName          string   `form:"client_name" 		 json:"ClientName"`
-	StaticIP            string   `form:"static_ip" 			 json:"StaticIP"`
-	IsRouteDefault      bool     `form:"is_route_default" 	 json:"IsRouteDefault"`
-	IsRouter            bool     `form:"is_router" 			 json:"IsRouter"`
-	RouterSubnet        string   `form:"router_subnet"		 json:"RouterSubnet"`
-	RouterMask          string   `form:"router_mask" 		 json:"RouterMask"`
-	Description         string   `form:"description" 		 json:"Description"`
-	RouteList           []string `form:"route_list_selected"  json:"RouteListSelected"`
-	RouteListUnselected []string `form:"route_list_unselected" json:"RouteListUnSelected"`
-	CSRFToken           string   `form:"csrftoken" 			 json:"CSRFToken"`
+	ClientName          string   `form:"client_name" 		 	json:"ClientName"`
+	StaticIP            string   `form:"static_ip" 			 	json:"StaticIP"`
+	IsRouteDefault      bool     `form:"is_route_default" 	 	json:"IsRouteDefault"`
+	IsRouter            bool     `form:"is_router" 			 	json:"IsRouter"`
+	RouterSubnet        string   `form:"router_subnet"		 	json:"RouterSubnet"`
+	RouterMask          string   `form:"router_mask" 		 	json:"RouterMask"`
+	Description         string   `form:"description" 		 	json:"Description"`
+	RouteList           []string `form:"route_list_selected"  	json:"RouteListSelected"`
+	RouteListUnselected []string `form:"route_list_unselected" 	json:"RouteListUnSelected"`
+	CSRFToken           string   `form:"csrftoken" 			 	json:"CSRFToken"`
+	MD5Sum              string   `json:"MD5Sum"`
 }
 
 type NameSorterClientDetails []*ClientDetails
@@ -38,6 +39,22 @@ func (a NameSorterClientDetails) Less(i, j int) bool { return a[i].ClientName < 
 type Client struct {
 	ClientName string
 	StaticIP   string
+}
+
+type ClientMD5 struct {
+	ClientName string
+	MD5Hash    string
+	IsValid    bool
+}
+
+var PATH_INDEX string
+var PATH_JSON string
+var CCD_DIR_PATH string
+
+func InitGlobalVars() {
+	PATH_INDEX = filepath.Join(state.GlobalCfg.OVConfigPath, "easy-rsa/pki/index.txt")
+	PATH_JSON = filepath.Join(state.GlobalCfg.OVConfigPath, "clientDetails.json")
+	CCD_DIR_PATH = filepath.Join(state.GlobalCfg.OVConfigPath, "ccd")
 }
 
 // Read index easy-rsa index file
@@ -84,7 +101,7 @@ func ReadClientsFromIndexFile(path string) ([]*Client, error) {
 }
 
 // Read JSON file
-func ReadJSONClientsDetailsFile(path string) ([]*ClientDetails, error) {
+func ReadClientsFromJSONFile(path string) ([]*ClientDetails, error) {
 
 	clientsDetails := make([]*ClientDetails, 0)
 
@@ -99,13 +116,26 @@ func ReadJSONClientsDetailsFile(path string) ([]*ClientDetails, error) {
 	return clientsDetails, nil
 }
 
+// Populate new file only clients from easy-rsa file
+// if client described get its info
+func CombineIndexJsonResults(clientsDetailsFromIndex []*Client, clientsDetailsFromJSON []*ClientDetails) []*ClientDetails {
+	clientsDetailsResult := make([]*ClientDetails, 0)
+
+	for _, indexClient := range clientsDetailsFromIndex {
+		clientMatched := InitClientFromStructure(*indexClient, clientsDetailsFromJSON)
+		clientsDetailsResult = append(clientsDetailsResult, &clientMatched)
+	}
+
+	return clientsDetailsResult
+}
+
 // Combine two sourses: INDEX and JSON files and produce new structure for WEB
 func GetClientsDetails(pathIndex string, pathJson string) ([]*ClientDetails, error) {
 	// Crate empty list of clients
 	clientsDetailsResult := make([]*ClientDetails, 0)
 
 	// Get all describet clients from file
-	clientsDetailsFromFile, errJson := ReadJSONClientsDetailsFile(pathJson)
+	clientsDetailsFromFile, errJson := ReadClientsFromJSONFile(pathJson)
 	if errJson != nil {
 		return clientsDetailsResult, errJson
 	}
@@ -119,7 +149,7 @@ func GetClientsDetails(pathIndex string, pathJson string) ([]*ClientDetails, err
 	// Populate new file only clients from easy-rsa file
 	// if client described get its info
 	for _, indexClient := range clientsFromIndex {
-		clientMatched := GetClientDetailsRaw(*indexClient, clientsDetailsFromFile)
+		clientMatched := InitClientFromStructure(*indexClient, clientsDetailsFromFile)
 		clientsDetailsResult = append(clientsDetailsResult, &clientMatched)
 	}
 
@@ -183,7 +213,7 @@ func parseJSON(jline string) ClientDetails {
 // Comapare INDEX vs JSON
 // if exist - return client from JSON
 // if not exist - generate new dummy
-func GetClientDetailsRaw(findClient Client, clients []*ClientDetails) ClientDetails {
+func InitClientFromStructure(findClient Client, clients []*ClientDetails) ClientDetails {
 	for _, client := range clients {
 		if client.ClientName == findClient.ClientName {
 			return *client
@@ -289,13 +319,14 @@ func GetClientFromStructure(clients []*ClientDetails, clientName string) (Client
 }
 
 // compile new client from web
-func UpdateClientsDetails(clientsDetails []*ClientDetails, client ClientDetails) ([]*ClientDetails, error) {
+func UpdateClientsDetailsInStructure(clientsDetails []*ClientDetails, client ClientDetails) ([]*ClientDetails, error) {
 	newClientsDetails := make([]*ClientDetails, 0)
 
 	for _, c := range clientsDetails {
 		if c.ClientName == client.ClientName {
 			if c.CSRFToken == client.CSRFToken {
 				client.CSRFToken = GenRandomString(32)
+				client.MD5Sum = ""
 				newClientsDetails = append(newClientsDetails, &client)
 				continue
 			} else {
@@ -309,11 +340,10 @@ func UpdateClientsDetails(clientsDetails []*ClientDetails, client ClientDetails)
 	return newClientsDetails, nil
 }
 
-func GetClientsDetailsFromFile() ([]*ClientDetails, error) {
+func GetClientsDetailsFromFiles() ([]*ClientDetails, error) {
+	InitGlobalVars()
 	//get clientsDetails from file
-	pathIndex := filepath.Join(state.GlobalCfg.OVConfigPath, "easy-rsa/pki/index.txt")
-	pathJson := filepath.Join(state.GlobalCfg.OVConfigPath, "clientDetails.json")
-	clientsDetails, err := GetClientsDetails(pathIndex, pathJson)
+	clientsDetails, err := GetClientsDetails(PATH_INDEX, PATH_JSON)
 	if err != nil {
 		return clientsDetails, err
 	}
@@ -324,16 +354,17 @@ func GetClientsDetailsFromFile() ([]*ClientDetails, error) {
 }
 
 func AddClientToJsonFile(client ClientDetails) error {
+	InitGlobalVars()
 	wasError := false
 	//get clientsDetails from file
-	clientsDetails, err_read := GetClientsDetailsFromFile()
+	clientsDetails, err_read := GetClientsDetailsFromFiles()
 	if err_read != nil {
 		wasError = true
 		logs.Error(err_read)
 		logs.Error("ERROR WHILE READING CLIENTS FROM FILE !")
 	}
 
-	newClientDetails, err_upd := UpdateClientsDetails(clientsDetails, client)
+	newClientDetails, err_upd := UpdateClientsDetailsInStructure(clientsDetails, client)
 	if err_upd != nil {
 		wasError = true
 		logs.Error(err_upd)
@@ -341,8 +372,7 @@ func AddClientToJsonFile(client ClientDetails) error {
 	}
 
 	if !wasError {
-		pathJson := filepath.Join(state.GlobalCfg.OVConfigPath, "clientDetails.json")
-		err_save := SaveJsonFile(newClientDetails, pathJson)
+		err_save := SaveJsonFile(newClientDetails, PATH_JSON)
 		if err_save != nil {
 			logs.Error(err_save)
 			logs.Error("FILE WAS NOT SAVE")
@@ -363,7 +393,7 @@ func SaveJsonFile(clientDetails []*ClientDetails, pathJson string) error {
 	return os.WriteFile(pathJson, file, 0644)
 }
 
-func GenerateClientsFileToFS() error {
+func ApplyClientsConfigToFS() error {
 	cmd := exec.Command("/bin/bash", "-c", " cd /opt/scripts/ && ./createClientFilesFromJSON.sh")
 	cmd.Dir = state.GlobalCfg.OVConfigPath
 	output, err := cmd.CombinedOutput()
@@ -376,7 +406,94 @@ func GenerateClientsFileToFS() error {
 }
 
 func GetClientDetailsFieldValue(clientName string, fieldName string) string {
-	allClients, _ := GetClientsDetailsFromFile()
+	allClients, _ := GetClientsDetailsFromFiles()
 	client, _ := GetClientFromStructure(allClients, clientName)
 	return reflect.ValueOf(&client).Elem().FieldByName(fieldName).String()
+}
+
+func GetMD5StructureFromFS(clients []*ClientDetails) []*ClientMD5 {
+	md5Hashs := make([]*ClientMD5, 0)
+	for _, c := range clients {
+		isHashValid := false
+
+		pathFile := filepath.Join(CCD_DIR_PATH, c.ClientName)
+		md5Client, err_get_md5 := GetMD5SumFile(pathFile)
+
+		if err_get_md5 != nil {
+			isHashValid = false
+		}
+
+		if c.MD5Sum == md5Client {
+			isHashValid = true
+		}
+
+		if c.MD5Sum == "" || md5Client == "" {
+			isHashValid = false
+		}
+
+		newMD5 := &ClientMD5{
+			ClientName: c.ClientName,
+			MD5Hash:    md5Client,
+			IsValid:    isHashValid,
+		}
+		md5Hashs = append(md5Hashs, newMD5)
+	}
+
+	return md5Hashs
+
+}
+
+func GetMD5StatusForClient(clients []*ClientDetails, clientName string) bool {
+
+	for _, c := range clients {
+		if c.ClientName == clientName {
+			pathFile := filepath.Join(CCD_DIR_PATH, clientName)
+			md5Client, err_get_md5 := GetMD5SumFile(pathFile)
+
+			if err_get_md5 != nil {
+				return false
+			}
+
+			if c.MD5Sum == "" || md5Client == "" {
+				return false
+			}
+
+			if c.MD5Sum == md5Client {
+				return true
+			}
+
+		}
+	}
+
+	return false
+}
+
+func UpdateJSONWithLatestMD5() error {
+	clientsDetails, err_read := GetClientsDetailsFromFiles()
+	if err_read != nil {
+		return err_read
+	}
+
+	for _, c := range clientsDetails {
+		md5hashs := GetMD5StructureFromFS(clientsDetails)
+
+		for _, h := range md5hashs {
+			if c.ClientName == h.ClientName {
+				c.MD5Sum = h.MD5Hash
+			}
+		}
+	}
+
+	err_save_new_json := SaveJsonFile(clientsDetails, PATH_JSON)
+	if err_save_new_json != nil {
+		return err_save_new_json
+	}
+
+	return nil
+}
+
+func RawReadClientFile(clientName string) (string, error) {
+	InitGlobalVars()
+	destPathClientConfig := filepath.Join(CCD_DIR_PATH, clientName)
+	return RawReadFile(destPathClientConfig)
 }

@@ -148,6 +148,11 @@
  text-align: center;
 }
 
+.but-center {
+ display: block !important;
+ margin: auto !important;
+}
+
 .row-flex {
   display: flex;
   flex-wrap: wrap;

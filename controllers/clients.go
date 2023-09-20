@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"path/filepath"
-	"strings"
 
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
@@ -29,6 +28,7 @@ func (c *ClientsController) NestPrepare() {
 	c.Data["breadcrumbs"] = &BreadCrumbs{
 		Title: "Clients Details",
 	}
+
 }
 
 // @router /clients [get]
@@ -41,12 +41,17 @@ func (c *ClientsController) showClients() {
 	flash := web.NewFlash()
 
 	//get clientsDetails from file
-	clientsDetails, err_read := lib.GetClientsDetailsFromFile()
+	clientsDetails, err_read := lib.GetClientsDetailsFromFiles()
 	if err_read != nil {
 		logs.Error(err_read)
 		flash.Error("ERROR WHILE READING CLIENTS FROM FILE !")
 		flash.Store(&c.Controller)
 	}
+
+	// get md5 sums from file system
+	md5hashs := lib.GetMD5StructureFromFS(clientsDetails)
+	lib.Dump(md5hashs)
+	c.Data["MD5"] = &md5hashs
 
 	lib.Dump(clientsDetails)
 	c.Data["clients"] = &clientsDetails
@@ -58,7 +63,7 @@ func (c *ClientsController) RenderModal() {
 	clientName := c.GetString("client-name")
 
 	//get clientsDetails from file
-	clientsDetails, err_read := lib.GetClientsDetailsFromFile()
+	clientsDetails, err_read := lib.GetClientsDetailsFromFiles()
 	if err_read != nil {
 		logs.Error(err_read)
 		flash.Error("ERROR WHILE READING CLIENTS FROM FILE !")
@@ -94,8 +99,7 @@ func (c *ClientsController) RenderModalRaw() {
 	clientName := c.GetString("client-name")
 
 	// Load data from the client-name.txt file.
-	destPathClientConfig := filepath.Join(state.GlobalCfg.OVConfigPath, "ccd", clientName)
-	data, err := lib.RawReadFile(destPathClientConfig)
+	data, err := lib.RawReadClientFile(clientName)
 	if err != nil {
 		logs.Error(err)
 		flash.Error("Cannot read " + clientName + " file !")
@@ -106,7 +110,7 @@ func (c *ClientsController) RenderModalRaw() {
 	c.Data["ClientName"] = clientName
 	c.Data["ClientData"] = string(data)
 
-	clients, err_get := lib.GetClientsDetailsFromFile()
+	clients, err_get := lib.GetClientsDetailsFromFiles()
 	clientJSON, err_get := lib.GetClientFromStructure(clients, clientName)
 	if err_get != nil {
 		logs.Error(err_get)
@@ -114,6 +118,10 @@ func (c *ClientsController) RenderModalRaw() {
 		flash.Store(&c.Controller)
 	}
 	c.Data["ClientJSON"] = clientJSON
+
+	// get md5 sums from file system
+	isMD5valid := lib.GetMD5StatusForClient(clients, clientName)
+	c.Data["IsMD5Valid"] = isMD5valid
 
 	c.Layout = ""
 	c.TplName = "modalClientRaw.html"
@@ -161,10 +169,19 @@ func (c *ClientsController) UpdateFiles() {
 	wasError := false
 
 	//update files
-	err_save := lib.GenerateClientsFileToFS()
+	err_save := lib.ApplyClientsConfigToFS()
 	if err_save != nil {
 		logs.Error(err_save)
 		flash.Error("ERROR SAVING CLIENTS TO FS !")
+		flash.Store(&c.Controller)
+		wasError = true
+	}
+
+	//UpdateJSON with new MD5
+	err_upd_md5 := lib.UpdateJSONWithLatestMD5()
+	if err_upd_md5 != nil {
+		logs.Error(err_upd_md5)
+		flash.Error("ERROR UPATING MD5 TO JSON ! ", err_upd_md5)
 		flash.Store(&c.Controller)
 		wasError = true
 	}
@@ -213,8 +230,4 @@ func (c *ClientsController) SaveClientRawData() {
 	c.TplName = "clients.html"
 	c.showClients()
 
-}
-
-func trim(s string) string {
-	return strings.Trim(strings.Trim(s, "\r\n"), "\n")
 }

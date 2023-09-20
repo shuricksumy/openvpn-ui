@@ -204,10 +204,6 @@ func parseDetails(d string) *Details {
 	return details
 }
 
-func trim(s string) string {
-	return strings.Trim(strings.Trim(s, "\r\n"), "\n")
-}
-
 func CreateCertificate(name string, passphrase string) error {
 	path := filepath.Join(state.GlobalCfg.OVConfigPath, "easy-rsa/pki/index.txt")
 	pass := false

@@ -1,8 +1,10 @@
 package lib
 
 import (
+	"crypto/md5"
 	"encoding/json"
 	"fmt"
+	"io"
 	"math/rand"
 	"os"
 	"os/exec"
@@ -134,4 +136,27 @@ func GenRandomString(n int) string {
 	}
 
 	return string(b)
+}
+
+func GetMD5SumFile(path string) (string, error) {
+
+	file, err := os.Open(path)
+	if err != nil {
+		return "", nil
+	}
+
+	hash := md5.New()
+
+	_, err = io.Copy(hash, file)
+	if err != nil {
+		return "", err
+	}
+
+	md5 := hash.Sum(nil)
+
+	return fmt.Sprintf("%x", md5), nil
+}
+
+func trim(s string) string {
+	return strings.Trim(strings.Trim(s, "\r\n"), "\n")
 }

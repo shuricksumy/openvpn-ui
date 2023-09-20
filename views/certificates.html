@@ -98,7 +98,8 @@
             </thead>
             <tbody>
 
-            {{range .certificates}}
+            {{$MD5 := .MD5}}  
+            {{range $c := .certificates}}
               <tr>
 
                   <!-- 1 sell -->
@@ -189,15 +190,31 @@
 
 
                   <!-- 7 sell -->
+                  {{ $col := "btn-primary btn-sm bg-light-blue-gradient" }}  
+                  {{ $comment := "Edit" }} 
+                  {{ $isValid := true }}
+                  {{ range $md5 := $MD5 }}
+                      {{ if eq $md5.ClientName $c.Details.CN }}
+                          {{ if not $md5.IsValid }} 
+                              {{ $col = "btn-danger btn-sm bg-red" }}
+                              {{ $comment = "Config was changed but not applied !" }}
+                              {{ $isValid = false }} 
+                          {{ end }}
+                      {{ end }}
+                  {{ end }}
                   {{if eq .EntryType "V"}}
                     <td class="textcenter">
                       <button  id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .Details.CN }}" 
-                        class="btn btn-primary btn-sm edit-button bg-light-blue-gradient btn80" title="Edit">Edit</button>
+                        class="btn {{ $col }} btn80 but-center right-icon-holder" title="{{ $comment }}">Edit
+                      {{if not $isValid }} <i class='fa fa-warning'></i> {{end}}
+                      </button>
                     </td>
                   {{else}}
                     <td class="textcenter">
                       <button  id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .Details.CN }}"  
-                        class="btn btn-default btn-sm edit-button btn80" title="Edit">Edit</button>
+                        class="btn btn-default btn-sm edit-button btn80 but-center right-icon-holder" title="{{ $comment }}">Edit
+                        {{if not $isValid }} <i class='fa fa-warning'></i> {{end}}
+                      </button>
                     </td>
                   {{end}}
 
@@ -208,14 +225,11 @@
                              <span class="param-name">Name:</span><span class="param-value"> {{ .Details.CN }}</span><br>
                              <span class="param-name">Description:</span><span class="param-value"> {{ .Details.Description }}</span><br>
                              <span class="param-name">Type:</span><span class="param-value"> {{ .EntryType }}</span><br>
-                             <span class="param-name">Status:</span><span class="param-value">
-                                {{if eq .EntryType "V"}}  Active {{else if eq .EntryType "R"}} Revoked {{else}} Unknown {{end}}</span><br>
+                             <span class="param-name">Status:</span><span class="param-value">{{if eq .EntryType "V"}}  Active {{else if eq .EntryType "R"}} Revoked {{else}} Unknown {{end}}</span><br>
                              <span class="param-name">Serial:</span><span class="param-value"> {{ .Serial }}</span><br>
                              <span class="param-name">IP Address:</span><span class="param-value"> {{ .Details.LocalIP }}</span><br>
-                             <span class="param-name">Expiration Date:</span><span class="param-value">
-                                {{ dateformat .ExpirationT "2006-01-02 15:04"}}</span><br>
-                             <span class="param-name">Revoke Date:</span><span class="param-value">
-                                {{if ne .Revocation ""}} {{ dateformat .RevocationT "2006-01-02 15:04"}} {{else}} none {{end}}</span><br>
+                             <span class="param-name">Expiration Date:</span><span class="param-value">{{ dateformat .ExpirationT "2006-01-02 15:04"}}</span><br>
+                             <span class="param-name">Revoke Date:</span><span class="param-value">{{if ne .Revocation ""}} {{ dateformat .RevocationT "2006-01-02 15:04"}} {{else}} none {{end}}</span><br>
                              <!-- Copy button -->
                              <button class="btn btn-primary copy-btn bg-light-blue-gradient btn80" data-dismiss="modal">Copy</button>
                              <!-- Close button -->
