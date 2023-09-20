@@ -110,7 +110,13 @@ func (c *ClientsController) RenderModalRaw() {
 	c.Data["ClientName"] = clientName
 	c.Data["ClientData"] = string(data)
 
-	clients, err_get := lib.GetClientsDetailsFromFiles()
+	clients, err_get_file := lib.GetClientsDetailsFromFiles()
+	if err_get_file != nil {
+		logs.Error(err_get_file)
+		flash.Error("Cannot read " + clientName + " file !")
+		flash.Store(&c.Controller)
+	}
+
 	clientJSON, err_get := lib.GetClientFromStructure(clients, clientName)
 	if err_get != nil {
 		logs.Error(err_get)
