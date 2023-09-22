@@ -9,12 +9,6 @@ OVDIR=/etc/openvpn
 DEST_FILE_PATH="$OVDIR/clients/$1.ovpn"
 INDEX_PATH="$OVDIR/easy-rsa/pki/index.txt"
 
-# Check if .ovpn file exists
-if [[ ! -f $DEST_FILE_PATH ]]; then
-    echo "User not found."
-    exit 1
-fi
-
 # Define key serial number by keyname
 
 STATUS_CH=$(grep -e ${1}$ -e ${1}/ ${INDEX_PATH} | awk '{print $1}' | tr -d '\n')

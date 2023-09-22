@@ -217,7 +217,7 @@ func CreateCertificate(name string, passphrase string) error {
 		logs.Error(err)
 		//		return err
 	}
-	Dump(certs)
+	// Dump(certs)
 	exists := false
 	for _, v := range certs {
 		if v.Details.CN == name {
@@ -280,9 +280,9 @@ func CreateOVPNFile(name string) error {
 func RevokeCertificate(name string) error {
 	cmd := exec.Command("/bin/bash", "-c",
 		fmt.Sprintf(
-			"cd /opt/scripts/ && "+
-				"export KEY_NAME=%s &&"+
-				"./rmclient.sh %s", name, name))
+			"cd /opt/scripts/ && export DOCKER_COMMAND=5 && "+
+				"export CLIENT=%s && "+
+				"./openvpn-install-v2.sh", name))
 	cmd.Dir = state.GlobalCfg.OVConfigPath
 	output, err := cmd.CombinedOutput()
 	if err != nil {
@@ -296,9 +296,9 @@ func RevokeCertificate(name string) error {
 func UnRevokeCertificate(name string) error {
 	cmd := exec.Command("/bin/bash", "-c",
 		fmt.Sprintf(
-			"cd /opt/scripts/ && "+
-				"export KEY_NAME=%s &&"+
-				"./unRevoke.sh %s", name, name))
+			"cd /opt/scripts/ && export DOCKER_COMMAND=6 && "+
+				"export CLIENT=%s && "+
+				"./openvpn-install-v2.sh", name))
 	cmd.Dir = state.GlobalCfg.OVConfigPath
 	output, err := cmd.CombinedOutput()
 	if err != nil {

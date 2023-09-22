@@ -114,7 +114,7 @@ pre.mypre {
                 
                                 <input class="form-control" name="static_ip" value="{{.StaticIP}}" 
                                 pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" 
-                                    placeholder="Enter Static IP">
+                                    placeholder="Enter Static IP" onfocusout="this.value = this.value.trim()">
 
                                 <div class="form-check mychekbox mychekbox-md">
                                     <input name="is_route_default" id="is_route_default" class="form-check-input" type="checkbox" value="true" 
@@ -148,12 +148,12 @@ pre.mypre {
                                 </label> -->
                                 <input class="form-control" id="router_subnet" name="router_subnet" value="{{.RouterSubnet}}" 
                                 pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" 
-                                placeholder="Enter Subnet: x.x.x.x">
+                                placeholder="Enter Subnet: x.x.x.x" onfocusout="this.value = this.value.trim()">
 
                                 <!-- <label class="form-check-label" for="router_mask">Mask:</label> -->
                                 <input class="form-control" id="router_mask" name="router_mask" value="{{.RouterMask}}" 
                                 pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" 
-                                placeholder="Enter Subnet Mask: x.x.x.x">
+                                placeholder="Enter Subnet Mask: x.x.x.x" onfocusout="this.value = this.value.trim()">
                             </div>
 
 
@@ -179,7 +179,7 @@ pre.mypre {
                         <div class="col-sm-8">
                                 <label class="form-check-label" for="description">Description:</label>
                                 <input class="form-control" id="description" name="description" 
-                                placeholder="Add some important notes here" value="{{.Description}}">
+                                placeholder="Add some important notes here" value="{{.Description}}" onfocusout="this.value = this.value.trim()">
                         </div>
                         <div class="col-sm-4"></div>
 

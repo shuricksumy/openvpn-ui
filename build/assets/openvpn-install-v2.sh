@@ -1332,6 +1332,33 @@ function revokeClient() {
 			read -rp "Select one client [1-$NUMBEROFCLIENTS]: " CLIENTNUMBER
 		fi
 	done
+
+	_revokeClient $CLIENTNUMBER
+}
+
+function revokeClientDocker() {
+
+	if [ -z $1 ]; then
+		echo "Add ClientName parameter to revoke"
+		exit 1
+	fi
+
+	CLIENT_NAME=$1
+	CLIENTNUMBER=$(tail -n +2 ${OVPN_PATH}/easy-rsa/pki/index.txt | grep "^V" | cut -d '=' -f 2 | nl -s ') ' | grep "$CLIENT_NAME"'\s*$' | cut -d ")" -f 1 | xargs)
+
+	_revokeClient $CLIENTNUMBER
+}
+
+function _revokeClient(){
+
+	if [ -z $1 ]; then
+		tail -n +2 ${OVPN_PATH}/easy-rsa/pki/index.txt | grep "^V" | cut -d '=' -f 2 | nl -s ') '
+		echo "Add Client Number parameter to revoke"
+		exit 1
+	fi
+
+	CLIENTNUMBER=$1
+
 	CLIENT=$(tail -n +2 ${OVPN_PATH}/easy-rsa/pki/index.txt | grep "^V" | cut -d '=' -f 2 | sed -n "$CLIENTNUMBER"p | cut -d "/" -f 1)
 	cd ${OVPN_PATH}/easy-rsa/ || return
 	./easyrsa --batch revoke "$CLIENT"
@@ -1366,6 +1393,32 @@ function unRevokeClient() {
 			read -rp "Select one client [1-$NUMBEROFCLIENTS]: " CLIENTNUMBER
 		fi
 	done
+
+	_unRevokeClient $CLIENTNUMBER
+
+}
+
+function unRevokeClientDocker() {
+
+	if [ -z $1 ]; then
+		echo "Add ClientName parameter to UNrevoke"
+		exit 1
+	fi
+
+	CLIENT_NAME=$1
+	CLIENTNUMBER=$(tail -n +2 ${OVPN_PATH}/easy-rsa/pki/index.txt | grep "^R" | cut -d '=' -f 2 | nl -s ') ' | grep "$CLIENT_NAME"'\s*$' | cut -d ")" -f 1 | xargs)
+
+	_unRevokeClient $CLIENTNUMBER
+}
+
+function _unRevokeClient(){
+
+	if [ -z $1 ]; then
+		tail -n +2 ${OVPN_PATH}/easy-rsa/pki/index.txt | grep "^R" | cut -d '=' -f 2 | nl -s ') '
+		echo "Add Client Number parameter to UNrevoke"
+		exit 1
+	fi
+
 	CLIENT=$(tail -n +2 ${OVPN_PATH}/easy-rsa/pki/index.txt   | grep "^R" | cut -d '=' -f 2 | sed -n "$CLIENTNUMBER"p | cut -d "/" -f 1)
 	exp_time=$(tail -n +2 ${OVPN_PATH}/easy-rsa/pki/index.txt | grep "^R" | awk "NR==$CLIENTNUMBER" | awk '{print $2}')
 	rev_time=$(tail -n +2 ${OVPN_PATH}/easy-rsa/pki/index.txt | grep "^R" | awk "NR==$CLIENTNUMBER" | awk '{print $3}')
@@ -1569,9 +1622,11 @@ if [[ $DOCKER_COMMAND != "" ]]; then
 	echo "   2) Configure openvpn and setup files"
 	echo "   3) Create new Client"
 	echo "   4) Generate .ovpn file"
-	echo "   5) Exit"
-	until [[ $DOCKER_COMMAND =~ ^[1-5]$ ]]; do
-		read -rp "Select an option [1-5]: " DOCKER_COMMAND
+	echo "   5) Revoke \$CLIENT_NAME"
+	echo "   6) UNrevoke \$CLIENT_NAME"
+	echo "   7) Exit"
+	until [[ $DOCKER_COMMAND =~ ^[1-7]$ ]]; do
+		read -rp "Select an option [1-7]: " DOCKER_COMMAND
 	done
 
 	case $DOCKER_COMMAND in
@@ -1596,6 +1651,14 @@ if [[ $DOCKER_COMMAND != "" ]]; then
 		exit 0
 		;;
 	5)
+		revokeClientDocker $CLIENT
+		exit 0
+		;;
+	6)
+		unRevokeClientDocker $CLIENT
+		exit 0
+		;;
+	7)
 		exit 0
 		;;
 	esac

@@ -24,7 +24,7 @@
       <div class="form-group">
         <label for="MIAddress">Management interface address</label>
         <input type="text" class="form-control" id="MIAddress" name="MIAddress" placeholder="Enter address"
-          value="{{ .Settings.MIAddress }}">
+          value="{{ .Settings.MIAddress }}"  onfocusout="this.value = this.value.trim()">
       </div>
 
       <div class="form-group">
@@ -51,7 +51,7 @@
       <div class="form-group">
         <label for="name">ConfigPath</label>
         <input type="text" class="form-control" id="OVConfigPath" name="OVConfigPath" placeholder="Enter config path"
-          value="{{ .Settings.OVConfigPath }}">
+          value="{{ .Settings.OVConfigPath }}"  onfocusout="this.value = this.value.trim()">
       </div>
 
       {{ .xsrfdata }}

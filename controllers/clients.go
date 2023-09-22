@@ -50,10 +50,10 @@ func (c *ClientsController) showClients() {
 
 	// get md5 sums from file system
 	md5hashs := lib.GetMD5StructureFromFS(clientsDetails)
-	lib.Dump(md5hashs)
+	// lib.Dump(md5hashs)
 	c.Data["MD5"] = &md5hashs
 
-	lib.Dump(clientsDetails)
+	// lib.Dump(clientsDetails)
 	c.Data["clients"] = &clientsDetails
 }
 

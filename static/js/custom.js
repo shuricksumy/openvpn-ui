@@ -219,9 +219,12 @@ $(".reveal").on('click',function() {
 });
 
 jQuery(function(){
+
+
     $(document).on("click", ".myspiner", function() {
-      $("#overlay").fadeIn(300);
+        $("#overlay").fadeIn(300);
     });
+
   
   $('.myspiner').click(function(){
     $.ajax({
