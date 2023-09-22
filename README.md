@@ -7,19 +7,19 @@
 ![Status page](screenshots/2.png?raw=true)
 
 ## Updates
-
-### September 2023 (v 2.1)
+#### September 2023 (v 2.2)
+- Small improvements 
+#### September 2023 (v 2.1)
 - Added md5 sum checker for client config files to be sure that current config is used or not
 - Fixed small issue
-
-### September 2023 (v 2.0)
+#### September 2023 (v 2.0)
 - Now is possible to organize routing between devices on Web UI
     - Added Client details page with Static IP, Routes, Subnet settings, Default Route
     - Added script to generate client config files based on these settings
 - It's possible un-revoke certificate
 - Redesigned a bit UI
 
-### Summer 2023 (v 1.0)
+#### Summer 2023 (v 1.0)
 
 - updated all config files and scripts to use `/etc/openvpn/easy-rsa` path
 - added the script from [openvpn-install](https://github.com/shuricksumy/openvpn-install) as the main script for generating new clients
