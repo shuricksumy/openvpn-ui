@@ -105,7 +105,7 @@ for client in ${Clients[*]}; do
     clientDetails=$(cat ${OVDIR}/${JSON} | jq -c ".[] | select( any(.; .ClientName == \"$client\") )")
 
     IFS=','
-    ClientSelectedRoutes=$(echo "$clientDetails" | jq -c ".RouteListSelected" | sed 's/[][]//g' | sed 's/["]//g')
+    ClientSelectedRoutes=$(echo "$clientDetails" | jq -c ".RouteList" | sed 's/[][]//g' | sed 's/["]//g')
 
     
     ####
@@ -129,7 +129,7 @@ for client in ${Clients[*]}; do
 
         isParamOK=true
 
-        if [ $thisRouterMask == "" || $thisRouterSubnet == "" ]; then
+        if [ $thisRouterMask == "" ] || [ $thisRouterSubnet == "" ]; then
             echo ">>>>> Network/Mask is empty"
             isParamOK=false
         fi
