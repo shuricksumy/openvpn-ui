@@ -1,6 +1,9 @@
 #!/bin/bash
 # requred jq - apt install jq
 
+# Exit immediately if a command exits with a non-zero status
+set -e
+
 
 # converts IPv4 as "A.B.C.D" to integer
 # ip4_to_int 192.168.0.1
