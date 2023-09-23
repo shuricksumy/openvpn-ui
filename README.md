@@ -3,6 +3,7 @@
 - There is the original [README.md](https://github.com/shuricksumy/openvpn-ui/blob/my_main/README_ORIGINAL.md) file
 - The project was cloned from [https://github.com/d3vilh/openvpn-ui](https://github.com/d3vilh/openvpn-ui)  - big thanks for a great job
 - The Docker builder with the Server part is here [**OPENVPN-SERVER-DOCKER**](https://github.com/shuricksumy/openvpn-server-docker)
+- The base example for docker-compose is here [***DOCKER-COMPOSE***](https://github.com/shuricksumy/openvpn-server-docker/tree/main/examples/basic)
 
 ![Status page](screenshots/2.png?raw=true)
 
