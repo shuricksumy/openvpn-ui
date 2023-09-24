@@ -511,8 +511,8 @@ func ApplyClientsConfigToFS() error {
 		return err_read
 	}
 
-	isTopologyNet30, _ := regexp.MatchString(`\n*topology net30\s*`, serverConf)
-	isTopologySubnet, _ := regexp.MatchString(`\n*topology subnet\s*`, serverConf)
+	isTopologyNet30, _ := regexp.MatchString(`\ntopology net30\s*\n`, serverConf)
+	isTopologySubnet, _ := regexp.MatchString(`\ntopology subnet\s*\n`, serverConf)
 
 	ClientDetails, err_read_json := ReadClientsFromJSONFile(PATH_JSON)
 	if err_read_json != nil {
