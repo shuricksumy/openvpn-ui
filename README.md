@@ -8,7 +8,9 @@
 ![Status page](screenshots/2.png?raw=true)
 
 ## Updates
-#### September 2023 (v2.0 - v 2.3)
+#### September 2023 (v2.0 - v 2.4)
+- Fixed some issues
+- Add script based on go gor client files generation
 - Small improvements 
 - Added md5 sum checker for client config files to be sure that current config is used or not
 - Fixed small issue
