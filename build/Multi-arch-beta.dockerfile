@@ -32,17 +32,12 @@ EXPOSE 8080
 RUN apt-get update && apt-get install -y curl bzip2 jq
 
 COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/start.sh /opt/start.sh
-COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/generate_ca_and_server_certs.sh /opt/scripts/generate_ca_and_server_certs.sh
 COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/vars.template /opt/scripts/vars.template
-COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/genclient.sh /opt/scripts/genclient.sh
 COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/openvpn-install-v2.sh /opt/scripts/openvpn-install-v2.sh
 COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/install_pkg.sh /opt/scripts/install_pkg.sh
 COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/restart.sh /opt/scripts/restart.sh
 COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/rmcert.sh /opt/scripts/rmcert.sh
-COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/rmclient.sh /opt/scripts/rmclient.sh
-COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/createClientFilesFromJSON.sh /opt/scripts/createClientFilesFromJSON.sh
 COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/renew.sh /opt/scripts/renew.sh
-COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/unRevoke.sh /opt/scripts/unRevoke.sh
 
 
 RUN /opt/scripts/install_pkg.sh

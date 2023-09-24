@@ -1,14 +1,18 @@
 package lib
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
+	"net/netip"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"reflect"
+	"regexp"
 	"sort"
 	"strings"
+	"time"
 
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/shuricksumy/openvpn-ui/state"
@@ -50,11 +54,13 @@ type ClientMD5 struct {
 var PATH_INDEX string
 var PATH_JSON string
 var CCD_DIR_PATH string
+var SERVER_CONFIG_PATH string
 
 func InitGlobalVars() {
 	PATH_INDEX = filepath.Join(state.GlobalCfg.OVConfigPath, "easy-rsa/pki/index.txt")
 	PATH_JSON = filepath.Join(state.GlobalCfg.OVConfigPath, "clientDetails.json")
 	CCD_DIR_PATH = filepath.Join(state.GlobalCfg.OVConfigPath, "ccd")
+	SERVER_CONFIG_PATH = filepath.Join(state.GlobalCfg.OVConfigPath, "server.conf")
 }
 
 // Read index easy-rsa index file
@@ -393,7 +399,7 @@ func SaveJsonFile(clientDetails []*ClientDetails, pathJson string) error {
 	return os.WriteFile(pathJson, file, 0644)
 }
 
-func ApplyClientsConfigToFS() error {
+func ApplyClientsConfigToFS2() error {
 	cmd := exec.Command("/bin/bash", "-c", " cd /opt/scripts/ && ./createClientFilesFromJSON.sh")
 	cmd.Dir = state.GlobalCfg.OVConfigPath
 	output, err := cmd.CombinedOutput()
@@ -496,4 +502,112 @@ func RawReadClientFile(clientName string) (string, error) {
 	InitGlobalVars()
 	destPathClientConfig := filepath.Join(CCD_DIR_PATH, clientName)
 	return RawReadFile(destPathClientConfig)
+}
+
+func ApplyClientsConfigToFS() error {
+	serverConf, err_read := RawReadFile(SERVER_CONFIG_PATH)
+	if err_read != nil {
+		logs.Error("Issue with reading config server file: ", SERVER_CONFIG_PATH)
+		return err_read
+	}
+
+	isTopologyNet30, _ := regexp.MatchString(`\n*topology net30\s*`, serverConf)
+	isTopologySubnet, _ := regexp.MatchString(`\n*topology subnet\s*`, serverConf)
+
+	ClientDetails, err_read_json := ReadClientsFromJSONFile(PATH_JSON)
+	if err_read_json != nil {
+		logs.Error("Issue with reading JSON file: ", PATH_JSON)
+		return err_read_json
+	}
+
+	for _, client := range ClientDetails {
+		var buffer bytes.Buffer
+
+		// 1. add init line
+		buffer.WriteString("Automatic generated \"" + client.ClientName + "\" settings file - " +
+			time.Now().Format(time.RFC850) + "\n")
+
+		// 2. add static IP
+		staticIp := client.StaticIP
+		if _isIPAddressValid(staticIp) {
+			var nextIP string
+
+			if isTopologyNet30 {
+				nextIP = _getNextIPAddress(staticIp) // --topology net30
+			}
+
+			if isTopologySubnet {
+				nextIP = "255.255.255.0" // --topology subnet
+			}
+
+			if nextIP != "" {
+				buffer.WriteString("ifconfig-push " + staticIp + " " + nextIP + "\n")
+			} else {
+				logs.Error("Cannot get nextIP or subnet topology is undefined in openvpn config file. Use as topology net30")
+				nextIP = _getNextIPAddress(staticIp) // --topology net30
+				buffer.WriteString("ifconfig-push " + staticIp + " " + nextIP + "\n")
+			}
+		}
+
+		// 3. if router add route to itself
+		if client.IsRouter {
+			routerSubnet := client.RouterSubnet
+			routerMask := client.RouterMask
+			if _isIPAddressValid(routerSubnet) && _isIPAddressValid(routerMask) {
+				buffer.WriteString("iroute " + routerSubnet + " " + routerMask + "\n")
+			}
+		}
+
+		// 4. default router
+		buffer.WriteString("\n")
+
+		if client.IsRouteDefault {
+			buffer.WriteString("# Set VPN as default route\n")
+			buffer.WriteString("push \"redirect-gateway def1\"\n")
+		} else {
+			buffer.WriteString("# Set VPN as default route\n")
+			buffer.WriteString("# push \"redirect-gateway def1\"\n")
+		}
+		buffer.WriteString("\n")
+
+		// 5. if Routes is xonfigured
+		for _, route := range client.RouteList {
+			routeDetails, _ := GetClientFromStructure(ClientDetails, route)
+			routeSubnet := routeDetails.RouterSubnet
+			routeMask := routeDetails.RouterMask
+
+			if _isIPAddressValid(routeSubnet) && _isIPAddressValid(routeMask) {
+				buffer.WriteString("# Route to " + route + " [" + routeDetails.Description + "] device internal subnet\n")
+				buffer.WriteString("push \"route " + routeSubnet + " " + routeMask + "\"\n")
+			}
+		}
+
+		// Debug results
+		// logs.Error("==========START==============")
+		// logs.Error(buffer.String())
+		// logs.Error("==========END================")
+
+		fileCCD := filepath.Join(CCD_DIR_PATH, client.ClientName)
+		err_save := RawSaveToFile(fileCCD, buffer.String())
+		if err_save != nil {
+			logs.Error("Issue with saving client file: ", fileCCD)
+			return err_save
+		}
+	}
+
+	return nil
+}
+
+func _isIPAddressValid(ip string) bool {
+	addr, _ := netip.ParseAddr(ip)
+	return addr.IsValid()
+}
+
+func _getNextIPAddress(ip string) string {
+	addr, err := netip.ParseAddr(ip)
+	if err != nil {
+		logs.Error("IP is nov valid: ", ip)
+		return ""
+	}
+	return addr.Next().String()
 }
