@@ -9,48 +9,48 @@
 
   <div class="row">
     <div class="col-md-3 col-sm-6 col-xs-12">
-      <div class="info-box">
-        <span class="info-box-icon bg-light-blue-gradient">
+      <div class="info-card">
+        <span class="info-card-icon bg-light-blue-gradient">
           <i class="ion ion-speedometer"></i>
         </span>
-        <div class="info-box-content">
-          <span class="info-box-text">
-            Clients count: <span class="info-box-number2">{{ .ovstats.NClients }}</span>
+        <div class="info-card-content">
+          <span class="info-card-text">
+            Clients count: <span class="info-card-number2">{{ .ovstats.NClients }}</span>
           </span>
-          <span class="info-box-text">
-            In: <span class="info-box-number2">{{ printmb .ovstats.BytesIn }} MB</span>
+          <span class="info-card-text">
+            In: <span class="info-card-number2">{{ printmb .ovstats.BytesIn }} MB</span>
           </span>
-          <span class="info-box-text">
-            Out: <span class="info-box-number2">{{ printmb .ovstats.BytesOut }} MB </span>
+          <span class="info-card-text">
+            Out: <span class="info-card-number2">{{ printmb .ovstats.BytesOut }} MB </span>
           </span>
         </div>
-        <!-- /.info-box-content -->
+        <!-- /.info-card-content -->
       </div>
-      <!-- /.info-box -->
+      <!-- /.info-card -->
     </div>
     <!-- /.col -->
 
     <div class="col-md-3 col-sm-6 col-xs-12">
-      <div class="info-box">
-        <span class="info-box-icon bg-light-blue-gradient">
+      <div class="info-card">
+        <span class="info-card-icon bg-light-blue-gradient">
           <i class="ion ion-ios-pulse"></i>
         </span>
-        <div class="info-box-content">
-          <span class="info-box-text">Load Average:</span>
-          <span class="info-box-number">
+        <div class="info-card-content">
+          <span class="info-card-text">Load Average:</span>
+          <span class="info-card-number">
             {{ .sysinfo.LoadAvg.One }},
             {{ .sysinfo.LoadAvg.Five }},
             {{ .sysinfo.LoadAvg.Fifteen }}<br/>
             </span>
-          <span class="info-box-text">
-            CPU count: <span class="info-box-number2">
+          <span class="info-card-text">
+            CPU count: <span class="info-card-number2">
               {{ .sysinfo.CPUList.List | len }}
             </span>
           </span>
         </div>
-        <!-- /.info-box-content -->
+        <!-- /.info-card-content -->
       </div>
-      <!-- /.info-box -->
+      <!-- /.info-card -->
     </div>
     <!-- /.col -->
 
@@ -58,36 +58,36 @@
     <div class="clearfix visible-sm-block"></div>
 
     <div class="col-md-3 col-sm-6 col-xs-12">
-      <div class="info-box">
-        <span class="info-box-icon bg-light-blue-gradient">
+      <div class="info-card">
+        <span class="info-card-icon bg-light-blue-gradient">
           <i class="ion ion-lightbulb"></i>
         </span>
-        <div class="info-box-content">
-          <span class="info-box-text">OS uptime:</span>
-          <span class="info-box-number">{{ .sysinfo.UptimeS }}</span>
+        <div class="info-card-content">
+          <span class="info-card-text">OS uptime:</span>
+          <span class="info-card-number">{{ .sysinfo.UptimeS }}</span>
         </div>
-        <!-- /.info-box-content -->
+        <!-- /.info-card-content -->
       </div>
-      <!-- /.info-box -->
+      <!-- /.info-card -->
     </div>
     <!-- /.col -->
 
     <div class="col-md-3 col-sm-6 col-xs-12">
-      <div class="info-box">
-        <span class="info-box-icon bg-light-blue-gradient">
+      <div class="info-card">
+        <span class="info-card-icon bg-light-blue-gradient">
           <i class="fa ion-clock"></i>
         </span>
-        <div class="info-box-content">
-          <span class="info-box-text">
+        <div class="info-card-content">
+          <span class="info-card-text">
             Server time:
           </span>
-          <span class="info-box-number">
+          <span class="info-card-number">
               {{ dateformat .sysinfo.CurrentTime "2006-01-02 15:04:05"}}
           </span>
         </div>
-        <!-- /.info-box-content -->
+        <!-- /.info-card-content -->
       </div>
-      <!-- /.info-box -->
+      <!-- /.info-card -->
     </div>
     <!-- /.col -->
 
@@ -95,11 +95,11 @@
   </div>
 <!-- /.row -->
 
-<div class="box box-default">
-  <div class="box-header with-border">
-    <h3 class="box-title">Memory usage</h3>
+<div class="card card-default">
+  <div class="card-header with-border">
+    <h3 class="card-title">Memory usage</h3>
   </div>
-  <div class="box-body">
+  <div class="card-body">
     <div class="col-md-6">
       <div class="progress-group">
         <span class="progress-text">Memory</span>
@@ -133,19 +133,19 @@
       </div>
     </div>
     <!-- /.col -->  </div>
-  <!-- /.box-body -->
+  <!-- /.card-body -->
 </div>
 
 <div class="row">
   <div class="col-md-12">
-    <div class="box box-default">
-      <div class="box-header with-border">
-        <h3 class="box-title">Connected clients</h3>
+    <div class="card card-default">
+      <div class="card-header with-border">
+        <h3 class="card-title">Connected clients</h3>
 
       </div>
-      <!-- /.box-header -->
+      <!-- /.card-header -->
 
-      <div class="box-body">
+      <div class="card-body">
         {{if .ovstatus}}
         <div class="table-responsive">
           <table class="table no-margin">
@@ -204,54 +204,54 @@
           Fix your configuration
       {{end}}
       </div>
-      <div class="box-footer clearfix">
+      <div class="card-footer clearfix">
       </div>
       <!--
-      <div class="box-footer clearfix">
+      <div class="card-footer clearfix">
         <a href="javascript:void(0)" class="btn btn-sm btn-info btn-flat pull-left">Place New Order</a>
         <a href="javascript:void(0)" class="btn btn-sm btn-default btn-flat pull-right">View All Orders</a>
       </div>
     -->
-      <!-- /.box-footer -->
+      <!-- /.card-footer -->
     </div>
-    <!-- /.box -->
+    <!-- /.card -->
   </div>
 </div>
 <!-- /.col -->
-<!-- /.box-body -->
+<!-- /.card-body -->
 
 <div class="row">
   <div class="col-md-6 col-sm-12 col-xs-12">
-    <div class="info-box">
-      <span class="info-box-icon bg-green-gradient">
+    <div class="info-card">
+      <span class="info-card-icon bg-green-gradient">
         <i class="ion ion-ios-information-empty"></i>
       </span>
-      <div class="info-box-content">
+      <div class="info-card-content">
       </span>
-      <span class="info-box-text">
-        OpenVPN version: <span class="info-box-number3">{{ .ovversion }}
+      <span class="info-card-text">
+        OpenVPN version: <span class="info-card-number3">{{ .ovversion }}
       </span>
       </div>
-      <!-- /.info-box-content -->
+      <!-- /.info-card-content -->
     </div>
-    <!-- /.info-box -->
+    <!-- /.info-card -->
   </div>
   <!-- /.col -->
 
   <div class="col-md-6 col-sm-12 col-xs-12">
-    <div class="info-box">
-      <span class="info-box-icon bg-green-gradient">
+    <div class="info-card">
+      <span class="info-card-icon bg-green-gradient">
         <i class="ion ion-ios-gear"></i>
       </span>
-      <div class="info-box-content">
-        <span class="info-box-text">Operating system:</span>
-        <span class="info-box-number3">{{ .sysinfo.Os }}</span>
-        <span class="info-box-text">Architecture: </span>
-        <span class="info-box-number3">{{ .sysinfo.Arch }} </span>
+      <div class="info-card-content">
+        <span class="info-card-text">Operating system:</span>
+        <span class="info-card-number3">{{ .sysinfo.Os }}</span>
+        <span class="info-card-text">Architecture: </span>
+        <span class="info-card-number3">{{ .sysinfo.Arch }} </span>
       </div>
-      <!-- /.info-box-content -->
+      <!-- /.info-card-content -->
     </div>
-    <!-- /.info-box -->
+    <!-- /.info-card -->
   </div>
   <!-- /.col -->
 

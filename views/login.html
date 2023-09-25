@@ -13,7 +13,7 @@
   <!-- Ionicons -->
   <link rel="stylesheet" href="static/css/ionicons.min.css">
   <!-- Theme style -->
-  <link rel="stylesheet" href="static/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="/static/css/adminlte.min.css">
   <!-- iCheck -->
   <link rel="stylesheet" href="static/plugins/iCheck/square/blue.css">
 
@@ -25,13 +25,13 @@
   <![endif]-->
 </head>
 <body class="hold-transition login-page">
-<div class="login-box">
+<div class="login-card">
   <div class="login-logo">
     <a href="#"><b>OpenVPN </b>{{ .SiteName }}</a>
   </div>
   <!-- /.login-logo -->
-  <div class="login-box-body">
-    <p class="login-box-msg">Sign in to start your session</p>
+  <div class="login-card-body">
+    <p class="login-card-msg">Sign in to start your session</p>
 
     <form action="{{urlfor "LoginController.Login"}}" method="post">
       <div class="form-group has-feedback">
@@ -56,20 +56,20 @@
     </form>
     {{template "common/alert.html" .}}
   </div>
-  <!-- /.login-box-body -->
+  <!-- /.login-card-body -->
 </div>
-<!-- /.login-box -->
+<!-- /.login-card -->
 
 <!-- jQuery 2.2.3 -->
-<script src="static/js/jquery-2.2.3.min.js"></script>
+<script src="static/js/jquery.min.js"></script>
 <!-- Bootstrap 3.3.6 -->
-<script src="static/js/bootstrap.min.js"></script>
+<script src="static/js/bootstrap.bundle.min.js"></script>
 <!-- iCheck -->
 <script src="static/plugins/iCheck/icheck.min.js"></script>
 <script>
   $(function () {
     $('input').iCheck({
-      checkboxClass: 'icheckbox_square-blue',
+      checkcardClass: 'icheckcard_square-blue',
       radioClass: 'iradio_square-blue',
       increaseArea: '20%' // optional
     });

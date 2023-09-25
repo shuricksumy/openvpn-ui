@@ -7,49 +7,55 @@
 {{define "body"}}
 
 
-<!-- /.box-header -->
+<!-- /.card-header -->
 {{template "common/alert.html" .}}
-
-<div class="box box-warning">
-  <div class="box-header with-border">
-    <table>
-      <tr>
-        <td class="col-md-1 text-right">
-          <i>If you finish working on clients details, do not forget to apply these changes for ALL clients and restart server. &nbsp;&nbsp;</i>
-          <a href="{{urlfor "ClientsController.UpdateFiles"}}" class="btn btn-warning btn-sm bg-yellow-gradient btn150"
-          data-title="Update ALL Clients?" title="Apply Clients Configuration" style="margin-right: 23px;">Apply Configurations</a>
-          <a href="{{urlfor "ClientsController.Restart"}}" class="btn btn-danger btn-sm bg-red-gradient btn150" data-title="Restart OpenVPN container?" 
-                title="Restart OpenVPN container" style="margin-right: 23px;">Restart OpenVPN Server</a>
-        </td>
-      </tr>
-    </table>
+<div class="col-xs-12">
+  <div class="card">
+    <div class="card-header">
+      <table>
+        <thead>
+          <th style="width:80%"></th>
+          <th style="width:10%"></th>
+          <th style="width:10%"></th>
+        </thead>
+        
+        <tbody>
+        <tr>
+          <td>
+              <i>If you finish working on clients details, do not forget to apply these changes for ALL clients and restart server. &nbsp;&nbsp;</i>
+          </td><td class="text-right">
+              <a href="{{urlfor "ClientsController.UpdateFiles"}}" class="btn btn-warning btn-sm btn-group-sm bg-yellow-gradient btn150"
+              data-title="Update ALL Clients?" title="Apply Clients Configuration" style="margin-right: 23px;">Apply Configurations</a>
+          </td><td class="text-right">
+              <a href="{{urlfor "ClientsController.Restart"}}" class="btn btn-danger btn-sm btn-group-sm bg-red-gradient btn150" data-title="Restart OpenVPN container?" 
+                    title="Restart OpenVPN container" style="margin-right: 23px;">Restart Server</a>
+          </td>
+        </tr>
+      </tbody>
+      </table>
+    </div>
   </div>
 </div>
 
-<div class="row">
-  <div class="col-md-12">
-    <div class="box box-primary">
-      <div class="box-header with-border">
-        <h3 class="box-title">Clients details</h3>
+<!-- <div class="row"> -->
+  <div class="col-xs-12">
+    <div class="card card-primary">
+      <div class="card-header with-border">
+        <h3 class="card-title">Clients details</h3>
       </div>
 
-      <div class="box-body">
-        <!--if .ovstatus -->
+      <div class="card-body p-0">
         <div class="table-responsive">
-         <table class="table no-margin">
+          <table class="table m-0">
             <thead>
             <tr>
               <th style="width:5%">Client Name</th>
               <th style="width:2%">DefR</th>
               <th style="width:5%">Static IP</th>
               <th style="width:5%">IsRouter</th>
-              <!-- <th>Revocation</th> -->
-              <!-- <th style="width:15%">Router Subnet</th> -->
-              <!-- <th>Details</th> -->
               <th class="textcenter" style="width:30%">Description</th>
               <th class="textcenter" style="width:50%">Route List</th>
               <th class="textcenter" style="width:3%">File</th>
-              <th></th>
             </tr>
             </thead>
             <tbody>
@@ -61,13 +67,13 @@
 
                   <!-- 1 sell -->
                   <td class="my-centered">
-                      {{ $col := "btn-primary btn-sm btn-block bg-light-blue-gradient" }} 
+                      {{ $col := "btn-primary btn-sm btn-group-sm btn-block bg-light-blue-gradient" }} 
                       {{ $comment := .ClientName }}
                       {{ $icon := "fa fa-edit" }}
                       {{ range $md5 := $MD5 }}
                           {{ if eq $md5.ClientName $c.ClientName }}
                               {{ if not $md5.IsValid }} 
-                                  {{ $col = "btn-danger btn-sm btn-block bg-red" }} 
+                                  {{ $col = "btn-danger btn-sm btn-group-sm btn-block bg-red" }} 
                                   {{ $comment = "Config was changed but not applied !" }}
                                   {{ $icon = "fa fa-warning" }} 
                               {{ end }}
@@ -82,18 +88,18 @@
                   <!-- 2 sell -->
                   <td class="my-centered first-cap">
                     {{ if .IsRouteDefault }}
-                      <span class="btn btn-xs bg-green btn40">{{ .IsRouteDefault }}</span>
+                      <span class="btn btn-xs btn-group-xs bg-green btn40">{{ .IsRouteDefault }}</span>
                     {{else}}
-                      <span class="btn btn-xs bg-gray btn40">{{ .IsRouteDefault }}</span>
+                      <span class="btn btn-xs bg-gray btn-group-xs btn40">{{ .IsRouteDefault }}</span>
                     {{end}}
                   </td>
 
                   <!-- 3 sell -->
                   <td class="my-centered">
                     {{ if ne .StaticIP "" }}
-                      <span class="btn btn-xs bg-green btn80">{{ .StaticIP }}</span>
+                      <span class="btn btn-xs btn-group-xs bg-green btn80">{{ .StaticIP }}</span>
                     {{else}}
-                      <span class="btn btn-xs bg-gray btn80">random</span>
+                      <span class="btn btn-xs btn-group-xs bg-gray btn80">random</span>
                     {{end}}
                   </td>
 
@@ -101,10 +107,10 @@
                   <!-- 5 sell -->
                   <td class="my-centered">
                     {{ if .IsRouter }}
-                      <span class="btn btn-xs bg-purple btn80">{{ .RouterSubnet }}</span>
+                      <span class="btn btn-xs btn-group-xs bg-purple btn80">{{ .RouterSubnet }}</span>
                       <!-- <span class="btn btn-xs bg-purple btn80">{{ .RouterMask }}</span> -->
                     {{else}}
-                      <span class="btn btn-xs bg-gray btn80">-</span>
+                      <span class="btn btn-xs btn-group-xs bg-gray btn80">-</span>
                     {{end}}
                   </td>
 
@@ -117,10 +123,10 @@
                   <!-- 7 sell -->
                   <td class="my-centered">
                     {{range  $val := .RouteList}}
-                      <span class="btn btn-xs bg-green bnt24">{{ $val }}</span>
+                      <span class="btn btn-xs btn-group-xs bg-green bnt24">{{ $val }}</span>
                     {{end}}
                     {{range  $val := .RouteListUnselected}}
-                      <span class="btn btn-xs bg-gray bnt24">{{ $val }}</span>
+                      <span class="btn btn-xs btn-group-xs bg-gray bnt24">{{ $val }}</span>
                     {{end}}
                   </td>
 
@@ -128,7 +134,7 @@
                   <td class="textcenter my-centered">
                     <div class="btn-group" role="group">
                         <button  id="openModalEditClientDetails" data-target="#editClientDetailsModal" data-client-name="{{ .ClientName }}"
-                        class="btn btn-primary btn-sm bg-light-blue-gradient btn80" title="Edit">Edit</button>
+                        class="btn btn-primary btn-sm btn-group-sm bg-light-blue-gradient btn80" title="Edit">Edit</button>
                         <!-- <button id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .ClientName }}" 
                         class="btn btn-sm bg-light-blue-gradient btn40" title="Edit">Raw</button> -->
                     </div>
@@ -147,23 +153,23 @@
       end-->
 
      <!--
-      <div class="box-footer clearfix">
+      <div class="card-footer clearfix">
         
       </div>
       -->
 
       <!--
-      <div class="box-footer clearfix">
+      <div class="card-footer clearfix">
         <a href="javascript:void(0)" class="btn btn-sm btn-info btn-flat pull-left">Place New Order</a>
         <a href="javascript:void(0)" class="btn btn-sm btn-default btn-flat pull-right">View All Orders</a>
       </div>
     -->
-      <!-- /.box-footer -->
+      <!-- /.card-footer -->
     </div>
-    <!-- /.box -->
+    <!-- /.card -->
   </div>
 
-</div>
+<!-- </div> -->
 
 <script type="text/javascript">
   var actionURL="/clients/save_client_data" 
