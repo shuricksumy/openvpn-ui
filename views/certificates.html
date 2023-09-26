@@ -40,7 +40,7 @@
               <div class="input-group">
                   <input type="password" class="form-control pwd" placeholder="Enter Password"  id="passphrase" name="passphrase">
                   <span class="input-group-btn">
-                      <button class="btn btn-default reveal" type="button"><i class="glyphicon glyphicon-eye-open"></i></button>
+                      <button class="btn btn-default reveal" type="button"><i class="fa fa-eye"></i></button>
                   </span>
               </div>
               <span class="help-block">Passphrase is used for privte key protection.&nbsp;&nbsp;&nbsp;</span>
@@ -118,21 +118,21 @@
                     <td>
                       <button type="button" class="btn btn-success btn-sm btn-group-sm bg-green-gradient" 
                         data-toggle="modal" data-target="#popup-{{ .Details.CN }}">
-                          <span class="glyphicon glyphicon-info-sign">
+                        <i class="fa fa-info-circle"></i>
                       </button>
                     </td>
                   {{else if eq .EntryType "R"}}
                     <td>
                        <button type="button" class="btn btn-warning btn-sm btn-group-sm bg-yellow-gradient" 
                         data-toggle="modal" data-target="#popup-{{ .Details.CN }}">
-                            <span class="glyphicon glyphicon-info-sign">
+                        <i class="fa fa-info-circle"></i>
                         </button>
                     </td>
                    {{else}}
                      <td>
                          <button type="button" class="btn btn-danger btn-sm btn-group-sm bg-red" 
                           data-toggle="modal" data-target="#popup-{{ .Details.CN }}">
-                            <span class="glyphicon glyphicon-info-sign">
+                            <span class="fa fa-info-circle">
                         </button>
                      </td>
                    {{end}}
@@ -215,20 +215,30 @@
 
                   </tr>
 
-                  <div id="popup-{{ .Details.CN }}" class="modal fade popupinfo" role="dialog">
-                      <div class="card card-primary bodypop">
-                             <span class="param-name">Name:</span><span class="param-value"> {{ .Details.CN }}</span><br>
-                             <span class="param-name">Description:</span><span class="param-value"> {{ .Details.Description }}</span><br>
-                             <span class="param-name">Type:</span><span class="param-value"> {{ .EntryType }}</span><br>
-                             <span class="param-name">Status:</span><span class="param-value">{{if eq .EntryType "V"}}  Active {{else if eq .EntryType "R"}} Revoked {{else}} Unknown {{end}}</span><br>
-                             <span class="param-name">Serial:</span><span class="param-value"> {{ .Serial }}</span><br>
-                             <span class="param-name">IP Address:</span><span class="param-value"> {{ .Details.LocalIP }}</span><br>
-                             <span class="param-name">Expiration Date:</span><span class="param-value">{{ dateformat .ExpirationT "2006-01-02 15:04"}}</span><br>
-                             <span class="param-name">Revoke Date:</span><span class="param-value">{{if ne .Revocation ""}} {{ dateformat .RevocationT "2006-01-02 15:04"}} {{else}} none {{end}}</span><br>
+                  <div id="popup-{{ .Details.CN }}" class="modal fade" role="dialog">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h4 class="modal-title">{{ .Details.CN }}</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-form-type="" data-dashlane-label="true">
+                              <span aria-hidden="true">×</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                             <span class="param-name"><b>Name:</b></span><span class="param-value"> {{ .Details.CN }}</span><br>
+                             <span class="param-name"><b>Description:</b></span><span class="param-value"> {{ .Details.Description }}</span><br>
+                             <span class="param-name"><b>Type:</b></span><span class="param-value"> {{ .EntryType }}</span><br>
+                             <span class="param-name"><b>Status:</b></span><span class="param-value">{{if eq .EntryType "V"}}  Active {{else if eq .EntryType "R"}} Revoked {{else}} Unknown {{end}}</span><br>
+                             <span class="param-name"><b>Serial:</b></span><span class="param-value"> {{ .Serial }}</span><br>
+                             <span class="param-name"><b>IP Address</b>:</span><span class="param-value"> {{ .Details.LocalIP }}</span><br>
+                             <span class="param-name"><b>Expiration Date:</b></span><span class="param-value">{{ dateformat .ExpirationT "2006-01-02 15:04"}}</span><br>
+                             <span class="param-name"><b>Revoke Date:</b></span><span class="param-value">{{if ne .Revocation ""}} {{ dateformat .RevocationT "2006-01-02 15:04"}} {{else}} none {{end}}</span><br>
+                          </div>
+                          <div class="modal-footer">   
                              <!-- Copy button -->
-                             <button class="btn btn-primary copy-btn bg-light-blue-gradient btn80" data-dismiss="modal">Copy</button>
-                             <!-- Close button -->
-                             <div class="close-btn" data-dismiss="modal">&times;</div>
+                             <button class="btn btn-primary bg-light-blue-gradient btn80" data-dismiss="modal">Close</button>
+                          </div>
+                        </div>
                      </div>
                   </div>
             {{end}}

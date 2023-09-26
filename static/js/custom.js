@@ -160,23 +160,6 @@ $(document).ready(function() {
             targetPopup.hide();
         }, 5000);
     });
-
-
-    // Copy the content to the clipboard when the Copy button is clicked
-    $('.copy-btn').on('click', function () {
-        var $popupContent = $(this).siblings('.param-name');
-        var content = $popupContent.map(function () {
-            return $(this).text() + $(this).next().text() + '\n';
-        }).get().join('');
-
-        // Create a temporary textarea to copy the content to the clipboard
-        var $tempTextArea = $('<textarea>').val(content).css('position', 'absolute').css('left', '-9999px');
-        $('body').append($tempTextArea);
-        $tempTextArea.select();
-        document.execCommand('copy');
-        $tempTextArea.remove();
-    });
-
 });
 
 function createEditor(name, size, theme, mode, readonly) {
