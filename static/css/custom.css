@@ -61,11 +61,6 @@
 }
 
 
-/* Style for parameter names */
-.popupinfo .param-value {
-}
-
-
 /* Style for close button */
 .popupinfo .close-btn {
  position: absolute;
@@ -215,7 +210,7 @@
 }
 
 td.my-centered{
-  /* text-align: center; */
+  text-align: center !important;
   vertical-align: middle !important;
 }
 
@@ -227,4 +222,55 @@ td.txt-smaller{
   font-size: smaller !important;
 }
 
+.btn-xxs {
+  padding: 0.2rem 0.2rem;
+  font-size: .65rem;
+  line-height: 1.0;
+  border-radius: 0.15rem;
+}
 
+.font75 {
+  font-size: 75% !important;
+}
+
+.font90 {
+  font-size: 90% !important;
+}
+
+.table-sm td, .table-sm th {
+  padding-left: 0.25rem !important;
+  padding-right: 0.25rem !important;
+}
+
+td.first-sm, th.first-sm {
+  padding-left: 0.75rem !important;
+}
+
+td.last-sm, th.last-sm {
+  padding-right: 0.75rem !important;
+}
+
+/* td span:not(:nth-child(-n + 7)) {
+  display: none;
+} */
+
+/* input[type=checkbox]:checked + ul li {
+  display:list-item;
+} */
+
+
+/* <input type="checkbox"/>
+<ul>
+  <li>1</li>
+  <li>2</li>
+  <li>3</li>
+  <li>4</li>
+  <li>5</li>
+  <li>6</li>
+  <li>7</li>
+  <li>8</li>
+  <li>9</li>
+  <li>10</li>
+  <li>11</li>
+  <li>12</li>
+</ul> */

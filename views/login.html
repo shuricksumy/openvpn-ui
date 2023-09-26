@@ -25,38 +25,38 @@
   <![endif]-->
 </head>
 <body class="hold-transition login-page">
-<div class="login-card">
-  <div class="login-logo">
-    <a href="#"><b>OpenVPN </b>{{ .SiteName }}</a>
-  </div>
-  <!-- /.login-logo -->
-  <div class="login-card-body">
-    <p class="login-card-msg">Sign in to start your session</p>
-
-    <form action="{{urlfor "LoginController.Login"}}" method="post">
-      <div class="form-group has-feedback">
-        <input type="text" class="form-control" name="login" placeholder="Login">
-        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+<div class="login-box">
+  <div class="card card-outline card-primary">
+      <div class="card-header text-center">
+        <a href="#" class="h2"><b>OpenVPN </b>{{ .SiteName }}</a>
       </div>
-      <div class="form-group has-feedback">
-        <input type="password" class="form-control" name="password" placeholder="Password">
-        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+      <!-- /.card-header -->
+      <div class="card-body">
+        <p class="login-box-msg">Sign in to start your session</p>
+        {{template "common/alert.html" .}}
+        <form action="{{urlfor "LoginController.Login"}}" method="post">
+          <div class="form-group has-feedback">
+            <input type="text" class="form-control" name="login" placeholder="Login">
+            <span class="glyphicon glyphicon-user form-control-feedback"></span>
+          </div>
+          <div class="form-group has-feedback">
+            <input type="password" class="form-control" name="password" placeholder="Password">
+            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+          </div>
+          <div class="row">
+            <div class="col-8">
+            </div>
+            <!-- /.col -->
+            {{ .xsrfdata }}
+            <div class="col-4">
+              <button type="submit" class="btn btn-block btn-flat bg-gradient-lightblue">Sign In</button>
+            </div>
+            <!-- /.col -->
+          </div>
+        </form>
       </div>
-      <div class="row">
-        <div class="col-xs-8">
-
-        </div>
-        <!-- /.col -->
-        {{ .xsrfdata }}
-        <div class="col-xs-4">
-          <button type="submit" class="btn btn-primary btn-block btn-flat bg-light-blue-gradient">Sign In</button>
-        </div>
-        <!-- /.col -->
-      </div>
-    </form>
-    {{template "common/alert.html" .}}
-  </div>
-  <!-- /.login-card-body -->
+      <!-- /.login-card-body -->
+    </div>
 </div>
 <!-- /.login-card -->
 
