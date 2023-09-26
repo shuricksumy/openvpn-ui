@@ -9,13 +9,14 @@
 {{template "common/alert.html" .}}  
 
 <div class="col-md-12">
-  <div class="card card-primary">
+  <div class="card card-lightblue">
     <div class="card-header with-border">
       <table>
         <tr>
-          <td class="col-md-1 text-left"><a class="btn btn-success btn-sm btn120" data-toggle="collapse" href="#newCert" role="button"  aria-expanded="false"
+          <td class="col-md-1 text-left"><a class="btn btn-sm bg-gradient-navy btn120" data-toggle="collapse" href="#newCert" role="button"  aria-expanded="false"
                   aria-controls="newCert" style="margin-left: 0.5%;">Create New Certificate</a></td>
-          <td class="col-md-1 text-right"><i>Restart server after revocation:&nbsp;&nbsp;&nbsp;</i><a href="{{urlfor "CertificatesController.Restart"}}" class="btn btn-danger btn-sm bg-red-gradient btn150" data-title="Restart OpenVPN container?" 
+          <td class="col-md-1 text-right"><i>Restart server after revocation:&nbsp;&nbsp;&nbsp;</i><a href="{{urlfor "CertificatesController.Restart"}}" 
+            class="btn btn-danger btn-sm bg-gradient-red btn150" data-title="Restart OpenVPN container?" 
                   title="Restart OpenVPN container" style="margin-right: 23px;">Restart OpenVPN Server</a></td>
         </tr>
       </table>
@@ -71,7 +72,7 @@
 
 
   <div class="col-md-12">
-    <div class="card card-primary">
+    <div class="card card-lightblue">
       <div class="card-header with-border">
         <h3 class="card-title">Clients certificates</h3>
 
@@ -101,7 +102,7 @@
                   {{if eq .EntryType "V"}}
                   <td>
                     <a href="{{urlfor "CertificatesController.Download" ":key" .Details.CN}}" 
-                      class="btn btn-primary btn-sm btn-group-sm btn-block bg-light-blue-gradient right-icon-holder" title="{{ .Details.CN }}">
+                      class="btn btn-primary btn-sm btn-group-sm btn-block bg-gradient-lightblue right-icon-holder" title="{{ .Details.CN }}">
                       {{ .Details.CN }}.ovpn<i class="fa fa-download"></i>
                     </a>
                   </td>
@@ -116,7 +117,7 @@
                    <!-- 2 sell -->
                   {{if eq .EntryType "V"}}
                     <td>
-                      <button type="button" class="btn btn-success btn-sm btn-group-sm bg-green-gradient" 
+                      <button type="button" class="btn btn-success btn-sm btn-group-sm bg-gradient-olive" 
                         data-toggle="modal" data-target="#popup-{{ .Details.CN }}">
                         <i class="fa fa-info-circle"></i>
                       </button>
@@ -130,7 +131,7 @@
                     </td>
                    {{else}}
                      <td>
-                         <button type="button" class="btn btn-danger btn-sm btn-group-sm bg-red" 
+                         <button type="button" class="btn btn-danger btn-sm btn-group-sm bg-gradient-red" 
                           data-toggle="modal" data-target="#popup-{{ .Details.CN }}">
                             <span class="fa fa-info-circle">
                         </button>
@@ -144,7 +145,7 @@
 
                    <!-- 4 sell -->
                     <td class="my-centered">
-                      <span class="btn btn-xs btn-group-xs bg-gray">{{ dateformat .ExpirationT "2006-01-02 15:04"}}</span>
+                      <span class="btn btn-xs btn-group-xs bg-gray-light">{{ dateformat .ExpirationT "2006-01-02 15:04"}}</span>
                     </td>
 
                     <!-- 5 sell -->
@@ -162,7 +163,7 @@
                   {{if eq .EntryType "V"}}
                     <td class="textcenter">
                       <a href="{{urlfor "CertificatesController.Revoke" ":key" .Details.CN}}" data-title="Disable access for user?" 
-                        class="btn btn-warning btn-sm btn-group-sm bg-yellow-gradient btn80" title="Revoke">Revoke</a>
+                        class="btn btn-warning btn-sm btn-group-sm bg-gradient-yellow btn80" title="Revoke">Revoke</a>
                       <!-- <a href="{{urlfor "CertificatesController.Renew" ":key" .Details.CN ":serial" .Serial}}" 
                           data-title="Restore certificates?" class="btn btn-warning btn-sm bg-yellow-gradient btn80" title="Burn">Renew</a> -->
                     </td>
@@ -170,9 +171,9 @@
                     <td class="textcenter">
                       <div class="btn-group" role="group">
                           <a href="{{urlfor "CertificatesController.Burn" ":key" .Details.CN ":serial" .Serial}}" 
-                            data-title="Remove certificates ?" class="btn btn-danger btn-sm btn-group-sm bg-red-gradient btn40" title="Remove">RM</a>
+                            data-title="Remove certificates ?" class="btn btn-danger btn-sm btn-group-sm bg-gradient-red btn40" title="Remove">RM</a>
                           <a href="{{urlfor "CertificatesController.UnRevoke" ":key" .Details.CN}}" style="border-color: #d73925;"
-                            data-title="Restore access for user?" class="btn btn-warning btn-sm btn-group-sm bg-green-gradient btn40" title="UNRevoke">UN</a>
+                            data-title="Restore access for user?" class="btn btn-warning btn-sm btn-group-sm bg-gradient-green btn40" title="UNRevoke">UN</a>
                           <!-- <a href="{{urlfor "CertificatesController.Renew" ":key" .Details.CN ":serial" .Serial}}" 
                             data-title="Restore certificates?" class="btn btn-warning btn-sm bg-yellow-gradient btn80" title="Burn">Renew</a> -->
                       </div>
@@ -185,13 +186,13 @@
 
 
                   <!-- 7 sell -->
-                  {{ $col := "btn-primary btn-sm btn-group-sm bg-light-blue-gradient" }}  
+                  {{ $col := "btn-primary btn-sm btn-group-sm bg-gradient-lightblue" }}  
                   {{ $comment := "Edit" }} 
                   {{ $isValid := true }}
                   {{ range $md5 := $MD5 }}
                       {{ if eq $md5.ClientName $c.Details.CN }}
                           {{ if not $md5.IsValid }} 
-                              {{ $col = "btn-danger btn-sm btn-group-sm bg-red" }}
+                              {{ $col = "btn-danger btn-sm btn-group-sm bg-gradient-red" }}
                               {{ $comment = "Config was changed but not applied !" }}
                               {{ $isValid = false }} 
                           {{ end }}
