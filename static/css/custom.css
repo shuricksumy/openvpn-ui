@@ -229,6 +229,10 @@ td.txt-smaller{
   border-radius: 0.15rem;
 }
 
+.btn-xs {
+  margin-top: 2px !important;
+}
+
 .font75 {
   font-size: 75% !important;
 }
@@ -238,8 +242,8 @@ td.txt-smaller{
 }
 
 .table-sm td, .table-sm th {
-  padding-left: 0.25rem !important;
-  padding-right: 0.25rem !important;
+  padding-left: 0.5rem !important;
+  padding-right: 0.5rem !important;
 }
 
 td.first-sm, th.first-sm {
@@ -250,27 +254,24 @@ td.last-sm, th.last-sm {
   padding-right: 0.75rem !important;
 }
 
-td span:not(:nth-child(-n + 5)) {
+td.b span:not(:nth-child(-n + 5)) {
   display: none;
 }
 
-/* input[type=checkbox]:checked + ul li {
-  display:list-item;
-} */
+.sbb {
+  overflow: hidden;
+  display: -webkit-box;
+  padding: inherit !important;
+  -webkit-line-clamp: 1; /* number of lines to show */
+          line-clamp: 1; 
+  -webkit-box-orient: vertical;
+}
 
-
-/* <input type="checkbox"/>
-<ul>
-  <li>1</li>
-  <li>2</li>
-  <li>3</li>
-  <li>4</li>
-  <li>5</li>
-  <li>6</li>
-  <li>7</li>
-  <li>8</li>
-  <li>9</li>
-  <li>10</li>
-  <li>11</li>
-  <li>12</li>
-</ul> */
+.sb {
+  display: block;/* or inline-block */
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  overflow: hidden;
+  max-height: 40px;
+  line-height: 28px;
+}

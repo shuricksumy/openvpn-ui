@@ -82,7 +82,7 @@
 
       <div class="card-body p-0">
         <div class="table-responsive">
-         <table class="table-sm table-bordered  m-0">
+         <table class="table-sm table-bordered table-striped m-0">
             <thead>
             <tr class="font90">
               <th style="width:25%" class="first-sm">Name</th>
@@ -120,21 +120,21 @@
                     <td class="my-centered">
                       <button type="button" class="btn btn-success btn-sm btn-group-sm bg-gradient-olive font75" 
                         data-toggle="modal" data-target="#popup-{{ .Details.CN }}">
-                        <i class="fa fa-info-circle"></i>
+                        <i class="fa-solid fa-circle-info"></i>
                       </button>
                     </td>
                   {{else if eq .EntryType "R"}}
                     <td class="my-centered">
                        <button type="button" class="btn btn-warning btn-sm btn-group-sm bg-yellow-gradient font75" 
                         data-toggle="modal" data-target="#popup-{{ .Details.CN }}">
-                        <i class="fa fa-info-circle"></i>
+                        <i class="fa-solid fa-circle-info"></i>
                         </button>
                     </td>
                    {{else}}
                      <td class="my-centered">
                          <button type="button" class="btn btn-danger btn-sm btn-group-sm bg-gradient-red font75" 
                           data-toggle="modal" data-target="#popup-{{ .Details.CN }}">
-                            <span class="fa fa-info-circle">
+                            <span class="fa-solid fa-circle-info">
                         </button>
                      </td>
                    {{end}}
