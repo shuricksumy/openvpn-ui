@@ -250,9 +250,9 @@ td.last-sm, th.last-sm {
   padding-right: 0.75rem !important;
 }
 
-/* td span:not(:nth-child(-n + 7)) {
+td span:not(:nth-child(-n + 5)) {
   display: none;
-} */
+}
 
 /* input[type=checkbox]:checked + ul li {
   display:list-item;

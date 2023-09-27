@@ -43,7 +43,7 @@
                     <div class="input-group" id="show_hide_password">
                         <input type="password" class="form-control pwd" placeholder="Enter Password"  id="passphrase" name="passphrase">
                         <span class="input-group-btn">
-                            <button class="btn btn-default reveal" type="button"><i class="fa fa-eye"></i></button>
+                            <button class="btn btn-default reveal" type="button"><i class="fa fa-eye-slash"></i></button>
                         </span>
                     </div>
                     <span class="help-block font75">Passphrase is used for privte key protection.&nbsp;&nbsp;&nbsp;</span>
@@ -82,7 +82,7 @@
 
       <div class="card-body p-0">
         <div class="table-responsive">
-         <table class="table-sm m-0">
+         <table class="table-sm table-bordered  m-0">
             <thead>
             <tr class="font90">
               <th style="width:25%" class="first-sm">Name</th>
@@ -117,21 +117,21 @@
 
                    <!-- 2 sell -->
                   {{if eq .EntryType "V"}}
-                    <td>
+                    <td class="my-centered">
                       <button type="button" class="btn btn-success btn-sm btn-group-sm bg-gradient-olive font75" 
                         data-toggle="modal" data-target="#popup-{{ .Details.CN }}">
                         <i class="fa fa-info-circle"></i>
                       </button>
                     </td>
                   {{else if eq .EntryType "R"}}
-                    <td>
+                    <td class="my-centered">
                        <button type="button" class="btn btn-warning btn-sm btn-group-sm bg-yellow-gradient font75" 
                         data-toggle="modal" data-target="#popup-{{ .Details.CN }}">
                         <i class="fa fa-info-circle"></i>
                         </button>
                     </td>
                    {{else}}
-                     <td>
+                     <td class="my-centered">
                          <button type="button" class="btn btn-danger btn-sm btn-group-sm bg-gradient-red font75" 
                           data-toggle="modal" data-target="#popup-{{ .Details.CN }}">
                             <span class="fa fa-info-circle">
