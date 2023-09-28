@@ -1,6 +1,7 @@
 .info-box-number2{
   font-weight:bold;
-  font-size:18px;
+  margin-top: 0px !important;
+  margin-left: 5px;
 }
 
 .info-box-text2{
