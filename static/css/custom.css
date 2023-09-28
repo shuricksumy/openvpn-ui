@@ -258,20 +258,23 @@ td.b span:not(:nth-child(-n + 5)) {
   display: none;
 }
 
-.sbb {
+.sb {
   overflow: hidden;
   display: -webkit-box;
-  padding: inherit !important;
   -webkit-line-clamp: 1; /* number of lines to show */
           line-clamp: 1; 
   -webkit-box-orient: vertical;
 }
 
-.sb {
+.sbb {
+  overflow: hidden;
   display: block;/* or inline-block */
   text-overflow: ellipsis;
   word-wrap: break-word;
-  overflow: hidden;
-  max-height: 40px;
+  max-height: 30px;
   line-height: 28px;
+}
+
+.popover-header {
+  color: black !important;
 }

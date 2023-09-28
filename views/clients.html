@@ -118,35 +118,44 @@
 
                   <!-- 6 sell -->
                   <td class="first-cap font75">
-                    {{ .Description }}
+                    <div class=" sb">{{ .Description }}</div>
                   </td>
 
 
                   <!-- 7 sell -->
-                  <td class="sb">
-                    <button 
-                        type="button" class="btn btn-xs bg-gradient-lightblue bnt24" 
-                        data-toggle="popover" data-html="true" data-placement="bottom"
-                        title="Full list of routers:"  
-                        data-content="
-                                  <div class='card card-outline card-olive'>
-                                    <div class='card-body'>
-                                      {{range  $val := .RouteList}}
-                                        <div class='btn btn-xs bg-gradient-olive bnt40'>{{ $val }}</div>
-                                      {{end}}
-                                      {{range  $val := .RouteListUnselected}}
-                                        <div class='btn btn-xs bg-gray-light bnt40'>{{ $val }}</div>
-                                      {{end}}
+                  <td>
+                      <div  class="btn-group" role="group">
+
+                        <div class="sb">
+                            {{range $val := .RouteList}}
+                              <span class="btn btn-xs btn-group-xs bg-gradient-olive bnt24">{{ $val }}</span>
+                            {{end}}
+                            {{range  $val := .RouteListUnselected}}
+                              <span class="btn btn-xs btn-group-xs bg-gray-light bnt24">{{ $val }}</span>
+                            {{end}}
+                        </div>
+
+                        <div class="my-centered">
+                          <button 
+                          type="button" class="btn btn-xs bg-gradient-lightblue bnt24" 
+                          data-toggle="popover" data-html="true" data-placement="bottom"
+                          title="Routes for <b>{{ .ClientName }}</b>:"  
+                          data-content="
+                                    <div class='card card-outline card-olive'>
+                                      <div class='card-body'>
+                                        {{range  $val := .RouteList}}
+                                          <div class='btn btn-xs bg-gradient-olive bnt40'>{{ $val }}</div>
+                                        {{end}}
+                                        {{range  $val := .RouteListUnselected}}
+                                          <div class='btn btn-xs bg-gray-light bnt40'>{{ $val }}</div>
+                                        {{end}}
+                                      </div>
                                     </div>
-                                  </div>
-                        "><i class="fa-solid fa-shuffle"></i>
-                    </button>
-                    {{range $val := .RouteList}}
-                      <span class="btn btn-xs btn-group-xs bg-gradient-olive bnt24">{{ $val }}</span>
-                    {{end}}
-                    {{range  $val := .RouteListUnselected}}
-                      <span class="btn btn-xs btn-group-xs bg-gray-light bnt24">{{ $val }}</span>
-                    {{end}}
+                          "><i class="fa-solid fa-shuffle"></i>
+                      </button>
+                        </div>
+                      
+                      </div>
                   </td>
 
                   <!-- 8 sell -->
