@@ -166,12 +166,12 @@
             <tbody>
 
             {{range .ovstatus.ClientList}}
-            <tr>
+            <tr class="font90">
                 <td><span class="btn btn-xs btn-group-xs bg-gradient-lightblue btn120">{{.CommonName}}</span></td>
                 <td>{{.RealAddress}}</td>
                 <td>
                   <span class="btn btn-success btn-xs btn-group-xs bg-olive btn100">{{.VirtualAddress}}</span>
-                  <button class="button-transparent button-copy" data-clipboard-text="{{.VirtualAddress}}">
+                  <button class="btn btn-xs button-transparent button-copy" data-clipboard-text="{{.VirtualAddress}}">
                       <img class="clippy" src="static/img/clippy.svg" width="13" alt="Copy to clipboard">
                   </button>
                 </td>
@@ -203,7 +203,7 @@
         </div>
         <!-- /.table-responsive -->
       {{else}}
-        <div class="col-md-12 btn btn-xs btn-group-xs btn-danger bg-red-gradient">Fix your configuration</div>
+        <div class="col-md-12 btn btn-xs btn-group-xs btn-danger bg-gradient-red">Fix your configuration</div>
       {{end}}
       </div>
       <div class="card-footer clearfix">
