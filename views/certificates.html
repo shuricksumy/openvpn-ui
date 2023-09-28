@@ -13,8 +13,8 @@
     <div class="card-header with-border">
       <table>
         <tr>
-          <td class="col-md-1 text-left"><a class="btn btn-sm bg-gradient-navy btn120" data-toggle="collapse" href="#newCert" role="button"  aria-expanded="false"
-                  aria-controls="newCert" style="margin-left: 0.5%;">Create New Certificate</a>
+          <td class="col-md-1 text-left"><button class="btn btn-sm bg-gradient-navy btn120" data-toggle="collapse" href="#newCert" role="button"  aria-expanded="false"
+                  aria-controls="newCert" style="margin-left: 0.5%;">Create New Certificate</button>
                   {{template "common/fvalid.html" field_error_message .validation "Name" }}</td>
           <td class="col-md-1 text-right"><i>Restart server after revocation:&nbsp;&nbsp;&nbsp;</i><a href="{{urlfor "CertificatesController.Restart"}}" 
             class="btn btn-danger btn-sm bg-gradient-red btn150" data-title="Restart OpenVPN container?" 
@@ -220,22 +220,25 @@
                   <div id="popup-{{ .Details.CN }}" class="modal fade" role="dialog">
                       <div class="modal-dialog">
                         <div class="modal-content">
+
                           <div class="modal-header">
                             <h5 class="modal-title">Certificate details</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-form-type="" data-dashlane-label="true">
                               <span aria-hidden="true">×</span>
                             </button>
                           </div>
-                          <div class="modal-body">
+
+                          <div class="modal-body font90">
                              <span class="param-name"><b>Name:</b></span><span class="param-value"> {{ .Details.CN }}</span><br>
                              <span class="param-name"><b>Description:</b></span><span class="param-value"> {{ .Details.Description }}</span><br>
                              <span class="param-name"><b>Type:</b></span><span class="param-value"> {{ .EntryType }}</span><br>
                              <span class="param-name"><b>Status:</b></span><span class="param-value">{{if eq .EntryType "V"}}  Active {{else if eq .EntryType "R"}} Revoked {{else}} Unknown {{end}}</span><br>
                              <span class="param-name"><b>Serial:</b></span><span class="param-value"> {{ .Serial }}</span><br>
-                             <span class="param-name"><b>IP Address</b>:</span><span class="param-value"> {{ .Details.LocalIP }}</span><br>
-                             <span class="param-name"><b>Expiration Date:</b></span><span class="param-value">{{ dateformat .ExpirationT "2006-01-02 15:04"}}</span><br>
+                             <span class="param-name"><b>IP Address:</b>:</span><span class="param-value"> {{ .Details.LocalIP }}</span><br>
+                             <span class="param-name"><b>Expiration Date:</b></span><span class="param-value"> {{ dateformat .ExpirationT "2006-01-02 15:04"}}</span><br>
                              <span class="param-name"><b>Revoke Date:</b></span><span class="param-value">{{if ne .Revocation ""}} {{ dateformat .RevocationT "2006-01-02 15:04"}} {{else}} none {{end}}</span><br>
                           </div>
+
                           <div class="modal-footer">   
                              <!-- Copy button -->
                              <button class="btn bg-gradient-lightblue btn80" data-dismiss="modal">Close</button>

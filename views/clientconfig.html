@@ -21,7 +21,7 @@
         <label for="name">client-template.txt</label>
         <textarea type="text" class="form-control my-textarea" name="ClientTemplate" 
           id="ClientTemplate" spellcheck="false" rows="15">{{ .ClientTemplate }}</textarea>
-        <span id="helpBlock" class="help-block">This is a user config template file. It was generated according to server setting. 
+        <span id="helpBlock" class="help-block font90">This is a user config template file. It was generated according to server setting. 
           The beckup file of previous version will be saved before new aon be applied.
         </span>
       </div>
@@ -47,7 +47,11 @@
 </div>
 
 <script>
-    createEditor("ClientTemplate", "600px", {{if eq .Settings.Theme "midnight"}}"clouds_midnight"{{else}}"clouds"{{end}}, "space", false)
+  editTheme = ""
+  if (localStorage.getItem('theme') != null ) {
+    editTheme = "_midnight"
+  };
+  createEditor("ClientTemplate", "600px", "clouds" + editTheme, "space", false)
 </script>
 
 

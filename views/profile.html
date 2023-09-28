@@ -5,7 +5,7 @@
 {{end}}
 
 {{define "body"}}
-<div class="card card-primary">
+<div class="card card-lightblue">
   <div class="card-header with-border">
     <h3 class="card-title">Edit your profile</h3>
   </div>
@@ -28,7 +28,7 @@
       <div class="form-group {{if field_error_exist .validation "Email" }}has-error{{end}}">
         <label for="email">Email address</label>
         <div class="input-group">
-          <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+          <span class="input-group-text"><i class="fa fa-envelope"></i></span>
           <input type="email" class="form-control" id="email" name="Email" placeholder="Enter email"
             value="{{ .profile.Email }}">
         </div>
@@ -49,7 +49,7 @@
     <!-- /.card-body -->
 
     <div class="card-footer">
-      <button type="submit" class="btn btn-primary bg-light-blue-gradient">Save</button>
+      <button type="submit" class="btn bg-gradient-lightblue">Save</button>
     </div>
   </form>
 </div>

@@ -199,6 +199,7 @@ func parseDetails(d string) *Details {
 		}
 		if details.CN != "" {
 			details.Description = GetClientDetailsFieldValue(details.CN, "Description")
+			details.LocalIP = GetClientDetailsFieldValue(details.CN, "StaticIP")
 		}
 	}
 	return details

@@ -5,7 +5,7 @@
 {{end}}
 
 {{define "body"}}
-<div class="card card-info">
+<div class="card card-lightblue">
   <div class="card-header with-border">
     <h3 class="card-title">Last 500 lines of OpenVPN log</h3>
   </div>
@@ -30,12 +30,14 @@
 
 </div>
 
-
 <script>
-    //createEditor("Logs", "750px", "clouds_midnight", "ovpn", true);
-    createEditor("Logs", "750px", {{if eq .Settings.Theme "midnight"}}"clouds_midnight"{{else}}"clouds"{{end}}, "ovpn", true);
-
+  editTheme = ""
+  if (localStorage.getItem('theme') != null ) {
+    editTheme = "_midnight"
+  };
+  createEditor("Logs", "600px", "clouds" + editTheme, "space", false)
 </script>
+
 
 <!-- /.card -->
 {{end}}

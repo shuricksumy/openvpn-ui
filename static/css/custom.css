@@ -278,3 +278,53 @@ td.b span:not(:nth-child(-n + 5)) {
 .popover-header {
   color: black !important;
 }
+
+.dark-mode .card-lightblue:not(.card-outline)>.card-header {
+  background-color: #3f6791 !important;
+  color: #fff !important;
+}
+
+.dark-mode .bg-gradient-lightblue {
+  background: #3f6791 linear-gradient(180deg,#5c7ea2,#3f6791) repeat-x!important;
+  color: #fff;
+}
+
+
+input#switch-input {
+  display:none;
+}
+label.switch-label{
+  border:2px solid white;
+  border-radius:25px;
+  cursor:pointer;
+  background-color: #343a40;
+  min-width: 60px;
+  margin-top: -5px;
+}
+.fa-sun{
+  color:orange;
+  font-size:24px;
+  text-shadow:0px 0px 15px orange;
+  transform:translateX(25px);
+  transition:.3s;
+}
+.fa-moon{
+  color:white;
+  font-size:25px;
+  text-shadow:0px 0px 15px white;
+  transform:translateX(0px);
+  opacity:0;
+  transition:.3s;
+}
+#switch-input:checked ~ label > .fa-sun{
+  opacity:0;
+  transform:translateX(0px);
+}
+#switch-input:checked ~ label > .fa-moon{
+  opacity:1;
+  transform:translateX(-15px);
+}
+
+.user-image {
+  background-color: white;
+}
