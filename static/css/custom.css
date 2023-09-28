@@ -329,3 +329,7 @@ label.switch-label{
 .user-image {
   background-color: white;
 }
+
+.multiselect-container>li>a>label {
+  padding: 2px 15px 2px 15px;
+}
