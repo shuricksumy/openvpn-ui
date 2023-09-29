@@ -5,9 +5,13 @@
 - The Docker builder with the Server part is here [**OPENVPN-SERVER-DOCKER**](https://github.com/shuricksumy/openvpn-server-docker)
 - The base example for docker-compose is here [***DOCKER-COMPOSE***](https://github.com/shuricksumy/openvpn-server-docker/tree/main/examples/basic)
 
-![Status page](screenshots/2.png?raw=true)
+![Status page](screenshots/1.png?raw=true)
 
 ## Updates
+
+#### September 2023 (v3.0)
+- New UI web components
+- UI updates
 #### September 2023 (v2.0 - v 2.4)
 - Fixed some issues
 - Add script based on go for client's file generation
@@ -85,6 +89,8 @@ services:
 
 ## Screenshots
 
+![Status page](screenshots/0.png?raw=true)
+![Status page](screenshots/1.png?raw=true)
 ![Status page](screenshots/2.png?raw=true)
 ![Status page](screenshots/3.png?raw=true)
 ![Status page](screenshots/4.png?raw=true)
@@ -94,3 +100,4 @@ services:
 ![Status page](screenshots/8.png?raw=true)
 ![Status page](screenshots/9.png?raw=true)
 ![Status page](screenshots/10.png?raw=true)
+![Status page](screenshots/11.png?raw=true)
