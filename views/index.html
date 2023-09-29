@@ -17,10 +17,10 @@
         <span class="info-box-text">
           Clients count: <span class="info-box-number2">{{ .ovstats.NClients }}</span>
         </span>
-        <span class="info-box-text">
+        <span class="info-box-text font90">
           In: <span class="info-box-number2 font75">{{ printmb .ovstats.BytesIn }} MB</span>
         </span>
-        <span class="info-box-text">
+        <span class="info-box-text font90">
           Out: <span class="info-box-number2 font75">{{ printmb .ovstats.BytesOut }} MB </span>
         </span>
       </div>
@@ -42,7 +42,7 @@
             {{ .sysinfo.LoadAvg.Five }},
             {{ .sysinfo.LoadAvg.Fifteen }}<br/>
             </span>
-          <span class="info-box-text">
+          <span class="info-box-text font90">
             CPU count: <span class="info-box-number2">
               {{ .sysinfo.CPUList.List | len }}
             </span>

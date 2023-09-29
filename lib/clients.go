@@ -6,7 +6,6 @@ import (
 	"errors"
 	"net/netip"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"reflect"
 	"regexp"
@@ -399,17 +398,17 @@ func SaveJsonFile(clientDetails []*ClientDetails, pathJson string) error {
 	return os.WriteFile(pathJson, file, 0644)
 }
 
-func ApplyClientsConfigToFS2() error {
-	cmd := exec.Command("/bin/bash", "-c", " cd /opt/scripts/ && ./createClientFilesFromJSON.sh")
-	cmd.Dir = state.GlobalCfg.OVConfigPath
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		logs.Debug(string(output))
-		logs.Error(err)
-		return err
-	}
-	return nil
-}
+// func ApplyClientsConfigToFS2() error {
+// 	cmd := exec.Command("/bin/bash", "-c", " ./createClientFilesFromJSON.sh")
+// 	cmd.Dir = state.GlobalCfg.OVConfigPath
+// 	output, err := cmd.CombinedOutput()
+// 	if err != nil {
+// 		logs.Debug(string(output))
+// 		logs.Error(err)
+// 		return err
+// 	}
+// 	return nil
+// }
 
 func GetClientDetailsFieldValue(clientName string, fieldName string) string {
 	allClients, _ := GetClientsDetailsFromFiles()

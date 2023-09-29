@@ -3,7 +3,9 @@
 set -e
 
 # Directory where OpenVPN configuration files are stored
-OVDIR=/etc/openvpn
+if [[ $OVDIR == "" ]]; then
+	OVDIR="/etc/openvpn"
+fi
 
 # Change to the /opt directory
 cd /opt/

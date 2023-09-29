@@ -3,7 +3,9 @@
 # Exit immediately if a command exits with a non-zero status
 set -e
 
-OVDIR=/etc/openvpn
+if [[ $OVDIR == "" ]]; then
+	OVDIR="/etc/openvpn"
+fi
 
 # .ovpn file path
 DEST_FILE_PATH="$OVDIR/clients/$1.ovpn"

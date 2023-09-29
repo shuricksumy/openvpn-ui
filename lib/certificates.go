@@ -231,7 +231,8 @@ func CreateCertificate(name string, passphrase string) error {
 				fmt.Sprintf(
 					"cd /opt/scripts/ && export DOCKER_COMMAND=3 && "+
 						"export CLIENT=%s && export PASS=1 && "+
-						"./openvpn-install-v2.sh", name))
+						"export OVPN_PATH=%s && "+
+						"./openvpn-install-v2.sh", name, state.GlobalCfg.OVConfigPath))
 			cmd.Dir = state.GlobalCfg.OVConfigPath
 			output, err := cmd.CombinedOutput()
 			if err != nil {
@@ -248,7 +249,8 @@ func CreateCertificate(name string, passphrase string) error {
 				fmt.Sprintf(
 					"cd /opt/scripts/ && export DOCKER_COMMAND=3 && "+
 						"export CLIENT=%s && export PASS=2 && export CL_PASS=%s && "+
-						"./openvpn-install-v2.sh", name, passphrase))
+						"export OVPN_PATH=%s && "+
+						"./openvpn-install-v2.sh", name, passphrase, state.GlobalCfg.OVConfigPath))
 			cmd.Dir = state.GlobalCfg.OVConfigPath
 			output, err := cmd.CombinedOutput()
 			if err != nil {
@@ -267,7 +269,8 @@ func CreateOVPNFile(name string) error {
 		fmt.Sprintf(
 			"cd /opt/scripts/ && export DOCKER_COMMAND=4 && "+
 				"export CLIENT=%s && "+
-				"./openvpn-install-v2.sh", name))
+				"export OVPN_PATH=%s && "+
+				"./openvpn-install-v2.sh", name, state.GlobalCfg.OVConfigPath))
 	cmd.Dir = state.GlobalCfg.OVConfigPath
 	output, err := cmd.CombinedOutput()
 	if err != nil {
@@ -283,7 +286,8 @@ func RevokeCertificate(name string) error {
 		fmt.Sprintf(
 			"cd /opt/scripts/ && export DOCKER_COMMAND=5 && "+
 				"export CLIENT=%s && "+
-				"./openvpn-install-v2.sh", name))
+				"export OVPN_PATH=%s && "+
+				"./openvpn-install-v2.sh", name, state.GlobalCfg.OVConfigPath))
 	cmd.Dir = state.GlobalCfg.OVConfigPath
 	output, err := cmd.CombinedOutput()
 	if err != nil {
@@ -299,7 +303,8 @@ func UnRevokeCertificate(name string) error {
 		fmt.Sprintf(
 			"cd /opt/scripts/ && export DOCKER_COMMAND=6 && "+
 				"export CLIENT=%s && "+
-				"./openvpn-install-v2.sh", name))
+				"export OVPN_PATH=%s && "+
+				"./openvpn-install-v2.sh", name, state.GlobalCfg.OVConfigPath))
 	cmd.Dir = state.GlobalCfg.OVConfigPath
 	output, err := cmd.CombinedOutput()
 	if err != nil {
@@ -314,7 +319,8 @@ func BurnCertificate(CN string, serial string) error {
 	cmd := exec.Command("/bin/bash", "-c",
 		fmt.Sprintf(
 			"cd /opt/scripts/ && "+
-				"./rmcert.sh %s %s", CN, serial))
+				"export OVDIR=%s && "+
+				"./rmcert.sh %s %s", state.GlobalCfg.OVConfigPath, CN, serial))
 	cmd.Dir = state.GlobalCfg.OVConfigPath
 	output, err := cmd.CombinedOutput()
 	if err != nil {
