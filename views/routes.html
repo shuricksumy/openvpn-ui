@@ -118,75 +118,44 @@
             </tr>
             </thead>
             <tbody>
-
-            {{$MD5 := .MD5}}
-            {{$numR := .numRouters}}
             
-            {{range $c := .clients}}
+            {{range $r := .routes}}
                 <!-- <tr data-widget="expandable-table" aria-expanded="false"> -->
                 <tr>
 
                   <!-- 1 sell -->
-                  <td class="my-centered first-sm">
-                      {{ $col := "btn-sm btn-group-sm btn-block bg-gradient-lightblue" }} 
-                      {{ $comment := .ClientName }}
-                      {{ $icon := "fa fa-edit" }}
-                      {{ range $md5 := $MD5 }}
-                          {{ if eq $md5.ClientName $c.ClientName }}
-                              {{ if not $md5.IsValid }} 
-                                  {{ $col = "btn-danger btn-sm btn-group-sm btn-block bg-gradient-red" }} 
-                                  {{ $comment = "Config was changed but not applied !" }}
-                                  {{ $icon = "fa fa-warning" }} 
-                              {{ end }}
-                          {{ end }}
-                      {{ end }}
-                       <button id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .ClientName }}" 
-                        class="btn {{ $col }} right-icon-holder font75" 
-                        title="{{ $comment }}">{{ .ClientName }}<i class="{{ $icon }}"></i>
-                      </button>
+                  <td>
+                      {{ .RouteID }}
                   </td>
 
                   <!-- 2 sell -->
-                  <td class="my-centered first-cap">
-                    {{ if .IsRouteDefault }}
-                      <span class="btn btn-xs btn-group-xs bg-gradient-olive btn40">{{ .IsRouteDefault }}</span>
-                    {{else}}
-                      <span class="btn btn-xs bg-gray-light btn-group-xs btn40">{{ .IsRouteDefault }}</span>
-                    {{end}}
+                  <td>
+                    {{ .RouterName }}
                   </td>
 
                   <!-- 3 sell -->
                   <td class="my-centered">
-                    {{ if ne .StaticIP "" }}
-                      <span class="btn btn-xs btn-group-xs bg-gradient-olive btn100">{{ .StaticIP }}</span>
-                    {{else}}
-                      <span class="btn btn-xs btn-group-xs bg-gray-light btn100">random</span>
-                    {{end}}
+                    <span class="btn btn-xs btn-group-xs bg-gradient-olive btn100">{{ .RouteIP }}</span>
                   </td>
 
 
                   <!-- 5 sell -->
                   <td class="my-centered">
-                    {{ if .IsRouter }}
-                      <span class="btn btn-xs btn-group-xs bg-gradient-purple btn100">{{ .RouterSubnet }}</span>
-                      <!-- <span class="btn btn-xs bg-purple btn80">{{ .RouterMask }}</span> -->
-                    {{else}}
-                      <span class="btn btn-xs btn-group-xs bg-gray-light btn100">-</span>
-                    {{end}}
+                    <span class="btn btn-xs btn-group-xs bg-gradient-olive btn100">{{ .RouteMask }}</span>
                   </td>
 
                   <!-- 6 sell -->
                   <td class="first-cap font75">
-                    <div class=" sb">{{ .Description }}</div>
+                    <div class="sb">{{ .Description }}</div>
                   </td>
 
 
                   <!-- 7 sell -->
                   <td class="textcenter my-centered last-sm">
                     <div class="btn-group" role="group">
-                        <button  id="openModalEditClientDetails" data-target="#editClientDetailsModal" data-client-name="{{ .ClientName }}"
+                        <button  id="openModalEditClientDetails" data-target="#editClientDetailsModal" data-client-name="{{ .RouterName }}"
                         class="btn btn-sm btn-group-sm bg-gradient-lightblue btn80 font75" title="Edit">Edit</button>
-                        <!-- <button id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .ClientName }}" 
+                        <!-- <button id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .RouterName }}" 
                         class="btn btn-sm bg-light-blue-gradient btn40" title="Edit">Raw</button> -->
                     </div>
                   </td>

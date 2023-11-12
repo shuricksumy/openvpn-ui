@@ -37,7 +37,15 @@ func (c *RoutesController) showRoutes() {
 	flash := web.NewFlash()
 
 	//get clientsDetails from file
-	clientsDetails, err_read := lib.GetClientsDetailsFromFiles()
+	clientsDetails, err_cl_read := lib.GetClientsDetailsFromFiles()
+	if err_cl_read != nil {
+		logs.Error(err_cl_read)
+		flash.Error("ERROR WHILE READING CLIENTS FROM FILE !")
+		flash.Store(&c.Controller)
+	}
+
+	//get routeDetails from file
+	routeDetails, err_read := lib.GetRoutesDetailsFromFiles()
 	if err_read != nil {
 		logs.Error(err_read)
 		flash.Error("ERROR WHILE READING CLIENTS FROM FILE !")
@@ -45,26 +53,42 @@ func (c *RoutesController) showRoutes() {
 	}
 
 	// lib.Dump(clientsDetails)
-	c.Data["clients"] = &clientsDetails
+	//c.Data["clients"] = &clientsDetails
 
 	// lib.GetRouterClients
 	c.Data["routers"] = lib.GetRouterClients(clientsDetails)
+
+	// lib.GetRoutesDetailsFromFiles
+	c.Data["routes"] = &routeDetails
 }
 
 // @router /routes [post]
 func (c *RoutesController) Post() {
 	c.TplName = "routes.html"
 	flash := web.NewFlash()
-	rParams := lib.RouteDetails{}
-	if err := c.ParseForm(&rParams); err != nil {
-		logs.Error(err)
-		flash.Error(err.Error())
+	wasError := false
+
+	route := &lib.RouteDetails{}
+	err_parse := c.ParseForm(route)
+	if err_parse != nil {
+		logs.Error(err_parse)
+		flash.Error(err_parse.Error())
 		flash.Store(&c.Controller)
-	} else {
-		//Validate
-		//Store
-		logs.Error(rParams.RouteID)
-		logs.Error(rParams)
+	}
+
+	err_save := lib.AddRouteToJsonFile(*route)
+	if err_save != nil {
+		wasError = true
+		logs.Error(err_save)
+		flash.Error("Error saving JSON file! " + string(err_save.Error()))
+		flash.Store(&c.Controller)
+	}
+
+	if !wasError {
+		// Redirect to the main page after successful file save.
+		flash.Success("Settings are saved for " + string(route.RouterName) + " to file. " +
+			"Do not forget to [Apply Configuration] for all clients at the end.")
+		flash.Store(&c.Controller)
 	}
 	c.showRoutes()
 }

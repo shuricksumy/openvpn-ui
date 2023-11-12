@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"io"
 	"math/rand"
-	"path/filepath"
 	"net/netip"
 	"os"
 	"os/exec"
 	"path"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -22,12 +22,14 @@ import (
 
 var PATH_INDEX string
 var PATH_JSON string
+var PATH_ROUTES_JSON string
 var CCD_DIR_PATH string
 var SERVER_CONFIG_PATH string
 
 func InitGlobalVars() {
 	PATH_INDEX = filepath.Join(state.GlobalCfg.OVConfigPath, "easy-rsa/pki/index.txt")
 	PATH_JSON = filepath.Join(state.GlobalCfg.OVConfigPath, "clientDetails.json")
+	PATH_ROUTES_JSON = filepath.Join(state.GlobalCfg.OVConfigPath, "routesDetails.json")
 	CCD_DIR_PATH = filepath.Join(state.GlobalCfg.OVConfigPath, "ccd")
 	SERVER_CONFIG_PATH = filepath.Join(state.GlobalCfg.OVConfigPath, "server.conf")
 }
@@ -174,7 +176,6 @@ func GetMD5SumFile(path string) (string, error) {
 func trim(s string) string {
 	return strings.Trim(strings.Trim(s, "\r\n"), "\n")
 }
-
 
 func _isIPAddressValid(ip string) bool {
 	addr, _ := netip.ParseAddr(ip)
