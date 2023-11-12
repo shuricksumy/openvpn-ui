@@ -8,12 +8,12 @@
 
 {{template "common/alert.html" .}}  
 
-<div class="col-md-12">
-  <div class="card card-lightblue">
-    <div class="card-header with-border">
+<div class="col-xs-12">
+  <div class="card card-outline card-lightblue">
+    <div class="card-header with-border table-responsive">
       <table>
         <tr>
-          <td class="col-md-1 text-left"><button class="btn btn-sm bg-gradient-navy btn120" data-toggle="collapse" href="#newCert" role="button"  aria-expanded="false"
+          <td class="col-md-1 text-left"><button class="btn btn-sm bg-gradient-navy btn150" data-toggle="collapse" href="#newCert" role="button"  aria-expanded="false"
                   aria-controls="newCert" style="margin-left: 0.5%;">Create New Certificate</button>
                   {{template "common/fvalid.html" field_error_message .validation "Name" }}</td>
           <td class="col-md-1 text-right"><i>Restart server after revocation:&nbsp;&nbsp;&nbsp;</i><a href="{{urlfor "CertificatesController.Restart"}}" 
@@ -72,7 +72,7 @@
 
 
 
-  <div class="col-md-12">
+  <div class="col-xs-12">
     <div class="card card-lightblue">
       <div class="card-header with-border">
         <h3 class="card-title">Clients certificates</h3>

@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io"
 	"math/rand"
+	"path/filepath"
+	"net/netip"
 	"os"
 	"os/exec"
 	"path"
@@ -17,6 +19,18 @@ import (
 	"github.com/beego/beego/v2/server/web"
 	"github.com/shuricksumy/openvpn-ui/state"
 )
+
+var PATH_INDEX string
+var PATH_JSON string
+var CCD_DIR_PATH string
+var SERVER_CONFIG_PATH string
+
+func InitGlobalVars() {
+	PATH_INDEX = filepath.Join(state.GlobalCfg.OVConfigPath, "easy-rsa/pki/index.txt")
+	PATH_JSON = filepath.Join(state.GlobalCfg.OVConfigPath, "clientDetails.json")
+	CCD_DIR_PATH = filepath.Join(state.GlobalCfg.OVConfigPath, "ccd")
+	SERVER_CONFIG_PATH = filepath.Join(state.GlobalCfg.OVConfigPath, "server.conf")
+}
 
 // CreateValidationMap ranslates validation structure to map
 // that can be easly presented in template
@@ -159,4 +173,19 @@ func GetMD5SumFile(path string) (string, error) {
 
 func trim(s string) string {
 	return strings.Trim(strings.Trim(s, "\r\n"), "\n")
+}
+
+
+func _isIPAddressValid(ip string) bool {
+	addr, _ := netip.ParseAddr(ip)
+	return addr.IsValid()
+}
+
+func _getNextIPAddress(ip string) string {
+	addr, err := netip.ParseAddr(ip)
+	if err != nil {
+		logs.Error("IP is nov valid: ", ip)
+		return ""
+	}
+	return addr.Next().String()
 }

@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"net/netip"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -14,7 +13,6 @@ import (
 	"time"
 
 	"github.com/beego/beego/v2/core/logs"
-	"github.com/shuricksumy/openvpn-ui/state"
 )
 
 // Structure for using on WEB
@@ -48,18 +46,6 @@ type ClientMD5 struct {
 	ClientName string
 	MD5Hash    string
 	IsValid    bool
-}
-
-var PATH_INDEX string
-var PATH_JSON string
-var CCD_DIR_PATH string
-var SERVER_CONFIG_PATH string
-
-func InitGlobalVars() {
-	PATH_INDEX = filepath.Join(state.GlobalCfg.OVConfigPath, "easy-rsa/pki/index.txt")
-	PATH_JSON = filepath.Join(state.GlobalCfg.OVConfigPath, "clientDetails.json")
-	CCD_DIR_PATH = filepath.Join(state.GlobalCfg.OVConfigPath, "ccd")
-	SERVER_CONFIG_PATH = filepath.Join(state.GlobalCfg.OVConfigPath, "server.conf")
 }
 
 // Read index easy-rsa index file
@@ -595,18 +581,4 @@ func ApplyClientsConfigToFS() error {
 	}
 
 	return nil
-}
-
-func _isIPAddressValid(ip string) bool {
-	addr, _ := netip.ParseAddr(ip)
-	return addr.IsValid()
-}
-
-func _getNextIPAddress(ip string) string {
-	addr, err := netip.ParseAddr(ip)
-	if err != nil {
-		logs.Error("IP is nov valid: ", ip)
-		return ""
-	}
-	return addr.Next().String()
 }

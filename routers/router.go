@@ -25,6 +25,7 @@ func Init(configDir string) {
 
 	web.Include(&controllers.CertificatesController{ConfigDir: configDir})
 	web.Include(&controllers.ClientsController{ConfigDir: configDir})
+	web.Include(&controllers.RoutesController{ConfigDir: configDir})
 
 	web.Include(&controllers.SystemController{})
 

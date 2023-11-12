@@ -41,6 +41,10 @@
       </li>
 
       <li class="nav-item">
+        <a href="{{urlfor "RoutesController.Get"}}" class="dropdown-item {{if compare .RouterPattern "/routes"}}active{{end}}">Routes</a>
+      </li>
+
+      <li class="nav-item">
         <a href="{{urlfor "CertificatesController.Get"}}" class="dropdown-item {{if compare .RouterPattern "/certificates"}}active{{end}}">Certificates</a>
       </li>
     

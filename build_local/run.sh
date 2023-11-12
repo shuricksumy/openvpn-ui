@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export GOPATH=`pwd`
+export GOPATH=$HOME/go
 export SITE_NAME="TCP version"
 
 export OPENVPN_ADMIN_USERNAME=admin # Leave this default as-is and update on first-run
@@ -8,8 +8,8 @@ export OPENVPN_ADMIN_PASSWORD=admin # Leave this default as-is and update on fir
 export OVDIR=/etc/openvpn
 
 rm $GOPATH/bin/openvpn-ui
-cd ./src/github.com/shuricksumy/openvpn-ui
-#rm ./data.db
+cd ../
+rm ./data.db
 rm ./openvpn-ui
 
 if [ ! -f ${OVDIR}/clientDetails.json ]; then
