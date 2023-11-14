@@ -62,6 +62,28 @@ func (c *RoutesController) showRoutes() {
 	c.Data["routes"] = &routeDetails
 }
 
+// @router /routes/ID [get]
+func (c *RoutesController) GetRoute() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+
+	// flash := web.NewFlash()
+	routeID := c.GetString(":key")
+	route := lib.GetRouteDetails(routeID)
+
+	c.Data["RouteID"] = route.RouteID
+	c.Data["RouterName"] = route.RouterName
+	c.Data["RouteIP"] = route.RouteIP
+	c.Data["RouteMask"] = route.RouteMask
+	c.Data["Description"] = route.Description
+	c.Data["CSRFToken"] = route.CSRFToken
+
+	c.TplName = "modalRouteEdit.html"
+	c.Render()
+}
+
 // @router /routes [post]
 func (c *RoutesController) Post() {
 	c.TplName = "routes.html"

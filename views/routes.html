@@ -153,9 +153,9 @@
                   <!-- 7 sell -->
                   <td class="textcenter my-centered last-sm">
                     <div class="btn-group" role="group">
-                        <button  id="openModalEditClientDetails" data-target="#editClientDetailsModal" data-client-name="{{ .RouterName }}"
+                        <button  id="getRouteEditModal" data-target="#getRouteEditModal" data-route-id="{{ .RouteID }}"
                         class="btn btn-sm btn-group-sm bg-gradient-lightblue btn80 font75" title="Edit">Edit</button>
-                        <!-- <button id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .RouterName }}" 
+                        <!-- <button id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .RouteID }}" 
                         class="btn btn-sm bg-light-blue-gradient btn40" title="Edit">Raw</button> -->
                     </div>
                   </td>
@@ -280,6 +280,7 @@
 </script>
 
 <!-- Add an empty modal container -->
+<div id="modal-edit-route-details"></div>
 <div id="modal-edit-client-details"></div>
 <div id="modal-edit-client-raw"></div>
 

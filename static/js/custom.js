@@ -146,6 +146,30 @@ $(function() {
     }
 });
 
+$(function() {
+    $(document).ready(function () {
+        $("button#getRouteEditModal").on("click", function () {
+            var routeID = $(this).data("route-id");
+            showEditRouteModal(routeID);
+        });
+    }); $()
+
+    function showEditRouteModal(routeID) {
+        // Make an AJAX request to get the data for the client
+        $.get("routes/get/" + routeID, function (data) {
+            // Update the modal content with the retrieved data
+            $("#modal-edit-route-details").html(data);
+            // Show the modal
+            $("#showEditRouteModal").modal("show");
+        }).fail(function () {
+            alert("Error loading data for the client.");
+        }).always(function() {
+            // Show the modal
+            $("#showEditRouteModal").modal("show");
+        });
+    }
+});
+
 $(document).ready(function() {
     // Use $(document).on() to bind the click event to dynamically added elements
     $(document).on('click', '[data-popup-target]', function() {

@@ -175,3 +175,13 @@ func UpdateRoutessDetailsInStructure(routesDetails []*RouteDetails, route RouteD
 
 	return newRoutesDetails, nil
 }
+
+func GetRouteDetails(routeID string) *RouteDetails {
+	routeDetails, _ := GetRoutesDetailsFromFiles()
+	for _, r := range routeDetails {
+		if r.RouteID == routeID {
+			return r
+		}
+	}
+	return nil
+}
