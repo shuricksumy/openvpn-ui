@@ -62,26 +62,54 @@ func (c *RoutesController) showRoutes() {
 	c.Data["routes"] = &routeDetails
 }
 
-// @router /routes/ID [get]
+// @router /routes/get/ID [get]
 func (c *RoutesController) GetRoute() {
 	if !c.IsLogin {
 		c.Ctx.Redirect(302, c.LoginPath())
 		return
 	}
 
-	// flash := web.NewFlash()
+	flash := web.NewFlash()
+
 	routeID := c.GetString(":key")
 	route := lib.GetRouteDetails(routeID)
+	if route == nil {
+		c.TplName = "routes.html"
+		flash.Error("Route: " + routeID + " was found. ")
+		flash.Store(&c.Controller)
+		c.showRoutes()
+	} else {
+		c.Data["RouteID"] = route.RouteID
+		c.Data["RouterName"] = route.RouterName
+		c.Data["RouteIP"] = route.RouteIP
+		c.Data["RouteMask"] = route.RouteMask
+		c.Data["Description"] = route.Description
+		c.Data["CSRFToken"] = route.CSRFToken
 
-	c.Data["RouteID"] = route.RouteID
-	c.Data["RouterName"] = route.RouterName
-	c.Data["RouteIP"] = route.RouteIP
-	c.Data["RouteMask"] = route.RouteMask
-	c.Data["Description"] = route.Description
-	c.Data["CSRFToken"] = route.CSRFToken
+		c.TplName = "modalRouteEdit.html"
+		c.Render()
+	}
+}
 
-	c.TplName = "modalRouteEdit.html"
-	c.Render()
+// @router /routes/delte/ID [get]
+func (c *RoutesController) Delete() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+	flash := web.NewFlash()
+	routeID := c.GetString(":key")
+	err_del := lib.DeleteRoute(routeID)
+
+	if err_del != nil {
+		flash.Error("Route: " + routeID + " was NOT deleted. " + string(err_del.Error()))
+		flash.Store(&c.Controller)
+	} else {
+		flash.Success("Route: " + routeID + " was successfully deleted. Please do not forget apply new config at the end of configuration!")
+		flash.Store(&c.Controller)
+	}
+	c.TplName = "routes.html"
+	c.showRoutes()
 }
 
 // @router /routes [post]

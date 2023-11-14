@@ -213,4 +213,12 @@ func init() {
 				Router:           `/routes/get/:key`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
+
+	web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:RoutesController"] =
+		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:RoutesController"],
+			web.ControllerComments{
+				Method:           "Delete",
+				Router:           `/routes/delete/:key`,
+				AllowHTTPMethods: []string{"get"},
+				Params:           nil})
 }

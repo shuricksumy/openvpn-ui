@@ -111,10 +111,11 @@
             <tr class="font90 textcenter">
               <th class="first-sm" style="width:15%">Route ID</th>
               <th style="width:15%">Router Name</th>
-              <th style="width:15%">Route IP</th>
-              <th style="width:15%">Route Mask</th>
-              <th style="width:35%">Description</th>
-              <th class="last-sm" style="width:15%">CRUD</th>
+              <th style="width:10%">Route IP</th>
+              <th style="width:10%">Route Mask</th>
+              <th style="width:40%">Description</th>
+              <th style="width:5%">Edit</th>
+              <th class="last-sm" style="width:5%">Delete</th>
             </tr>
             </thead>
             <tbody>
@@ -135,13 +136,13 @@
 
                   <!-- 3 sell -->
                   <td class="my-centered">
-                    <span class="btn btn-xs btn-group-xs bg-gradient-olive btn100">{{ .RouteIP }}</span>
+                    <span class="btn btn-xs btn-group-xs bg-gradient-purple btn100">{{ .RouteIP }}</span>
                   </td>
 
 
                   <!-- 5 sell -->
                   <td class="my-centered">
-                    <span class="btn btn-xs btn-group-xs bg-gradient-olive btn100">{{ .RouteMask }}</span>
+                    <span class="btn btn-xs btn-group-xs bg-gradient-purple btn100">{{ .RouteMask }}</span>
                   </td>
 
                   <!-- 6 sell -->
@@ -156,7 +157,15 @@
                         <button  id="getRouteEditModal" data-target="#getRouteEditModal" data-route-id="{{ .RouteID }}"
                         class="btn btn-sm btn-group-sm bg-gradient-lightblue btn80 font75" title="Edit">Edit</button>
                         <!-- <button id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .RouteID }}" 
-                        class="btn btn-sm bg-light-blue-gradient btn40" title="Edit">Raw</button> -->
+                        class="btn btn-sm btn-group-sm bg-gradient-red btn80" title="Delete">Delete</button> -->
+                    </div>
+                  </td>
+
+                  <!-- 8 sell -->
+                  <td class="textcenter my-centered last-sm">
+                    <div class="btn-group" role="group">
+                      <a href="{{urlfor "RoutesController.Delete" ":key" .RouteID}}" 
+                            data-title="Remove route ?" class="btn btn-danger btn-sm btn-group-sm bg-gradient-red btn80 font75" title="Delete">Delete</a>
                     </div>
                   </td>
                 </tr>

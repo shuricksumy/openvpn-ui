@@ -185,3 +185,29 @@ func GetRouteDetails(routeID string) *RouteDetails {
 	}
 	return nil
 }
+
+func DeleteRoute(routeID string) error {
+	InitGlobalVars()
+
+	routeDetails, err_read_file := GetRoutesDetailsFromFiles()
+	if err_read_file != nil {
+		return err_read_file
+	}
+
+	newRoutesDetails := make([]*RouteDetails, 0)
+	for _, r := range routeDetails {
+		if r.RouteID == routeID {
+			continue
+		}
+		newRoutesDetails = append(newRoutesDetails, r)
+	}
+
+	err_save := SaveRouteJsonFile(newRoutesDetails, PATH_ROUTES_JSON)
+	if err_save != nil {
+		logs.Error(err_save)
+		logs.Error("FILE WAS NOT SAVE")
+		return errors.New("FILE WAS NOT SAVE!" + err_save.Error())
+	}
+
+	return nil
+}
