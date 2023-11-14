@@ -11,12 +11,13 @@ import (
 
 // Structure for using on WEB
 type RouteDetails struct {
-	RouteID     string `form:"route_id" 			json:"RouteID"`
-	RouterName  string `form:"router_name"		 	json:"RouterName"`
-	RouteIP     string `form:"route_ip"			 	json:"RouteIP"`
-	RouteMask   string `form:"route_mask" 		 	json:"RouteMask"`
-	Description string `form:"description" 		 	json:"Description"`
-	CSRFToken   string `form:"csrftoken" 			json:"CSRFToken"`
+	RouteID       string `form:"route_id" 			json:"RouteID"`
+	RouterName    string `form:"router_name"		 	json:"RouterName"`
+	RouteIP       string `form:"route_ip"			 	json:"RouteIP"`
+	RouteMask     string `form:"route_mask" 		 	json:"RouteMask"`
+	Description   string `form:"description" 		 	json:"Description"`
+	CSRFToken     string `form:"csrftoken" 			json:"CSRFToken"`
+	RouterIsValid bool   `json:"RouterIsValid"`
 }
 
 type NameSorterRoutesDetails []*RouteDetails
@@ -84,6 +85,10 @@ func GetRoutesDetailsFromFiles() ([]*RouteDetails, error) {
 
 	sort.Sort(NameSorterRoutesDetails(routeDetails))
 
+	routeDetails, err_validation := ValidateRoutersInRouteList(routeDetails)
+	if err_validation != nil {
+		return nil, err_validation
+	}
 	return routeDetails, nil
 }
 
@@ -124,6 +129,10 @@ func AddRouteToJsonFile(route RouteDetails) error {
 
 func SaveRouteJsonFile(routeDetails []*RouteDetails, pathJson string) error {
 	sort.Sort(NameSorterRoutesDetails(routeDetails))
+	routeDetails, err_validation := ValidateRoutersInRouteList(routeDetails)
+	if err_validation != nil {
+		return err_validation
+	}
 	file, err := json.MarshalIndent(routeDetails, "", " ")
 	if err != nil {
 		return err
@@ -211,3 +220,35 @@ func DeleteRoute(routeID string) error {
 
 	return nil
 }
+
+func ValidateRoutersInRouteList(routesDetails []*RouteDetails) ([]*RouteDetails, error) {
+	newRoutesDetails := make([]*RouteDetails, 0)
+
+	clientsDetails, err_read_file := GetClientsDetailsFromFiles()
+	if err_read_file != nil {
+		return nil, err_read_file
+	}
+
+	for _, r := range routesDetails {
+		client, err_client := GetClientFromStructure(clientsDetails, r.RouterName)
+		if err_client != nil {
+			r.RouterIsValid = false
+			newRoutesDetails = append(newRoutesDetails, r)
+			continue
+		}
+
+		if client.IsRouter == false {
+			r.RouterIsValid = false
+			newRoutesDetails = append(newRoutesDetails, r)
+			continue
+		}
+
+		r.RouterIsValid = true
+		newRoutesDetails = append(newRoutesDetails, r)
+	}
+
+	return newRoutesDetails, nil
+
+}
+
+//TODO ROUTE IS USED

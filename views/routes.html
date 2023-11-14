@@ -125,12 +125,12 @@
                 <tr>
 
                   <!-- 1 sell -->
-                  <td>
+                  <td class="{{ if not $r.RouterIsValid }}bg-red{{end}}">
                       {{ .RouteID }}
                   </td>
 
                   <!-- 2 sell -->
-                  <td>
+                  <td class="{{ if not $r.RouterIsValid }}bg-red{{end}}"> 
                     {{ .RouterName }}
                   </td>
 
