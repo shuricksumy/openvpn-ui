@@ -11,13 +11,15 @@ import (
 
 // Structure for using on WEB
 type RouteDetails struct {
-	RouteID       string `form:"route_id" 			json:"RouteID"`
+	RouteID       string `form:"route_id" 				json:"RouteID"`
 	RouterName    string `form:"router_name"		 	json:"RouterName"`
 	RouteIP       string `form:"route_ip"			 	json:"RouteIP"`
 	RouteMask     string `form:"route_mask" 		 	json:"RouteMask"`
 	Description   string `form:"description" 		 	json:"Description"`
-	CSRFToken     string `form:"csrftoken" 			json:"CSRFToken"`
+	CSRFToken     string `form:"csrftoken" 			 	json:"CSRFToken"`
 	RouterIsValid bool   `json:"RouterIsValid"`
+	RouterIsUsed  bool   `json:"RouterIsUsed"`
+	RouteIsUsedBy []string
 }
 
 type NameSorterRoutesDetails []*RouteDetails
@@ -72,6 +74,20 @@ func GetRoutesDetails(pathIndex string, pathJson string) ([]*RouteDetails, error
 	// return modified collection
 	return routesDetailsResult, nil
 
+}
+
+func GetRawRoutesDetailsFromFiles() ([]*RouteDetails, error) {
+	InitGlobalVars()
+
+	//get routesDetails from file
+	routeDetails, err := GetRoutesDetails(PATH_INDEX, PATH_ROUTES_JSON)
+	if err != nil {
+		return routeDetails, err
+	}
+
+	sort.Sort(NameSorterRoutesDetails(routeDetails))
+
+	return routeDetails, nil
 }
 
 func GetRoutesDetailsFromFiles() ([]*RouteDetails, error) {
@@ -231,6 +247,9 @@ func ValidateRoutersInRouteList(routesDetails []*RouteDetails) ([]*RouteDetails,
 
 	for _, r := range routesDetails {
 		client, err_client := GetClientFromStructure(clientsDetails, r.RouterName)
+
+		r.RouteIsUsedBy, _ = whoUseRoute(r.RouteID)
+
 		if err_client != nil {
 			r.RouterIsValid = false
 			newRoutesDetails = append(newRoutesDetails, r)
@@ -251,4 +270,39 @@ func ValidateRoutersInRouteList(routesDetails []*RouteDetails) ([]*RouteDetails,
 
 }
 
+func getRouterRoutes(routerName string) ([]*RouteDetails, error) {
+	//get routessDetails from file
+	allRoutes, err_read := GetRoutesDetailsFromFiles()
+	if err_read != nil {
+		return nil, err_read
+	}
+	newRoutesDetails := make([]*RouteDetails, 0)
+	for _, r := range allRoutes {
+		if r.RouterName == routerName {
+			newRoutesDetails = append(newRoutesDetails, r)
+		}
+	}
+	return newRoutesDetails, nil
+}
+
 //TODO ROUTE IS USED
+func whoUseRoute(RouteID string) ([]string, error) {
+
+	var clientsName []string
+
+	// Get all real existed clients from easy-rsa file
+	clientsDetails, errIndex := GetClientsDetailsFromFiles()
+	if errIndex != nil {
+		return nil, errIndex
+	}
+	for _, c := range clientsDetails {
+		for _, r := range c.RouteList {
+			if r.RouteID == RouteID {
+				clientsName = append(clientsName, c.ClientName)
+				continue
+			}
+		}
+	}
+
+	return clientsName, nil
+}

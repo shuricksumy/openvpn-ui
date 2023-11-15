@@ -8,9 +8,9 @@ import (
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-	mi "github.com/shuricksumy/openvpn-ui/pkg/openvpn-server-config/server/mi"
 	"github.com/shuricksumy/openvpn-ui/lib"
 	"github.com/shuricksumy/openvpn-ui/models"
+	mi "github.com/shuricksumy/openvpn-ui/pkg/openvpn-server-config/server/mi"
 	"github.com/shuricksumy/openvpn-ui/state"
 )
 
@@ -66,7 +66,7 @@ func (c *OVConfigController) Post() {
 		flash.Store(&c.Controller)
 		return
 	}
-	lib.Dump(cfg)
+	//lib.Dump(cfg)
 	c.Data["Settings"] = &cfg
 
 	destPathServerConfig := filepath.Join(state.GlobalCfg.OVConfigPath, "server.conf")

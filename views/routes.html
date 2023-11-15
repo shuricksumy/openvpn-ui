@@ -136,8 +136,14 @@
                   </td>
 
                                     <!-- 2 sell -->
-                                    <td class="font75 {{ if not $r.RouterIsValid }}bg-gradient-red{{end}}"> 
-                                      {{ if not $r.RouterIsValid }}NO ROUTER{{else}}NOT USED{{end}}
+                                    <td class="font75 
+                                      {{ if not $r.RouterIsValid }}
+                                        bg-gradient-red"> NO ROUTER
+                                      {{else if $r.RouteIsUsedBy}}
+                                        bg-gradient-lightblue"> USED
+                                      {{else}}
+                                        ">NOT USED
+                                      {{end}}
                                     </td>
 
                   <!-- 3 sell -->
@@ -153,7 +159,7 @@
 
                   <!-- 6 sell -->
                   <td class="first-cap font75">
-                    <div class="sb">{{ .Description }}</div>
+                    <div class="sb">{{ .Description }} {{.RouteIsUsedBy}}</div>
                   </td>
 
 

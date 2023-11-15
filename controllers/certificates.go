@@ -291,10 +291,8 @@ func AddDescriptionToFile(clientName string, description string) error {
 		StaticIP:       "",
 		IsRouteDefault: false,
 		IsRouter:       false,
-		RouterSubnet:   "",
-		RouterMask:     "",
 		Description:    description,
-		RouteList:      []string{},
+		RouteList:      nil,
 		CSRFToken:      "",
 	}
 

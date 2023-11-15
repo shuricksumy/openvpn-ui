@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/beego/beego/v2/core/logs"
-	mi "github.com/shuricksumy/openvpn-ui/pkg/openvpn-server-config/server/mi"
 	"github.com/shuricksumy/openvpn-ui/lib"
+	mi "github.com/shuricksumy/openvpn-ui/pkg/openvpn-server-config/server/mi"
 	"github.com/shuricksumy/openvpn-ui/state"
 )
 
@@ -25,7 +25,7 @@ func (c *MainController) NestPrepare() {
 
 func (c *MainController) Get() {
 	c.Data["sysinfo"] = lib.GetSystemInfo()
-	lib.Dump(lib.GetSystemInfo())
+	//lib.Dump(lib.GetSystemInfo())
 	client := mi.NewClient(state.GlobalCfg.MINetwork, state.GlobalCfg.MIAddress)
 	status, err := client.GetStatus()
 	if err != nil {
@@ -35,7 +35,7 @@ func (c *MainController) Get() {
 	} else {
 		c.Data["ovstatus"] = status
 	}
-	lib.Dump(status)
+	//lib.Dump(status)
 
 	version, err := client.GetVersion()
 	if err != nil {
@@ -43,7 +43,7 @@ func (c *MainController) Get() {
 	} else {
 		c.Data["ovversion"] = version.OpenVPN
 	}
-	lib.Dump(version)
+	//lib.Dump(version)
 
 	pid, err := client.GetPid()
 	if err != nil {
@@ -59,7 +59,7 @@ func (c *MainController) Get() {
 	} else {
 		c.Data["ovstats"] = loadStats
 	}
-	lib.Dump(loadStats)
+	//lib.Dump(loadStats)
 
 	c.TplName = "index.html"
 }

@@ -81,8 +81,6 @@ func (c *ClientsController) RenderModal() {
 	c.Data["StaticIP"] = foundClient.StaticIP
 	c.Data["IsRouteDefault"] = foundClient.IsRouteDefault
 	c.Data["IsRouter"] = foundClient.IsRouter
-	c.Data["RouterSubnet"] = foundClient.RouterSubnet
-	c.Data["RouterMask"] = foundClient.RouterMask
 	c.Data["Description"] = foundClient.Description
 	c.Data["RouteListSelected"] = foundClient.RouteList
 	c.Data["RouteListUnselected"] = foundClient.RouteListUnselected
@@ -150,7 +148,17 @@ func (c *ClientsController) SaveClientDetailsData() {
 		flash.Store(&c.Controller)
 	}
 
-	err_save := lib.AddClientToJsonFile(*client)
+	routeListSelected := c.GetStrings("route_list_selected")
+	clientUpdated, err_upd_route := lib.FillRouteClientSettins(*client, routeListSelected)
+	if err_upd_route != nil {
+		wasError = true
+		logs.Error(err_upd_route)
+		flash.Error("ERROR FILL CLIENT WITH HIS ROUTES !")
+		flash.Store(&c.Controller)
+	}
+	lib.Dump(routeListSelected)
+
+	err_save := lib.AddClientToJsonFile(clientUpdated)
 	if err_save != nil {
 		wasError = true
 		logs.Error(err_save)

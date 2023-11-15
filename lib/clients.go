@@ -17,17 +17,15 @@ import (
 
 // Structure for using on WEB
 type ClientDetails struct {
-	ClientName          string   `form:"client_name" 		 	json:"ClientName"`
-	StaticIP            string   `form:"static_ip" 			 	json:"StaticIP"`
-	IsRouteDefault      bool     `form:"is_route_default" 	 	json:"IsRouteDefault"`
-	IsRouter            bool     `form:"is_router" 			 	json:"IsRouter"`
-	RouterSubnet        string   `form:"router_subnet"		 	json:"RouterSubnet"`
-	RouterMask          string   `form:"router_mask" 		 	json:"RouterMask"`
-	Description         string   `form:"description" 		 	json:"Description"`
-	RouteList           []string `form:"route_list_selected"  	json:"RouteListSelected"`
-	RouteListUnselected []string `form:"route_list_unselected" 	json:"RouteListUnSelected"`
-	CSRFToken           string   `form:"csrftoken" 			 	json:"CSRFToken"`
-	MD5Sum              string   `json:"MD5Sum"`
+	ClientName          string          `form:"client_name" 		 	json:"ClientName"`
+	StaticIP            string          `form:"static_ip" 			 	json:"StaticIP"`
+	IsRouteDefault      bool            `form:"is_route_default" 	 	json:"IsRouteDefault"`
+	IsRouter            bool            `form:"is_router" 			 	json:"IsRouter"`
+	Description         string          `form:"description" 		 	json:"Description"`
+	RouteList           []*RouteDetails `json:"RouteList"`
+	RouteListUnselected []*RouteDetails `json:"RouteListUnselected"`
+	CSRFToken           string          `form:"csrftoken" 			 	json:"CSRFToken"`
+	MD5Sum              string          `json:"MD5Sum"`
 }
 
 type NameSorterClientDetails []*ClientDetails
@@ -145,12 +143,15 @@ func GetClientsDetails(pathIndex string, pathJson string) ([]*ClientDetails, err
 	}
 
 	// get list of routers in result file
-	var allRouters []string = GetRouterClients(clientsDetailsResult)
+	allRoutes, err_get_routes := GetRawRoutesDetailsFromFiles()
+	if err_get_routes != nil {
+		return nil, errIndex
+	}
 
 	// validate existed selected - remove not in client list
 	// upend new non selected  - RouteListUnselected
 	// exclude itself route
-	clientsDetailsResult = UpdateRoutersToActual(clientsDetailsResult, allRouters)
+	clientsDetailsResult = UpdateRoutersToActual(clientsDetailsResult, allRoutes)
 
 	// return modified collection
 	return clientsDetailsResult, nil
@@ -215,10 +216,8 @@ func InitClientFromStructure(findClient Client, clients []*ClientDetails) Client
 		StaticIP:       findClient.StaticIP,
 		IsRouteDefault: false,
 		IsRouter:       false,
-		RouterSubnet:   "",
-		RouterMask:     "",
 		Description:    "New record from Index file",
-		RouteList:      []string{},
+		RouteList:      nil,
 		CSRFToken:      "",
 	}
 
@@ -235,23 +234,22 @@ func GetRouterClients(clients []*ClientDetails) []string {
 	return routers
 }
 
-func GetSelectedClientRouters(clients []*ClientDetails, clientName string) []string {
-	var selectedRoutes []string
+func GetSelectedClientRoutes(clients []*ClientDetails, clientName string) []*RouteDetails {
 	for _, client := range clients {
 		if client.ClientName == clientName {
 			return client.RouteList
 		}
 	}
-	return selectedRoutes
+	return nil
 }
 
-func CombineSelectedRouters(selected []string, all []string) []string {
-	var resultRoute []string
+func ValidateSelectedRoutes(selected []*RouteDetails, all []*RouteDetails) []*RouteDetails {
+	resultRoute := make([]*RouteDetails, 0)
+
 	for _, route := range selected {
 		for _, r := range all {
-			if route == r {
+			if route.RouteID == r.RouteID {
 				resultRoute = append(resultRoute, route)
-				continue
 			}
 		}
 
@@ -260,37 +258,38 @@ func CombineSelectedRouters(selected []string, all []string) []string {
 }
 
 // Populate unselected routers only by valid values
-func CombineUnSelectedRouters(selected []string, all []string, clientName string) []string {
-	var resultNewRoute []string
-	for _, route := range all {
-		var routeExist bool = false
+func GetUnSelectedRoutes(selected []*RouteDetails, all []*RouteDetails, clientName string) []*RouteDetails {
+	unselectedRoutes := make([]*RouteDetails, 0)
+
+	for _, routeFromAll := range all {
+		var routeIsSkipped bool = false
 
 		// skip in selected list
 		for _, r := range selected {
 			// if not selected or not itself
-			if route == r {
-				routeExist = true
+			if r.RouteID == routeFromAll.RouteID {
+				routeIsSkipped = true
 			}
 		}
 
 		// skip itself
-		if route == clientName {
-			routeExist = true
+		if routeFromAll.RouterName == clientName {
+			routeIsSkipped = true
 		}
 
-		if !routeExist {
-			resultNewRoute = append(resultNewRoute, route)
+		if !routeIsSkipped {
+			unselectedRoutes = append(unselectedRoutes, routeFromAll)
 		}
 	}
-	return resultNewRoute
+	return unselectedRoutes
 }
 
 // update Result structure with actual routers per client - selected/nonSelected
-func UpdateRoutersToActual(clients []*ClientDetails, allRouters []string) []*ClientDetails {
+func UpdateRoutersToActual(clients []*ClientDetails, allRouters []*RouteDetails) []*ClientDetails {
 	for _, client := range clients {
-		var selectedRouters []string = GetSelectedClientRouters(clients, client.ClientName)
-		var modSelectedRouters []string = CombineSelectedRouters(selectedRouters, allRouters)
-		var nonSelectedRouters []string = CombineUnSelectedRouters(selectedRouters, allRouters, client.ClientName)
+		var selectedRouters []*RouteDetails = GetSelectedClientRoutes(clients, client.ClientName)
+		var modSelectedRouters []*RouteDetails = ValidateSelectedRoutes(selectedRouters, allRouters)
+		var nonSelectedRouters []*RouteDetails = GetUnSelectedRoutes(selectedRouters, allRouters, client.ClientName)
 
 		client.RouteList = modSelectedRouters
 		client.RouteListUnselected = nonSelectedRouters
@@ -536,10 +535,11 @@ func ApplyClientsConfigToFS() error {
 
 		// 3. if router add route to itself
 		if client.IsRouter {
-			routerSubnet := client.RouterSubnet
-			routerMask := client.RouterMask
-			if _isIPAddressValid(routerSubnet) && _isIPAddressValid(routerMask) {
-				buffer.WriteString("iroute " + routerSubnet + " " + routerMask + "\n")
+			routerRoutes, _ := getRouterRoutes(client.ClientName)
+			for _, r := range routerRoutes {
+				if _isIPAddressValid(r.RouteIP) && _isIPAddressValid(r.RouteMask) {
+					buffer.WriteString("iroute " + r.RouteIP + " " + r.RouteMask + "\n")
+				}
 			}
 		}
 
@@ -555,15 +555,11 @@ func ApplyClientsConfigToFS() error {
 		}
 		buffer.WriteString("\n")
 
-		// 5. if Routes is xonfigured
-		for _, route := range client.RouteList {
-			routeDetails, _ := GetClientFromStructure(ClientDetails, route)
-			routeSubnet := routeDetails.RouterSubnet
-			routeMask := routeDetails.RouterMask
-
-			if _isIPAddressValid(routeSubnet) && _isIPAddressValid(routeMask) {
-				buffer.WriteString("# Route to " + route + " [" + routeDetails.Description + "] device internal subnet\n")
-				buffer.WriteString("push \"route " + routeSubnet + " " + routeMask + "\"\n")
+		// 5. if Routes is configured
+		for _, r := range client.RouteList {
+			if _isIPAddressValid(r.RouteIP) && _isIPAddressValid(r.RouteMask) {
+				buffer.WriteString("# Route to " + r.RouteID + " [" + r.Description + "] device internal subnet\n")
+				buffer.WriteString("push \"route " + r.RouteIP + " " + r.RouteMask + "\"\n")
 			}
 		}
 
@@ -581,4 +577,33 @@ func ApplyClientsConfigToFS() error {
 	}
 
 	return nil
+}
+
+func FillRouteClientSettins(client ClientDetails, routeListSelected []string) (ClientDetails, error) {
+	selectedRoutes := make([]*RouteDetails, 0)
+	unSelectedRoutes := make([]*RouteDetails, 0)
+
+	// get list of routers in result file
+	allRoutes, err_get_routes := GetRawRoutesDetailsFromFiles()
+	if err_get_routes != nil {
+		return client, err_get_routes
+	}
+
+	for _, r := range allRoutes {
+		routeSelected := false
+		for _, rID := range routeListSelected {
+			if r.RouteID == rID {
+				routeSelected = true
+				selectedRoutes = append(selectedRoutes, r)
+			}
+		}
+		if !routeSelected {
+			unSelectedRoutes = append(unSelectedRoutes, r)
+		}
+	}
+
+	client.RouteList = selectedRoutes
+	client.RouteListUnselected = unSelectedRoutes
+	return client, nil
+
 }
