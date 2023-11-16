@@ -140,10 +140,10 @@
                                       {{ if not $r.RouterIsValid }}
                                         <span class="btn btn-xs btn-group-xs bg-gradient-red btn80">NO ROUTER</span>
                                       {{else if $r.RouteIsUsedBy}}
-                                      <span class="btn btn-xs btn-group-xs bg-gradient-lightblue btn80" data-toggle="tooltip" 
-                                      title="Used by:{{range $r.RouteIsUsedBy}} {{.}}{{end}}">USED</span>
+                                        <span class="btn btn-xs btn-group-xs bg-gradient-lightblue btn80" data-toggle="tooltip" 
+                                        title="Used by:{{range $r.RouteIsUsedBy}} {{.}}{{end}}">USED</span>
                                       {{else}}
-                                      <span class="btn btn-xs btn-group-xs bg-gradient-gray btn80">NOT USED</span>
+                                        <span class="btn btn-xs btn-group-xs bg-gradient-gray btn80">NOT USED</span>
                                       {{end}}
                                     </td>
 

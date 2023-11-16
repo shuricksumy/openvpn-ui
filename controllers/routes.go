@@ -85,6 +85,8 @@ func (c *RoutesController) GetRoute() {
 		c.Data["RouteMask"] = route.RouteMask
 		c.Data["Description"] = route.Description
 		c.Data["CSRFToken"] = route.CSRFToken
+		c.Data["RouteIsUsedBy"] = route.RouteIsUsedBy
+		c.Data["RouterIsUsed"] = route.RouterIsUsed
 
 		c.TplName = "modalRouteEdit.html"
 		c.Render()
