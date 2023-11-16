@@ -535,7 +535,7 @@ func ApplyClientsConfigToFS() error {
 
 		// 3. if router add route to itself
 		if client.IsRouter {
-			routerRoutes, _ := getRouterRoutes(client.ClientName)
+			routerRoutes, _ := GetRouterRoutes(client.ClientName)
 			for _, r := range routerRoutes {
 				if _isIPAddressValid(r.RouteIP) && _isIPAddressValid(r.RouteMask) {
 					buffer.WriteString("iroute " + r.RouteIP + " " + r.RouteMask + "\n")

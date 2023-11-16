@@ -38,14 +38,14 @@
                         {{end}}
                         <span class="btn btn-xs bg-gray-light"><b>IsRouter:</b></span>
                         <span class="btn btn-xs bg-gray-light">{{.ClientJSON.IsRouter}}</span>
-                        {{ if .ClientJSON.IsRouter}}
-                            <span class="btn btn-xs bg-gray-light">.ClientJSON.RouterSubnet/.ClientJSON.RouterMask</span>
+                        {{ range $r := .RouterRotes}}
+                            <span class="btn btn-xs bg-gray-light">{{$r.RouteIP}}/{{$r.RouteMask}}</span>
                         {{end}}
                     </div>
                     <div class="form-group mylables">
                         <span class="btn btn-xs bg-gray-light"><b>Route list:</b></span>
                         {{range  $val := .ClientJSON.RouteList}}
-                            <span class="btn btn-xs bg-gray-light">{{$val}}</span>
+                            <span class="btn btn-xs bg-gray-light">{{$val.RouterName}}_{{$val.RouteIP}}</span>
                         {{end}}
                     </div>
                 </div>

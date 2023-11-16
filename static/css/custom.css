@@ -333,3 +333,11 @@ label.switch-label{
 .multiselect-container>li>a>label {
   padding: 2px 15px 2px 15px;
 }
+
+.tool-tip {
+  display: inline-block;
+}
+
+.tool-tip [disabled] {
+  pointer-events: none;
+}

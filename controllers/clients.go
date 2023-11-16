@@ -77,6 +77,9 @@ func (c *ClientsController) RenderModal() {
 		flash.Store(&c.Controller)
 	}
 
+	routerRotes, _ := lib.GetRouterRoutes(clientName)
+	c.Data["RouterRotes"] = routerRotes
+
 	c.Data["ClientName"] = foundClient.ClientName
 	c.Data["StaticIP"] = foundClient.StaticIP
 	c.Data["IsRouteDefault"] = foundClient.IsRouteDefault
@@ -103,6 +106,9 @@ func (c *ClientsController) RenderModalRaw() {
 		flash.Error("Cannot read " + clientName + " file !")
 		flash.Store(&c.Controller)
 	}
+
+	routerRotes, _ := lib.GetRouterRoutes(clientName)
+	c.Data["RouterRotes"] = routerRotes
 
 	// Pass the client name and data to the modal template for rendering.
 	c.Data["ClientName"] = clientName

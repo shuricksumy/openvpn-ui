@@ -11,7 +11,7 @@
 {{template "common/alert.html" .}}
 
 <div class="col-xs-12">
-  <div class="card card-outline card-lightblue">
+  <div class="card card-outline card-purple">
     <div class="card-header with-border table-responsive">
       <table>
         <tr>
@@ -99,7 +99,7 @@
 
 <!-- <div class="row"> -->
   <div class="col-xs-12">
-    <div class="card card-lightblue">
+    <div class="card card-purple">
       <div class="card-header with-border">
         <h3 class="card-title">Routes details</h3>
       </div>
@@ -126,40 +126,41 @@
                 <tr>
 
                   <!-- 1 sell -->
-                  <td>
+                  <td class="font90">
                       {{ .RouteID }}
                   </td>
 
                   <!-- 2 sell -->
-                  <td> 
+                  <td  class="font90"> 
                     {{ .RouterName }}
                   </td>
 
                                     <!-- 2 sell -->
-                                    <td class="font75 
+                                    <td> 
                                       {{ if not $r.RouterIsValid }}
-                                        bg-gradient-red"> NO ROUTER
+                                        <span class="btn btn-xs btn-group-xs bg-gradient-red btn80">NO ROUTER</span>
                                       {{else if $r.RouteIsUsedBy}}
-                                        bg-gradient-lightblue"> USED
+                                      <span class="btn btn-xs btn-group-xs bg-gradient-lightblue btn80" data-toggle="tooltip" 
+                                      title="Used by:{{range $r.RouteIsUsedBy}} {{.}}{{end}}">USED</span>
                                       {{else}}
-                                        ">NOT USED
+                                      <span class="btn btn-xs btn-group-xs bg-gradient-gray btn80">NOT USED</span>
                                       {{end}}
                                     </td>
 
                   <!-- 3 sell -->
                   <td class="my-centered">
-                    <span class="btn btn-xs btn-group-xs bg-gradient-purple btn100">{{ .RouteIP }}</span>
+                    <span class="btn btn-xs btn-group-xs bg-gray-light btn100">{{ .RouteIP }}</span>
                   </td>
 
 
                   <!-- 5 sell -->
                   <td class="my-centered">
-                    <span class="btn btn-xs btn-group-xs bg-gradient-purple btn100">{{ .RouteMask }}</span>
+                    <span class="btn btn-xs btn-group-xs bg-gray-light btn100">{{ .RouteMask }}</span>
                   </td>
 
                   <!-- 6 sell -->
                   <td class="first-cap font75">
-                    <div class="sb">{{ .Description }} {{.RouteIsUsedBy}}</div>
+                    <div class="sb">{{ .Description }}</div>
                   </td>
 
 
@@ -174,10 +175,12 @@
                   </td>
 
                   <!-- 8 sell -->
-                  <td class="textcenter my-centered last-sm">
-                    <div class="btn-group" role="group">
+                  <td class="textcenter my-centered last-sm" data-toggle="tooltip" title="Used by:{{range $r.RouteIsUsedBy}} {{.}}{{end}}">
+                    <div class="btn-group tool-tip">
                       <a href="{{urlfor "RoutesController.Delete" ":key" .RouteID}}" 
-                            data-title="Remove route ?" class="btn btn-danger btn-sm btn-group-sm bg-gradient-red btn80 font75" title="Delete">Delete</a>
+                            data-title="Remove route ?" 
+                            class="btn btn-sm btn-group-sm btn80 font75 {{if $r.RouteIsUsedBy}} btn-default disabled {{else}} btn-danger bg-gradient-red {{end}}" 
+                            title="Delete">Delete</a>
                     </div>
                   </td>
                 </tr>
@@ -299,6 +302,12 @@
 
 });
 </script>
+
+<!-- <script>
+  $(document).ready(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+  });
+</script> -->
 
 <!-- Add an empty modal container -->
 <div id="modal-edit-route-details"></div>

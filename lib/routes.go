@@ -270,7 +270,7 @@ func ValidateRoutersInRouteList(routesDetails []*RouteDetails) ([]*RouteDetails,
 
 }
 
-func getRouterRoutes(routerName string) ([]*RouteDetails, error) {
+func GetRouterRoutes(routerName string) ([]*RouteDetails, error) {
 	//get routessDetails from file
 	allRoutes, err_read := GetRoutesDetailsFromFiles()
 	if err_read != nil {
