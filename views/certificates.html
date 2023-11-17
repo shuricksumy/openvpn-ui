@@ -13,12 +13,18 @@
     <div class="card-header with-border table-responsive">
       <table>
         <tr>
-          <td class="col-md-1 text-left"><button class="btn btn-sm bg-gradient-navy btn150" data-toggle="collapse" href="#newCert" role="button"  aria-expanded="false"
-                  aria-controls="newCert" style="margin-left: 0.5%;">Create New Certificate</button>
+          <td class="col-md-1 text-left"><button class="btn btn-sm bg-gradient-navy btn150" 
+                  data-toggle="collapse" href="#newCert" role="button"  aria-expanded="false"
+                  aria-controls="newCert" style="margin-left: 0.5%;">New Certificate</button>
                   {{template "common/fvalid.html" field_error_message .validation "Name" }}</td>
-          <td class="col-md-1 text-right"><i>Restart server after revocation:&nbsp;&nbsp;&nbsp;</i><a href="{{urlfor "CertificatesController.Restart"}}" 
-            class="btn btn-danger btn-sm bg-gradient-red btn150" data-title="Restart OpenVPN container?" 
-                  title="Restart OpenVPN container" style="margin-right: 23px;">Restart OpenVPN Server</a></td>
+          <td class="col-md-1 text-right">
+          </td>
+          <td class="col-md-12 text-right sb"><i>Restart server after revocation:</i>
+          </td>
+          <td class="col-md-1 text-right"><a href="{{urlfor "CertificatesController.Restart"}}" 
+            class="btn btn-danger btn-sm btn-group-sm bg-gradient-red btn150" data-title="Restart OpenVPN container?" 
+                  title="Restart OpenVPN container" style="margin-right: 23px;">Restart Server</a>
+          </td>
         </tr>
       </table>
     </div>
@@ -63,7 +69,7 @@
 
       <div class="card-footer">
         <button type="submit" class="btn btn-sm bg-gradient-lightblue btn80 form-to-confirm" 
-          style="margin-right: 23px; float: right;" data-title="Create new client?">Create</button>
+          style="margin-right: 23px; float: right;" data-title="Create new client?" id="create_crt">Create</button>
       </div>
     </form>
   </div>
@@ -300,14 +306,49 @@ $(document).ready(function() {
 });
 </script>
 
+<script>
+  $('.submit').click(function(){
+    validateForm();
+    breakccc   
+  });
+
+  $(document).ready(function () {
+      $('#form-to-confirm').validate({ // initialize the plugin
+        rules: {
+          Nmae: {
+                required: true,
+            }
+        },
+        messages: {
+          Name: {
+            required: "Please select the Name",
+            email: "Please enter a vaild email address"
+          }
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+          $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $(element).removeClass('is-invalid');
+        }
+      });
+
+});
+</script>
+
 
 <!-- Add an empty modal container -->
 <div id="modal-edit-client-raw"></div>
 {{end}}
 
 
-<div id="overlay">
+<!-- <div id="overlay">
   <div class="cv-spinner">
     <span class="spinner"></span>
   </div>
-</div>
+</div> -->
