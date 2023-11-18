@@ -212,13 +212,14 @@ func InitClientFromStructure(findClient Client, clients []*ClientDetails) Client
 		}
 	}
 	newClient := &ClientDetails{
-		ClientName:     findClient.ClientName,
-		StaticIP:       findClient.StaticIP,
-		IsRouteDefault: false,
-		IsRouter:       false,
-		Description:    "New record from Index file",
-		RouteList:      nil,
-		CSRFToken:      "",
+		ClientName:          findClient.ClientName,
+		StaticIP:            findClient.StaticIP,
+		IsRouteDefault:      false,
+		IsRouter:            false,
+		Description:         "New record from Index file",
+		RouteList:           nil,
+		RouteListUnselected: nil,
+		CSRFToken:           "",
 	}
 
 	return *newClient

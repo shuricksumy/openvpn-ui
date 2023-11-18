@@ -66,7 +66,7 @@ func GetRoutesDetails(pathIndex string, pathJson string) ([]*RouteDetails, error
 	for _, iRoute := range routesDetailsFromFile {
 		routeMatched, err_index := InitRouteFromStructure(*iRoute, clientsFromIndex)
 		if err_index != nil {
-			return routesDetailsResult, err_index
+			continue
 		}
 		routesDetailsResult = append(routesDetailsResult, &routeMatched)
 	}

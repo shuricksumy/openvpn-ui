@@ -69,13 +69,13 @@
 
                   <!-- 1 sell -->
                   <td class="my-centered first-sm">
-                      {{ $col := "btn-sm btn-group-sm btn-block bg-gradient-lightblue" }} 
+                      {{ $col := "btn-sm btn-group-sm btn-block bg-lightblue" }} 
                       {{ $comment := .ClientName }}
                       {{ $icon := "fa fa-edit" }}
                       {{ range $md5 := $MD5 }}
                           {{ if eq $md5.ClientName $c.ClientName }}
                               {{ if not $md5.IsValid }} 
-                                  {{ $col = "btn-danger btn-sm btn-group-sm btn-block bg-gradient-red" }} 
+                                  {{ $col = "btn-danger btn-sm btn-group-sm btn-block bg-red" }} 
                                   {{ $comment = "Config was changed but not applied !" }}
                                   {{ $icon = "fa fa-warning" }} 
                               {{ end }}
@@ -90,7 +90,7 @@
                   <!-- 2 sell -->
                   <td class="my-centered first-cap">
                     {{ if .IsRouteDefault }}
-                      <span class="btn btn-xs btn-group-xs bg-gradient-olive btn40">{{ .IsRouteDefault }}</span>
+                      <span class="btn btn-xs btn-group-xs bg-olive btn40">{{ .IsRouteDefault }}</span>
                     {{else}}
                       <span class="btn btn-xs bg-gray-light btn-group-xs btn40">{{ .IsRouteDefault }}</span>
                     {{end}}
@@ -99,7 +99,7 @@
                   <!-- 3 sell -->
                   <td class="my-centered">
                     {{ if ne .StaticIP "" }}
-                      <span class="btn btn-xs btn-group-xs bg-gradient-olive btn100">{{.StaticIP}}</span>
+                      <span class="btn btn-xs btn-group-xs bg-olive btn100">{{.StaticIP}}</span>
                     {{else}}
                       <span class="btn btn-xs btn-group-xs bg-gray-light btn100">random</span>
                     {{end}}
@@ -109,7 +109,7 @@
                   <!-- 5 sell -->
                   <td class="my-centered">
                     {{ if .IsRouter }}
-                      <span class="btn btn-xs btn-group-xs bg-gradient-purple btn40">True</span>
+                      <span class="btn btn-xs btn-group-xs bg-purple btn40">True</span>
                       <!-- <span class="btn btn-xs bg-purple btn80">.RouterMask</span> -->
                     {{else}}
                       <span class="btn btn-xs btn-group-xs bg-gray-light btn40">-</span>
@@ -128,14 +128,14 @@
 
                         <div class="my-centered" style="margin-right: 5px;">
                           <button 
-                            type="button" class="btn btn-xs bg-gradient-lightblue bnt24" 
+                            type="button" class="btn btn-xs bg-lightblue bnt24" 
                             data-toggle="popover" data-html="true" data-placement="bottom"
                             title="Routes for <b>{{ .ClientName }}</b>:"  
                             data-content="
                                       <div class='card card-outline card-olive'>
                                         <div class='card-body'>
                                           {{range  $val := .RouteList}}
-                                            <div class='btn btn-xs bg-gradient-olive bnt40'>{{ $val.RouterName }}_{{ $val.RouteIP }}</div>
+                                            <div class='btn btn-xs bg-olive bnt40'>{{ $val.RouterName }}_{{ $val.RouteIP }}</div>
                                           {{end}}
                                           {{range  $val := .RouteListUnselected}}
                                             <div class='btn btn-xs bg-gray-light bnt40'>{{ $val.RouterName }}_{{ $val.RouteIP }}</div>
@@ -150,7 +150,7 @@
 
                         <div class="sb">
                             {{range $val := .RouteList}}
-                              <span class="btn btn-xs btn-group-xs bg-gradient-olive bnt24">{{ $val.RouterName }}_{{ $val.RouteIP }}</span>
+                              <span class="btn btn-xs btn-group-xs bg-olive bnt24">{{ $val.RouterName }}_{{ $val.RouteIP }}</span>
                             {{end}}
                             {{range  $val := .RouteListUnselected}}
                               <span class="btn btn-xs btn-group-xs bg-gray-light bnt24">{{ $val.RouterName }}_{{ $val.RouteIP }}</span>
