@@ -23,9 +23,9 @@ func Init(configDir string) {
 	web.Router("/ov/clientconfig", &controllers.ClientConfigController{ConfigDir: configDir})
 	web.Router("/logs", &controllers.LogsController{})
 
-	web.Include(&controllers.CertificatesController{ConfigDir: configDir})
-	web.Include(&controllers.ClientsController{ConfigDir: configDir})
-	web.Include(&controllers.RoutesController{ConfigDir: configDir})
+	// web.Include(&controllers.CertificatesController{ConfigDir: configDir})
+	// web.Include(&controllers.ClientsController{ConfigDir: configDir})
+	// web.Include(&controllers.RoutesController{ConfigDir: configDir})
 
 	web.Include(&controllers.SystemController{})
 

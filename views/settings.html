@@ -33,15 +33,6 @@
           value="{{ .Settings.MINetwork }}">
       </div>
 
-      <div class="form-group" hidden>
-        <label for="Theme">Theme</label>
-        <select class="form-control" id="Theme" name="Theme">
-            <option value="blue" {{if eq .Settings.Theme "blue"}}selected{{end}}>Blue</option>
-            <option value="midnight" {{if eq .Settings.Theme "midnight"}}selected{{end}}>Midnight</option>
-            <option value="black" {{if eq .Settings.Theme "black"}}selected{{end}}>Black</option>
-        </select>
-      </div>
-
       <div class="form-group">
         <label for="ServerName">Server Name</label>
         <input type="text" class="form-control" id="ServerName" name="ServerName" placeholder="Enter server Name"

@@ -9,19 +9,14 @@ import (
 )
 
 type Settings struct {
-	Id      int64
-	Profile string `orm:"size(64);unique" form:"Profile" valid:"Required;"`
-
-	MIAddress string `orm:"size(64);unique" form:"MIAddress" valid:"Required;"`
-	MINetwork string `orm:"size(64);unique" form:"MINetwork" valid:"Required;"`
-
-	OVConfigPath string `orm:"size(64);unique" form:"OVConfigPath" valid:"Required;"`
-
-	Theme             string `orm:"size(64);unique" form:"Theme" valid:"Required;"`
-	ServerName        string `orm:"size(64);unique" form:"ServerName" valid:"Required;"`
-
-	Created time.Time `orm:"auto_now_add;type(datetime)"`
-	Updated time.Time `orm:"auto_now;type(datetime)"`
+	Id           int64
+	Profile      string    `orm:"size(64);unique" form:"Profile" valid:"Required;"`
+	MIAddress    string    `orm:"size(64);unique" form:"MIAddress" valid:"Required;"`
+	MINetwork    string    `orm:"size(64);unique" form:"MINetwork" valid:"Required;"`
+	OVConfigPath string    `orm:"size(64);unique" form:"OVConfigPath" valid:"Required;"`
+	ServerName   string    `orm:"size(64);unique" form:"ServerName" valid:"Required;"`
+	Created      time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated      time.Time `orm:"auto_now;type(datetime)"`
 }
 
 // Insert wrapper

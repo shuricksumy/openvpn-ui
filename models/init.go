@@ -72,10 +72,6 @@ func CreateDefaultSettings() (*Settings, error) {
 	if err != nil {
 		return nil, err
 	}
-	theme, err := web.AppConfig.String("Theme")
-	if err != nil {
-		return nil, err
-	}
 	serverName, err := web.AppConfig.String("SiteName")
 	if err != nil {
 		return nil, err
@@ -86,12 +82,11 @@ func CreateDefaultSettings() (*Settings, error) {
 	}
 
 	s := Settings{
-		Profile:           "default",
-		MIAddress:         miAddress,
-		MINetwork:         miNetwork,
-		Theme:             theme,
-		ServerName:        serverName,
-		OVConfigPath:      ovConfigPath,
+		Profile:      "default",
+		MIAddress:    miAddress,
+		MINetwork:    miNetwork,
+		ServerName:   serverName,
+		OVConfigPath: ovConfigPath,
 	}
 
 	o := orm.NewOrm()
