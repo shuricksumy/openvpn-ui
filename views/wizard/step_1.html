@@ -1,0 +1,22 @@
+{{ template "layout/base.html" . }}
+
+{{define "head"}}
+<title>OpenVPN - Wizard</title>
+{{end}}
+
+{{define "body"}}
+<div class="card card-lightblue">
+  <div class="card-header with-border">
+    <h3 class="card-title">Step 1: Initial parameters</h3>
+  </div>
+
+  <form id="form-to-confirm" role="form" action="{{urlfor "WizardController.Step1Post"}}" method="post">
+
+    <div class="card-footer">
+      <button type="submit" class="btn btn-sm bg-gradient-lightblue btn80 form-to-confirm" 
+        style="margin-right: 23px; float: right;" data-title="To Step 2" id="to_step_2">NEXT</button>
+    </div>
+  </form>
+
+</div>
+{{end}}

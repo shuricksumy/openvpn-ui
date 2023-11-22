@@ -8,8 +8,40 @@ func init() {
 	web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:WizardController"] =
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:WizardController"],
 			web.ControllerComments{
-				Method:           "Get",
-				Router:           `/`,
+				Method:           "Step1Get",
+				Router:           `/wizard/step1`,
+				AllowHTTPMethods: []string{"get"},
+				Params:           nil})
+
+	web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:WizardController"] =
+		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:WizardController"],
+			web.ControllerComments{
+				Method:           "Step1Post",
+				Router:           `/wizard/step1`,
+				AllowHTTPMethods: []string{"post"},
+				Params:           nil})
+
+	web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:WizardController"] =
+		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:WizardController"],
+			web.ControllerComments{
+				Method:           "Step2Get",
+				Router:           `/wizard/step2`,
+				AllowHTTPMethods: []string{"get"},
+				Params:           nil})
+
+	web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:WizardController"] =
+		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:WizardController"],
+			web.ControllerComments{
+				Method:           "Step2Post",
+				Router:           `/wizard/step2`,
+				AllowHTTPMethods: []string{"post"},
+				Params:           nil})
+
+	web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:WizardController"] =
+		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:WizardController"],
+			web.ControllerComments{
+				Method:           "Step3Get",
+				Router:           `/wizard/step3`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
 }

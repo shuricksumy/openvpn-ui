@@ -190,3 +190,19 @@ func _getNextIPAddress(ip string) string {
 	}
 	return addr.Next().String()
 }
+
+func GetExtIP() (string, error) {
+
+	siteName := state.GlobalCfg.ServerName
+	siteName = strings.ReplaceAll(siteName, " ", "")
+
+	cmd := exec.Command("/usr/bin/curl", "-s", "https://api.ipify.org")
+	cmd.Dir = state.GlobalCfg.OVConfigPath
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		logs.Debug(string(output))
+		logs.Error(err)
+		return "", err
+	}
+	return string(output), err
+}

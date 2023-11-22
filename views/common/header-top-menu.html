@@ -54,4 +54,8 @@
   <li class="nav-item">
     <a href="{{urlfor "LogsController.Get"}}" class="nav-link {{if compare .RouterPattern "/logs"}}active{{end}}">Logs</a>
   </li>
+
+  <li class="nav-item">
+    <a href="{{urlfor "WizardController.Step1Get"}}" class="nav-link {{if compare .RouterPattern "/wizard/step1"}}active{{end}}">Wizard</a>
+  </li>
 </ul>
