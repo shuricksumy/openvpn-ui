@@ -11,12 +11,149 @@
   </div>
 
   <form id="form-to-confirm" role="form" action="{{urlfor "WizardController.Step1Post"}}" method="post">
+      <div class="card-body">
+          <div class="form-row">
+              <!-- IP endpoint -->
+              <div class="form-group col-md-4">        
+                <label for="ip_endpoint">IP endpoint*</label>
+                <input class="form-control" name="ip_endpoint" value="{{.IpEndpoint}}" id="ip_endpoint"
+                                data-inputmask="'alias': 'ip'" data-mask 
+                                pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" 
+                                    placeholder="Enter External IP" onfocusout="this.value = this.value.trim()" value="{{.IpEndpoint}}">
+                <span class="help-block font75">OpenVPN server public IP endpoint</span>
+              </div>
+
+              <div class="form-group col-md-4">
+                <label for="port">OpenVPN external port*</label>
+                <input type="text" class="form-control" placeholder="Add port" id="port" 
+                  name="port" onfocusout="this.value = this.value.trim()" value="{{.OvpnWizardData.OvpnPort}}">
+                <span class="help-block font75">External port for connaction to VPN</span>
+              </div>
+
+              <div class="form-group col-sm-4">
+                <label for="ovpn_protocol">Connection Protocol*</label>
+                <select class="custom-select" name="ovpn_protocol" id="ovpn_protocol">
+                  <option value="{{ .OvpnWizardData.OvpnProtocol }}" selected="selected">{{ .OvpnWizardData.OvpnProtocol }}</option>
+                  {{range  $val := .OvpnProtocolList}}
+                      <option value="{{ $val }}">{{ $val }}</option>
+                  {{end}}
+                </select>
+                <span class="help-block font75">OpenVPN connection protocol</span>
+              </div>
+
+              <div class="form-group col-md-4">        
+                <label for="ovpn_ip_range">Internal VPN Subnet*</label>
+                <input class="form-control" name="ovpn_ip_range" value="{{.OvpnWizardData.OvpnIPRange}}" id="ovpn_ip_range"
+                                data-inputmask="'alias': 'ip'" data-mask 
+                                pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" 
+                                    placeholder="Enter Static IP" onfocusout="this.value = this.value.trim()" value="{{.OvpnWizardData.OvpnIPRange}}">
+                <span class="help-block font75">OpenVPN Internal subnet (mask 255.0.0.0)</span>
+              </div>
+
+              <div class="form-group col-sm-4">
+                <label for="dns_provider">DNS provider*</label>
+                <select class="custom-select" name="dns_provider" id="dns_provider">
+                      <option value="{{ .SelectedDNS.DNS1 }},{{ .SelectedDNS.DNS2 }}" selected="selected">{{ .SelectedDNS.Name }}</option>
+                  {{range  $val := .DNSProvidersList}}
+                      <option value="{{ $val.DNS1 }},{{ $val.DNS2 }}">{{ $val.Name }}</option>
+                  {{end}}
+                </select>
+                <span class="help-block font75">Select who will be DNS provider</span>
+              </div>
+
+              <div class="form-group col-md-4">
+                  <label for="dns_1">DNS 1 / DNS 2*</label>
+                  <input class="form-control" id="dns_1" name="dns_1" value="{{.OvpnWizardData.OvpnDNS1}}" 
+                        data-inputmask="'alias': 'ip'" data-mask 
+                        pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" 
+                            placeholder="DNS address 1" onfocusout="this.value = this.value.trim()" value="{{.OvpnWizardData.OvpnDNS1}}">
+                 
+                  <input class="form-control" id="dns_2" name="dns_2" value="{{.OvpnWizardData.OvpnDNS2}}" 
+                        data-inputmask="'alias': 'ip'" data-mask 
+                        pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" 
+                            placeholder="DNS address 2" onfocusout="this.value = this.value.trim()" value="{{.OvpnWizardData.OvpnDNS2}}">
+              </div>
+          </div>
+      </div>
 
     <div class="card-footer">
-      <button type="submit" class="btn btn-sm bg-gradient-lightblue btn80 form-to-confirm" 
-        style="margin-right: 23px; float: right;" data-title="To Step 2" id="to_step_2">NEXT</button>
+      <button type="submit" class="btn btn-sm bg-gradient-lightblue btn80" 
+        style="margin-right: 23px; float: right;" data-title="To Step 2" id="to_step_2">STEP 2</button>
     </div>
   </form>
 
 </div>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+
+      $(function () {
+          $('[data-mask]').inputmask();
+      });
+
+      var selectedOption = $('#dns_provider option:selected').text();
+
+      $('#to_step_2').click(function(){
+          validateForm();   
+        });
+        
+        $('#form-to-confirm').validate({ // initialize the plugin
+        rules: {
+            ip_endpoint: {
+                required: true,
+            },
+            port: {
+                required: true,
+            },
+            ovpn_protocol: {
+                required: true,
+            },
+            ovpn_ip_range: {
+                required: true,
+            },
+            dns_provider: {
+                required: true,
+            },
+            dns_1: {
+                required: true,
+            },
+            dns_2: {
+                required: true,
+            }
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+            error.addClass('invalid-feedback');
+            element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
+        }
+    });
+
+  });
+
+  $("#dns_provider").change(function () {
+     var sel = $('#dns_provider').val()
+     var dns = sel.match(/(.+),(.+)/);
+     var selectedOption = $('#dns_provider option:selected').text();
+
+     if (selectedOption == "Custom DNS"){
+        $('#dns_1').prop('disabled', false);
+        $('#dns_2').prop('disabled', false);
+     }
+     
+     if (dns !== null && dns.length > 1) {
+          $("#dns_1").val(dns[1]);
+          $("#dns_2").val(dns[2]);
+     }else{
+          $("#dns_1").val("");
+          $("#dns_2").val("");
+     }
+ });
+ </script>
+
 {{end}}

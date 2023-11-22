@@ -13,10 +13,31 @@
   <form id="form-to-confirm" role="form" action="{{urlfor "WizardController.Step2Post"}}" method="post">
 
     <div class="card-footer">
-      <button type="submit" class="btn btn-sm bg-gradient-lightblue btn80 form-to-confirm" 
-        style="margin-right: 23px; float: right;" data-title="To Step 3" id="to_step_3">NEXT</button>
+      <a href="{{urlfor "WizardController.Step1Get"}}" 
+            class="btn btn-sm bg-gradient-lightblue btn80" data-title="BACK" 
+                  title="BACK" style="margin-right: 23px;">STEP 1</a>
+      <button type="submit" class="btn btn-sm bg-gradient-lightblue btn80" 
+        style="margin-right: 23px; float: right;" data-title="To Step 3" id="to_step_3">STEP 3</button>
     </div>
   </form>
 
 </div>
 {{end}}
+
+
+              <!-- <div class="col-md-4">
+                <div class="form-check">
+                  <input name="dis_def_client_routing" id="dis_def_client_routing" class="form-check-input" type="checkbox" value="true" 
+                      {{if .OvpnWizardData.DisableDefRouteForClientsByDefault}} checked {{else}} {{end}}>
+                  <label class="form-check-label" for="dis_def_client_routing">
+                    Disable Default Route For Clients By Default
+                  </label>
+                </div>
+
+                <div class="form-check">
+                  <input name="dis_def_client_routing" id="dis_def_client_routing" class="form-check-input" type="checkbox" value="true" 
+                      {{if .OvpnWizardData.ClientToClientConfigIsUsed}} checked {{else}} {{end}}>
+                  <label class="form-check-label" for="dis_def_client_routing">
+                    Client To Client Config Is Used
+                  </label>
+                </div> -->

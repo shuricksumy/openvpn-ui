@@ -34,6 +34,17 @@ type OvpnServerBaseSetting struct {
 
 var ovpnProtocolList = []string{"udp", "tcp"}
 
+func GetovpnProtocolList(selected string) []string {
+	var actualOvpnProtocolList []string
+	for _, p := range ovpnProtocolList {
+		if selected == p {
+			continue
+		}
+		actualOvpnProtocolList = append(actualOvpnProtocolList, p)
+	}
+	return actualOvpnProtocolList
+}
+
 type DNSProvider struct {
 	Name string
 	DNS1 string
@@ -51,6 +62,27 @@ var dnsProviders = []DNSProvider{
 	{"AdGuard DNS", "94.140.14.14", "94.140.15.15"},
 	{"NextDNS", "45.90.28.167", "45.90.30.167"},
 	{"Custom DNS", "", ""},
+}
+
+func GetDNSProvidersList(selected string) []DNSProvider {
+	var actualdnsProviders []DNSProvider
+	for _, d := range dnsProviders {
+		if selected == d.Name {
+			continue
+		}
+		actualdnsProviders = append(actualdnsProviders, d)
+	}
+	return actualdnsProviders
+}
+
+func GetDNSProvidersNameByIP(ip string) DNSProvider {
+	for _, d := range dnsProviders {
+		if ip == d.DNS1 {
+			return d
+		}
+	}
+	var customProvider = DNSProvider{"Custom DNS", "", ""}
+	return customProvider
 }
 
 var compressionList = []string{"Disabled", "lz4-v2", "lz4", "lzo"}

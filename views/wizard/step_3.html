@@ -13,8 +13,11 @@
   <form id="form-to-confirm" role="form" action="{{urlfor "WizardController.Step3Post"}}" method="post">
 
     <div class="card-footer">
-      <button type="submit" class="btn btn-sm bg-gradient-lightblue btn80 form-to-confirm" 
-        style="margin-right: 23px; float: right;" data-title="To Step 3" id="to_step_4">NEXT</button>
+      <a href="{{urlfor "WizardController.Step2Get"}}" 
+      class="btn btn-sm bg-gradient-lightblue btn80" data-title="BACK" 
+            title="BACK" style="margin-right: 23px;">STEP 3</a>
+      <button type="submit" class="btn btn-sm bg-gradient-lightblue btn80" 
+        style="margin-right: 23px; float: right;" data-title="To Step 3" id="to_step_4">STEP 4</button>
     </div>
   </form>
 

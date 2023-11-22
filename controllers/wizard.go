@@ -27,17 +27,31 @@ func (c *WizardController) Step1Get() {
 	}
 
 	//get def settings
-	ovpnWizardData := models.GetDefWizardSettings()
+	//TODO IF NO SESSION DATA INIT DEFAULT
+	wizardByte, ok := c.GetSession("ovpnWizardData").([]byte)
+
+	var ovpnWizardData models.OvpnServerBaseSetting
+	if !ok || wizardByte == nil {
+		ovpnWizardData = models.GetDefWizardSettings()
+	} else {
+		ovpnWizardData = Decode(wizardByte)
+	}
 	lib.Dump(ovpnWizardData)
 
 	//get extIP
 	ipEndpoint, _ := lib.GetExtIP()
-	c.Data["RouterRotes"] = ipEndpoint
-	lib.Dump(ipEndpoint)
+	c.Data["IpEndpoint"] = ipEndpoint
+	//lib.Dump(ipEndpoint)
+
+	c.Data["OvpnWizardData"] = ovpnWizardData
+	c.Data["OvpnProtocolList"] = models.GetovpnProtocolList(ovpnWizardData.OvpnProtocol)
+	selectedDNS := models.GetDNSProvidersNameByIP(ovpnWizardData.OvpnDNS1)
+	c.Data["SelectedDNS"] = selectedDNS
+	c.Data["DNSProvidersList"] = models.GetDNSProvidersList(selectedDNS.Name)
 
 	//store to session
-	wizardByte := Encode(ovpnWizardData)
-	c.SetSession("ovpnWizardData", wizardByte.Bytes())
+	wizardSaveByte := Encode(ovpnWizardData)
+	c.SetSession("ovpnWizardData", wizardSaveByte.Bytes())
 	//lib.Dump(wizardByte.Bytes())
 }
 
@@ -48,8 +62,12 @@ func (c *WizardController) Step1Post() {
 	//lib.Dump(ovpnWizardData)
 
 	//MODIFY ovpnWizardData
-	ovpnWizardData.OvpnEndpoint = "STEP2"
-	//clientName := c.GetString("client-name")
+	ovpnWizardData.OvpnEndpoint = c.GetString("ip_endpoint")
+	ovpnWizardData.OvpnPort = c.GetString("port")
+	ovpnWizardData.OvpnProtocol = c.GetString("ovpn_protocol")
+	ovpnWizardData.OvpnIPRange = c.GetString("ovpn_ip_range")
+	ovpnWizardData.OvpnDNS1 = c.GetString("dns_1")
+	ovpnWizardData.OvpnDNS2 = c.GetString("dns_2")
 
 	//save
 	a := Encode(ovpnWizardData)
