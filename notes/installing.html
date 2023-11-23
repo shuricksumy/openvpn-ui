@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multiple POST Requests Example</title>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <style>
+    .spinner {
+      margin-bottom: 10px;
+    }
+
+    .status {
+      margin-bottom: 5px;
+    }
+
+    .success-icon {
+      color: green;
+      margin-left: 5px;
+    }
+
+    .error-icon {
+      color: red;
+      margin-left: 5px;
+    }
+
+    .error-details {
+      color: red;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Placeholder for displaying loading spinners, request status, and error details -->
+<div id="spinner-container"></div>
+<div id="status-container"></div>
+<div id="error-details-container" class="error-details"></div>
+
+<script>
+$(document).ready(function() {
+  // Array to store the URLs and JSON data for the requests
+  var requestDetails = [
+    { url: 'https://example.com/first', method: 'POST', data: { key1: 'value1' }, description: 'First Request' },
+    { url: 'https://example.com/second', method: 'POST', data: { key2: 'value2' }, description: 'Second Request' },
+    { url: 'https://example.com/third', method: 'POST', data: { key3: 'value3' }, description: 'Third Request' }
+  ];
+
+  // Function to make a single request and handle the response
+  function makeRequest(request) {
+    // Display spinner for the current request
+    $('#spinner-container').append('<div class="spinner">Loading...</div>');
+
+    // Perform the AJAX request
+    $.ajax({
+      url: request.url,
+      method: request.method,
+      contentType: 'application/json',
+      data: JSON.stringify(request.data),
+      success: function(response) {
+        // Remove the spinner for the completed request
+        $('.spinner').last().remove();
+
+        // Display the status of the current request with a green tick
+        $('#status-container').append('<div class="status">' + request.description + ' - OK <span class="success-icon">✔</span></div>');
+
+        // If this is not the last request, make the next one
+        if (request !== requestDetails[requestDetails.length - 1]) {
+          makeRequest(requestDetails[requestDetails.indexOf(request) + 1]);
+        }
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        // Remove the spinner for the completed request
+        $('.spinner').last().remove();
+
+        // Display the error status for the current request with a red icon
+        $('#status-container').append('<div class="status">' + request.description + ' - Error <span class="error-icon">❌</span> -> Stopped</div>');
+
+        // Display detailed error information
+        $('#error-details-container').text('Error details: ' + textStatus + ', ' + errorThrown).show();
+
+        // Stop further requests after an error
+        console.error('Request failed:', textStatus, errorThrown);
+      }
+    });
+  }
+
+  // Start the sequence of requests by making the first one
+  makeRequest(requestDetails[0]);
+});
+</script>
+
+</body>
+</html>
