@@ -7,37 +7,188 @@
 {{define "body"}}
 <div class="card card-lightblue">
   <div class="card-header with-border">
-    <h3 class="card-title">Step 2: Some new params</h3>
+    <h3 class="card-title">Step 2: Crypto Setting</h3>
   </div>
 
   <form id="form-to-confirm" role="form" action="{{urlfor "WizardController.Step2Post"}}" method="post">
+      <div class="card-body">
+          <div class="form-row">
+              <!-- OvpnCompression -->
+              <div class="form-group col-md-4">        
+                <label for="ovpn_compression">Compression*</label>
+                <select class="custom-select" name="ovpn_compression" id="ovpn_compression">
+                  <option value="{{ .OvpnWizardData.OvpnCompression }}" selected="selected">{{ .OvpnWizardData.OvpnCompression }}</option>
+                  {{range  $val := .OvpnCompressionList}}
+                      <option value="{{ $val }}">{{ $val }}</option>
+                  {{end}}
+                </select>
+                <span class="help-block font75">Compression</span>
+              </div>
+
+
+              <!-- CipherChoice -->
+              <div class="form-group col-md-4">        
+                <label for="cipher_choice">Cipher Choice*</label>
+                <select class="custom-select" name="cipher_choice" id="cipher_choice">
+                  <option value="{{ .OvpnWizardData.CipherChoice }}" selected="selected">{{ .OvpnWizardData.CipherChoice }}</option>
+                  {{range  $val := .CipherChoiceList}}
+                      <option value="{{ $val.Name }}">{{ $val.Name }}</option>
+                  {{end}}
+                </select>
+                <span class="help-block font75">Cipher Choice</span>
+              </div>
+
+              <!-- HMACAlgorithm -->
+              <div class="form-group col-md-4">        
+                <label for="hmac_algorithm">HMAC Algorithm*</label>
+                <select class="custom-select" name="hmac_algorithm" id="hmac_algorithm">
+                  <option value="{{ .OvpnWizardData.HMACAlgorithm }}" selected="selected">{{ .OvpnWizardData.HMACAlgorithm }}</option>
+                  {{range  $val := .HMACAlgorithmList}}
+                      <option value="{{ $val }}">{{ $val }}</option>
+                  {{end}}
+                </select>
+                <span class="help-block font75">HMAC Algorithm</span>
+              </div>
+
+
+              <!-- CertType -->
+              <div class="form-group col-md-4">        
+                <label for="cert_type">Cert Type*</label>
+                <select class="custom-select" name="cert_type" id="cert_type">
+                  <option value="{{ .OvpnWizardData.CertType }}" selected="selected">{{ .OvpnWizardData.CertType }}</option>
+                  {{range  $val := .CertTypeList}}
+                      <option value="{{ $val.Type }}">{{ $val.Type }}</option>
+                  {{end}}
+                </select>
+                <span class="help-block font75">Cert Type</span>
+              </div>
+
+              <!-- CertCurve/RSAKeySize -->
+              <div class="form-group col-md-4">        
+                <label for="cert_params">Cert Params*</label>
+                <select class="custom-select" name="cert_params" id="cert_params">
+                  <option value="{{ .OvpnWizardData.CertCurve }}" selected="selected">{{ .OvpnWizardData.CertCurve }}</option>
+                  {{range  $val := .CertParamList}}
+                      <option value="{{ $val }}">{{ $val }}</option>
+                  {{end}}
+                </select>
+                <span class="help-block font75">Cert Curve/RSA Key Size</span>
+              </div>
+
+              <!-- CertCCCipherChoice -->
+              <div class="form-group col-md-4">        
+                <label for="cert_cipher">CC Cipher Choice*</label>
+                <select class="custom-select" name="cert_cipher" id="cert_cipher">
+                  <option value="{{ .OvpnWizardData.CCCipherChoice }}" selected="selected">{{ .OvpnWizardData.CCCipherChoice }}</option>
+                  {{range  $val := .CCCipherChoiceList}}
+                      <option value="{{ $val }}">{{ $val }}</option>
+                  {{end}}
+                </select>
+                <span class="help-block font75">CC Cipher Choice</span>
+              </div>
+
+              <!-- DHType -->
+              <div class="form-group col-md-4">        
+                <label for="dh_type">DH Type*</label>
+                <select class="custom-select" name="dh_type" id="dh_type">
+                  <option value="{{ .OvpnWizardData.DHType }}" selected="selected">{{ .OvpnWizardData.DHType }}</option>
+                  {{range  $val := .DHTypeList}}
+                      <option value="{{ $val.Name }}">{{ $val.Name }}</option>
+                  {{end}}
+                </select>
+                <span class="help-block font75">DH Type</span>
+              </div>
+
+              <!-- DHCurve/DHKeySize -->
+              <div class="form-group col-md-4">        
+                <label for="dh_params">DH Params*</label>
+                <select class="custom-select" name="dh_params" id="dh_params">
+                  <option value="{{ .OvpnWizardData.DHCurve }}" selected="selected">{{ .OvpnWizardData.DHCurve }}</option>
+                  {{range  $val := .DHParamList}}
+                      <option value="{{ $val }}">{{ $val }}</option>
+                  {{end}}
+                </select>
+                <span class="help-block font75">DH Curve/DH Key Size</span>
+              </div>
+
+              <!-- TLSsig -->
+              <div class="form-group col-md-4">        
+                <label for="tls_sig">TLS sig*</label>
+                <select class="custom-select" name="tls_sig" id="tls_sig">
+                  <option value="{{ .OvpnWizardData.TLSsig }}" selected="selected">{{ .OvpnWizardData.TLSsig }}</option>
+                  {{range  $val := .TLSsigList}}
+                      <option value="{{ $val }}">{{ $val }}</option>
+                  {{end}}
+                </select>
+                <span class="help-block font75">TLS sig</span>
+              </div>
+
+          </div>
+      </div>
 
     <div class="card-footer">
       <a href="{{urlfor "WizardController.Step1Get"}}" 
-            class="btn btn-sm bg-gradient-lightblue btn80" data-title="BACK" 
-                  title="BACK" style="margin-right: 23px;">STEP 1</a>
+      class="btn btn-sm bg-gradient-lightblue btn80" data-title="BACK" 
+            title="BACK" style="margin-right: 23px;">STEP 1</a>
       <button type="submit" class="btn btn-sm bg-gradient-lightblue btn80" 
-        style="margin-right: 23px; float: right;" data-title="To Step 3" id="to_step_3">STEP 3</button>
+        style="margin-right: 23px; float: right;" data-title="To Step 2" id="to_step_2">STEP 2</button>
     </div>
   </form>
 
 </div>
+
+<script type="text/javascript">
+
+  function updateSelectorOptions(selectorId, options) {
+      var selector = $(selectorId);
+      selector.empty();
+
+      // Add default option
+      selector.append('<option value="' + options[0] + '">' + options[0] + '</option>');
+      unselectedOptions =  options.slice(1)
+
+      // Add options from the backend response
+      unselectedOptions.forEach(function (unselectedOptions) {
+          selector.append('<option value="' + unselectedOptions + '">' + unselectedOptions + '</option>');
+      });
+  }
+
+  $("#cipher_choice").change(function () {
+    
+        var selectedValue = $('#cipher_choice').val()
+        // Load options for the second selector based on the selected value of the first selector
+        $.get("/wizard/step2/alg/" + selectedValue  + "/nul", function (data) {
+            updateSelectorOptions("#hmac_algorithm", data);
+        });
+
+   });
+
+
+   $("#cert_type").change(function () {
+    
+        var selectedValue = $('#cert_type').val()
+
+        // Load options for the second selector based on the selected value of the first selector
+        $.get("/wizard/step2/crtparam/" + selectedValue  + "/nul", function (data) {
+            updateSelectorOptions("#cert_params", data);
+        });
+
+        $.get("/wizard/step2/crtcipher/" + selectedValue  + "/nul", function (data2) {
+            updateSelectorOptions("#cert_cipher", data2);
+        });
+    });
+
+
+  $("#dh_type").change(function () {
+    
+      var selectedValue = $('#dh_type').val()
+
+      // Load options for the second selector based on the selected value of the first selector
+      $.get("/wizard/step2/dhparam/" + selectedValue  + "/nul", function (data) {
+          updateSelectorOptions("#dh_params", data);
+      });
+
+   });
+ </script>
+
 {{end}}
-
-
-              <!-- <div class="col-md-4">
-                <div class="form-check">
-                  <input name="dis_def_client_routing" id="dis_def_client_routing" class="form-check-input" type="checkbox" value="true" 
-                      {{if .OvpnWizardData.DisableDefRouteForClientsByDefault}} checked {{else}} {{end}}>
-                  <label class="form-check-label" for="dis_def_client_routing">
-                    Disable Default Route For Clients By Default
-                  </label>
-                </div>
-
-                <div class="form-check">
-                  <input name="dis_def_client_routing" id="dis_def_client_routing" class="form-check-input" type="checkbox" value="true" 
-                      {{if .OvpnWizardData.ClientToClientConfigIsUsed}} checked {{else}} {{end}}>
-                  <label class="form-check-label" for="dis_def_client_routing">
-                    Client To Client Config Is Used
-                  </label>
-                </div> -->

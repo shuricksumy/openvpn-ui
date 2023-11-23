@@ -73,6 +73,25 @@
                         pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" 
                             placeholder="DNS address 2" onfocusout="this.value = this.value.trim()" value="{{.OvpnWizardData.OvpnDNS2}}">
               </div>
+
+
+              <div class="col-md-4">
+                <div class="form-check">
+                  <input name="dis_def_client_routing" id="dis_def_client_routing" class="form-check-input" type="checkbox" value="true" 
+                      {{if .OvpnWizardData.DisableDefRouteForClientsByDefault}} checked {{else}} {{end}}>
+                  <label class="form-check-label" for="dis_def_client_routing">
+                    Disable Default Route For Clients By Default
+                  </label>
+                </div>
+
+                <div class="form-check">
+                  <input name="client_to_client" id="client_to_client" class="form-check-input" type="checkbox" value="true" 
+                      {{if .OvpnWizardData.ClientToClientConfigIsUsed}} checked {{else}} {{end}}>
+                  <label class="form-check-label" for="client_to_client">
+                    Client To Client Config Is Used
+                  </label>
+                </div>
+              </div>
           </div>
       </div>
 

@@ -1,0 +1,143 @@
+package main
+
+import (
+	"fmt"
+	"net/http"
+	"os"
+	"os/exec"
+	"time"
+
+	"github.com/astaxie/beego"
+)
+
+type ProcessManager struct {
+	cmd         *exec.Cmd
+	statusCh    chan error
+	isMonitoring bool
+}
+
+func NewProcessManager(command string, args ...string) *ProcessManager {
+	return &ProcessManager{
+		cmd: exec.Command(command, args...),
+	}
+}
+
+func (pm *ProcessManager) Start() error {
+	if pm.cmd == nil {
+		return fmt.Errorf("command not initialized")
+	}
+
+	if pm.isMonitoring {
+		return fmt.Errorf("process is already being monitored")
+	}
+
+	pm.statusCh = make(chan error)
+	err := pm.cmd.Start()
+	if err != nil {
+		return err
+	}
+
+	go func() {
+		err := pm.cmd.Wait()
+		pm.statusCh <- err
+		close(pm.statusCh)
+	}()
+
+	pm.isMonitoring = true
+	return nil
+}
+
+func (pm *ProcessManager) Stop() error {
+	if pm.cmd == nil || !pm.isMonitoring {
+		return fmt.Errorf("process is not being monitored")
+	}
+
+	err := pm.cmd.Process.Kill()
+	if err != nil {
+		return err
+	}
+
+	pm.isMonitoring = false
+	return nil
+}
+
+func (pm *ProcessManager) GetStatus() (bool, error) {
+	if pm.cmd == nil {
+		return false, fmt.Errorf("command not initialized")
+	}
+
+	if pm.isMonitoring {
+		return true, nil
+	}
+
+	select {
+	case err, ok := <-pm.statusCh:
+		if !ok {
+			return false, fmt.Errorf("process has already exited")
+		}
+		return false, err
+	default:
+		return true, nil
+	}
+}
+
+type ProcessController struct {
+	beego.Controller
+	manager *ProcessManager
+}
+
+func (c *ProcessController) Start() {
+	err := c.manager.Start()
+	if err != nil {
+		c.Ctx.Output.SetStatus(http.StatusInternalServerError)
+		c.Ctx.Output.Body([]byte(fmt.Sprintf("Error starting process: %s", err)))
+		return
+	}
+
+	c.Ctx.Output.Body([]byte("Process started."))
+}
+
+func (c *ProcessController) Stop() {
+	err := c.manager.Stop()
+	if err != nil {
+		c.Ctx.Output.SetStatus(http.StatusInternalServerError)
+		c.Ctx.Output.Body([]byte(fmt.Sprintf("Error stopping process: %s", err)))
+		return
+	}
+
+	c.Ctx.Output.Body([]byte("Process stopped."))
+}
+
+func (c *ProcessController) Status() {
+	isRunning, err := c.manager.GetStatus()
+	if err != nil {
+		c.Ctx.Output.SetStatus(http.StatusInternalServerError)
+		c.Ctx.Output.Body([]byte(fmt.Sprintf("Error getting process status: %s", err)))
+		return
+	}
+
+	if isRunning {
+		c.Ctx.Output.Body([]byte("Process is running."))
+	} else {
+		c.Ctx.Output.Body([]byte("Process has exited."))
+	}
+}
+
+func main() {
+	manager := NewProcessManager("your_linux_command", "arg1", "arg2")
+
+	// Start the process automatically
+	err := manager.Start()
+	if err != nil {
+		fmt.Println("Error starting process:", err)
+		os.Exit(1)
+	}
+
+	fmt.Println("Process started. PID:", manager.cmd.Process.Pid)
+
+	// Run the Beego server
+	beego.Router("/start", &ProcessController{manager: manager}, "post:Start")
+	beego.Router("/stop", &ProcessController{manager: manager}, "post:Stop")
+	beego.Router("/status", &ProcessController{manager: manager}, "get:Status")
+	beego.Run()
+}

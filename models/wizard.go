@@ -87,20 +87,62 @@ func GetDNSProvidersNameByIP(ip string) DNSProvider {
 
 var compressionList = []string{"Disabled", "lz4-v2", "lz4", "lzo"}
 
+func GetOvpnCompressionList(selected string) []string {
+	var actualCompressionList []string
+	for _, c := range compressionList {
+		if selected == c {
+			continue
+		}
+		actualCompressionList = append(actualCompressionList, c)
+	}
+	return actualCompressionList
+}
+
 type CipherList struct {
 	Name      string
 	Algorithm []string
 }
 
 var HMACAlgorithmList = []string{"SHA256", "SHA384", "SHA512"}
+var emptyStringArray = []string{"none"}
 
 var cipherList = []CipherList{
 	{"AES-128-GCM", HMACAlgorithmList},
 	{"AES-192-GCM", HMACAlgorithmList},
 	{"AES-256-GCM", HMACAlgorithmList},
-	{"AES-128-CBC", nil},
-	{"AES-192-CBC", nil},
-	{"AES-256-CBC", nil},
+	{"AES-128-CBC", emptyStringArray},
+	{"AES-192-CBC", emptyStringArray},
+	{"AES-256-CBC", emptyStringArray},
+}
+
+func GetCipherChoiceList(selected string) []CipherList {
+	var actualCipherList []CipherList
+	for _, c := range cipherList {
+		if selected == c.Name {
+			continue
+		}
+		actualCipherList = append(actualCipherList, c)
+	}
+	return actualCipherList
+}
+
+func GetHMACAlgorithmList(selectedCipher string, selectedAlgorithm string) []string {
+	var actualAlgorithmList []string
+	for _, c := range cipherList {
+		if selectedCipher == c.Name {
+			for _, a := range c.Algorithm {
+				if selectedAlgorithm == a {
+					continue
+				}
+				actualAlgorithmList = append(actualAlgorithmList, a)
+			}
+		}
+	}
+	return actualAlgorithmList
+}
+
+func GetHMACAlgorithmAllList() []string {
+	return HMACAlgorithmList
 }
 
 var CertCurveList = []string{"prime256v1", "secp384r1", "secp521r1"}
@@ -119,7 +161,50 @@ var certType = []CertType{
 	{"RSA", RSAKeySizeList, CCCipherRSAList},
 }
 
+func GetCertTypeList(selected string) []CertType {
+	var actualCertTypeList []CertType
+	for _, c := range certType {
+		if selected == c.Type {
+			continue
+		}
+		actualCertTypeList = append(actualCertTypeList, c)
+	}
+	return actualCertTypeList
+}
+
 var DHCurveList = []string{"prime256v1", "secp384r1", "secp521r1"}
+
+func GetCertParamList(selectedCertType string, selectedParam string) []string {
+	var actualCertParamList []string
+	for _, c := range certType {
+		if selectedCertType == c.Type {
+			for _, p := range c.Params {
+				if selectedParam == p {
+					continue
+				}
+				actualCertParamList = append(actualCertParamList, p)
+			}
+		}
+	}
+	return actualCertParamList
+}
+
+func GetCCCipherChoiceList(selectedCertType string, selectedCipher string) []string {
+	var actualCertCipherList []string
+	for _, c := range certType {
+		if selectedCertType == c.Type {
+			for _, p := range c.CCCipher {
+				if selectedCipher == p {
+					continue
+				}
+				actualCertCipherList = append(actualCertCipherList, p)
+			}
+		}
+	}
+	return actualCertCipherList
+
+}
+
 var DHKeySizeList = []string{"2048", "3072", "4096"}
 
 type DHType struct {
@@ -132,7 +217,45 @@ var dhType = []DHType{
 	{"DH", DHKeySizeList},
 }
 
+func GetDHTypeList(selected string) []DHType {
+	var actualDHTypeList []DHType
+	for _, d := range dhType {
+		if selected == d.Name {
+			continue
+		}
+		actualDHTypeList = append(actualDHTypeList, d)
+	}
+	return actualDHTypeList
+}
+
+func GetDHParamList(selectedDHType string, selectedParam string) []string {
+	var actualDHParams []string
+	for _, d := range dhType {
+		if selectedDHType == d.Name {
+			for _, p := range d.Params {
+				if selectedParam == p {
+					continue
+				}
+				actualDHParams = append(actualDHParams, p)
+			}
+		}
+	}
+	return actualDHParams
+
+}
+
 var TLSSigList = []string{"tls-crypt-v2", "tls-crypt", "tls-auth", "no tls"}
+
+func GetTLSsigList(selected string) []string {
+	var actualTLSsigList []string
+	for _, c := range TLSSigList {
+		if selected == c {
+			continue
+		}
+		actualTLSsigList = append(actualTLSsigList, c)
+	}
+	return actualTLSsigList
+}
 
 var defaultOVPNConfig = OvpnServerBaseSetting{
 	OvpnEndpoint:                       "TODO",                     //ENDPOINT

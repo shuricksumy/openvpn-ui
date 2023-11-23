@@ -41,7 +41,6 @@ func (c *WizardController) Step1Get() {
 	//get extIP
 	ipEndpoint, _ := lib.GetExtIP()
 	c.Data["IpEndpoint"] = ipEndpoint
-	//lib.Dump(ipEndpoint)
 
 	c.Data["OvpnWizardData"] = ovpnWizardData
 	c.Data["OvpnProtocolList"] = models.GetovpnProtocolList(ovpnWizardData.OvpnProtocol)
@@ -52,14 +51,12 @@ func (c *WizardController) Step1Get() {
 	//store to session
 	wizardSaveByte := Encode(ovpnWizardData)
 	c.SetSession("ovpnWizardData", wizardSaveByte.Bytes())
-	//lib.Dump(wizardByte.Bytes())
 }
 
 func (c *WizardController) Step1Post() {
 	//get data from session
 	var wizardByte = c.GetSession("ovpnWizardData").([]byte)
 	ovpnWizardData := Decode(wizardByte)
-	//lib.Dump(ovpnWizardData)
 
 	//MODIFY ovpnWizardData
 	ovpnWizardData.OvpnEndpoint = c.GetString("ip_endpoint")
@@ -68,10 +65,13 @@ func (c *WizardController) Step1Post() {
 	ovpnWizardData.OvpnIPRange = c.GetString("ovpn_ip_range")
 	ovpnWizardData.OvpnDNS1 = c.GetString("dns_1")
 	ovpnWizardData.OvpnDNS2 = c.GetString("dns_2")
+	ovpnWizardData.DisableDefRouteForClientsByDefault, _ = c.GetBool("dis_def_client_routing")
+	ovpnWizardData.ClientToClientConfigIsUsed, _ = c.GetBool("client_to_client")
 
 	//save
 	a := Encode(ovpnWizardData)
 	c.SetSession("ovpnWizardData", a.Bytes())
+	lib.Dump(ovpnWizardData)
 
 	c.Redirect("/wizard/step2", 302)
 }
@@ -84,22 +84,45 @@ func (c *WizardController) Step2Get() {
 
 	var wizardByte = c.GetSession("ovpnWizardData").([]byte)
 	ovpnWizardData := Decode(wizardByte)
-	lib.Dump(ovpnWizardData)
 
+	c.Data["OvpnWizardData"] = ovpnWizardData
+	c.Data["OvpnCompressionList"] = models.GetOvpnCompressionList(ovpnWizardData.OvpnCompression)
+	c.Data["CipherChoiceList"] = models.GetCipherChoiceList(ovpnWizardData.CipherChoice)
+	c.Data["HMACAlgorithmList"] = models.GetHMACAlgorithmList(ovpnWizardData.CipherChoice, ovpnWizardData.HMACAlgorithm)
+	c.Data["CertTypeList"] = models.GetCertTypeList(ovpnWizardData.CertType)
+	c.Data["CertParamList"] = models.GetCertParamList(ovpnWizardData.CertType, ovpnWizardData.CertCurve)
+	c.Data["CCCipherChoiceList"] = models.GetCCCipherChoiceList(ovpnWizardData.CertType, ovpnWizardData.CCCipherChoice)
+	c.Data["DHTypeList"] = models.GetDHTypeList(ovpnWizardData.DHType)
+	c.Data["DHParamList"] = models.GetDHParamList(ovpnWizardData.DHType, ovpnWizardData.DHCurve)
+	c.Data["TLSsigList"] = models.GetTLSsigList(ovpnWizardData.TLSsig)
+
+	//store to session
+	wizardSaveByte := Encode(ovpnWizardData)
+	c.SetSession("ovpnWizardData", wizardSaveByte.Bytes())
 }
 
 func (c *WizardController) Step2Post() {
 	//get data from session
 	var wizardByte = c.GetSession("ovpnWizardData").([]byte)
 	ovpnWizardData := Decode(wizardByte)
-	//lib.Dump(ovpnWizardData)
 
 	//MODIFY ovpnWizardData
-	ovpnWizardData.OvpnEndpoint = "STEP3"
+	ovpnWizardData.OvpnCompression = c.GetString("ovpn_compression")
+	ovpnWizardData.CipherChoice = c.GetString("cipher_choice")
+	ovpnWizardData.HMACAlgorithm = c.GetString("hmac_algorithm")
+	ovpnWizardData.CertType = c.GetString("cert_type")
+	ovpnWizardData.CertCurve = c.GetString("cert_params")
+	ovpnWizardData.RSAKeySize = c.GetString("cert_params")
+	ovpnWizardData.CCCipherChoice = c.GetString("cert_cipher")
+	ovpnWizardData.DHType = c.GetString("dh_type")
+	ovpnWizardData.DHCurve = c.GetString("dh_params")
+	ovpnWizardData.DHKeySize = c.GetString("dh_params")
+	ovpnWizardData.TLSsig = c.GetString("tls_sig")
 
 	//save
 	a := Encode(ovpnWizardData)
 	c.SetSession("ovpnWizardData", a.Bytes())
+	lib.Dump(ovpnWizardData)
 
 	c.Redirect("/wizard/step3", 302)
 }
@@ -113,6 +136,40 @@ func (c *WizardController) Step3Get() {
 	var wizardByte = c.GetSession("ovpnWizardData").([]byte)
 	ovpnWizardData := Decode(wizardByte)
 	lib.Dump(ovpnWizardData)
+}
+
+// GET ENDPOINTS FOR JSON PARAMS
+
+func (c *WizardController) Step2GetHmacAlg() {
+	CipherChoice := c.GetString(":cipher")
+	HMACAlgorithm := c.GetString(":selcted_hmac")
+	response := models.GetHMACAlgorithmList(CipherChoice, HMACAlgorithm)
+	c.Data["json"] = response
+	c.ServeJSON()
+}
+
+func (c *WizardController) Step2GetCrtParam() {
+	certType := c.GetString(":type")
+	selectedParam := c.GetString(":selcted_option")
+	response := models.GetCertParamList(certType, selectedParam)
+	c.Data["json"] = response
+	c.ServeJSON()
+}
+
+func (c *WizardController) Step2GetCrtCipher() {
+	certType := c.GetString(":type")
+	selectedParam := c.GetString(":selcted_option")
+	response := models.GetCCCipherChoiceList(certType, selectedParam)
+	c.Data["json"] = response
+	c.ServeJSON()
+}
+
+func (c *WizardController) Step2GetDhParamr() {
+	dhType := c.GetString(":type")
+	selectedParam := c.GetString(":selcted_option")
+	response := models.GetDHParamList(dhType, selectedParam)
+	c.Data["json"] = response
+	c.ServeJSON()
 }
 
 func Encode(ovpnWizardData models.OvpnServerBaseSetting) bytes.Buffer {
