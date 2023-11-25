@@ -4,12 +4,12 @@ FROM debian:stable
 ARG TARGETPLATFORM
 
 
-RUN apt-get update && apt-get install golang-go git curl bzip2 wget jq -y
+RUN apt-get update && apt-get install -y golang-go git curl bzip2 wget jq openvpn iptables openssl wget ca-certificates iproute2
 RUN apt-get remove golang-go -y
 
-RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then wget https://go.dev/dl/go1.21.1.linux-amd64.tar.gz && tar -C /usr/local/ -xzf go1.21.1.linux-amd64.tar.gz; fi
+RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then wget https://go.dev/dl/go1.21.4.linux-amd64.tar.gz && tar -C /usr/local/ -xzf go1.21.4.linux-amd64.tar.gz; fi
 
-RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then wget https://go.dev/dl/go1.21.1.linux-arm64.tar.gz && tar -C /usr/local/ -xzf go1.21.1.linux-arm64.tar.gz; fi
+RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then wget https://go.dev/dl/go1.21.4.linux-arm64.tar.gz && tar -C /usr/local/ -xzf go1.21.4.linux-arm64.tar.gz; fi
 
 ENV PATH="$PATH:/usr/local/go/bin"
 RUN export PATH="$PATH:/usr/local/go/bin"; echo $PATH
