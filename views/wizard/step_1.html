@@ -50,6 +50,15 @@
                 <span class="help-block font75">OpenVPN Internal subnet (mask 255.0.0.0)</span>
               </div>
 
+
+              <div class="form-group col-md-4">
+                <label for="tun_num">Tun number*</label>
+                <input type="text" class="form-control" placeholder="Tun Num" id="tun_num" 
+                  name="tun_num" onfocusout="this.value = this.value.trim()" value="{{.OvpnWizardData.TunNumber}}">
+                <span class="help-block font75">Tun Num</span>
+              </div>
+
+
               <div class="form-group col-sm-4">
                 <label for="dns_provider">DNS provider*</label>
                 <select class="custom-select" name="dns_provider" id="dns_provider">
@@ -62,18 +71,19 @@
               </div>
 
               <div class="form-group col-md-4">
-                  <label for="dns_1">DNS 1 / DNS 2*</label>
+                  <label for="dns_1">DNS 1*</label>
                   <input class="form-control" id="dns_1" name="dns_1" value="{{.OvpnWizardData.OvpnDNS1}}" 
                         data-inputmask="'alias': 'ip'" data-mask 
                         pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" 
                             placeholder="DNS address 1" onfocusout="this.value = this.value.trim()" value="{{.OvpnWizardData.OvpnDNS1}}">
-                 
+              </div>
+              <div class="form-group col-md-4">
+                  <label for="dns_2">DNS 2*</label>                
                   <input class="form-control" id="dns_2" name="dns_2" value="{{.OvpnWizardData.OvpnDNS2}}" 
                         data-inputmask="'alias': 'ip'" data-mask 
                         pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" 
                             placeholder="DNS address 2" onfocusout="this.value = this.value.trim()" value="{{.OvpnWizardData.OvpnDNS2}}">
               </div>
-
 
               <div class="col-md-4">
                 <div class="form-check">
@@ -92,6 +102,7 @@
                   </label>
                 </div>
               </div>
+              
           </div>
       </div>
 
@@ -122,6 +133,9 @@
                 required: true,
             },
             port: {
+                required: true,
+            },
+            tun_num: {
                 required: true,
             },
             ovpn_protocol: {

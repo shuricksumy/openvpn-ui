@@ -1,21 +1,14 @@
 package models
 
-type FormData struct {
-	Step1Data string
-	Step2Data string
-	Step3Data string
-}
-
 type OvpnServerBaseSetting struct {
 	OvpnEndpoint                       string // external ip
-	OvpnTunNumber                      int
-	ApproveIP                          bool //double check
-	OvpnIPV6Support                    bool
+	ApproveIP                          bool   //double check TO DELETE
 	DisableDefRouteForClientsByDefault bool
 	ClientToClientConfigIsUsed         bool
 	OvpnMgmtAddress                    string //use def interna ip
 	OvpnIPRange                        string
 	OvpnPort                           string
+	TunNumber                          string
 	OvpnProtocol                       string
 	OvpnDNS1                           string //use struct
 	OvpnDNS2                           string //use struct
@@ -104,15 +97,14 @@ type CipherList struct {
 }
 
 var HMACAlgorithmList = []string{"SHA256", "SHA384", "SHA512"}
-var emptyStringArray = []string{"none"}
 
 var cipherList = []CipherList{
 	{"AES-128-GCM", HMACAlgorithmList},
 	{"AES-192-GCM", HMACAlgorithmList},
 	{"AES-256-GCM", HMACAlgorithmList},
-	{"AES-128-CBC", emptyStringArray},
-	{"AES-192-CBC", emptyStringArray},
-	{"AES-256-CBC", emptyStringArray},
+	{"AES-128-CBC", HMACAlgorithmList},
+	{"AES-192-CBC", HMACAlgorithmList},
+	{"AES-256-CBC", HMACAlgorithmList},
 }
 
 func GetCipherChoiceList(selected string) []CipherList {
@@ -259,14 +251,13 @@ func GetTLSsigList(selected string) []string {
 
 var defaultOVPNConfig = OvpnServerBaseSetting{
 	OvpnEndpoint:                       "TODO",                     //ENDPOINT
-	OvpnTunNumber:                      0,                          //TUN_NUMBER
 	ApproveIP:                          false,                      //APPROVE_IP
-	OvpnIPV6Support:                    false,                      //IPV6_SUPPORT
 	DisableDefRouteForClientsByDefault: true,                       //DISABLE_DEF_ROUTE_FOR_CLIENTS
 	ClientToClientConfigIsUsed:         true,                       //CLIENT_TO_CLIENT
 	OvpnMgmtAddress:                    "openvpn:2080",             //SET_MGMT
 	OvpnIPRange:                        "10.8.0.0",                 //IP_RANGE
 	OvpnPort:                           "1194",                     //PORT
+	TunNumber:                          "0",                        //TUN_NUMBER
 	OvpnProtocol:                       ovpnProtocolList[0],        //PROTOCOL
 	OvpnDNS1:                           dnsProviders[0].DNS1,       //DNS1
 	OvpnDNS2:                           dnsProviders[0].DNS2,       //DNS2
@@ -285,4 +276,67 @@ var defaultOVPNConfig = OvpnServerBaseSetting{
 
 func GetDefWizardSettings() OvpnServerBaseSetting {
 	return defaultOVPNConfig
+}
+
+var indexMapper = map[string]string{
+	"udp":              "1", //PROTOCOL_CHOICE
+	"tcp":              "2",
+	"Google":           "9", //DNS
+	"Cloudflare":       "3",
+	"Quad9":            "4",
+	"Quad9 uncensored": "5",
+	"FDN":              "6",
+	"DNS.WATCH":        "7",
+	"OpenDNS":          "8",
+	"AdGuard DNS":      "11",
+	"NextDNS":          "12",
+	"Custom DNS":       "13",
+	"ECDSA":            "1", //Cert type
+	"RSA":              "2",
+	"ECDH":             "1", //DH type
+	"DH":               "2",
+	"tls-crypt":        "1", //TLS sig
+	"tls-auth":         "2",
+	"tls-crypt-v2":     "3",
+	"no tls":           "4",
+	"AES-128-GCM":      "1", //CIPHER_CHOICE
+	"AES-192-GCM":      "2",
+	"AES-256-GCM":      "3",
+	"AES-128-CBC":      "4",
+	"AES-192-CBC":      "5",
+	"AES-256-CBC":      "6",
+	"prime256v1":       "1", //CERT_CURVE_CHOICE
+	"secp384r1":        "2",
+	"secp521r1":        "3",
+	"2048":             "1", //RSA_KEY_SIZE
+	"3072":             "2",
+	"4096":             "3",
+	"TLS-ECDHE-ECDSA-WITH-AES-128-GCM-SHA256": "1", //CC_CIPHER_CHOICE
+	"TLS-ECDHE-ECDSA-WITH-AES-256-GCM-SHA384": "2",
+	"TLS-ECDHE-RSA-WITH-AES-128-GCM-SHA256":   "1",
+	"TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384":   "2",
+	"SHA256":                                  "1", //HMAC_ALG_CHOICE
+	"SHA384":                                  "2",
+	"SHA512":                                  "3",
+	"lz4-v2":                                  "1", //COMPRESSION_CHOICE
+	"lz4":                                     "2",
+	"lzo":                                     "3",
+}
+
+func GetIndex(key string) string {
+	return indexMapper[key]
+}
+
+func GetConstEnv() string {
+
+	const constantEnvVars = `
+DOCKER_COMMAND="2"
+IP_CHOICE="2"
+IPV6_SUPPORT="n"
+PORT_CHOICE="2"
+DNS="13"
+CUSTOMIZE_ENC="y"
+SET_MGMT="management 172.30.0.1 2088"
+`
+	return constantEnvVars
 }

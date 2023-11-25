@@ -11,7 +11,13 @@
   </div>
 
   <form id="form-to-confirm" role="form" action="{{urlfor "WizardController.Step3Post"}}" method="post">
+    
 
+    <div class="form-group" >
+      <textarea type="text" class="form-control my-textarea" name="ClientTemplate" 
+        id="ClientTemplate" spellcheck="false" rows="30">{{ .EnvString }}</textarea>
+    </div>
+    
     <div class="card-footer">
       <a href="{{urlfor "WizardController.Step2Get"}}" 
       class="btn btn-sm bg-gradient-lightblue btn80" data-title="BACK" 

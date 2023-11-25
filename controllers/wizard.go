@@ -63,6 +63,7 @@ func (c *WizardController) Step1Post() {
 	ovpnWizardData.OvpnPort = c.GetString("port")
 	ovpnWizardData.OvpnProtocol = c.GetString("ovpn_protocol")
 	ovpnWizardData.OvpnIPRange = c.GetString("ovpn_ip_range")
+	ovpnWizardData.TunNumber = c.GetString("tun_num")
 	ovpnWizardData.OvpnDNS1 = c.GetString("dns_1")
 	ovpnWizardData.OvpnDNS2 = c.GetString("dns_2")
 	ovpnWizardData.DisableDefRouteForClientsByDefault, _ = c.GetBool("dis_def_client_routing")
@@ -136,6 +137,9 @@ func (c *WizardController) Step3Get() {
 	var wizardByte = c.GetSession("ovpnWizardData").([]byte)
 	ovpnWizardData := Decode(wizardByte)
 	lib.Dump(ovpnWizardData)
+
+	c.Data["EnvString"] = GenerateEnvFile(ovpnWizardData)
+
 }
 
 // GET ENDPOINTS FOR JSON PARAMS
@@ -185,4 +189,61 @@ func Decode(wizardByte []byte) models.OvpnServerBaseSetting {
 	dec := gob.NewDecoder(buf)
 	dec.Decode(&ovpnWizardData)
 	return ovpnWizardData
+}
+
+func appendString(original string, addition string) string {
+	return original + "\n" + addition
+}
+
+func GenerateEnvFile(ovpnWizardData models.OvpnServerBaseSetting) string {
+	var envString = models.GetConstEnv()
+	envString = appendString(envString, "ENDPOINT=\""+ovpnWizardData.OvpnEndpoint+"\"")
+	envString = appendString(envString, "IP_RANGE=\""+ovpnWizardData.OvpnIPRange+"\"")
+	envString = appendString(envString, "PROTOCOL_CHOICE=\""+
+		models.GetIndex(ovpnWizardData.OvpnProtocol)+"\" #"+ovpnWizardData.OvpnProtocol)
+	envString = appendString(envString, "PORT=\""+ovpnWizardData.OvpnPort+"\"")
+	envString = appendString(envString, "TUN_NUMBER=\""+ovpnWizardData.TunNumber+"\"")
+	envString = appendString(envString, "DNS1=\""+ovpnWizardData.OvpnDNS1+"\"")
+	envString = appendString(envString, "DNS2=\""+ovpnWizardData.OvpnDNS2+"\"")
+	if ovpnWizardData.OvpnCompression == "Disabled" {
+		envString = appendString(envString, "COMPRESSION_ENABLED=\"n\"")
+	} else {
+		envString = appendString(envString, "COMPRESSION_ENABLED=\"y\"")
+		envString = appendString(envString, "COMPRESSION_ALG=\""+
+			models.GetIndex(ovpnWizardData.OvpnCompression)+"\" #"+ovpnWizardData.OvpnCompression)
+	}
+	envString = appendString(envString, "CIPHER_CHOICE=\""+
+		models.GetIndex(ovpnWizardData.CipherChoice)+"\" #"+ovpnWizardData.CipherChoice)
+	envString = appendString(envString, "CERT_TYPE=\""+
+		models.GetIndex(ovpnWizardData.CertType)+"\" #"+ovpnWizardData.CertType)
+	envString = appendString(envString, "CERT_CURVE_CHOICE=\""+
+		models.GetIndex(ovpnWizardData.CertCurve)+"\" #"+ovpnWizardData.CertCurve)
+	envString = appendString(envString, "RSA_KEY_SIZE_CHOICE=\""+
+		models.GetIndex(ovpnWizardData.RSAKeySize)+"\" #"+ovpnWizardData.RSAKeySize)
+	envString = appendString(envString, "CC_CIPHER=\""+
+		models.GetIndex(ovpnWizardData.CCCipherChoice)+"\" #"+ovpnWizardData.CCCipherChoice)
+	envString = appendString(envString, "DH_TYPE=\""+
+		models.GetIndex(ovpnWizardData.DHType)+"\" #"+ovpnWizardData.DHType)
+	envString = appendString(envString, "DH_CURVE_CHOICE=\""+
+		models.GetIndex(ovpnWizardData.DHCurve)+"\" #"+ovpnWizardData.DHCurve)
+	envString = appendString(envString, "DH_KEY_SIZE_CHOICE=\""+
+		models.GetIndex(ovpnWizardData.DHKeySize)+"\" #"+ovpnWizardData.DHKeySize)
+	envString = appendString(envString, "HMAC_ALG_CHOICE=\""+
+		models.GetIndex(ovpnWizardData.HMACAlgorithm)+"\" #"+ovpnWizardData.HMACAlgorithm)
+	envString = appendString(envString, "TLS_SIG=\""+
+		models.GetIndex(ovpnWizardData.TLSsig)+"\" #"+ovpnWizardData.TLSsig)
+
+	if ovpnWizardData.DisableDefRouteForClientsByDefault {
+		envString = appendString(envString, "DISABLE_DEF_ROUTE_FOR_CLIENTS=\"y\"")
+	} else {
+		envString = appendString(envString, "DISABLE_DEF_ROUTE_FOR_CLIENTS=\"n\"")
+	}
+
+	if ovpnWizardData.ClientToClientConfigIsUsed {
+		envString = appendString(envString, "CLIENT_TO_CLIENT=\"y\"")
+	} else {
+		envString = appendString(envString, "CLIENT_TO_CLIENT=\"n\"")
+	}
+
+	return envString
 }
