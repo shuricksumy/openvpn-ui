@@ -2,7 +2,7 @@ FROM shuricksumy/builder:latest
 
 ARG BRANCH
 
-#RUN apt-get update && apt-get install golang-go git curl bzip2 jq -y
+#RUN apt-get update && apt-get install golang-go git curl bzip2 jq -y 
 
 ENV PATH="$PATH:/usr/local/go/bin"
 RUN export PATH="$PATH:/usr/local/go/bin"; echo $PATH
@@ -28,8 +28,7 @@ FROM debian:stable
 WORKDIR /opt
 EXPOSE 8080
 
-
-RUN apt-get update && apt-get install -y curl bzip2 jq
+RUN apt-get update && apt-get install -y curl bzip2 jq git wget openvpn iptables openssl wget ca-certificates iproute2
 
 COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/start.sh /opt/start.sh
 COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/vars.template /opt/scripts/vars.template
