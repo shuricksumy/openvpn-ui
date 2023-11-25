@@ -72,10 +72,10 @@ if [ ! -f ${OVDIR}/routesDetails.json ]; then
 fi
 
 # wait for openvpn server ready
-until [ -f ${OVDIR}/server.conf ]
-do
-     sleep 1
-done
+# until [ -f ${OVDIR}/server.conf ]
+# do
+#      sleep 1
+# done
 
 # Start the OpenVPN GUI
 echo "Starting openvpn-ui!"

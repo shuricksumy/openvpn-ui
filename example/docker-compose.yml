@@ -1,0 +1,33 @@
+version: '3'
+
+networks:
+    default:
+        driver: bridge
+    npm_proxy:
+        name: npm_proxy
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 172.18.0.0/24
+services:
+  gui:
+        image: shuricksumy/openvpn-ui:beta
+        container_name: openvpn-ui
+        working_dir: /etc/openvpn/easy-rsa
+        environment:
+            - OPENVPN_ADMIN_USERNAME=admin # Leave this default as-is and update on first-run
+            - OPENVPN_ADMIN_PASSWORD=admin # Leave this default as-is and update on first-run
+            - SITE_NAME=UDP Server
+            - OPENVPN_SERVER_DOCKER_NAME=openvpn-ui
+            - OPENVPN_MANAGEMENT_ADDRESS=openvpn-ui:2080
+        ports:
+            - "8080:8080/tcp"
+        restart: always
+        networks:
+            npm_proxy:
+                ipv4_address: $IP_GUI
+        volumes:
+         -  /var/run/docker.sock:/var/run/docker.sock
+        #  - ./openvpn/openvpn1:/etc/openvpn
+        #  - ./openvpn/easy-rsa:/etc/openvpn/easy-rsa
+        #  - ./openvpn/openvpn1/db:/opt/openvpn-gui/db
