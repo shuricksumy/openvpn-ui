@@ -33,6 +33,7 @@ RUN apt-get update && apt-get install -y curl bzip2 jq git wget openvpn iptables
 COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/start.sh /opt/start.sh
 COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/vars.template /opt/scripts/vars.template
 COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/openvpn-install-v2.sh /opt/scripts/openvpn-install-v2.sh
+COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/EasyRSA-3.1.7.tgz ~/EasyRSA-3.1.7.tgz
 COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/install_pkg.sh /opt/scripts/install_pkg.sh
 COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/restart.sh /opt/scripts/restart.sh
 COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/rmcert.sh /opt/scripts/rmcert.sh
