@@ -2,7 +2,11 @@ package controllers
 
 import (
 	"bytes"
+	"context"
 	"encoding/gob"
+	"fmt"
+	"os/exec"
+	"time"
 
 	"github.com/shuricksumy/openvpn-ui/lib"
 	"github.com/shuricksumy/openvpn-ui/models"
@@ -138,8 +142,28 @@ func (c *WizardController) Step3Get() {
 	ovpnWizardData := Decode(wizardByte)
 	lib.Dump(ovpnWizardData)
 
-	c.Data["EnvString"] = GenerateEnvFile(ovpnWizardData)
+	setupScript := GenerateEnvFile(ovpnWizardData)
+	c.Data["EnvString"] = setupScript
+	lib.RawSaveToFile("/tmp/setup.sh", setupScript)
+}
 
+func (c *WizardController) Setup() {
+	// Create a new HTTP client with a custom timeout
+	ctx, cancel := context.WithTimeout(context.Background(), 660*time.Second)
+	defer cancel()
+
+	// Run the Bash script within the context
+	cmd := exec.CommandContext(ctx, "/bin/bash", "-c",
+		fmt.Sprintf("cd /tmp/ && bash ./setup.sh"))
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		// If there is an error, return 500 Internal Server Error with details
+		c.CustomAbort(500, "Error running script: "+err.Error()+"\n"+string(output))
+	} else {
+		// If successful, return 200 OK with the script output
+		c.Data["json"] = map[string]string{"output": string(output)}
+		c.ServeJSON()
+	}
 }
 
 // GET ENDPOINTS FOR JSON PARAMS
@@ -197,53 +221,55 @@ func appendString(original string, addition string) string {
 
 func GenerateEnvFile(ovpnWizardData models.OvpnServerBaseSetting) string {
 	var envString = models.GetConstEnv()
-	envString = appendString(envString, "ENDPOINT=\""+ovpnWizardData.OvpnEndpoint+"\"")
-	envString = appendString(envString, "IP_RANGE=\""+ovpnWizardData.OvpnIPRange+"\"")
-	envString = appendString(envString, "PROTOCOL_CHOICE=\""+
+	envString = appendString(envString, "export ENDPOINT=\""+ovpnWizardData.OvpnEndpoint+"\"")
+	envString = appendString(envString, "export IP_RANGE=\""+ovpnWizardData.OvpnIPRange+"\"")
+	envString = appendString(envString, "export PROTOCOL_CHOICE=\""+
 		models.GetIndex(ovpnWizardData.OvpnProtocol)+"\" #"+ovpnWizardData.OvpnProtocol)
-	envString = appendString(envString, "PORT=\""+ovpnWizardData.OvpnPort+"\"")
-	envString = appendString(envString, "TUN_NUMBER=\""+ovpnWizardData.TunNumber+"\"")
-	envString = appendString(envString, "DNS1=\""+ovpnWizardData.OvpnDNS1+"\"")
-	envString = appendString(envString, "DNS2=\""+ovpnWizardData.OvpnDNS2+"\"")
+	envString = appendString(envString, "export PORT=\""+ovpnWizardData.OvpnPort+"\"")
+	envString = appendString(envString, "export TUN_NUMBER=\""+ovpnWizardData.TunNumber+"\"")
+	envString = appendString(envString, "export DNS1=\""+ovpnWizardData.OvpnDNS1+"\"")
+	envString = appendString(envString, "export DNS2=\""+ovpnWizardData.OvpnDNS2+"\"")
 	if ovpnWizardData.OvpnCompression == "Disabled" {
-		envString = appendString(envString, "COMPRESSION_ENABLED=\"n\"")
+		envString = appendString(envString, "export COMPRESSION_ENABLED=\"n\"")
 	} else {
-		envString = appendString(envString, "COMPRESSION_ENABLED=\"y\"")
-		envString = appendString(envString, "COMPRESSION_ALG=\""+
+		envString = appendString(envString, "export COMPRESSION_ENABLED=\"y\"")
+		envString = appendString(envString, "export COMPRESSION_CHOICE=\""+
 			models.GetIndex(ovpnWizardData.OvpnCompression)+"\" #"+ovpnWizardData.OvpnCompression)
 	}
-	envString = appendString(envString, "CIPHER_CHOICE=\""+
+	envString = appendString(envString, "export CIPHER_CHOICE=\""+
 		models.GetIndex(ovpnWizardData.CipherChoice)+"\" #"+ovpnWizardData.CipherChoice)
-	envString = appendString(envString, "CERT_TYPE=\""+
+	envString = appendString(envString, "export CERT_TYPE=\""+
 		models.GetIndex(ovpnWizardData.CertType)+"\" #"+ovpnWizardData.CertType)
-	envString = appendString(envString, "CERT_CURVE_CHOICE=\""+
+	envString = appendString(envString, "export CERT_CURVE_CHOICE=\""+
 		models.GetIndex(ovpnWizardData.CertCurve)+"\" #"+ovpnWizardData.CertCurve)
-	envString = appendString(envString, "RSA_KEY_SIZE_CHOICE=\""+
+	envString = appendString(envString, "export RSA_KEY_SIZE_CHOICE=\""+
 		models.GetIndex(ovpnWizardData.RSAKeySize)+"\" #"+ovpnWizardData.RSAKeySize)
-	envString = appendString(envString, "CC_CIPHER=\""+
+	envString = appendString(envString, "export CC_CIPHER_CHOICE=\""+
 		models.GetIndex(ovpnWizardData.CCCipherChoice)+"\" #"+ovpnWizardData.CCCipherChoice)
-	envString = appendString(envString, "DH_TYPE=\""+
+	envString = appendString(envString, "export DH_TYPE=\""+
 		models.GetIndex(ovpnWizardData.DHType)+"\" #"+ovpnWizardData.DHType)
-	envString = appendString(envString, "DH_CURVE_CHOICE=\""+
+	envString = appendString(envString, "export DH_CURVE_CHOICE=\""+
 		models.GetIndex(ovpnWizardData.DHCurve)+"\" #"+ovpnWizardData.DHCurve)
-	envString = appendString(envString, "DH_KEY_SIZE_CHOICE=\""+
+	envString = appendString(envString, "export DH_KEY_SIZE_CHOICE=\""+
 		models.GetIndex(ovpnWizardData.DHKeySize)+"\" #"+ovpnWizardData.DHKeySize)
-	envString = appendString(envString, "HMAC_ALG_CHOICE=\""+
+	envString = appendString(envString, "export HMAC_ALG_CHOICE=\""+
 		models.GetIndex(ovpnWizardData.HMACAlgorithm)+"\" #"+ovpnWizardData.HMACAlgorithm)
-	envString = appendString(envString, "TLS_SIG=\""+
+	envString = appendString(envString, "export TLS_SIG=\""+
 		models.GetIndex(ovpnWizardData.TLSsig)+"\" #"+ovpnWizardData.TLSsig)
 
 	if ovpnWizardData.DisableDefRouteForClientsByDefault {
-		envString = appendString(envString, "DISABLE_DEF_ROUTE_FOR_CLIENTS=\"y\"")
+		envString = appendString(envString, "export DISABLE_DEF_ROUTE_FOR_CLIENTS=\"y\"")
 	} else {
-		envString = appendString(envString, "DISABLE_DEF_ROUTE_FOR_CLIENTS=\"n\"")
+		envString = appendString(envString, "export DISABLE_DEF_ROUTE_FOR_CLIENTS=\"n\"")
 	}
 
 	if ovpnWizardData.ClientToClientConfigIsUsed {
-		envString = appendString(envString, "CLIENT_TO_CLIENT=\"y\"")
+		envString = appendString(envString, "export CLIENT_TO_CLIENT=\"y\"")
 	} else {
-		envString = appendString(envString, "CLIENT_TO_CLIENT=\"n\"")
+		envString = appendString(envString, "export CLIENT_TO_CLIENT=\"n\"")
 	}
+
+	envString = appendString(envString, models.GetScriptEnv())
 
 	return envString
 }

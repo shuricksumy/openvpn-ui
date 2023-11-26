@@ -76,4 +76,12 @@ func init() {
 				Router:           `/wizard/step3`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
+
+	web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:WizardController"] =
+		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:WizardController"],
+			web.ControllerComments{
+				Method:           "Setup",
+				Router:           `/wizard/setup`,
+				AllowHTTPMethods: []string{"get"},
+				Params:           nil})
 }

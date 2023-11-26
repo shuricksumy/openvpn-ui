@@ -267,7 +267,7 @@ var defaultOVPNConfig = OvpnServerBaseSetting{
 	CertType:                           certType[0].Type,           //CERT_TYPE
 	CertCurve:                          certType[0].Params[0],      //CERT_CURVE
 	RSAKeySize:                         certType[0].Params[0],      //RSA_KEY_SIZE
-	CCCipherChoice:                     certType[0].CCCipher[0],    //CC_CIPHER
+	CCCipherChoice:                     certType[0].CCCipher[0],    //CC_CIPHER_CHOICE
 	DHType:                             dhType[0].Name,             //DH_TYPE
 	DHCurve:                            dhType[0].Params[0],        //DH_CURVE
 	DHKeySize:                          dhType[0].Params[0],        //DH_KEY_SIZE
@@ -329,14 +329,34 @@ func GetIndex(key string) string {
 
 func GetConstEnv() string {
 
-	const constantEnvVars = `
-DOCKER_COMMAND="2"
-IP_CHOICE="2"
-IPV6_SUPPORT="n"
-PORT_CHOICE="2"
-DNS="13"
-CUSTOMIZE_ENC="y"
-SET_MGMT="management 172.30.0.1 2088"
+	const constantEnvVars = `#!/bin/bash
+export DOCKER_COMMAND="2"
+export IP_CHOICE="2"
+export IPV6_SUPPORT="n"
+export PORT_CHOICE="2"
+export DNS="13"
+export CUSTOMIZE_ENC="y"
+export SET_MGMT="management 127.0.0.1 2080"
 `
 	return constantEnvVars
 }
+
+func GetScriptEnv() string {
+
+	const scriptInstall = `
+if [[ ! -e /etc/openvpn/server.conf ]]; then
+        echo "Waiting for the good weather... ;)"
+        bash /opt/scripts/openvpn-install-v2.sh
+        echo "" > /etc/openvpn/.provisioned
+        echo "    --= SETUP IS DONE ==-"
+fi
+`
+	return scriptInstall
+}
+
+// # Apply FireWall rules
+// if [[ -f /etc/openvpn/set_fw.sh ]]; then
+//      bash /etc/openvpn/set_fw.sh
+// fi
+
+// /usr/sbin/openvpn  --cd /etc/openvpn --config /etc/openvpn/server.conf
