@@ -34,7 +34,7 @@ func GetOpenVPNStatus() string {
 }
 
 func StartOpenVPN() error {
-	cmd := exec.Command("/usr/sbin/openvpn", "--cd /etc/openvpn", "--config /etc/openvpn/server.conf")
+	cmd := exec.Command("/usr/sbin/openvpn", "--cd", "/etc/openvpn", "--config", "/etc/openvpn/server.conf")
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 

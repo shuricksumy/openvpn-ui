@@ -26,6 +26,10 @@ services:
         networks:
             npm_proxy:
                 ipv4_address: $IP_GUI
+        devices:
+            - /dev/net/tun
+        cap_add:
+            - NET_ADMIN
         volumes:
          -  /var/run/docker.sock:/var/run/docker.sock
         #  - ./openvpn/openvpn1:/etc/openvpn
