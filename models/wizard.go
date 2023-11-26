@@ -254,7 +254,7 @@ var defaultOVPNConfig = OvpnServerBaseSetting{
 	ApproveIP:                          false,                      //APPROVE_IP
 	DisableDefRouteForClientsByDefault: true,                       //DISABLE_DEF_ROUTE_FOR_CLIENTS
 	ClientToClientConfigIsUsed:         true,                       //CLIENT_TO_CLIENT
-	OvpnMgmtAddress:                    "openvpn:2080",             //SET_MGMT
+	OvpnMgmtAddress:                    "127.0.0.1:2080",           //SET_MGMT
 	OvpnIPRange:                        "10.8.0.0",                 //IP_RANGE
 	OvpnPort:                           "1194",                     //PORT
 	TunNumber:                          "0",                        //TUN_NUMBER

@@ -2,13 +2,13 @@ package shared
 
 import (
 	"fmt"
-	"os"
 	"os/exec"
+	"strconv"
+	"strings"
 	"sync"
 )
 
 var (
-	OpenVPNProcess   *exec.Cmd
 	OpenVPNProcessID int
 	OpenVPNStatus    string
 	ProcessMutex     sync.Mutex
@@ -18,7 +18,7 @@ func IsOpenVPNRunning() bool {
 	ProcessMutex.Lock()
 	defer ProcessMutex.Unlock()
 
-	return OpenVPNProcess != nil && OpenVPNProcess.ProcessState != nil && !OpenVPNProcess.ProcessState.Exited()
+	return OpenVPNProcessID != 0
 }
 
 func SetOpenVPNStatus(status string) {
@@ -35,66 +35,77 @@ func GetOpenVPNStatus() string {
 
 func StartOpenVPN() error {
 	cmd := exec.Command("/usr/sbin/openvpn", "--daemon", "openvpnserver", "--cd", "/etc/openvpn", "--config", "/etc/openvpn/server.conf")
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-
 	err := cmd.Run()
 	if err != nil {
 		SetOpenVPNStatus(fmt.Sprintf("Failed to start OpenVPN: %s", err))
 		return err
 	}
 
-	// Store the cmd object in the shared state for later use
-	ProcessMutex.Lock()
-	OpenVPNProcess = cmd
-	ProcessMutex.Unlock()
-
-	// Wait for the process to finish
-	err = cmd.Wait()
+	// Get the PID of the newly started OpenVPN process
+	pid, err := GetOpenVPNProcessIDFromPS()
 	if err != nil {
-		SetOpenVPNStatus(fmt.Sprintf("OpenVPN process exited with error: %s", err))
+		SetOpenVPNStatus(fmt.Sprintf("Error getting OpenVPN PID: %s", err))
 		return err
 	}
+
+	ProcessMutex.Lock()
+	OpenVPNProcessID = pid
+	ProcessMutex.Unlock()
 
 	SetOpenVPNStatus("OpenVPN started successfully")
 	return nil
 }
 
-func StopOpenVPN(pid int) error {
-	cmd := exec.Command("kill", fmt.Sprintf("%d", pid))
+func StopOpenVPN() error {
+	if !IsOpenVPNRunning() {
+		SetOpenVPNStatus("OpenVPN is not running")
+		return nil
+	}
+
+	cmd := exec.Command("kill", fmt.Sprintf("%d", OpenVPNProcessID))
 	err := cmd.Run()
 	if err != nil {
 		return fmt.Errorf("Error stopping OpenVPN: %s", err)
 	}
 
 	ProcessMutex.Lock()
-	OpenVPNProcess = nil
+	OpenVPNProcessID = 0
 	ProcessMutex.Unlock()
-
-	ProcessMutex.Lock()
-	defer ProcessMutex.Unlock()
-
-	// Check if the process state is available
-	if OpenVPNProcess != nil && OpenVPNProcess.ProcessState != nil {
-		// Check if the process has already completed
-		if !OpenVPNProcess.ProcessState.Exited() {
-			// Wait for the process to finish
-			err := OpenVPNProcess.Wait()
-			if err != nil {
-				return fmt.Errorf("Error waiting for OpenVPN process to finish: %s", err)
-			}
-		}
-	}
 
 	SetOpenVPNStatus("OpenVPN stopped")
 	return nil
 }
 
-func GetOpenVPNProcessID() int {
-	ProcessMutex.Lock()
-	defer ProcessMutex.Unlock()
-	if OpenVPNProcess != nil && OpenVPNProcess.Process != nil {
-		return OpenVPNProcess.Process.Pid
+func GetOpenVPNProcessIDFromPS() (int, error) {
+	cmd := exec.Command("ps", "-aux")
+	grepCmd := exec.Command("grep", "openvpn /etc/openvpn/server.conf")
+
+	// Connect the output of ps to the input of grep
+	grepCmd.Stdin, _ = cmd.StdoutPipe()
+
+	// Capture the output of the grep command
+	output, err := grepCmd.CombinedOutput()
+	if err != nil {
+		return 0, fmt.Errorf("Error getting OpenVPN PID: %s\n%s", err, output)
 	}
-	return 0
+
+	// Extract the PID from the output
+	pid, err := ExtractPIDFromPSOutput(string(output))
+	if err != nil {
+		return 0, fmt.Errorf("Error extracting OpenVPN PID: %s\n%s", err, output)
+	}
+
+	return pid, nil
+}
+
+func ExtractPIDFromPSOutput(output string) (int, error) {
+	lines := strings.Split(output, "\n")
+	for _, line := range lines {
+		fields := strings.Fields(line)
+		if len(fields) > 1 {
+			pid := fields[1]
+			return strconv.Atoi(pid)
+		}
+	}
+	return 0, fmt.Errorf("PID not found in PS output")
 }
