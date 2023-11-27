@@ -2,6 +2,7 @@
 
 version="1.21.4"
 export GOPATH=$HOME/go
+export PATH="$HOME/go/bin:$PATH"
 
 cd ~
 wget https://go.dev/dl/go${version}.linux-amd64.tar.gz

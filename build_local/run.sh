@@ -1,6 +1,7 @@
 #!/bin/bash
 
 export GOPATH=$HOME/go
+export PATH="$HOME/go/bin:$PATH"
 export SITE_NAME="TCP version"
 
 export OPENVPN_ADMIN_USERNAME=admin # Leave this default as-is and update on first-run

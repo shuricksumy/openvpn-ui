@@ -27,7 +27,13 @@
     </div>
     <!-- /.card-body -->
    </form>
+   <div id="openvpn-status" style="padding: 20px; text-align: center; font-size: 18px;"></div>
 
+   <button onclick="startOpenVPN()">Start OpenVPN</button>
+   <button onclick="stopOpenVPN()">Stop OpenVPN</button>
+   
+   <div id="start-stop-messages" style="padding: 20px; text-align: center; font-size: 16px;"></div>
+   
 </div>
 
 <script>
@@ -47,3 +53,63 @@
     <span class="spinner"></span>
   </div>
 </div>
+
+<script>
+  function updateStatus() {
+      $.ajax({
+          url: "/openvpn/status",
+          type: "GET",
+          success: function(response) {
+              if (response.includes("running")) {
+                  $("#openvpn-status").css("background-color", "green");
+                  $("#openvpn-status").text("OVPN is Running");
+              } else {
+                  $("#openvpn-status").css("background-color", "red");
+                  $("#openvpn-status").text("OVPN is STOPPED");
+              }
+          },
+          error: function() {
+              $("#openvpn-status").css("background-color", "red");
+              $("#openvpn-status").text("Error checking OpenVPN status");
+          }
+      });
+  }
+  
+  function startOpenVPN() {
+      $.ajax({
+          url: "/openvpn/start",
+          type: "GET",
+          success: function(response) {
+              updateStatus();
+              $("#start-stop-messages").css("color", "green");
+              $("#start-stop-messages").text(response);
+          },
+          error: function(err) {
+              $("#start-stop-messages").css("color", "red");
+              $("#start-stop-messages").text("Error starting OpenVPN: " + err.responseText);
+          }
+      });
+  }
+  
+  function stopOpenVPN() {
+      $.ajax({
+          url: "/openvpn/stop",
+          type: "GET",
+          success: function(response) {
+              updateStatus();
+              $("#start-stop-messages").css("color", "green");
+              $("#start-stop-messages").text(response);
+          },
+          error: function(err) {
+              $("#start-stop-messages").css("color", "red");
+              $("#start-stop-messages").text("Error stopping OpenVPN: " + err.responseText);
+          }
+      });
+  }
+  
+  // Update status every minute
+  setInterval(updateStatus, 60000);
+  
+  // Initial update
+  updateStatus();
+  </script>

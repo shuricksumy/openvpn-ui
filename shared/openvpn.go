@@ -60,7 +60,7 @@ func StartOpenVPN() error {
 
 func StopOpenVPN() error {
 	if !IsOpenVPNRunning() {
-		SetOpenVPNStatus("OpenVPN is not running")
+		SetOpenVPNStatus("OpenVPN is stopped")
 		return nil
 	}
 
