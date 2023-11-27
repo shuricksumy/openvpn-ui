@@ -6,6 +6,8 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+
+	"github.com/beego/beego/v2/core/logs"
 )
 
 var (
@@ -77,14 +79,11 @@ func StopOpenVPN() error {
 }
 
 func GetOpenVPNProcessIDFromPS() (int, error) {
-	cmd := exec.Command("ps", "-aux")
-	grepCmd := exec.Command("grep", "openvpnserver")
+	cmd := exec.Command("bash", "-c", "/usr/bin/ps -ef | /usr/bin/grep openvpnserver | /usr/bin/grep -v grep")
+	logs.Error("CMD:", cmd)
 
-	// Connect the output of ps to the input of grep
-	grepCmd.Stdin, _ = cmd.StdoutPipe()
-
-	// Capture the output of the grep command
-	output, err := grepCmd.CombinedOutput()
+	output, err := cmd.CombinedOutput()
+	logs.Error("OUTPUT:", output)
 	if err != nil {
 		return 0, fmt.Errorf("Error getting OpenVPN PID: %s\n%s", err, output)
 	}
