@@ -31,9 +31,9 @@ func Init(configDir string) {
 
 	web.Include(&controllers.SystemController{})
 
-	web.Router("/openvpn/start", &controllers.OpenVPNController{}, "get:Start")
-	web.Router("/openvpn/stop", &controllers.OpenVPNController{}, "get:Stop")
-	web.Router("/openvpn/status", &controllers.OpenVPNController{}, "get:Status")
+	web.Router("/openvpn/start", &controllers.OpenVPNController{}, "get:StartOpenVPN")
+	web.Router("/openvpn/stop", &controllers.OpenVPNController{}, "get:StopOpenVPN")
+	web.Router("/openvpn/status", &controllers.OpenVPNController{}, "get:GetOpenVPNStatus")
 
 	ns := web.NewNamespace("/api/v1",
 		web.NSNamespace("/session",

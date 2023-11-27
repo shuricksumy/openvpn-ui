@@ -78,7 +78,7 @@ func StopOpenVPN() error {
 
 func GetOpenVPNProcessIDFromPS() (int, error) {
 	cmd := exec.Command("ps", "-aux")
-	grepCmd := exec.Command("grep", "openvpn /etc/openvpn/server.conf")
+	grepCmd := exec.Command("grep", "openvpnserver")
 
 	// Connect the output of ps to the input of grep
 	grepCmd.Stdin, _ = cmd.StdoutPipe()
