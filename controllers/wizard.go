@@ -30,6 +30,12 @@ func (c *WizardController) Step1Get() {
 		Title: "Wizard: Step 1",
 	}
 
+	isSetuped := models.IsVPNConfigured()
+	if isSetuped {
+		c.TplName = "wizard/step_no.html"
+		return
+	}
+
 	//get def settings
 	//TODO IF NO SESSION DATA INIT DEFAULT
 	wizardByte, ok := c.GetSession("ovpnWizardData").([]byte)
@@ -40,7 +46,7 @@ func (c *WizardController) Step1Get() {
 	} else {
 		ovpnWizardData = Decode(wizardByte)
 	}
-	lib.Dump(ovpnWizardData)
+	//lib.Dump(ovpnWizardData)
 
 	//get extIP
 	ipEndpoint, _ := lib.GetExtIP()
@@ -85,6 +91,12 @@ func (c *WizardController) Step2Get() {
 	c.TplName = "wizard/step_2.html"
 	c.Data["breadcrumbs"] = &BreadCrumbs{
 		Title: "Wizard: Step 2",
+	}
+
+	isSetuped := models.IsVPNConfigured()
+	if isSetuped {
+		c.TplName = "wizard/step_no.html"
+		return
 	}
 
 	var wizardByte = c.GetSession("ovpnWizardData").([]byte)
@@ -136,6 +148,12 @@ func (c *WizardController) Step3Get() {
 	c.TplName = "wizard/step_3.html"
 	c.Data["breadcrumbs"] = &BreadCrumbs{
 		Title: "Wizard: Step 3",
+	}
+
+	isSetuped := models.IsVPNConfigured()
+	if isSetuped {
+		c.TplName = "wizard/step_no.html"
+		return
 	}
 
 	var wizardByte = c.GetSession("ovpnWizardData").([]byte)

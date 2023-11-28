@@ -19,7 +19,7 @@ func (c *MainController) NestPrepare() {
 		return
 	}
 	c.Data["breadcrumbs"] = &BreadCrumbs{
-		Title: "Status",
+		Title: "",
 	}
 }
 

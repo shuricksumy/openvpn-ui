@@ -1,5 +1,10 @@
 package models
 
+import (
+	"fmt"
+	"os"
+)
+
 type OvpnServerBaseSetting struct {
 	OvpnEndpoint                       string // external ip
 	ApproveIP                          bool   //double check TO DELETE
@@ -345,13 +350,25 @@ func GetScriptEnv() string {
 
 	const scriptInstall = `
 if [[ ! -e /etc/openvpn/server.conf ]]; then
-        echo "Waiting for the good weather... ;)"
         bash /opt/scripts/openvpn-install-v2.sh
         echo "" > /etc/openvpn/.provisioned
         echo "    --= SETUP IS DONE ==-"
 fi
 `
 	return scriptInstall
+}
+
+func IsVPNConfigured() bool {
+	_, err := os.Stat("/etc/openvpn/.provisioned")
+	if err == nil {
+		return true
+	} else if os.IsNotExist(err) {
+		return false
+	} else {
+		// Handle other errors (permission issues, etc.) if needed
+		fmt.Println("Error checking file existence:", err)
+		return false
+	}
 }
 
 // # Apply FireWall rules

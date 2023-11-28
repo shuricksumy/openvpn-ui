@@ -13,30 +13,36 @@
     <h3 class="card-title">Step 3: See the selectued params and setup</h3>
   </div>
 
-  <!-- <form id="form-to-confirm" role="form" action="{{urlfor "WizardController.Step3Post"}}" method="post"> -->
-    
-
-    <div class="form-group" >
-      <textarea type="text" class="form-control my-textarea" name="ClientTemplate" 
-        id="ClientTemplate" spellcheck="false" rows="30">{{ .EnvString }}</textarea>
-    </div>
+  <div class="form-group" >
+    <textarea type="text" class="form-control my-textarea" name="ClientTemplate" 
+      id="ClientTemplate" spellcheck="false" rows="30" readonly>{{ .EnvString }}</textarea>
+  </div>
 
 <!-- Spinner, icons, and response messages -->
-<div class="spinner">Loading...</div>
-<span class="success-icon">✔</span>
-<span class="error-icon">❌</span>
-<div class="success-message"></div>
-<div class="error-message"></div>
+<div id="spinner">
+  <span class="fas fa-3x fa-sync-alt fa-spin"></span>
+  <span style="margin-left: 10px;">OpenVPN server is configuring... 
+    It can take up to 10 min for certifivate generation. Depends on selected settings.</span>
+  </div>
+
+<div>
+  <span class="success-icon" style="margin-left: 10px;">✔</span>
+  <span class="success-message" style="margin-left: 10px;"></span>
+</div>
+<div>
+  <span class="error-icon" style="margin-left: 10px;">❌</span>
+  <span class="error-message" style="margin-left: 10px;"></span>
+</div>
 
 <!-- Progress bar -->
 <div id="progress-container" class="progress">
-  <div id="progress-bar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+  <div id="progress-bar" class="progress-bar progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
 </div>
     
     <div class="card-footer">
       <a href="{{urlfor "WizardController.Step2Get"}}" 
       class="btn btn-sm bg-gradient-lightblue btn80" data-title="BACK" 
-            title="BACK" style="margin-right: 23px;">STEP 3</a>
+            title="BACK" style="margin-right: 23px;">STEP 2</a>
       <button class="btn btn-danger btn-sm bg-gradient-red btn80" 
         style="margin-right: 23px; float: right;" data-title="SETUP" id="setup">SETUP</button>
     </div>
@@ -60,7 +66,7 @@
       $('#progress-container').hide();
   
       // Display spinner
-      $('.spinner').show();
+      $('#spinner').show();
   
       // Initialize progress bar
       $('#progress-bar').width('0%');
@@ -80,7 +86,7 @@
           clearInterval(progressInterval);
   
           // Hide spinner on success
-          $('.spinner').hide();
+          $('#spinner').hide();
   
           // Show success icon and message
           $('.success-icon').show();
@@ -91,7 +97,7 @@
           clearInterval(progressInterval);
   
           // Hide spinner on error
-          $('.spinner').hide();
+          $('#spinner').hide();
   
           // Show error icon and message with response text
           $('.error-icon').show();
@@ -130,11 +136,13 @@
   });
   </script>
   
-  
-  
-
   <style>
-    .spinner {
+    .fa-spin {
+      font-size: x-large;
+      margin-left: 10px;
+    }
+
+    #spinner {
       display: none;
     }
 

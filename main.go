@@ -9,15 +9,19 @@ import (
 	"github.com/shuricksumy/openvpn-ui/lib"
 	"github.com/shuricksumy/openvpn-ui/models"
 	"github.com/shuricksumy/openvpn-ui/routers"
-	"github.com/shuricksumy/openvpn-ui/shared"
 	"github.com/shuricksumy/openvpn-ui/state"
 )
 
 func main() {
 	// Start OpenVPN
-	err := shared.StartOpenVPN()
+	err := lib.StartOpenVPN()
 	if err != nil {
 		fmt.Println("Error starting OpenVPN:", err)
+	}
+
+	err_fw := lib.EnableFWRules()
+	if err_fw != nil {
+		fmt.Println("Error apply FireWall rules:", err)
 	}
 
 	configDir := flag.String("config", "conf", "Path to config dir")

@@ -113,7 +113,7 @@ func init() {
 	web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:SystemController"] =
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:SystemController"],
 			web.ControllerComments{
-				Method:           "Restart",
+				Method:           "RestartLocalService",
 				Router:           `/ov/system/restart`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})

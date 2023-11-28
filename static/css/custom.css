@@ -341,3 +341,37 @@ label.switch-label{
 .tool-tip [disabled] {
   pointer-events: none;
 }
+
+
+#openvpn-status {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 10px;
+  vertical-align: middle;
+  border: 2px solid #454d55;
+  transition: background-color 0.5s, box-shadow 0.3s; /* Smooth transitions */
+  box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.5); /* Small shadow */
+  cursor: pointer;
+}
+
+#openvpn-status.running {
+  background-color: rgb(8, 199, 8);
+  animation: none; /* Disable pulsing animation when running */
+}
+
+#openvpn-status:hover {
+        opacity: 0.8; /* Decrease opacity on hover */
+    }
+
+#openvpn-status.stopped {
+  background-color: red;
+  animation: pulse 1.5s infinite; /* Pulsing animation when stopped */
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.9); opacity: 0.5; }
+  50% { transform: scale(1.5); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.5; }
+}

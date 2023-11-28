@@ -252,3 +252,58 @@ jQuery(function(){
 $(document).ready(function() {
     $('.select2').select2();
 });
+
+  function updateStatus() {
+      $.ajax({
+          url: "/openvpn/status",
+          type: "GET",
+          success: function(response) {
+              if (response.includes("running")) {
+                  $("#openvpn-status").removeClass("stopped").addClass("running").attr("title", "OpenVPN is running");
+              } else {
+                  $("#openvpn-status").removeClass("running").addClass("stopped").attr("title", "OpenVPN is stopped");
+              }
+          },
+          error: function() {
+              $("#openvpn-status").removeClass("running").addClass("stopped").attr("title", "OpenVPN is stopped");
+          }
+      });
+  }
+  
+  function startOpenVPN() {
+      $.ajax({
+          url: "/openvpn/start",
+          type: "GET",
+          success: function(response) {
+              updateStatus();
+              $("#start-stop-messages").css("color", "green");
+              $("#start-stop-messages").text(response);
+          },
+          error: function(err) {
+              $("#start-stop-messages").css("color", "red");
+              $("#start-stop-messages").text("Error starting OpenVPN: " + err.responseText);
+          }
+      });
+  }
+  
+  function stopOpenVPN() {
+      $.ajax({
+          url: "/openvpn/stop",
+          type: "GET",
+          success: function(response) {
+              updateStatus();
+              $("#start-stop-messages").css("color", "green");
+              $("#start-stop-messages").text(response);
+          },
+          error: function(err) {
+              $("#start-stop-messages").css("color", "red");
+              $("#start-stop-messages").text("Error stopping OpenVPN: " + err.responseText);
+          }
+      });
+  }
+  
+  // Update status every minute
+  setInterval(updateStatus, 60000);
+  
+  // Initial update
+  updateStatus();

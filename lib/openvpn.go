@@ -1,4 +1,4 @@
-package shared
+package lib
 
 import (
 	"fmt"
@@ -40,6 +40,7 @@ func StartOpenVPN() error {
 	err := cmd.Run()
 	if err != nil {
 		SetOpenVPNStatus(fmt.Sprintf("Failed to start OpenVPN: %s", err))
+		logs.Error(err)
 		return err
 	}
 
@@ -47,6 +48,7 @@ func StartOpenVPN() error {
 	pid, err := GetOpenVPNProcessIDFromPS()
 	if err != nil {
 		SetOpenVPNStatus(fmt.Sprintf("Error getting OpenVPN PID: %s", err))
+		logs.Error(err)
 		return err
 	}
 
@@ -54,7 +56,7 @@ func StartOpenVPN() error {
 	OpenVPNProcessID = pid
 	ProcessMutex.Unlock()
 
-	SetOpenVPNStatus("OpenVPN started successfully")
+	SetOpenVPNStatus("OpenVPN is running now")
 	return nil
 }
 
@@ -68,6 +70,7 @@ func StopOpenVPN() error {
 	err := cmd.Run()
 	if err != nil {
 		return fmt.Errorf("Error stopping OpenVPN: %s", err)
+		logs.Error(err)
 	}
 
 	ProcessMutex.Lock()
@@ -80,18 +83,22 @@ func StopOpenVPN() error {
 
 func GetOpenVPNProcessIDFromPS() (int, error) {
 	cmd := exec.Command("bash", "-c", "/usr/bin/ps -ef | /usr/bin/grep openvpnserver | /usr/bin/grep -v grep")
-	logs.Error("CMD:", cmd)
+	// logs.Error("CMD:", cmd)
 
 	output, err := cmd.CombinedOutput()
-	logs.Error("OUTPUT:", output)
+	// logs.Error("OUTPUT:", output)
 	if err != nil {
 		return 0, fmt.Errorf("Error getting OpenVPN PID: %s\n%s", err, output)
+		logs.Error(err)
+		logs.Error(output)
 	}
 
 	// Extract the PID from the output
 	pid, err := ExtractPIDFromPSOutput(string(output))
 	if err != nil {
 		return 0, fmt.Errorf("Error extracting OpenVPN PID: %s\n%s", err, output)
+		logs.Error(err)
+		logs.Error(output)
 	}
 
 	return pid, nil
@@ -106,5 +113,32 @@ func ExtractPIDFromPSOutput(output string) (int, error) {
 			return strconv.Atoi(pid)
 		}
 	}
+	logs.Error("PID not found in PS output")
 	return 0, fmt.Errorf("PID not found in PS output")
+}
+
+func EnableFWRules() error {
+	//bash /etc/openvpn/set_fw.sh
+	cmd := exec.Command("/bin/bash", "-c", "/bin/bash /etc/openvpn/set_fw.sh")
+	err := cmd.Run()
+	if err != nil {
+		logs.Error("SET FW RULES:", err)
+		return err
+	}
+
+	logs.Error("SET FW RULES:", cmd)
+
+	return nil
+}
+
+func DisableFWRules() error {
+	//bash /etc/openvpn/rm_fw.sh
+	cmd := exec.Command("/bin/bash", "-c", "/bin/bash /etc/openvpn/rm_fw.sh")
+	err := cmd.Run()
+	if err != nil {
+		logs.Error(err)
+		return err
+	}
+
+	return nil
 }
