@@ -6,8 +6,9 @@ import (
 	"strings"
 
 	"github.com/beego/beego/v2/core/logs"
-	"github.com/shuricksumy/openvpn-ui/models"
 	"github.com/beego/beego/v2/server/web"
+	"github.com/shuricksumy/openvpn-ui/lib"
+	"github.com/shuricksumy/openvpn-ui/models"
 )
 
 type LogsController struct {
@@ -21,7 +22,7 @@ func (c *LogsController) NestPrepare() {
 	}
 }
 
-func (c *LogsController) Get() {
+func ShowLogs(c *LogsController) {
 	c.TplName = "logs.html"
 	c.Data["breadcrumbs"] = &BreadCrumbs{
 		Title: "Logs",
@@ -59,6 +60,11 @@ func (c *LogsController) Get() {
 		start = 0
 	}
 	c.Data["logs"] = reverse(logs[start:])
+
+}
+
+func (c *LogsController) Get() {
+	ShowLogs(c)
 }
 
 func reverse(lines []string) []string {
@@ -67,4 +73,26 @@ func reverse(lines []string) []string {
 		lines[i], lines[j] = lines[j], lines[i]
 	}
 	return lines
+}
+
+func (c *LogsController) RestartLocalService() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+
+	flash := web.NewFlash()
+	c.TplName = "logs.html"
+
+	msg, err_r := lib.RestartOpenVpnUI()
+	if err_r != nil {
+		logs.Error(msg)
+		flash.Error(msg)
+		flash.Store(&c.Controller)
+	} else {
+		flash.Success(msg)
+		flash.Store(&c.Controller)
+	}
+
+	ShowLogs(c)
 }

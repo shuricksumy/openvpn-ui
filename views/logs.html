@@ -5,6 +5,9 @@
 {{end}}
 
 {{define "body"}}
+
+{{template "common/alert.html" .}}
+
 <div class="card card-lightblue">
   <div class="card-header with-border">
     <h3 class="card-title">Last 500 lines of OpenVPN log</h3>

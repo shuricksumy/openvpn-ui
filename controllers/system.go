@@ -1,9 +1,7 @@
 package controllers
 
 import (
-	"fmt"
 	"os"
-	"time"
 
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
@@ -60,49 +58,21 @@ func (c *SystemController) Restart() {
 }
 
 func (c *SystemController) RestartLocalService() {
-	flash := web.NewFlash()
-
 	if !c.IsLogin {
 		c.Ctx.Redirect(302, c.LoginPath())
 		return
 	}
-	// Stop the process
-	err := lib.StopOpenVPN()
-	if err != nil {
-		logs.Error(err)
-		flash.Error(fmt.Sprintf("Error stopping OpenVPN: %s", err))
+
+	flash := web.NewFlash()
+	msg, err_r := lib.RestartOpenVpnUI()
+	if err_r != nil {
+		logs.Error(msg)
+		flash.Error(msg)
+		flash.Store(&c.Controller)
+	} else {
+		flash.Success(msg)
 		flash.Store(&c.Controller)
 	}
 
-	err_fw := lib.DisableFWRules()
-	if err_fw != nil {
-		// c.Ctx.WriteString(fmt.Sprintf("Error deleting FireWall rules: %s", err_fw))
-		logs.Error(err_fw)
-		flash.Error(fmt.Sprintf("Error deleting FireWall rules: %s", err_fw))
-		flash.Store(&c.Controller)
-	}
-
-	// Calling Sleep method
-	time.Sleep(3 * time.Second)
-
-	// Start the process again
-	err = lib.StartOpenVPN()
-	if err != nil {
-		logs.Error(err)
-		flash.Error(fmt.Sprintf("Error starting OpenVPN: %s", err))
-		flash.Store(&c.Controller)
-	}
-
-	err_fw = lib.EnableFWRules()
-	if err_fw != nil {
-		// c.Ctx.WriteString(fmt.Sprintf("Error apply FireWall rules: %s", err_fw))
-		logs.Error(err_fw)
-		flash.Error(fmt.Sprintf("Error apply FireWall rules: %s", err_fw))
-		flash.Store(&c.Controller)
-	}
-
-	// c.Redirect(c.URLFor("SystemController.Get"), 302)
-	flash.Success("OpenVPN server has been restarted")
-	flash.Store(&c.Controller)
 	c.TplName = "system.html"
 }

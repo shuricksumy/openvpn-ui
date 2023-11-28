@@ -28,7 +28,7 @@ func Init(configDir string) {
 	// web.Include(&controllers.RoutesController{ConfigDir: configDir})
 
 	web.Include(&controllers.WizardController{ConfigDir: configDir})
-
+	web.Include(&controllers.LogsController{})
 	web.Include(&controllers.SystemController{})
 
 	web.Router("/openvpn/start", &controllers.OpenVPNController{}, "get:StartOpenVPN")

@@ -1,11 +1,13 @@
 package lib
 
 import (
+	"errors"
 	"fmt"
 	"os/exec"
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/beego/beego/v2/core/logs"
 )
@@ -139,4 +141,46 @@ func DisableFWRules() error {
 	}
 
 	return nil
+}
+
+func RestartOpenVpnUI() (string, error) {
+
+	errMsg := ""
+
+	// Stop the process
+	err := StopOpenVPN()
+	if err != nil {
+		logs.Error(err)
+		errMsg = errMsg + "\n" + fmt.Sprintf("Error stopping OpenVPN: %s", err)
+	}
+
+	err_fw := DisableFWRules()
+	if err_fw != nil {
+		// c.Ctx.WriteString(fmt.Sprintf("Error deleting FireWall rules: %s", err_fw))
+		logs.Error(err_fw)
+		errMsg = errMsg + "\n" + fmt.Sprintf("Error deleting FireWall rules: %s", err_fw)
+	}
+
+	// Calling Sleep method
+	time.Sleep(3 * time.Second)
+
+	// Start the process again
+	err = StartOpenVPN()
+	if err != nil {
+		logs.Error(err)
+		errMsg = errMsg + "\n" + fmt.Sprintf("Error starting OpenVPN: %s", err)
+	}
+
+	err_fw = EnableFWRules()
+	if err_fw != nil {
+		// c.Ctx.WriteString(fmt.Sprintf("Error apply FireWall rules: %s", err_fw))
+		logs.Error(err_fw)
+		errMsg = errMsg + "\n" + fmt.Sprintf("Error apply FireWall rules: %s", err_fw)
+	}
+
+	if errMsg != "" {
+		return errMsg, errors.New("Failed")
+	}
+
+	return "OpenVPN server has been restarted", nil
 }
