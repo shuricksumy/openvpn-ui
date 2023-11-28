@@ -5,6 +5,7 @@ import (
 
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/shuricksumy/openvpn-ui/lib"
+	"github.com/shuricksumy/openvpn-ui/models"
 	mi "github.com/shuricksumy/openvpn-ui/pkg/openvpn-server-config/server/mi"
 	"github.com/shuricksumy/openvpn-ui/state"
 )
@@ -60,6 +61,8 @@ func (c *MainController) Get() {
 		c.Data["ovstats"] = loadStats
 	}
 	//lib.Dump(loadStats)
+
+	c.Data["IsVPNSetup"] = models.IsVPNConfigured()
 
 	c.TplName = "index.html"
 }

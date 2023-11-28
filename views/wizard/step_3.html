@@ -10,7 +10,7 @@
 {{define "body"}}
 <div class="card card-lightblue">
   <div class="card-header with-border">
-    <h3 class="card-title">Step 3: See the selectued params and setup</h3>
+    <h3 class="card-title">Step 3: See the selected params and setup</h3>
   </div>
 
   <div class="form-group" >
@@ -22,24 +22,31 @@
 <div id="spinner">
   <span class="fas fa-3x fa-sync-alt fa-spin"></span>
   <span style="margin-left: 10px;">OpenVPN server is configuring... 
-    It can take up to 10 min for certifivate generation. Depends on selected settings.</span>
+    It can take up to 10 min for certificate generation. Depends on selected settings.</span>
   </div>
 
-<div>
-  <span class="success-icon" style="margin-left: 10px;">✔</span>
-  <span class="success-message" style="margin-left: 10px;"></span>
+<div class="success-div">
+  <div class="card-footer">
+    <a href="{{urlfor "SystemController.RestartLocalService"}}" class="btn btn-sm btn-danger bg-gradient-red btn100" 
+    data-title="Restart OpenVPN container?" title="Restart OpenVPN container">Restart</a> &nbsp; &nbsp; Restart can take up to the 7 seconds.
+    <span class="success-icon" style="margin-left: 10px;">✔</span>
+    <span class="success-message" style="margin-left: 10px;">1231</span>
+  </div>
 </div>
-<div>
-  <span class="error-icon" style="margin-left: 10px;">❌</span>
-  <span class="error-message" style="margin-left: 10px;"></span>
-</div>
+
+<div class="error-div">
+  <div class="card-footer clearfix">
+    <span class="error-icon" style="margin-left: 10px;">❌</span>
+    <span class="error-message" style="margin-left: 10px;"></span>
+  </div>
+</div>  
 
 <!-- Progress bar -->
 <div id="progress-container" class="progress">
   <div id="progress-bar" class="progress-bar progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
 </div>
     
-    <div class="card-footer">
+    <div id="buttons" class="card-footer clearfix">
       <a href="{{urlfor "WizardController.Step2Get"}}" 
       class="btn btn-sm bg-gradient-lightblue btn80" data-title="BACK" 
             title="BACK" style="margin-right: 23px;">STEP 2</a>
@@ -62,7 +69,7 @@
       $('#overlay').show();
   
       // Hide icons, messages, and progress bar
-      $('.success-icon, .error-icon, .success-message, .error-message').hide();
+      $('.success-div, .error-div, .success-message, .error-message').hide();
       $('#progress-container').hide();
   
       // Display spinner
@@ -89,8 +96,9 @@
           $('#spinner').hide();
   
           // Show success icon and message
-          $('.success-icon').show();
-          $('.success-message').text('Request successful').show();
+          $('.success-div').show();
+          $('.success-message').text('Setup successful').show();
+          $('#buttons').hide();
         },
         error: function(jqXHR, textStatus, errorThrown) {
           // Clear the progress interval
@@ -100,7 +108,7 @@
           $('#spinner').hide();
   
           // Show error icon and message with response text
-          $('.error-icon').show();
+          $('.error-div').show();
           $('.error-message').text('Error: ' + textStatus + '. Response: ' + jqXHR.responseText).show();
         },
         complete: function() {
@@ -146,9 +154,8 @@
       display: none;
     }
 
-    .success-icon, .error-icon {
+    .success-div, .error-div {
       display: none;
-      margin-left: 5px;
     }
 
     .error-message {

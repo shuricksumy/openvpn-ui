@@ -7,6 +7,18 @@
 
 {{define "body"}}
 
+{{ if not .IsVPNSetup }}
+<div class="row">
+  <div class="col-md-12 col-sm-18 col-xs-36">
+    <div class="info-box" style="min-height: 50px;">
+    <a href="{{urlfor "WizardController.Step1Get"}}"  
+      class="col-md-12 btn btn-md btn-group-xs bg-gradient-red">
+        OpenVPN needs to be setup. Click to run wizard !</a>
+      </div>
+  </div>
+</div>
+{{end}}
+
 <div class="row">
   <div class="col-md-3 col-sm-6 col-xs-12">
     <div class="info-box" style="min-height: 100px;">
@@ -203,7 +215,7 @@
         </div>
         <!-- /.table-responsive -->
       {{else}}
-        <div class="col-md-12 btn btn-xs btn-group-xs btn-danger bg-gradient-red">Fix your configuration</div>
+        <a href="{{urlfor "SystemController.Get"}}" class="col-md-12 btn btn-md btn-group-xs bg-gradient-red">Fix your configuration or restart OpenVPN</a>
       {{end}}
       </div>
       <div class="card-footer clearfix">

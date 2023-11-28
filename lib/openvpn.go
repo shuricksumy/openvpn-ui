@@ -69,8 +69,8 @@ func StopOpenVPN() error {
 	cmd := exec.Command("kill", fmt.Sprintf("%d", OpenVPNProcessID))
 	err := cmd.Run()
 	if err != nil {
-		return fmt.Errorf("Error stopping OpenVPN: %s", err)
 		logs.Error(err)
+		return fmt.Errorf("Error stopping OpenVPN: %s", err)
 	}
 
 	ProcessMutex.Lock()
@@ -88,17 +88,17 @@ func GetOpenVPNProcessIDFromPS() (int, error) {
 	output, err := cmd.CombinedOutput()
 	// logs.Error("OUTPUT:", output)
 	if err != nil {
-		return 0, fmt.Errorf("Error getting OpenVPN PID: %s\n%s", err, output)
 		logs.Error(err)
 		logs.Error(output)
+		return 0, fmt.Errorf("Error getting OpenVPN PID: %s\n%s", err, output)
 	}
 
 	// Extract the PID from the output
 	pid, err := ExtractPIDFromPSOutput(string(output))
 	if err != nil {
-		return 0, fmt.Errorf("Error extracting OpenVPN PID: %s\n%s", err, output)
 		logs.Error(err)
 		logs.Error(output)
+		return 0, fmt.Errorf("Error extracting OpenVPN PID: %s\n%s", err, output)
 	}
 
 	return pid, nil
@@ -123,10 +123,8 @@ func EnableFWRules() error {
 	err := cmd.Run()
 	if err != nil {
 		logs.Error("SET FW RULES:", err)
-		return err
+		return fmt.Errorf("SET FW RULES: %s", err)
 	}
-
-	logs.Error("SET FW RULES:", cmd)
 
 	return nil
 }
@@ -137,7 +135,7 @@ func DisableFWRules() error {
 	err := cmd.Run()
 	if err != nil {
 		logs.Error(err)
-		return err
+		return fmt.Errorf("DEL FW RULES: %s", err)
 	}
 
 	return nil

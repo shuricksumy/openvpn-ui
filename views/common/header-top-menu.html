@@ -12,10 +12,6 @@
 
     <ul class="dropdown-menu" role="menu">
       <li class="nav-item">
-        <a href="{{urlfor "WizardController.Step1Get"}}" class="dropdown-item {{if compare .RouterPattern "/wizard/step1"}}active{{end}}">Setup Wizard</a>
-      </li>
-
-      <li class="nav-item">
         <a href="{{urlfor "SettingsController.Get"}}" class="dropdown-item {{if compare .RouterPattern "/settings"}}active{{end}}">App Settings</a>
       </li>
 

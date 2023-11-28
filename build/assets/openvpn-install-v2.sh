@@ -1103,13 +1103,16 @@ function setFWRules() {
 
 	# Script to add rules
 	echo "#!/bin/bash
+if [[ -z \$NIC ]]; then
+	NIC=\$(ip -4 route ls | grep default | grep -Po '(?<=dev )(\S+)' | head -1)
+fi
 
-if [[ ! \$(iptables -t nat -C POSTROUTING -s $IP_RANGE/24 -o $NIC -j MASQUERADE) ]]; then
-  iptables -t nat -I POSTROUTING 1 -s $IP_RANGE/24 -o $NIC -j MASQUERADE
+if [[ ! \$(iptables -t nat -C POSTROUTING -s $IP_RANGE/24 -o \$NIC -j MASQUERADE) ]]; then
+  iptables -t nat -I POSTROUTING 1 -s $IP_RANGE/24 -o \$NIC -j MASQUERADE
   iptables -I INPUT 1 -i tun$TUN_NUMBER -j ACCEPT
-  iptables -I FORWARD 1 -i $NIC -o tun$TUN_NUMBER -j ACCEPT
-  iptables -I FORWARD 1 -i tun$TUN_NUMBER -o $NIC -j ACCEPT
-  iptables -I INPUT 1 -i $NIC -p $PROTOCOL --dport $PORT -j ACCEPT
+  iptables -I FORWARD 1 -i \$NIC -o tun$TUN_NUMBER -j ACCEPT
+  iptables -I FORWARD 1 -i tun$TUN_NUMBER -o \$NIC -j ACCEPT
+  iptables -I INPUT 1 -i \$NIC -p $PROTOCOL --dport $PORT -j ACCEPT
 else
   echo \"Rules ip4 are already exist\"
 fi" >${SET_FW_FILE_PATH}
@@ -1128,13 +1131,16 @@ fi" >>${SET_FW_FILE_PATH}
 
 	# Script to remove rules
 	echo "#!/bin/bash
+if [[ -z \$NIC ]]; then
+	NIC=\$(ip -4 route ls | grep default | grep -Po '(?<=dev )(\S+)' | head -1)
+fi
 
-if [[ \$(iptables -t nat -C POSTROUTING -s $IP_RANGE/24 -o $NIC -j MASQUERADE) ]]; then
-  iptables -t nat -D POSTROUTING -s $IP_RANGE/24 -o $NIC -j MASQUERADE
+if [[ \$(iptables -t nat -C POSTROUTING -s $IP_RANGE/24 -o \$NIC -j MASQUERADE) ]]; then
+  iptables -t nat -D POSTROUTING -s $IP_RANGE/24 -o \$NIC -j MASQUERADE
   iptables -D INPUT -i tun$TUN_NUMBER -j ACCEPT
-  iptables -D FORWARD -i $NIC -o tun$TUN_NUMBER -j ACCEPT
-  iptables -D FORWARD -i tun$TUN_NUMBER -o $NIC -j ACCEPT
-  iptables -D INPUT -i $NIC -p $PROTOCOL --dport $PORT -j ACCEPT
+  iptables -D FORWARD -i \$NIC -o tun$TUN_NUMBER -j ACCEPT
+  iptables -D FORWARD -i tun$TUN_NUMBER -o \$NIC -j ACCEPT
+  iptables -D INPUT -i \$NIC -p $PROTOCOL --dport $PORT -j ACCEPT
 else
   echo \"Rules ip4 are NOT exist to delete\"
 fi" >${RM_FW_FILE_PATH}
