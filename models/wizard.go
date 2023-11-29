@@ -370,10 +370,3 @@ func IsVPNConfigured() bool {
 		return false
 	}
 }
-
-// # Apply FireWall rules
-// if [[ -f /etc/openvpn/set_fw.sh ]]; then
-//      bash /etc/openvpn/set_fw.sh
-// fi
-
-// /usr/sbin/openvpn  --cd /etc/openvpn --config /etc/openvpn/server.conf

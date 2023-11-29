@@ -41,8 +41,6 @@ func main() {
 		panic(err)
 	}
 
-	models.CreateDefaultOVConfig(*configDir, defaultSettings.OVConfigPath, defaultSettings.MIAddress, defaultSettings.MINetwork)
-
 	state.GlobalCfg = *defaultSettings
 
 	routers.Init(*configDir)

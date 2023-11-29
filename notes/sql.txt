@@ -1,0 +1,188 @@
+package controllers
+
+import (
+    "your_project_name/models"
+    "github.com/astaxie/beego"
+    "github.com/astaxie/beego/orm"
+)
+
+type YourController struct {
+    beego.Controller
+}
+
+func (c *YourController) GetRouteDetailsByID() {
+    routeDetailsID, err := c.GetInt(":id")
+    if err != nil {
+        c.Ctx.WriteString("Invalid RouteDetails ID")
+        return
+    }
+
+    routeDetails, err := models.GetRouteDetailsByID(routeDetailsID)
+    if err == nil {
+        c.Data["json"] = routeDetails
+    } else {
+        c.Data["json"] = map[string]string{"error": "RouteDetails not found"}
+    }
+
+    c.ServeJSON()
+}
+
+func (c *YourController) UpdateRouteDetails() {
+    routeDetailsID, err := c.GetInt(":id")
+    if err != nil {
+        c.Ctx.WriteString("Invalid RouteDetails ID")
+        return
+    }
+
+    updatedDetails := &models.RouteDetails{
+        Name:        "UpdatedName",
+        RouterName:  "UpdatedRouterName",
+        RouteIP:     "UpdatedRouteIP",
+        RouteMask:   "UpdatedRouteMask",
+        Description: "UpdatedDescription",
+    }
+
+    if err := models.UpdateRouteDetails(routeDetailsID, updatedDetails); err == nil {
+        c.Ctx.WriteString("RouteDetails updated successfully")
+    } else {
+        c.Ctx.WriteString("Failed to update RouteDetails")
+    }
+}
+
+func (c *YourController) GetClientsForRoute() {
+    routeDetailsID, err := c.GetInt(":id")
+    if err != nil {
+        c.Ctx.WriteString("Invalid RouteDetails ID")
+        return
+    }
+
+    clients, err := models.GetClientsForRoute(routeDetailsID)
+    if err == nil {
+        c.Data["json"] = clients
+    } else {
+        c.Data["json"] = map[string]string{"error": "RouteDetails not found"}
+    }
+
+    c.ServeJSON()
+}
+
+package controllers
+
+import (
+    "your_project_name/models"
+    "github.com/astaxie/beego"
+)
+
+type YourController struct {
+    beego.Controller
+}
+
+func (c *YourController) AddNewClient() {
+    clientName := "NewClient"
+    staticIP := "192.168.1.10"
+    isRouteDefault := true
+    isRouter := false
+    description := "New client description"
+    md5Sum := "xyz123"
+
+    // Specify the IDs of the routes to associate with the client
+    routeIDs := []int{1, 2, 3}
+
+    if err := models.AddNewClient(clientName, staticIP, isRouteDefault, isRouter, description, md5Sum, routeIDs); err == nil {
+        c.Ctx.WriteString("New client added successfully")
+    } else {
+        c.Ctx.WriteString("Failed to add new client")
+    }
+}
+
+
+
+
+package controllers
+
+import (
+    "your_project_name/models"
+    "github.com/astaxie/beego"
+)
+
+type YourController struct {
+    beego.Controller
+}
+
+func (c *YourController) AddNewRouteDetails() {
+    name := "NewRoute"
+    routerName := "NewRouter"
+    routeIP := "192.168.2.1"
+    routeMask := "255.255.255.0"
+    description := "New route description"
+
+    if err := models.AddNewRouteDetails(name, routerName, routeIP, routeMask, description); err == nil {
+        c.Ctx.WriteString("New route added successfully")
+    } else {
+        c.Ctx.WriteString("Failed to add new route")
+    }
+}
+
+func (c *YourController) UpdateRouteDetailsByID() {
+    routeID, err := c.GetInt(":id")
+    if err != nil {
+        c.Ctx.WriteString("Invalid RouteDetails ID")
+        return
+    }
+
+    updatedDetails := &models.RouteDetails{
+        Name:        "UpdatedRouteName",
+        RouterName:  "UpdatedRouterName",
+        RouteIP:     "UpdatedRouteIP",
+        RouteMask:   "UpdatedRouteMask",
+        Description: "UpdatedRouteDescription",
+    }
+
+    if err := models.UpdateRouteDetailsByID(routeID, updatedDetails); err == nil {
+        c.Ctx.WriteString("RouteDetails updated successfully")
+    } else {
+        c.Ctx.WriteString("Failed to update RouteDetails")
+    }
+}
+
+func (c *YourController) GetClientsForRouteID() {
+    routeID, err := c.GetInt(":id")
+    if err != nil {
+        c.Ctx.WriteString("Invalid RouteDetails ID")
+        return
+    }
+
+    clientNames, err := models.GetClientsForRouteID(routeID)
+    if err == nil {
+        c.Data["json"] = clientNames
+    } else {
+        c.Data["json"] = map[string]string{"error": "Failed to get clients for route"}
+    }
+
+    c.ServeJSON()
+}
+
+
+package controllers
+
+import (
+    "your_project_name/models"
+    "github.com/astaxie/beego"
+)
+
+type YourController struct {
+    beego.Controller
+}
+
+func (c *YourController) GetRouterClients() {
+    clients, err := models.GetRouterClients()
+    if err == nil {
+        c.Data["json"] = clients
+    } else {
+        c.Data["json"] = map[string]string{"error": "Failed to get router clients"}
+    }
+
+    c.ServeJSON()
+}
+
+
