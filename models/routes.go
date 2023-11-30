@@ -2,18 +2,20 @@ package models
 
 import (
 	//Sqlite driver
+	"strconv"
+
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/validation"
 	_ "github.com/mattn/go-sqlite3"
 )
 
 type RouteDetails struct {
-	Id          int    `orm:"auto;pk"`
-	Name        string `orm:"unique"`
-	RouterName  string `valid:"Required"`
-	RouteIP     string `orm:"unique"`
-	RouteMask   string
-	Description string
+	Id          int              `orm:"auto;pk"`
+	Name        string           `orm:"unique"`
+	RouterName  string           `valid:"Required" form:"router_name"`
+	RouteIP     string           `orm:"unique" form:"route_ip"`
+	RouteMask   string           `form:"route_mask"`
+	Description string           `form:"description"`
 	Client      []*ClientDetails `orm:"reverse(many)"`
 }
 
@@ -107,4 +109,22 @@ func RouteExistsByIP(routeIP string) bool {
 	o := orm.NewOrm()
 
 	return o.QueryTable(new(RouteDetails)).Filter("RouteIP", routeIP).Exist()
+}
+
+func GetAllRoutesDetails() ([]*RouteDetails, error) {
+	o := orm.NewOrm()
+
+	var routers []*RouteDetails
+	if _, err := o.QueryTable(new(RouteDetails)).All(&routers); err == nil {
+		return routers, nil
+	}
+
+	return nil, nil
+}
+
+// Custom function defined in the controller
+func RouteIsUsedBy(inputId string) []string {
+	id, _ := strconv.Atoi(inputId)
+	clients, _ := GetClientsForRouteID(id)
+	return clients
 }

@@ -46,5 +46,11 @@ func main() {
 	routers.Init(*configDir)
 
 	lib.AddFuncMaps()
+
+	//Add custom functions to web templates
+	web.AddFuncMap("RouteIsUsedBy", models.RouteIsUsedBy)
+	web.AddFuncMap("GetConnectedRoutes", models.GetConnectedRoutes)
+	web.AddFuncMap("GetDisConnectedRoutes", models.GetDisConnectedRoutes)
+
 	web.Run()
 }

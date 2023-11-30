@@ -1,13 +1,23 @@
 package routers
 
+import "github.com/beego/beego/v2/server/web"
+
 func init() {
-	// web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"] =
-	// 	append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"],
-	// 		web.ControllerComments{
-	// 			Method:           "Get",
-	// 			Router:           `/clients`,
-	// 			AllowHTTPMethods: []string{"get"},
-	// 			Params:           nil})
+	web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"] =
+		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"],
+			web.ControllerComments{
+				Method:           "Get",
+				Router:           `/clients`,
+				AllowHTTPMethods: []string{"get"},
+				Params:           nil})
+
+	web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"] =
+		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"],
+			web.ControllerComments{
+				Method:           "NewClient",
+				Router:           `/clients/newclient`,
+				AllowHTTPMethods: []string{"post"},
+				Params:           nil})
 
 	// web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"] =
 	// 	append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"],

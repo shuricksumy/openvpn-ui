@@ -36,24 +36,17 @@
     <!-- form start -->
 
     <div id="newCert" class="collapse">
-    <form id="form-to-confirm" role="form" action="{{urlfor "RoutesController.Post"}}" method="post">
+    <form id="form-to-confirm" role="form" action="{{urlfor "RoutesController.NewRoute"}}" method="post">
       <div class="card-body">
 
           <div class="form-row">
 
-            <div class="form-group col-md-4" hidden>
-              <label for="route_id">Route ID*</label>
-              <input type="text" class="form-control" placeholder="Set route name" id="route_id" 
-                name="route_id" onfocusout="this.value = this.value.trim()">
-              <span class="help-block font75">The unique ID</span>
-            </div>
-            
               <div class="form-group col-md-4">
                 <label for="router_name">Router Name*</label>
                 <select class="custom-select" name="router_name" id="router_name">
                     <option disabled selected value> -- select router -- </option>
-                    {{range  $val := .routers}}
-                        <option value="{{ $val }}">{{ $val }}</option>
+                    {{range  $val := .Routers}}
+                        <option value="{{ $val.ClientName }}">{{ $val.ClientName }}</option>
                     {{end}}
                 </select>
                 <span class="help-block font75">The Router client</span>
@@ -123,25 +116,26 @@
             </thead>
             <tbody>
             
-            {{range $r := .routes}}
+            {{range $r := .Routes}}
                 <!-- <tr data-widget="expandable-table" aria-expanded="false"> -->
                 <tr>
 
                   <!-- 2 sell -->
                   <td> 
-                    {{ if not $r.RouterIsValid }}
-                      <span class="btn btn-xs btn-group-xs bg-red btn80">NO ROUTER</span>
-                    {{else if $r.RouteIsUsedBy}}
-                      <span class="btn btn-xs btn-group-xs bg-lightblue btn80" data-toggle="tooltip" 
-                      title="Used by:{{range $r.RouteIsUsedBy}} {{.}}{{end}}">USED</span>
-                    {{else}}
-                      <span class="btn btn-xs btn-group-xs bg-gray btn80">NOT USED</span>
-                    {{end}}
+                    {{$isUsedBy := RouteIsUsedBy "$r.Id"}}
+                        {{ if not $r.RouterName }}
+                          <span class="btn btn-xs btn-group-xs bg-red btn80">NO ROUTER</span>
+                        {{else if $isUsedBy}}
+                          <span class="btn btn-xs btn-group-xs bg-lightblue btn80" data-toggle="tooltip" 
+                          title="Used by:{{range $isUsedBy}} {{.}} {{end}}">USED</span>
+                        {{else}}
+                          <span class="btn btn-xs btn-group-xs bg-gray btn80">NOT USED</span>
+                        {{end}}
                   </td>
 
                   <!-- 1 sell -->
                   <td class="font90">
-                      {{ .RouteID }}
+                      {{ .Name }}
                   </td>
 
                   <!-- 2 sell -->
@@ -171,19 +165,19 @@
                   <!-- 7 sell -->
                   <td class="textcenter my-centered last-sm">
                     <div class="btn-group" role="group">
-                        <button  id="getRouteEditModal" data-target="#getRouteEditModal" data-route-id="{{ .RouteID }}"
+                        <button  id="getRouteEditModal" data-target="#getRouteEditModal" data-route-id="{{ .Name }}"
                         class="btn btn-sm btn-group-sm bg-gradient-lightblue btn80 font75" title="Edit">Edit</button>
-                        <!-- <button id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .RouteID }}" 
+                        <!-- <button id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .Name }}" 
                         class="btn btn-sm btn-group-sm bg-gradient-red btn80" title="Delete">Delete</button> -->
                     </div>
                   </td>
 
                   <!-- 8 sell -->
-                  <td class="textcenter my-centered last-sm" data-toggle="tooltip" title="Used by:{{range $r.RouteIsUsedBy}} {{.}}{{end}}">
+                  <td class="textcenter my-centered last-sm" data-toggle="tooltip" title="Used by:{range $r.RouteIsUsedBy} {.}{end}">
                     <div class="btn-group tool-tip">
-                      <a href="{{urlfor "RoutesController.Delete" ":key" .RouteID}}" 
+                      <a href="{{urlfor "RoutesController.Delete" ":key" .Name}}" 
                             data-title="Remove route ?" 
-                            class="btn btn-sm btn-group-sm btn80 font75 {{if $r.RouteIsUsedBy}} btn-default disabled {{else}} btn-danger bg-gradient-red {{end}}" 
+                            class="btn btn-sm btn-group-sm btn80 font75 {if $r.RouteIsUsedBy} btn-default disabled {else} btn-danger bg-gradient-red {end}" 
                             title="Delete">Delete</a>
                     </div>
                   </td>

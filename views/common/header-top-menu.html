@@ -35,13 +35,12 @@
     </a>
 
     <ul class="dropdown-menu" role="menu">
-
       <li class="nav-item">
-        <a href="{{urlfor "CertificatesController.Get"}}" class="dropdown-item {{if compare .RouterPattern "/certificates"}}active{{end}}">Certificates</a>
+        <a href="{{urlfor "ClientsController.Get"}}" class="dropdown-item {{if compare .RouterPattern "/clients"}}active{{end}}">Details</a>
       </li>
 
       <li class="nav-item">
-        <a href="{{urlfor "ClientsController.Get"}}" class="dropdown-item {{if compare .RouterPattern "/clients"}}active{{end}}">Details</a>
+        <a href="{{urlfor "CertificatesController.Get"}}" class="dropdown-item {{if compare .RouterPattern "/certificates"}}active{{end}}">Certificates</a>
       </li>
 
       <li class="nav-item">
