@@ -1,50 +1,50 @@
+
+{{$r := .Route}}
+{{$connectedRouters := RouteIsUsedBy $r.Id}}
+
 <div class="modal fade" id="showEditRouteModal" role="dialog">
     <div class="modal-dialog custom-modal-dialog-form"> <!-- Apply custom CSS style for the modal width -->
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Edit route: <font face="Verdana" size="+1"><strong> {{.RouteID}} </strong></font></h5>
+                <h5 class="modal-title">Edit route: <font face="Verdana" size="+1"><strong> {{$r.Name}} </strong></font></h5>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
                      <div class="panel-body">
                         <form id="modal-edit-route_form-to-confirm" role="form" action="{{urlfor "RoutesController.Post"}}" method="post">
                             <div class="card-body">
-                      
                                 <div class="form-row">
                       
                                     <!-- Hidden fields for proper form usage -->
-                                    <input type="hidden" name="route_id" id="route_id" value="{{.RouteID}}">
-                                    <input name="router_name" id="router_name" value="{{.RouterName}}" type="hidden">
-                                    <input name="csrftoken" id="csrftoken" value="{{.CSRFToken}}" type="hidden">
-
+                                    <input type="hidden" name="route_id" id="route_id" value="{{$r.Id}}">
                                  
                                     <div class="form-group col-md-6">        
                                       <label for="route_ip">Route IP*</label>
-                                      <input class="form-control" name="route_ip" value="{{.RouteIP}}" 
+                                      <input class="form-control" name="route_ip" value="{{$r.RouteIP}}" 
                                                       data-inputmask="'alias': 'ip'" data-mask 
                                                       pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" 
-                                                          placeholder="Enter Static IP" onfocusout="this.value = this.value.trim()" value="{{.RouteIP}}">
+                                                          placeholder="Enter Static IP" onfocusout="this.value = this.value.trim()" value="{{$r.RouteIP}}">
                                       <span class="help-block font75">Router subnet IP (ex.192.168.10.0)</span>
                                     </div>
                       
                                     <div class="form-group col-md-6">        
                                       <label for="route_mask">Route Mask*</label>
-                                      <input class="form-control" name="route_mask" value="{{.RouteMask}}" 
+                                      <input class="form-control" name="route_mask" value="{{$r.RouteMask}}" 
                                                       data-inputmask="'alias': 'ip'" data-mask 
                                                       pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" 
-                                                          placeholder="Enter Static IP" onfocusout="this.value = this.value.trim()" value="{{.RouteMask}}">
+                                                          placeholder="Enter Static IP" onfocusout="this.value = this.value.trim()" value="{{$r.RouteMask}}">
                                       <span class="help-block font75">Router subnet Mask (ex.255.255.255.0)</span>
                                     </div>
                       
                                     <div class="form-group col-md-12">
                                           <label for="description">Description</label>
                                           <input type="text" class="form-control" placeholder="Add description" id="description" 
-                                            name="description" onfocusout="this.value = this.value.trim()" value="{{.Description}}">
+                                            name="description" onfocusout="this.value = this.value.trim()" value="{{$r.Description}}">
                                           <span class="help-block font75">Describe the route details</span>
                                     </div>
                                     
                                     <div class="form-group col-xs-2"><span class="btn btn-xs btn-group-xs bg-gradient-lightblue btn40">Used by:</div>
-                                        {{range .RouteIsUsedBy}}                                            
+                                        {{range $connectedRouters}}                                            
                                                 <div class="form-group col-xs-1"><span class="btn btn-xs btn-group-xs bg-gray-light btn40">{{.}}</span></div>
                                         {{end}}
                                 </div>
@@ -86,27 +86,17 @@
             route_id: {
                 required: true,
             },
-            route_name: {
-                required: true,
-            },
             route_ip: {
                 required: true,
             },
             route_mask: {
                 required: true,
             },
-            csrftoken: {
-                required: true,
-            }
         },
         messages: {
             route_id: {
             required: "Automaticaly generated",
             email: "Please enter a vaild email address"
-            },
-            route_name: {
-            required: "Please select the Router",
-            minlength: "Your password must be at least 5 characters long"
             },
             route_ip: "Please set IP route",
             route_mask: "Please set IP Mask route",

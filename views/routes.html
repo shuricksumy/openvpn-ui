@@ -122,7 +122,7 @@
 
                   <!-- 2 sell -->
                   <td> 
-                    {{$isUsedBy := RouteIsUsedBy "$r.Id"}}
+                    {{$isUsedBy := RouteIsUsedBy $r.Id}}
                         {{ if not $r.RouterName }}
                           <span class="btn btn-xs btn-group-xs bg-red btn80">NO ROUTER</span>
                         {{else if $isUsedBy}}
@@ -165,7 +165,7 @@
                   <!-- 7 sell -->
                   <td class="textcenter my-centered last-sm">
                     <div class="btn-group" role="group">
-                        <button  id="getRouteEditModal" data-target="#getRouteEditModal" data-route-id="{{ .Name }}"
+                        <button  id="getRouteEditModal" data-target="#getRouteEditModal" data-route-id="{{ $r.Id }}"
                         class="btn btn-sm btn-group-sm bg-gradient-lightblue btn80 font75" title="Edit">Edit</button>
                         <!-- <button id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .Name }}" 
                         class="btn btn-sm btn-group-sm bg-gradient-red btn80" title="Delete">Delete</button> -->
@@ -173,11 +173,11 @@
                   </td>
 
                   <!-- 8 sell -->
-                  <td class="textcenter my-centered last-sm" data-toggle="tooltip" title="Used by:{range $r.RouteIsUsedBy} {.}{end}">
+                  <td class="textcenter my-centered last-sm" data-toggle="tooltip" title="Used by:{{range $isUsedBy}} {{.}}{{end}}">
                     <div class="btn-group tool-tip">
-                      <a href="{{urlfor "RoutesController.Delete" ":key" .Name}}" 
+                      <a href="{{urlfor "RoutesController.Delete" ":key" $r.Id}}" 
                             data-title="Remove route ?" 
-                            class="btn btn-sm btn-group-sm btn80 font75 {if $r.RouteIsUsedBy} btn-default disabled {else} btn-danger bg-gradient-red {end}" 
+                            class="btn btn-sm btn-group-sm btn80 font75 {{if $isUsedBy}} btn-default disabled {{else}} btn-danger bg-gradient-red {{end}}" 
                             title="Delete">Delete</a>
                     </div>
                   </td>

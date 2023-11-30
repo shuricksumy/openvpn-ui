@@ -88,6 +88,11 @@ func (c *ClientsController) NewClient() {
 
 // @router /clients/render_modal/ [post]
 func (c *ClientsController) RenderModal() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+
 	flash := web.NewFlash()
 	id, _ := c.GetInt("client-name")
 

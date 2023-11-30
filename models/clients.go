@@ -251,6 +251,48 @@ func UnassignAllRoutesFromClient(clientID int) error {
 	return nil
 }
 
+// GetClientDetailsByCertificate retrieves a client by its CertificateName from the database
+func GetClientDetailsByCertificate(certificateName string) (*ClientDetails, error) {
+	o := orm.NewOrm()
+
+	// Query ClientDetails with the given CertificateName
+	client := &ClientDetails{CertificateName: &certificateName}
+	err := o.Read(client)
+
+	if err == orm.ErrNoRows {
+		// Client with the given CertificateName not found
+		return nil, nil
+	} else if err != nil {
+		// Other error occurred
+		return nil, err
+	}
+
+	// Load the associated RouteDetails
+	o.LoadRelated(client, "Routes")
+
+	return client, nil
+}
+
+// GetClientCertificateByName retrieves the CertificateName for a client by its ClientName
+func GetClientCertificateByName(clientName string) (string, error) {
+	o := orm.NewOrm()
+
+	// Query ClientDetails with the given ClientName
+	client := &ClientDetails{ClientName: clientName}
+	err := o.Read(client)
+
+	if err == orm.ErrNoRows {
+		// Client with the given ClientName not found
+		return "", nil
+	} else if err != nil {
+		// Other error occurred
+		return "", err
+	}
+
+	// Return the CertificateName
+	return *client.CertificateName, nil
+}
+
 // Custom function defined in the controller
 func GetConnectedRoutes(inputId int) []*RouteDetails {
 	// id, _ := strconv.Atoi(inputId)

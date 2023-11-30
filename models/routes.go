@@ -2,7 +2,6 @@ package models
 
 import (
 	//Sqlite driver
-	"strconv"
 
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/validation"
@@ -43,22 +42,25 @@ func GetRouteDetailsByID(routeDetailsID int) (*RouteDetails, error) {
 	return &routeDetails, err
 }
 
-// UpdateRouteDetails updates a RouteDetails by its ID
-func UpdateRouteDetails(routeDetailsID int, updatedDetails *RouteDetails) error {
-	var routeDetails RouteDetails
-	if err := orm.NewOrm().QueryTable(new(RouteDetails)).Filter("Id", routeDetailsID).One(&routeDetails); err == nil {
-		// Update the RouteDetails attributes
-		routeDetails.Name = updatedDetails.Name
-		routeDetails.RouterName = updatedDetails.RouterName
-		routeDetails.RouteIP = updatedDetails.RouteIP
-		routeDetails.RouteMask = updatedDetails.RouteMask
-		routeDetails.Description = updatedDetails.Description
+// UpdateRouteDetails updates specified parameters for a RouteDetails instance by its ID
+func UpdateRouteDetails(routeID int, routeIP, routeMask, description string) error {
+	o := orm.NewOrm()
 
-		// Save the updated RouteDetails
-		_, err := orm.NewOrm().Update(&routeDetails)
+	// Get the existing route
+	route := &RouteDetails{Id: routeID}
+	err := o.Read(route)
+	if err != nil {
 		return err
 	}
-	return nil
+
+	// Update the specified parameters
+	route.RouteIP = routeIP
+	route.RouteMask = routeMask
+	route.Description = description
+
+	// Save the updated route
+	_, err = o.Update(route)
+	return err
 }
 
 // AddNewRouteDetails creates a new route and adds it to the database
@@ -114,21 +116,20 @@ func GetClientsForRouteID(routeID int) ([]string, error) {
 	return nil, nil
 }
 
-// DeleteRouteDetailsByID deletes a route by its ID
-func DeleteRouteDetailsByID(routeID int) error {
+// DeleteRouteDetailsById deletes a RouteDetails instance by its ID
+func DeleteRouteDetailsById(routeID int) error {
 	o := orm.NewOrm()
 
+	// Get the existing route
 	route := &RouteDetails{Id: routeID}
-	if err := o.Read(route); err == nil {
-		// Remove the route from associated clients
-		o.QueryM2M(route, "Clients").Clear()
-
-		// Delete the route from the database
-		_, err := o.Delete(route)
+	err := o.Read(route)
+	if err != nil {
 		return err
 	}
 
-	return nil
+	// Delete the route
+	_, err = o.Delete(route)
+	return err
 }
 
 // RouteExistsByIP checks if a route with the given IP exists
@@ -150,9 +151,8 @@ func GetAllRoutesDetails() ([]*RouteDetails, error) {
 }
 
 // Custom function defined in the controller
-func RouteIsUsedBy(inputId string) []string {
-	id, _ := strconv.Atoi(inputId)
-	clients, _ := GetClientsForRouteID(id)
+func RouteIsUsedBy(inputId int) []string {
+	clients, _ := GetClientsForRouteID(inputId)
 	return clients
 }
 

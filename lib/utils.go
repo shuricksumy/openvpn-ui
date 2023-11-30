@@ -214,3 +214,8 @@ func StringToNilString(input string) *string {
 	}
 	return &input
 }
+
+func NilStringToString(input *string) string {
+	pointerToString := &input
+	return **pointerToString
+}

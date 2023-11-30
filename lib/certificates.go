@@ -197,10 +197,11 @@ func parseDetails(d string) *Details {
 				// logs.Debug(fmt.Sprintf("Undefined entry: %s", line))
 			}
 		}
-		if details.CN != "" {
-			details.Description = GetClientDetailsFieldValue(details.CN, "Description")
-			details.LocalIP = GetClientDetailsFieldValue(details.CN, "StaticIP")
-		}
+		// if details.CN != "" {
+		// 	clientDetails, _ := models.GetClientDetailsByCertificate(details.CN)
+		// 	details.Description = clientDetails.Description
+		// 	details.LocalIP = NilStringToString(clientDetails.StaticIP)
+		// }
 	}
 	return details
 }

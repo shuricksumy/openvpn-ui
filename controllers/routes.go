@@ -95,7 +95,7 @@ func (c *RoutesController) NewRoute() {
 	}
 
 	if err := models.AddNewRouteDetails(new_route.Name, new_route.RouterName, new_route.Id, new_route.RouteIP,
-		new_route.RouteMask, new_route.RouteMask); err == nil {
+		new_route.RouteMask, new_route.Description); err == nil {
 
 		flash.Success("New route added successfully")
 		flash.Store(&c.Controller)
@@ -103,5 +103,84 @@ func (c *RoutesController) NewRoute() {
 		flash.Error("Failed to add new route: ", err)
 		flash.Store(&c.Controller)
 	}
+	c.showRoutes()
+}
+
+// @router /routes/get/ID [get]
+func (c *RoutesController) GetRouteDetails() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+
+	flash := web.NewFlash()
+	routeIDstr := c.GetString(":key")
+	routeID, _ := strconv.Atoi(routeIDstr)
+	route, _ := models.GetRouteDetailsByID(routeID)
+
+	if route == nil {
+		c.TplName = "routes.html"
+		flash.Error("Route: " + routeIDstr + " was found. ")
+		flash.Store(&c.Controller)
+		c.showRoutes()
+	} else {
+		c.Data["Route"] = &route
+		c.TplName = "modalRouteEdit.html"
+		c.Render()
+	}
+}
+
+// @router /routes [post]
+func (c *RoutesController) Post() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+
+	c.TplName = "routes.html"
+	flash := web.NewFlash()
+
+	routeID, _ := c.GetInt("route_id")
+	routeIP := c.GetString("route_ip")
+	routeMask := c.GetString("route_mask")
+	description := c.GetString("description")
+
+	err := models.UpdateRouteDetails(routeID, routeIP, routeMask, description)
+	if err != nil {
+		flash.Error("Error updating route details", err)
+		flash.Store(&c.Controller)
+		c.showRoutes()
+	} else {
+		flash.Success("Route was updates successfuly")
+		flash.Store(&c.Controller)
+		c.showRoutes()
+	}
+}
+
+// @router /routes/delte/ID [get]
+func (c *RoutesController) Delete() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+	flash := web.NewFlash()
+	routeIDstr := c.GetString(":key")
+	routeID, _ := strconv.Atoi(routeIDstr)
+
+	routeIsUsed := models.RouteIsUsedBy(routeID)
+	if len(routeIsUsed) != 0 {
+		flash.Error("Route: " + routeIDstr + " was NOT deleted. It's Used !")
+		flash.Store(&c.Controller)
+	} else {
+		err_del := models.DeleteRouteDetailsById(routeID)
+		if err_del != nil {
+			flash.Error("Route: " + routeIDstr + " was NOT deleted. " + string(err_del.Error()))
+			flash.Store(&c.Controller)
+		} else {
+			flash.Success("Route: " + routeIDstr + " was successfully deleted. Please do not forget apply new config at the end of configuration!")
+			flash.Store(&c.Controller)
+		}
+	}
+	c.TplName = "routes.html"
 	c.showRoutes()
 }

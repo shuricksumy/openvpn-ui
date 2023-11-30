@@ -81,20 +81,21 @@ func (c *CertificatesController) showCerts() {
 
 	}
 
-	//get clientsDetails from file
-	clientsDetails, err_read := lib.GetClientsDetailsFromFiles()
-	if err_read != nil {
-		logs.Error(err_read)
-		flash.Error("ERROR WHILE READING CLIENTS FROM FILE !")
-		flash.Store(&c.Controller)
-	}
+	// //get clientsDetails from file
+	// clientsDetails, err_read := lib.GetClientsDetailsFromFiles()
+	// if err_read != nil {
+	// 	logs.Error(err_read)
+	// 	flash.Error("ERROR WHILE READING CLIENTS FROM FILE !")
+	// 	flash.Store(&c.Controller)
+	// }
 
-	// get md5 sums from file system
-	md5hashs := lib.GetMD5StructureFromFS(clientsDetails)
-	// lib.Dump(md5hashs)
-	c.Data["MD5"] = &md5hashs
+	// // get md5 sums from file system
+	// md5hashs := lib.GetMD5StructureFromFS(clientsDetails)
+	// // lib.Dump(md5hashs)
+	// c.Data["MD5"] = &md5hashs
 
 	// lib.Dump(certs)
+	c.TplName = "certificates.html"
 	c.Data["certificates"] = &certs
 }
 
@@ -116,10 +117,10 @@ func (c *CertificatesController) Post() {
 				flash.Error(err.Error())
 				flash.Store(&c.Controller)
 			} else {
-				err_save_json := AddDescriptionToFile(cParams.Name, cParams.Description)
-				if err_save_json != nil {
-					flash.Warning("Certificate for the name \"" + cParams.Name + "\" has been created. But Description was not saved")
-				}
+				// err_save_json := AddDescriptionToFile(cParams.Name, cParams.Description)
+				// if err_save_json != nil {
+				// 	flash.Warning("Certificate for the name \"" + cParams.Name + "\" has been created. But Description was not saved")
+				// }
 				flash.Success("Success! Certificate for the name \"" + cParams.Name + "\" has been created")
 				flash.Store(&c.Controller)
 			}
@@ -284,18 +285,18 @@ func SaveToFile(tplPath string, c config.Config, destPath string) error {
 	return lib.RawSaveToFile(destPath, str)
 }
 
-func AddDescriptionToFile(clientName string, description string) error {
+// func AddDescriptionToFile(clientName string, description string) error {
 
-	newClient := lib.ClientDetails{
-		ClientName:     clientName,
-		StaticIP:       "",
-		IsRouteDefault: false,
-		IsRouter:       false,
-		Description:    description,
-		RouteList:      nil,
-		CSRFToken:      "",
-	}
+// 	newClient := models.ClientDetails{
+// 		ClientName:     clientName,
+// 		StaticIP:       "",
+// 		IsRouteDefault: false,
+// 		IsRouter:       false,
+// 		Description:    description,
+// 		RouteList:      nil,
+// 		CSRFToken:      "",
+// 	}
 
-	return lib.AddClientToJsonFile(newClient)
+// 	return lib.AddClientToJsonFile(newClient)
 
-}
+// }
