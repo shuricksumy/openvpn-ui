@@ -13,6 +13,7 @@ type RouteDetails struct {
 	Id          int              `orm:"auto;pk"`
 	Name        string           `orm:"unique"`
 	RouterName  string           `valid:"Required" form:"router_name"`
+	RouterId    int              `valid:"Required"`
 	RouteIP     string           `orm:"unique" form:"route_ip"`
 	RouteMask   string           `form:"route_mask"`
 	Description string           `form:"description"`
@@ -35,13 +36,39 @@ func (r *RouteDetails) Validate() error {
 	return nil
 }
 
+// GetRouteDetailsByID retrieves a RouteDetails by its ID
+func GetRouteDetailsByID(routeDetailsID int) (*RouteDetails, error) {
+	var routeDetails RouteDetails
+	err := orm.NewOrm().QueryTable(new(RouteDetails)).Filter("Id", routeDetailsID).RelatedSel().One(&routeDetails)
+	return &routeDetails, err
+}
+
+// UpdateRouteDetails updates a RouteDetails by its ID
+func UpdateRouteDetails(routeDetailsID int, updatedDetails *RouteDetails) error {
+	var routeDetails RouteDetails
+	if err := orm.NewOrm().QueryTable(new(RouteDetails)).Filter("Id", routeDetailsID).One(&routeDetails); err == nil {
+		// Update the RouteDetails attributes
+		routeDetails.Name = updatedDetails.Name
+		routeDetails.RouterName = updatedDetails.RouterName
+		routeDetails.RouteIP = updatedDetails.RouteIP
+		routeDetails.RouteMask = updatedDetails.RouteMask
+		routeDetails.Description = updatedDetails.Description
+
+		// Save the updated RouteDetails
+		_, err := orm.NewOrm().Update(&routeDetails)
+		return err
+	}
+	return nil
+}
+
 // AddNewRouteDetails creates a new route and adds it to the database
-func AddNewRouteDetails(name, routerName, routeIP, routeMask, description string) error {
+func AddNewRouteDetails(name string, routerName string, routerId int, routeIP string, routeMask string, description string) error {
 	o := orm.NewOrm()
 
 	route := &RouteDetails{
 		Name:        name,
 		RouterName:  routerName,
+		RouterId:    routerId,
 		RouteIP:     routeIP,
 		RouteMask:   routeMask,
 		Description: description,
@@ -127,4 +154,25 @@ func RouteIsUsedBy(inputId string) []string {
 	id, _ := strconv.Atoi(inputId)
 	clients, _ := GetClientsForRouteID(id)
 	return clients
+}
+
+// GetAllRoutesProvided retrieves all RouteDetails associated with a specific RouterId
+func GetAllRoutesProvided(routerID int) ([]*RouteDetails, error) {
+	o := orm.NewOrm()
+
+	// Query RouteDetails with the given RouterId
+	var routes []*RouteDetails
+	_, err := o.QueryTable("route_details").Filter("RouterId", routerID).All(&routes)
+
+	if err != nil {
+		// Handle error, e.g., database query error
+		return nil, err
+	}
+
+	// Load related clients for each route
+	for _, route := range routes {
+		o.LoadRelated(route, "Client")
+	}
+
+	return routes, nil
 }

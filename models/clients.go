@@ -16,6 +16,7 @@ type ClientDetails struct {
 	IsRouter        bool            `valid:"Required" form:"client_is_router"`
 	CertificateName *string         `orm:"unique;null" form:"certificate_name"`
 	Description     string          `form:"description"`
+	Passphrase      string          `form:"cert_pass"`
 	Routes          []*RouteDetails `orm:"rel(m2m)"`
 	MD5Sum          string          `form:"md5sum"`
 }
@@ -36,33 +37,8 @@ func (c *ClientDetails) Validate() error {
 	return nil
 }
 
-// GetRouteDetailsByID retrieves a RouteDetails by its ID
-func GetRouteDetailsByID(routeDetailsID int) (*RouteDetails, error) {
-	var routeDetails RouteDetails
-	err := orm.NewOrm().QueryTable(new(RouteDetails)).Filter("Id", routeDetailsID).RelatedSel().One(&routeDetails)
-	return &routeDetails, err
-}
-
-// UpdateRouteDetails updates a RouteDetails by its ID
-func UpdateRouteDetails(routeDetailsID int, updatedDetails *RouteDetails) error {
-	var routeDetails RouteDetails
-	if err := orm.NewOrm().QueryTable(new(RouteDetails)).Filter("Id", routeDetailsID).One(&routeDetails); err == nil {
-		// Update the RouteDetails attributes
-		routeDetails.Name = updatedDetails.Name
-		routeDetails.RouterName = updatedDetails.RouterName
-		routeDetails.RouteIP = updatedDetails.RouteIP
-		routeDetails.RouteMask = updatedDetails.RouteMask
-		routeDetails.Description = updatedDetails.Description
-
-		// Save the updated RouteDetails
-		_, err := orm.NewOrm().Update(&routeDetails)
-		return err
-	}
-	return nil
-}
-
 // AddNewClient creates a new client and adds it to the database
-func AddNewClient(clientName string, staticIP *string, isRouteDefault, isRouter bool, description, md5Sum string, routeIDs []int) error {
+func AddNewClient(clientName string, staticIP *string, isRouteDefault, isRouter bool, description, md5Sum string, passphrase string, routeIDs []int) error {
 	o := orm.NewOrm()
 
 	client := &ClientDetails{
@@ -72,6 +48,7 @@ func AddNewClient(clientName string, staticIP *string, isRouteDefault, isRouter 
 		IsRouter:       isRouter,
 		Description:    description,
 		MD5Sum:         md5Sum,
+		Passphrase:     passphrase,
 	}
 
 	// Add routes to the client
@@ -85,6 +62,27 @@ func AddNewClient(clientName string, staticIP *string, isRouteDefault, isRouter 
 	// Save the client to the database
 	_, err := o.Insert(client)
 	return err
+}
+
+// GetClientDetailsById retrieves a client by its ID from the database
+func GetClientDetailsById(clientID int) (*ClientDetails, error) {
+	o := orm.NewOrm()
+
+	client := &ClientDetails{Id: clientID}
+	err := o.Read(client)
+
+	if err == orm.ErrNoRows {
+		// Client with the given ID not found
+		return nil, nil
+	} else if err != nil {
+		// Other error occurred
+		return nil, err
+	}
+
+	// Load the associated RouteDetails
+	o.LoadRelated(client, "Routes")
+
+	return client, nil
 }
 
 // AssignRoutesToClient assigns one or more routes to a specific client
@@ -105,7 +103,7 @@ func AssignRoutesToClient(clientID int, routeIDs []int) error {
 	}
 
 	// Add routes to the client
-	o.QueryM2M(client, "RouteList").Add(routes)
+	o.QueryM2M(client, "Routes").Add(routes)
 
 	return nil
 }
@@ -211,6 +209,46 @@ func GetAllClientDetails() ([]*ClientDetails, error) {
 	}
 
 	return nil, nil
+}
+
+// UpdateClientDetails updates specified parameters for a ClientDetails instance
+func UpdateClientDetails(clientID int, staticIP *string, description string, isRouteDefault, isRouter bool) error {
+	o := orm.NewOrm()
+
+	// Get the existing client
+	client := &ClientDetails{Id: clientID}
+	err := o.Read(client)
+	if err != nil {
+		return err
+	}
+
+	// Update the specified parameters
+	if staticIP != nil {
+		client.StaticIP = staticIP
+	}
+
+	client.Description = description
+	client.IsRouteDefault = isRouteDefault
+	client.IsRouter = isRouter
+
+	// Save the updated client
+	_, err = o.Update(client)
+	return err
+}
+
+// UnassignAllRoutesFromClient unassigns all routes from a specific client
+func UnassignAllRoutesFromClient(clientID int) error {
+	o := orm.NewOrm()
+
+	client := &ClientDetails{Id: clientID}
+	if err := o.Read(client); err != nil {
+		return err
+	}
+
+	// Clear all routes from the client
+	o.QueryM2M(client, "Routes").Clear()
+
+	return nil
 }
 
 // Custom function defined in the controller

@@ -44,9 +44,9 @@
               <div class="form-group col-md-4">
                 <label for="router_name">Router Name*</label>
                 <select class="custom-select" name="router_name" id="router_name">
-                    <option disabled selected value> -- select router -- </option>
+                    <option value="" disabled selected value> -- select router -- </option>
                     {{range  $val := .Routers}}
-                        <option value="{{ $val.ClientName }}">{{ $val.ClientName }}</option>
+                        <option value="{{ $val.Id }},{{$val.ClientName}}">{{ $val.ClientName }}</option>
                     {{end}}
                 </select>
                 <span class="help-block font75">The Router client</span>
@@ -260,10 +260,7 @@
   $(document).ready(function () {
       $('#form-to-confirm').validate({ // initialize the plugin
         rules: {
-            route_id: {
-                required: true,
-            },
-            route_name: {
+            router_name: {
                 required: true,
             },
             route_ip: {
@@ -274,13 +271,9 @@
             }
         },
         messages: {
-          route_id: {
-            required: "Automaticaly generated",
-            email: "Please enter a vaild email address"
-          },
-          route_name: {
+          router_name: {
             required: "Please select the Router",
-            minlength: "Your password must be at least 5 characters long"
+            email: "Please enter a vaild email address"
           },
           route_ip: "Please set IP route",
           route_mask: "Please set IP Mask route",
@@ -296,9 +289,9 @@
         unhighlight: function (element, errorClass, validClass) {
           $(element).removeClass('is-invalid');
         }
+  });
 });
 
-});
 </script>
 
 <!-- <script>

@@ -1,6 +1,9 @@
 package controllers
 
 import (
+	"strconv"
+	"strings"
+
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
 	"github.com/shuricksumy/openvpn-ui/lib"
@@ -79,9 +82,19 @@ func (c *RoutesController) NewRoute() {
 		flash.Error("ERROR PARSING !")
 		flash.Store(&c.Controller)
 	}
-	new_route.Name = new_route.RouterName + "_" + lib.GenRandomString(5)
 
-	if err := models.AddNewRouteDetails(new_route.Name, new_route.RouterName, new_route.RouteIP,
+	values := strings.Split(c.GetString("router_name"), ",")
+	if len(values) >= 2 {
+		new_route.RouterName = values[1]
+		new_route.Name = values[1] + "_" + lib.GenRandomString(5)
+		new_route.Id, _ = strconv.Atoi(values[0])
+	} else {
+		logs.Error(err_parse)
+		flash.Error("ERROR PARSING ROUTERS PARAMS!")
+		flash.Store(&c.Controller)
+	}
+
+	if err := models.AddNewRouteDetails(new_route.Name, new_route.RouterName, new_route.Id, new_route.RouteIP,
 		new_route.RouteMask, new_route.RouteMask); err == nil {
 
 		flash.Success("New route added successfully")

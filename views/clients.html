@@ -48,8 +48,8 @@
               </div>
               
                <div class="form-group col-md-4">        
-                  <label for="static_ip">Static IP*</label>
-                  <input class="form-control" name="static_ip" value="{.static_ip}" 
+                  <label for="static_ip">Static IP</label>
+                  <input class="form-control" name="static_ip" id="static_ip"
                                   data-inputmask="'alias': 'ip'" data-mask 
                                   pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" 
                                       placeholder="Enter Static IP" onfocusout="this.value = this.value.trim()">
@@ -74,13 +74,26 @@
                   </div>
                 </div>
 
-                <div class="form-group col-md-12">
+                <div class="form-group col-md-8">
                       <label for="description">Description</label>
                       <input type="text" class="form-control" placeholder="Add description" id="description" 
                         name="description" onfocusout="this.value = this.value.trim()">
                       <span class="help-block font75">Describe the route details</span>
                 </div>
     
+                <div class="form-group col-md-4">
+                    <label for="cert_pass">Passphrase</label>
+                    <div class="input-group" id="show_hide_password">
+                      <input type="password" class="form-control" placeholder="Passphrase" id="cert_pass" 
+                        name="cert_pass" data-inputmask="'mask': '*' ,'repeat': 35, 'greedy' : false" 
+                        data-mask required onfocusout="this.value = this.value.trim()">
+                      <span class="input-group-btn">
+                        <button class="btn btn-default reveal" type="button">
+                          <i class="fa fa-eye-slash"></i></button>
+                      </span>
+                    </div>
+                    <span class="help-block font75">Passphrase for the certificate</span>
+                </div>
             </div>
 
         </div>
@@ -223,7 +236,7 @@
                   <!-- 8 sell -->
                   <td class="textcenter my-centered last-sm">
                     <div class="btn-group" role="group">
-                        <button  id="openModalEditClientDetails" data-target="#editClientDetailsModal" data-client-name="{ .ClientName }"
+                        <button  id="openModalEditClientDetails" data-target="#editClientDetailsModal" data-client-name="{{ .Id }}"
                         class="btn btn-sm btn-group-sm bg-gradient-lightblue btn80 font75" title="Edit">Edit</button>
                         <!-- <button id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{ .ClientName }" 
                         class="btn btn-sm bg-light-blue-gradient btn40" title="Edit">Raw</button> -->
@@ -281,11 +294,11 @@
 
 {{end}}
 
-<div id="overlay">
+<!-- <div id="overlay">
   <div class="cv-spinner">
     <span class="spinner"></span>
   </div>
-</div>
+</div> -->
 
 <script type="text/javascript">
   var actionURL="/certificates/save_client_data" 
@@ -294,4 +307,45 @@
         $('[data-mask]').inputmask();
   });
 
+
+  $(document).ready(function () {
+      $('#form-to-confirm').validate({ // initialize the plugin
+        rules: {
+            client_name: {
+                required: true,
+            },
+            cert_pass: {
+                required: false,
+            },
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+          $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $(element).removeClass('is-invalid');
+        }
+  });
+});
 </script>
+
+<script>
+  $(document).ready(function() {
+      $("#show_hide_password button").on('click', function(event) {
+          event.preventDefault();
+          if($('#show_hide_password input').attr("type") == "text"){
+              $('#show_hide_password input').attr('type', 'password');
+              $('#show_hide_password i').addClass( "fa-eye-slash" );
+              $('#show_hide_password i').removeClass( "fa-eye" );
+          }else if($('#show_hide_password input').attr("type") == "password"){
+              $('#show_hide_password input').attr('type', 'text');
+              $('#show_hide_password i').removeClass( "fa-eye-slash" );
+              $('#show_hide_password i').addClass( "fa-eye" );
+          }
+      });
+  });
+  </script>

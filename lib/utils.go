@@ -206,3 +206,11 @@ func GetExtIP() (string, error) {
 	}
 	return string(output), err
 }
+
+func StringToNilString(input string) *string {
+
+	if input == "" {
+		return nil
+	}
+	return &input
+}
