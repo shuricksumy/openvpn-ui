@@ -156,7 +156,7 @@ $(function() {
 
     function showEditRouteModal(routeID) {
         // Make an AJAX request to get the data for the client
-        $.get("routes/get/" + routeID, function (data) {
+        $.get("/routes/get/" + routeID, function (data) {
             // Update the modal content with the retrieved data
             $("#modal-edit-route-details").html(data);
             // Show the modal

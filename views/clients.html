@@ -86,7 +86,7 @@
                     <div class="input-group" id="show_hide_password">
                       <input type="password" class="form-control" placeholder="Passphrase" id="cert_pass" 
                         name="cert_pass" data-inputmask="'mask': '*' ,'repeat': 35, 'greedy' : false" 
-                        data-mask required onfocusout="this.value = this.value.trim()">
+                        data-mask onfocusout="this.value = this.value.trim()">
                       <span class="input-group-btn">
                         <button class="btn btn-default reveal" type="button">
                           <i class="fa fa-eye-slash"></i></button>
@@ -150,16 +150,21 @@
                           {{ $icon = "fa fa-warning" }} 
                       {{ end }}
                        <button id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .ClientName }}" 
-                        class="btn {{ $col }} right-icon-holder font75" 
+                        class="btn {{ $col }} right-icon-holder font75 {{if not $c.CertificateName}} disabled {{end}}" 
                         title="{{ $comment }}">{{ .ClientName }}<i class="{ $icon }"></i>
                       </button>
                   </td>
 
                   <td class="my-centered first-cap">
-                    {{ if .CertificateName }}
-                      <span class="btn btn-xs btn-group-xs bg-olive btn40">OK</span>
+                    {{ if .CertificateStatus }}
+                      {{if eq (printf .CertificateStatus) "Active"}}
+                        <span class="btn btn-xs btn-group-xs bg-olive btn40">Acive</span>
+                      {{end}}
+                      {{if eq (printf .CertificateStatus) "Revoked"}}
+                        <span class="btn btn-xs btn-group-xs bg-yellow btn40">Revoked</span>
+                      {{end}}
                     {{else}}
-                      <span class="btn btn-xs bg-red btn-group-xs btn40">false</span>
+                        <span class="btn btn-xs bg-red btn-group-xs btn40">False</span>
                     {{end}}
                   </td>
 
@@ -243,15 +248,13 @@
                   </td>
 
                   <!-- 8 sell -->
-                  <td class="textcenter my-centered last-sm">
+                  <td class="textcenter my-centered">
                     <div class="btn-group" role="group">
                         <button  id="openModalEditClientDetails" data-target="#editClientDetailsModal" data-client-name="{{ .Id }}"
-                        class="btn btn-sm btn-group-sm bg-gradient-lightblue btn80 font75" title="Edit">Edit</button>
-                        
-                        <a id="delete_client" data-client-name="{{ .Id }}" class="btn btn-sm btn-group-sm bg-red-gradient btn40"
-                         title="Delete">Delete</a>
+                        class="btn btn-sm btn-group-sm bg-gradient-lightblue btn60 font75" title="Edit">Edit</button>
                     </div>
                   </td>
+                  
                 </tr>
 
             {{end}}

@@ -19,13 +19,21 @@ func init() {
 				AllowHTTPMethods: []string{"post"},
 				Params:           nil})
 
-	// web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"] =
-	// 	append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"],
-	// 		web.ControllerComments{
-	// 			Method:           "RenderModalRaw",
-	// 			Router:           `/clients/render_modal_raw`,
-	// 			AllowHTTPMethods: []string{"post"},
-	// 			Params:           nil})
+	web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"] =
+		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"],
+			web.ControllerComments{
+				Method:           "DelClient",
+				Router:           `/clients/delclient/:key`,
+				AllowHTTPMethods: []string{"get"},
+				Params:           nil})
+
+	web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"] =
+		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"],
+			web.ControllerComments{
+				Method:           "RenderModalRaw",
+				Router:           `/clients/render_modal_raw`,
+				AllowHTTPMethods: []string{"post"},
+				Params:           nil})
 
 	web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"] =
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"],
@@ -59,11 +67,11 @@ func init() {
 	// 			AllowHTTPMethods: []string{"get"},
 	// 			Params:           nil})
 
-	// web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"] =
-	// 	append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"],
-	// 		web.ControllerComments{
-	// 			Method:           "SaveClientRawData",
-	// 			Router:           `/clients/save_client_data`,
-	// 			AllowHTTPMethods: []string{"post"},
-	// 			Params:           nil})
+	web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"] =
+		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"],
+			web.ControllerComments{
+				Method:           "SaveClientRawData",
+				Router:           `/clients/save_client_data`,
+				AllowHTTPMethods: []string{"post"},
+				Params:           nil})
 }

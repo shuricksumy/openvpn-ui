@@ -138,6 +138,8 @@ func (c *CertificatesController) Post() {
 				flash.Error(err_cl.Error())
 				flash.Store(&c.Controller)
 			} else {
+				status := "Active"
+				models.UpdateClientCertificateStatusById(clientId, &status)
 				flash.Success("Success! Certificate for the name \"" + client.ClientName + "\" has been created")
 				flash.Store(&c.Controller)
 			}
@@ -151,11 +153,28 @@ func (c *CertificatesController) Revoke() {
 	c.TplName = "certificates.html"
 	flash := web.NewFlash()
 	name := c.GetString(":key")
+
+	clientDetails, err_cl := models.GetClientDetailsByCertificate(name)
+	if err_cl != nil {
+		logs.Error(err_cl)
+		flash.Error(err_cl.Error())
+		flash.Store(&c.Controller)
+	}
+
 	if err := lib.RevokeCertificate(name); err != nil {
 		logs.Error(err)
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
 	} else {
+		if clientDetails != nil {
+			status := "Revoked"
+			err_upd := models.UpdateClientCertificateStatusById(clientDetails.Id, &status)
+			if err_upd != nil {
+				logs.Error(err_upd)
+				flash.Error(err_upd.Error())
+				flash.Store(&c.Controller)
+			}
+		}
 		flash.Warning("Success! Certificate for the name \"" + name + "\" has been revoked")
 		flash.Store(&c.Controller)
 	}
@@ -167,11 +186,28 @@ func (c *CertificatesController) UnRevoke() {
 	c.TplName = "certificates.html"
 	flash := web.NewFlash()
 	name := c.GetString(":key")
+
+	clientDetails, err_cl := models.GetClientDetailsByCertificate(name)
+	if err_cl != nil {
+		logs.Error(err_cl)
+		flash.Error(err_cl.Error())
+		flash.Store(&c.Controller)
+	}
+
 	if err := lib.UnRevokeCertificate(name); err != nil {
 		logs.Error(err)
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
 	} else {
+		if clientDetails != nil {
+			status := "Active"
+			err_upd := models.UpdateClientCertificateStatusById(clientDetails.Id, &status)
+			if err_upd != nil {
+				logs.Error(err_upd)
+				flash.Error(err_upd.Error())
+				flash.Store(&c.Controller)
+			}
+		}
 		flash.Warning("Success! Certificate for the name \"" + name + "\" has been UNrevoked")
 		flash.Store(&c.Controller)
 	}

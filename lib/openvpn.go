@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os/exec"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"sync"
@@ -183,4 +184,10 @@ func RestartOpenVpnUI() (string, error) {
 	}
 
 	return "OpenVPN server has been restarted", nil
+}
+
+func RawReadClientFile(clientName string) (string, error) {
+	InitGlobalVars()
+	destPathClientConfig := filepath.Join(CCD_DIR_PATH, clientName)
+	return RawReadFile(destPathClientConfig)
 }

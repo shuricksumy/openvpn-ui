@@ -109,9 +109,8 @@
               <th style="width:15%">Router Name</th>
               <th style="width:10%">Route IP</th>
               <th style="width:10%">Route Mask</th>
-              <th style="width:30%">Description</th>
-              <th style="width:5%">Edit</th>
-              <th class="last-sm" style="width:5%">Delete</th>
+              <th style="width:40%">Description</th>
+              <th class="last-sm" style="width:5%">Edit</th>
             </tr>
             </thead>
             <tbody>
@@ -172,15 +171,6 @@
                     </div>
                   </td>
 
-                  <!-- 8 sell -->
-                  <td class="textcenter my-centered last-sm" data-toggle="tooltip" title="Used by:{{range $isUsedBy}} {{.}}{{end}}">
-                    <div class="btn-group tool-tip">
-                      <a href="{{urlfor "RoutesController.Delete" ":key" $r.Id}}" 
-                            data-title="Remove route ?" 
-                            class="btn btn-sm btn-group-sm btn80 font75 {{if $isUsedBy}} btn-default disabled {{else}} btn-danger bg-gradient-red {{end}}" 
-                            title="Delete">Delete</a>
-                    </div>
-                  </td>
                 </tr>
                 <!-- <tr class="expandable-body d-none">
                   <td colspan="6">

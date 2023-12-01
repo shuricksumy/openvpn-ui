@@ -124,6 +124,10 @@
   min-width: 40px;
  }
 
+.btn60 {
+min-width: 60px;
+}
+
 .btn80 {
  min-width: 80px;
 }
@@ -374,4 +378,14 @@ label.switch-label{
   0% { transform: scale(0.9); opacity: 0.5; }
   50% { transform: scale(1.5); opacity: 1; }
   100% { transform: scale(0.9); opacity: 0.5; }
+}
+
+a.disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+button.disabled {
+  pointer-events: none;
+  cursor: default;
 }

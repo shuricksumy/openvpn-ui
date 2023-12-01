@@ -9,16 +9,17 @@ import (
 )
 
 type ClientDetails struct {
-	Id              int             `orm:"auto;pk"`
-	ClientName      string          `orm:"unique" form:"client_name"`
-	StaticIP        *string         `orm:"unique;null" form:"static_ip"`
-	IsRouteDefault  bool            `valid:"Required" form:"use_def_routing"`
-	IsRouter        bool            `valid:"Required" form:"client_is_router"`
-	CertificateName *string         `orm:"unique;null" form:"certificate_name"`
-	Description     string          `form:"description"`
-	Passphrase      string          `form:"cert_pass"`
-	Routes          []*RouteDetails `orm:"rel(m2m)"`
-	MD5Sum          string          `form:"md5sum"`
+	Id                int             `orm:"auto;pk"`
+	ClientName        string          `orm:"unique" form:"client_name"`
+	StaticIP          *string         `orm:"unique;null" form:"static_ip"`
+	IsRouteDefault    bool            `valid:"Required" form:"use_def_routing"`
+	IsRouter          bool            `valid:"Required" form:"client_is_router"`
+	CertificateName   *string         `orm:"unique;null" form:"certificate_name"`
+	CertificateStatus *string         `orm:"null"`
+	Description       string          `form:"description"`
+	Passphrase        string          `form:"cert_pass"`
+	Routes            []*RouteDetails `orm:"rel(m2m)"`
+	MD5Sum            string          `form:"md5sum"`
 }
 
 // Validate function to perform custom validation
@@ -258,6 +259,12 @@ func GetClientDetailsByCertificate(certificateName string) (*ClientDetails, erro
 	var clients []*ClientDetails
 	if _, err := o.QueryTable(new(ClientDetails)).Filter("CertificateName", certificateName).All(&clients); err == nil {
 		if len(clients) > 0 {
+
+			// Load the associated RouteDetails for each client
+			for _, client := range clients {
+				o.LoadRelated(client, "Routes")
+			}
+
 			return clients[0], nil
 		}
 	} else {
@@ -327,6 +334,24 @@ func UpdateClientCertificateById(clientID int, certificateName *string) error {
 	return err
 }
 
+func UpdateClientCertificateStatusById(clientID int, certificateStatus *string) error {
+	o := orm.NewOrm()
+
+	// Get the existing client
+	client := &ClientDetails{Id: clientID}
+	err := o.Read(client)
+	if err != nil {
+		return err
+	}
+
+	// Update the CertificateName
+	client.CertificateStatus = certificateStatus
+
+	// Save the updated client
+	_, err = o.Update(client)
+	return err
+}
+
 // ClearClientCertificateById clears the CertificateName for a client by its ID
 func ClearClientCertificateById(clientID int) error {
 	o := orm.NewOrm()
@@ -340,6 +365,26 @@ func ClearClientCertificateById(clientID int) error {
 
 	// Clear the CertificateName
 	client.CertificateName = nil
+	client.CertificateStatus = nil
+
+	// Save the updated client
+	_, err = o.Update(client)
+	return err
+}
+
+// UpdatePassphraseById updates the Passphrase for a client by its ID
+func UpdatePassphraseById(clientID int, passphrase string) error {
+	o := orm.NewOrm()
+
+	// Get the existing client
+	client := &ClientDetails{Id: clientID}
+	err := o.Read(client)
+	if err != nil {
+		return err
+	}
+
+	// Update the Passphrase
+	client.Passphrase = passphrase
 
 	// Save the updated client
 	_, err = o.Update(client)

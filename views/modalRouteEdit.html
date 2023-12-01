@@ -1,6 +1,7 @@
 
 {{$r := .Route}}
 {{$connectedRouters := RouteIsUsedBy $r.Id}}
+{{$isUsedBy := RouteIsUsedBy $r.Id}}
 
 <div class="modal fade" id="showEditRouteModal" role="dialog">
     <div class="modal-dialog custom-modal-dialog-form"> <!-- Apply custom CSS style for the modal width -->
@@ -52,6 +53,12 @@
                             </div>
                             <!-- /.card-body -->
                             <div class="modal-footer">
+                                <div class="btn-group" role="group" style="position: absolute; left: 25px;">                  
+                                    <a href="{{urlfor "RoutesController.Delete" ":key" $r.Id}}" 
+                                        data-title="Remove route ?" 
+                                        class="btn btn-sm btn-group-sm btn80 font75 btn-danger bg-gradient-red {{if $isUsedBy}} disabled {{end}}" 
+                                        title="Delete">{{if $isUsedBy}} Cann't {{end}}Delete{{if $isUsedBy}}: it's used{{end}}</a>
+                                </div>
                                 <button type="button" class="btn btn-sm btn-default btn80" data-dismiss="modal" >Close</button>
                                 <button type="submit" class="btn btn-sm bg-gradient-lightblue btn80 myspiner" id="updateRoute">Update</button>
                             </div>
@@ -114,5 +121,30 @@
         }
     });
   
+    
+    $(function() {
+        $('a.btn-danger').confirm({
+            content: "Are you sure? This cannot be reverted.",
+            type: 'red',
+            icon: 'fa fa-hand-o-right',
+            title: 'font-awesome',
+            theme: 'bootstrap',
+            columnClass: 'small',
+            animateFromElement: false,
+            animation: 'RotateXR',
+            closeAnimation: 'rotateXR',
+            buttons: {
+                Confirm: {
+                    btnClass: 'btn-red bg-red-gradient btn80 myspiner',
+                    action: function(){location.href = this.$target.attr('href');}
+                },
+                Cancel: {
+                    btnClass: 'btn80',
+                    action: function(){}
+                },
+            }
+        });
+    });
+
   });
   </script>

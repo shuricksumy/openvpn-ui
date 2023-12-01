@@ -89,8 +89,56 @@ pre.mypre {
 
                     <div class="panel-body">
                         <div class="form-row">
+
+
+                            <div class="form-group col-sm-6">
+                                <label for="cert_status" class="form-check-label">Certificate Name</label>
+                                <i class="fa fa-info-circle" data-toggle="popover" data-html="true" data-placement="bottom"
+                                    data-content=" If client has Certificate you will see its status here"></i>
+                                <div class="input-group">
+                                    <div class="btn-group" role="group" style="flex: 1 0 auto; margin-top: 3px;">
+                                            {{if $c.CertificateName}}
+                                                <span class="btn btn-sm btn-group-sm bg-gradient-lightblue" id="cert_name">{{$c.CertificateName}}</span>                       
+                                            {{else}}
+                                                <span class="btn btn-sm btn-group-sm bg-gray-light" id="cert_name">No Certificates</span>
+                                            {{end}}
+                                            
+                                            {{if $c.CertificateStatus}}
+                                                {{if eq (printf $c.CertificateStatus) "Active"}}
+                                                    <span class="btn btn-sm btn-group-sm bg-gradient-olive" 
+                                                        id="cert_status">{{$c.CertificateStatus}}</span>
+                                                {{end}}
+                                                {{if eq (printf $c.CertificateStatus) "Revoked"}}
+                                                    <span class="btn btn-sm btn-group-sm bg-gradient-yellow" 
+                                                        id="cert_status">{{$c.CertificateStatus}}</span>
+                                                {{end}}
+                                            {{else}}
+                                                <span class="btn btn-sm btn-group-sm bg-red" id="cert_status">Failed</span>
+                                            {{end}}
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group col-sm-6">
+                                <label for="passphrase" class="form-check-label">Passphrase</label>
+                                <i class="fa fa-info-circle" data-toggle="popover" data-html="true" data-placement="bottom"
+                                    data-content=" Use this phrase to import Certificate on clien side"></i>
+                                <div class="input-group" id="show_hide_password">
+                                  <input type="password" class="form-control" placeholder="Passphrase" id="passphrase" 
+                                    name="passphrase" data-inputmask="'mask': '*' ,'repeat': 35, 'greedy' : false" 
+                                    data-mask onfocusout="this.value = this.value.trim()" 
+                                        value="{{$c.Passphrase}}" {{if $c.CertificateName}}readonly{{end}}>
+                                  <span class="input-group-btn">
+                                    <button class="btn btn-default reveal" type="button">
+                                      <i class="fa fa-eye-slash"></i></button>
+                                  </span>
+                                </div>
+                                <span class="help-block font75">Can be changed if user has no Certificates</span>
+                            </div>
+
+
                             <div class="col-sm-6">
-                                
                                 <label class="form-check-label" for="static_ip">
                                     Static IP: &nbsp;    
                                 </label>
@@ -277,13 +325,20 @@ pre.mypre {
                     </div>      
 
 
-
+                   
 
                     <div class="panel-body"></div>   
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-default btn80" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-sm bg-gradient-lightblue btn80 myspiner">Save</button>
+                            <div class="btn-group" role="group" style="position: absolute; left: 25px;">                  
+                                <a href="{{urlfor "ClientsController.DelClient" ":key" $c.Id}}" id="delete_client" data-title="Delete client {{$c.ClientName}}?"
+                                  class="btn btn-sm btn-danger btn-group-sm bg-gradient-red btn80 {{if $c.CertificateName}} disabled {{end}}" 
+                                    title="Delete">{{if $c.CertificateName}} Cann't {{end}}Delete{{if $c.CertificateName}}: it's used{{end}}</a>
+                            </div>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-sm btn-default btn80" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-sm bg-gradient-lightblue btn80 myspiner">Save</button>
+                            </div>
                     </div>
 
                 </form>
@@ -301,5 +356,46 @@ pre.mypre {
 <script type="text/javascript">
     $(function () {
         $('[data-mask]').inputmask();
+    });
+
+    $(function() {
+        $('a.btn-danger').confirm({
+            content: "Are you sure? This cannot be reverted.",
+            type: 'red',
+            icon: 'fa fa-hand-o-right',
+            title: 'font-awesome',
+            theme: 'bootstrap',
+            columnClass: 'small',
+            animateFromElement: false,
+            animation: 'RotateXR',
+            closeAnimation: 'rotateXR',
+            buttons: {
+                Confirm: {
+                    btnClass: 'btn-red bg-red-gradient btn80 myspiner',
+                    action: function(){location.href = this.$target.attr('href');}
+                },
+                Cancel: {
+                    btnClass: 'btn80',
+                    action: function(){}
+                },
+            }
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $("#show_hide_password button").on('click', function(event) {
+            event.preventDefault();
+            if($('#show_hide_password input').attr("type") == "text"){
+                $('#show_hide_password input').attr('type', 'password');
+                $('#show_hide_password i').addClass( "fa-eye-slash" );
+                $('#show_hide_password i').removeClass( "fa-eye" );
+            }else if($('#show_hide_password input').attr("type") == "password"){
+                $('#show_hide_password input').attr('type', 'text');
+                $('#show_hide_password i').removeClass( "fa-eye-slash" );
+                $('#show_hide_password i').addClass( "fa-eye" );
+            }
+        });
     });
 </script>

@@ -1,12 +1,14 @@
 package controllers
 
 import (
+	"path/filepath"
 	"strconv"
 
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
 	"github.com/shuricksumy/openvpn-ui/lib"
 	"github.com/shuricksumy/openvpn-ui/models"
+	"github.com/shuricksumy/openvpn-ui/state"
 )
 
 type ClientsController struct {
@@ -128,6 +130,7 @@ func (c *ClientsController) SaveClientDetailsData() {
 	isRouteDefaultStr := c.GetString("is_route_default")
 	isRouterStr := c.GetString("is_router")
 	usedRoutes := c.GetStrings("route_list_selected")
+	passphrase := c.GetString("passphrase")
 
 	var isRouteDefault bool
 
@@ -152,8 +155,6 @@ func (c *ClientsController) SaveClientDetailsData() {
 
 	}
 
-	//func UpdateClientDetails(clientID int, staticIP *string, routes []*RouteDetails, description string, isRouteDefault, isRouter bool) error {
-
 	if err := models.UpdateClientDetails(clientID, staticIP, description, isRouteDefault, isRouter); err == nil {
 		flash.Success("New client added successfully")
 	} else {
@@ -176,6 +177,137 @@ func (c *ClientsController) SaveClientDetailsData() {
 		flash.Error("Failed to add routes ", err)
 		flash.Store(&c.Controller)
 	}
+
+	if err := models.UpdatePassphraseById(clientID, passphrase); err == nil {
+		flash.Success("New client added successfully")
+		flash.Store(&c.Controller)
+	} else {
+		flash.Error("Failed to update passphrase ", err)
+		flash.Store(&c.Controller)
+	}
+
+	c.ShowClients()
+}
+
+// @router /clients/render_modal_raw/ [post]
+func (c *ClientsController) RenderModalRaw() {
+
+	flash := web.NewFlash()
+	clientName := c.GetString("client-name")
+
+	// Load data from the client-name.txt file.
+	data, err := lib.RawReadClientFile(clientName)
+	if err != nil {
+		logs.Error(err)
+		flash.Error("Cannot read " + clientName + " file !")
+		flash.Store(&c.Controller)
+	}
+
+	client, err_client := models.GetClientDetailsByCertificate(clientName)
+	if err_client != nil {
+		providedRoutes, _ := models.GetAllRoutesProvided(client.Id)
+		c.Data["RouterProvideRouts"] = providedRoutes
+	} else {
+		logs.Error(err_client)
+		flash.Error("Cannot find Client in DB")
+		flash.Store(&c.Controller)
+	}
+
+	c.Data["Client"] = &client
+	c.Data["ClientData"] = string(data)
+
+	// // get md5 sums from file system
+	// isMD5valid := lib.GetMD5StatusForClient(clients, clientName)
+	// c.Data["IsMD5Valid"] = isMD5valid
+
+	c.TplName = "modalClientRaw.html"
+	c.Render()
+	c.ShowClients()
+}
+
+// @router /clients/save_client_data [post]
+func (c *ClientsController) SaveClientRawData() {
+	flash := web.NewFlash()
+	clientName := c.GetString("client_name")
+	clientData := c.GetString("client_data")
+
+	// Save the data to the client-name.txt file.
+	destPathClientConfig := filepath.Join(state.GlobalCfg.OVConfigPath, "ccd", clientName)
+	err := lib.RawSaveToFile(destPathClientConfig, clientData)
+	if err != nil {
+		logs.Error(err)
+		flash.Error("Cannot save " + clientName + " file !")
+		flash.Store(&c.Controller)
+		return
+	}
+
+	// Redirect to the main page after successful file save.
+	flash.Success("Settings are saved for " + clientName + " to file.")
+	flash.Store(&c.Controller)
+
+	c.TplName = "clients.html"
+	c.ShowClients()
+
+}
+
+// @router /clients/delclient [post]
+func (c *ClientsController) DelClient() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+	c.TplName = "clients.html"
+
+	flash := web.NewFlash()
+	clientID := c.GetString(":key")
+	lib.Dump("---DELETE CLIENT")
+	lib.Dump(clientID)
+
+	id, _ := strconv.Atoi(clientID)
+	client, err := models.GetClientDetailsById(id)
+	if err != nil {
+		logs.Error(err)
+		flash.Error("Client is not found")
+		flash.Store(&c.Controller)
+		c.ShowClients()
+		return
+	}
+	providedRoutes, err := models.GetAllRoutesProvided(id)
+	if err != nil {
+		logs.Error(err)
+		flash.Error("Error while getting client routes")
+		flash.Store(&c.Controller)
+		c.ShowClients()
+		return
+	}
+
+	if client.CertificateName != nil {
+		logs.Error("Client can not be deleted. First delete connected certificate")
+		flash.Error("Client can not be deleted. First delete connected certificate")
+		flash.Store(&c.Controller)
+		c.ShowClients()
+		return
+	}
+
+	if len(providedRoutes) > 0 {
+		logs.Error("Client can not be deleted. First delete all provided routes")
+		flash.Error("Client can not be deleted. First delete all provided routes")
+		flash.Store(&c.Controller)
+		c.ShowClients()
+		return
+	}
+
+	err_del := models.DeleteClientDetailsByID(id)
+	if err_del != nil {
+		logs.Error("Error while deleteing client", err_del)
+		flash.Error("Error while deleteing client", err_del)
+		flash.Store(&c.Controller)
+		c.ShowClients()
+		return
+	}
+
+	flash.Success("Client was successfuly deleted:" + clientID)
+	flash.Store(&c.Controller)
 
 	c.ShowClients()
 }
