@@ -38,30 +38,21 @@
           <div class="form-row">
             
                 <div class="form-group col-md-4 {{if field_error_exist .validation "Name" }}has-error{{end}}">
-                    <label for="Name">Name*</label>
-                    <input type="text" class="form-control" placeholder="Enter name" id="Name" name="Name" 
-                    data-inputmask="'mask': '*' ,'repeat': 20, 'greedy' : false" data-mask required onfocusout="this.value = this.value.trim()">
-                    <span class="help-block font75">Common name of the certificate.&nbsp;&nbsp;&nbsp;<span>
+                  <label for="client_name">Name*</label>
+                  <select class="custom-select" name="client_name" id="client_name">
+                      <option value="" disabled selected value> -- select client -- </option>
+                      {{range  $val := .Clients}}
+                          <option value="{{ $val.Id }}">{{ $val.ClientName }}</option>
+                      {{end}}
+                  </select>
+                  <span class="help-block font75">The client without certificate</span>
                 </div>
-
-                <div class="form-group col-md-4">
-                    <label for="passphrase">Passphrase (Optional)</label>
-                    <div class="input-group" id="show_hide_password">
-                        <input type="password" class="form-control pwd" placeholder="Enter Password"  id="passphrase" name="passphrase">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default reveal" type="button"><i class="fa fa-eye-slash"></i></button>
-                        </span>
-                    </div>
-                    <span class="help-block font75">Passphrase is used for privte key protection.&nbsp;&nbsp;&nbsp;</span>
-                </div>
-
-              <div class="form-group col-md-4">
-                    <label for="description">Description (Optional)</label>
-                    <input type="text" class="form-control" placeholder="Add description" id="description" 
-                      name="description" onfocusout="this.value = this.value.trim()">
-                    <span class="help-block font75">Client Static IP used as a local Client IP for subnet split.</span>
-              </div>
-
+  
+                <div class="form-group col-md-8">
+                  <label for="help">*</label>
+                  <input type="text" class="form-control" value="Here, you can select Clients witout certificates" disabled id="help">
+            </div>
+               
           </div>
 
       </div>
@@ -236,11 +227,9 @@
 
                           <div class="modal-body font90">
                              <span class="param-name"><b>Name:</b></span><span class="param-value"> {{ .Details.CN }}</span><br>
-                             <span class="param-name"><b>Description:</b></span><span class="param-value"> {{ .Details.Description }}</span><br>
                              <span class="param-name"><b>Type:</b></span><span class="param-value"> {{ .EntryType }}</span><br>
                              <span class="param-name"><b>Status:</b></span><span class="param-value">{{if eq .EntryType "V"}}  Active {{else if eq .EntryType "R"}} Revoked {{else}} Unknown {{end}}</span><br>
                              <span class="param-name"><b>Serial:</b></span><span class="param-value"> {{ .Serial }}</span><br>
-                             <span class="param-name"><b>IP Address:</b>:</span><span class="param-value"> {{ .Details.LocalIP }}</span><br>
                              <span class="param-name"><b>Expiration Date:</b></span><span class="param-value"> {{ dateformat .ExpirationT "2006-01-02 15:04"}}</span><br>
                              <span class="param-name"><b>Revoke Date:</b></span><span class="param-value">{{if ne .Revocation ""}} {{ dateformat .RevocationT "2006-01-02 15:04"}} {{else}} none {{end}}</span><br>
                           </div>

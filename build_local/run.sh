@@ -10,7 +10,7 @@ export OVDIR=/etc/openvpn
 
 rm $GOPATH/bin/openvpn-ui
 cd ../
-rm ./data.db
+#rm ./data.db
 rm ./openvpn-ui
 
 if [ ! -f ${OVDIR}/clientDetails.json ]; then

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"path/filepath"
+	"strconv"
 	"text/template"
 
 	"github.com/beego/beego/v2/core/logs"
@@ -78,7 +79,18 @@ func (c *CertificatesController) showCerts() {
 		logs.Error(err)
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
+	}
 
+	clientsNoCert, err := models.GetClientsDetailsWithoutCertificate()
+	if err == nil {
+		c.Data["Clients"] = &clientsNoCert
+	} else {
+		c.Data["Clients"] = map[string]string{"error": "Failed to get all ClientDetails"}
+	}
+	if err != nil {
+		logs.Error(err)
+		flash.Error(err.Error())
+		flash.Store(&c.Controller)
 	}
 
 	// //get clientsDetails from file
@@ -97,31 +109,36 @@ func (c *CertificatesController) showCerts() {
 	// lib.Dump(certs)
 	c.TplName = "certificates.html"
 	c.Data["certificates"] = &certs
+
 }
 
 // @router /certificates [post]
 func (c *CertificatesController) Post() {
 	c.TplName = "certificates.html"
 	flash := web.NewFlash()
-	cParams := NewCertParams{}
-	if err := c.ParseForm(&cParams); err != nil {
-		logs.Error(err)
-		flash.Error(err.Error())
+
+	clientIdStr := c.GetString("client_name")
+	clientId, _ := strconv.Atoi(clientIdStr)
+
+	client, err_cl := models.GetClientDetailsById(clientId)
+	if err_cl != nil {
+		logs.Error(err_cl)
+		flash.Error(err_cl.Error())
 		flash.Store(&c.Controller)
 	} else {
-		if vMap := validateCertParams(cParams); vMap != nil {
-			c.Data["validation"] = vMap
+		if err := lib.CreateCertificate(client.ClientName, client.Passphrase); err != nil {
+			logs.Error(err)
+			flash.Error(err.Error())
+			flash.Store(&c.Controller)
 		} else {
-			if err := lib.CreateCertificate(cParams.Name, cParams.Passphrase); err != nil {
-				logs.Error(err)
-				flash.Error(err.Error())
+			clName := lib.StringToNilString(client.ClientName)
+			err_upd_cl := models.UpdateClientCertificateById(clientId, clName)
+			if err_upd_cl != nil {
+				logs.Error(err_cl)
+				flash.Error(err_cl.Error())
 				flash.Store(&c.Controller)
 			} else {
-				// err_save_json := AddDescriptionToFile(cParams.Name, cParams.Description)
-				// if err_save_json != nil {
-				// 	flash.Warning("Certificate for the name \"" + cParams.Name + "\" has been created. But Description was not saved")
-				// }
-				flash.Success("Success! Certificate for the name \"" + cParams.Name + "\" has been created")
+				flash.Success("Success! Certificate for the name \"" + client.ClientName + "\" has been created")
 				flash.Store(&c.Controller)
 			}
 		}
@@ -174,11 +191,26 @@ func (c *CertificatesController) Burn() {
 	flash := web.NewFlash()
 	CN := c.GetString(":key")
 	serial := c.GetString(":serial")
+
+	clientDetails, err_cl := models.GetClientDetailsByCertificate(CN)
+	if err_cl != nil {
+		logs.Error(err_cl)
+		flash.Error(err_cl.Error())
+		flash.Store(&c.Controller)
+	}
 	if err := lib.BurnCertificate(CN, serial); err != nil {
 		logs.Error(err)
-		//flash.Error(err.Error())
-		//flash.Store(&c.Controller)
+		flash.Error(err.Error())
+		flash.Store(&c.Controller)
 	} else {
+		if clientDetails != nil {
+			err_upd := models.ClearClientCertificateById(clientDetails.Id)
+			if err_upd != nil {
+				logs.Error(err_upd)
+				flash.Error(err_upd.Error())
+				flash.Store(&c.Controller)
+			}
+		}
 		flash.Success("Success! Certificate for the name \"" + CN + "\" has been removed")
 		flash.Store(&c.Controller)
 	}
@@ -284,19 +316,3 @@ func SaveToFile(tplPath string, c config.Config, destPath string) error {
 
 	return lib.RawSaveToFile(destPath, str)
 }
-
-// func AddDescriptionToFile(clientName string, description string) error {
-
-// 	newClient := models.ClientDetails{
-// 		ClientName:     clientName,
-// 		StaticIP:       "",
-// 		IsRouteDefault: false,
-// 		IsRouter:       false,
-// 		Description:    description,
-// 		RouteList:      nil,
-// 		CSRFToken:      "",
-// 	}
-
-// 	return lib.AddClientToJsonFile(newClient)
-
-// }
