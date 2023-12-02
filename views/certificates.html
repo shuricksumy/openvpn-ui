@@ -187,15 +187,11 @@
                   {{ $col := "btn btn-sm btn-group-sm bg-gradient-lightblue" }}  
                   {{ $comment := "Edit" }} 
                   {{ $isValid := true }}
-                  {{ range $md5 := $MD5 }}
-                      {{ if eq $md5.ClientName $c.Details.CN }}
-                          {{ if not $md5.IsValid }} 
+                          {{ if not (GetBoolValueByKey $c.Details.CN $MD5) }} 
                               {{ $col = "btn-danger btn-sm btn-group-sm bg-gradient-red" }}
                               {{ $comment = "Config was changed but not applied !" }}
                               {{ $isValid = false }} 
                           {{ end }}
-                      {{ end }}
-                  {{ end }}
                   {{if eq .EntryType "V"}}
                     <td class="textcenter last-sm">
                       <button  id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .Details.CN }}" 

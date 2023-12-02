@@ -48,6 +48,11 @@ func (c *ClientsController) ShowClients() {
 	} else {
 		c.Data["Clients"] = map[string]string{"error": "Failed to get all ClientDetails"}
 	}
+
+	//Get md5 validatios
+	md5Struct := lib.GetMD5StructureFromFS()
+	c.Data["MD5"] = &md5Struct
+
 	// c.ServeJSON()
 	if err != nil {
 		flash.Error("Clients not found")
@@ -157,6 +162,7 @@ func (c *ClientsController) SaveClientDetailsData() {
 	}
 
 	if err := models.UpdateClientDetails(clientID, staticIP, description, isRouteDefault, isRouter); err == nil {
+		models.UpdateMD5SumForClientDetailsByID(clientID, "edited")
 		flash.Success("New client added successfully")
 	} else {
 		flash.Error("Failed to add new client: ", err)
@@ -327,14 +333,14 @@ func (c *ClientsController) UpdateFiles() {
 		wasError = true
 	}
 
-	// //UpdateJSON with new MD5
-	// err_upd_md5 := lib.UpdateJSONWithLatestMD5()
-	// if err_upd_md5 != nil {
-	// 	logs.Error(err_upd_md5)
-	// 	flash.Error("ERROR UPATING MD5 TO JSON ! ", err_upd_md5)
-	// 	flash.Store(&c.Controller)
-	// 	wasError = true
-	// }
+	// Update DB with new MD5
+	err_upd_md5 := lib.UpdateDBWithLatestMD5()
+	if err_upd_md5 != nil {
+		logs.Error(err_upd_md5)
+		flash.Error("ERROR UPATING MD5 TO JSON ! ", err_upd_md5)
+		flash.Store(&c.Controller)
+		wasError = true
+	}
 
 	if !wasError {
 		// Redirect to the main page after successful file save.

@@ -134,23 +134,25 @@
             </thead>
             <tbody>
 
-
+            {{$MD5 := .MD5}} 
             {{range $c := .Clients}}
                 <!-- <tr data-widget="expandable-table" aria-expanded="false"> -->
-                <tr>
-
+                <tr> 
                   <!-- 1 sell -->
                   <td class="my-centered first-sm">
-                      {{ $col := "btn-sm btn-group-sm btn-block bg-lightblue" }} 
+                      {{ $col := "btn-sm btn-group-sm btn-block bg-gradient-lightblue" }} 
                       {{ $comment := .ClientName }}
                       {{ $icon := "fa fa-edit" }}
-                      {{ if not .MD5Sum }} 
-                          {{ $col = "btn-danger btn-sm btn-group-sm btn-block bg-red" }} 
+                      {{ if not (GetBoolValueByKey $c.ClientName $MD5) }}
+                          {{ $col = "btn-danger btn-sm btn-group-sm btn-block bg-gradient-red" }} 
                           {{ $comment = "Config was changed but not applied !" }}
                           {{ $icon = "fa fa-warning" }} 
                       {{ end }}
+                      {{if not $c.CertificateName}} 
+                        {{ $col = "btn-default btn-sm btn-group-sm btn-block disabled" }}  
+                      {{end}}
                        <button id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .ClientName }}" 
-                        class="btn {{ $col }} right-icon-holder font75 {{if not $c.CertificateName}} disabled {{end}}" 
+                        class="btn {{ $col }} right-icon-holder font75" 
                         title="{{ $comment }}">{{ .ClientName }}<i class="{ $icon }"></i>
                       </button>
                   </td>

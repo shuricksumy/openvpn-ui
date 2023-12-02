@@ -288,3 +288,98 @@ func ApplyClientsConfigToFS() error {
 
 	return nil
 }
+
+// FileData represents the structure with FileName and MD5sum fields.
+type FileData struct {
+	FileName string
+	MD5sum   string
+}
+
+// // createFileMap creates a map with FileName as the key and FileData as the value.
+// func createFileMap(files ...FileData) map[string]FileData {
+// 	fileMap := make(map[string]FileData)
+// 	for _, file := range files {
+// 		fileMap[file.FileName] = file
+// 	}
+// 	return fileMap
+// }
+
+// // calculateMD5Sum calculates the MD5 sum of a file content (dummy implementation for illustration).
+// func calculateMD5Sum(content string) string {
+// 	hasher := md5.New()
+// 	hasher.Write([]byte(content))
+// 	return hex.EncodeToString(hasher.Sum(nil))
+// }
+
+func UpdateDBWithLatestMD5() error {
+	clients, err_cl := models.GetAllClientsWithCertificate()
+	if err_cl != nil {
+		return err_cl
+	}
+
+	for _, c := range clients {
+
+		pathFile := filepath.Join(CCD_DIR_PATH, c.ClientName)
+
+		md5Client, err_get_md5 := GetMD5SumFile(pathFile)
+		if err_get_md5 != nil {
+			return err_get_md5
+		}
+
+		err_upd := models.UpdateMD5SumForClientDetails(c.ClientName, md5Client)
+		if err_upd != nil {
+			logs.Error("Issue with updating MD5 [", c.ClientName, "] :", err_upd)
+		}
+
+	}
+	return nil
+
+}
+
+func GetMD5StructureFromFS() map[string]bool {
+	result := make(map[string]bool)
+
+	clients, err_cl := models.GetAllClientsWithCertificate()
+	if err_cl != nil {
+		logs.Error("Issue with reading from DB:", err_cl)
+	}
+
+	for _, c := range clients {
+		pathFile := filepath.Join(CCD_DIR_PATH, c.ClientName)
+		md5Client, err_get_md5 := GetMD5SumFile(pathFile)
+		if err_get_md5 != nil {
+			logs.Error("Issue with getting MD5 from FS:", err_get_md5)
+		}
+
+		// Compare MD5 sums
+		isMD5Valid := c.MD5Sum == md5Client
+		// Add result to the map
+		result[c.ClientName] = isMD5Valid
+
+	}
+
+	return result
+
+}
+
+// func UpdateDBWithLatestMD5() error {
+// 	clientsDetails, err_read := models.GetAllClientsWithCertificate()
+// 	if err_read != nil {
+// 		return err_read
+// 	}
+
+// 	md5hashs := GetMD5StructureFromFS(clientsDetails)
+
+// 	for _, c := range clientsDetails {
+
+// 		// models.UpdateMD5SumForClientDetails()
+
+// 		for _, h := range md5hashs {
+// 			if c.ClientName == h.ClientName {
+// 				c.MD5Sum = h.MD5Hash
+// 			}
+// 		}
+// 	}
+
+// 	return nil
+// }

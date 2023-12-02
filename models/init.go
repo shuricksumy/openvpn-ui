@@ -101,3 +101,10 @@ func CreateDefaultSettings() (*Settings, error) {
 		return nil, err
 	}
 }
+
+func GetBoolValueByKey(key string, m map[string]bool) bool {
+	if m != nil {
+		return m[key]
+	}
+	return false
+}

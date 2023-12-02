@@ -132,6 +132,12 @@ func GetRouterClients() ([]*ClientDetails, error) {
 
 	var clients []*ClientDetails
 	if _, err := o.QueryTable(new(ClientDetails)).Filter("IsRouter", true).All(&clients); err == nil {
+
+		// Load the associated RouteDetails for each client
+		for _, client := range clients {
+			o.LoadRelated(client, "Routes")
+		}
+
 		return clients, nil
 	}
 
@@ -206,6 +212,12 @@ func GetAllClientDetails() ([]*ClientDetails, error) {
 
 	var clients []*ClientDetails
 	if _, err := o.QueryTable(new(ClientDetails)).All(&clients); err == nil {
+
+		// Load the associated RouteDetails for each client
+		for _, client := range clients {
+			o.LoadRelated(client, "Routes")
+		}
+
 		return clients, nil
 	}
 
@@ -275,23 +287,25 @@ func GetClientDetailsByCertificate(certificateName string) (*ClientDetails, erro
 }
 
 // GetClientCertificateByName retrieves the CertificateName for a client by its ClientName
-func GetClientCertificateByName(clientName string) (string, error) {
+func GetClientCertificateByName(clientName string) (*string, error) {
 	o := orm.NewOrm()
 
-	// Query ClientDetails with the given ClientName
-	client := &ClientDetails{ClientName: clientName}
-	err := o.Read(client)
+	// Use QueryTable to construct a custom query
+	query := o.QueryTable(new(ClientDetails)).Filter("ClientName", clientName)
 
+	// Get the existing client
+	client := &ClientDetails{}
+	err := query.One(client)
 	if err == orm.ErrNoRows {
 		// Client with the given ClientName not found
-		return "", nil
+		return nil, nil
 	} else if err != nil {
 		// Other error occurred
-		return "", err
+		return nil, err
 	}
 
 	// Return the CertificateName
-	return *client.CertificateName, nil
+	return client.CertificateName, nil
 }
 
 // GetClientsDetailsWithoutCertificate retrieves clients without a CertificateName from the database
@@ -411,6 +425,71 @@ func GetAllClientsWithCertificate() ([]*ClientDetails, error) {
 	}
 
 	return clients, nil
+}
+
+// UpdateMD5SumForClientDetails updates the MD5Sum for a client by its ClientName
+func UpdateMD5SumForClientDetails(clientName, newMD5Sum string) error {
+	o := orm.NewOrm()
+
+	// Use QueryTable to construct a custom query
+	query := o.QueryTable(new(ClientDetails)).Filter("ClientName", clientName)
+
+	// Get the existing client
+	client := &ClientDetails{}
+	err := query.One(client)
+	if err != nil {
+		return err
+	}
+
+	// Update the MD5Sum with the provided value
+	client.MD5Sum = newMD5Sum
+
+	// Save the updated client
+	_, err = o.Update(client)
+	return err
+}
+
+// UpdateMD5SumForClientDetailsByID updates the MD5Sum for a client by its Id
+func UpdateMD5SumForClientDetailsByID(clientID int, newMD5Sum string) error {
+	o := orm.NewOrm()
+
+	// Get the existing client by Id
+	client := &ClientDetails{Id: clientID}
+	err := o.Read(client)
+	if err != nil {
+		return err
+	}
+
+	// Update the MD5Sum with the provided value
+	client.MD5Sum = newMD5Sum
+
+	// Save the updated client
+	_, err = o.Update(client)
+	return err
+}
+
+// IsMD5SumValid checks if the provided MD5Sum matches the one stored in the database for a given client
+func IsMD5SumValid(clientName, inputMD5Sum string) (bool, error) {
+	o := orm.NewOrm()
+
+	// Use QueryTable to construct a custom query
+	query := o.QueryTable(new(ClientDetails)).Filter("ClientName", clientName)
+
+	// Get the existing client
+	client := &ClientDetails{}
+	err := query.One(client)
+	if err == orm.ErrNoRows {
+		// Client with the given ClientName not found
+		return false, nil
+	} else if err != nil {
+		// Other error occurred
+		return false, err
+	}
+
+	// Compare the input MD5Sum with the stored MD5Sum
+	isValid := client.MD5Sum == inputMD5Sum
+
+	return isValid, nil
 }
 
 // Custom function defined in the controller
