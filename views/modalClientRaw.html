@@ -37,7 +37,7 @@
                     <div class="form-group mylables">
                         <span class="btn btn-xs bg-gray-light"><b>VPN route is default:</b></span>
                         <span class="btn btn-xs bg-gray-light">{{$c.IsRouteDefault}}</span>
-                        {{if not $c.StaticIP }}
+                        {{if $c.StaticIP }}
                             <span class="btn btn-xs bg-gray-light"><b>StaticIP:</b></span>
                             <span class="btn btn-xs bg-gray-light">{{$c.StaticIP}}</span>
                         {{end}}

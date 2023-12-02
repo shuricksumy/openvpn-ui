@@ -391,6 +391,28 @@ func UpdatePassphraseById(clientID int, passphrase string) error {
 	return err
 }
 
+// GetAllClientsWithCertificate retrieves all clients where CertificateName is not nil
+func GetAllClientsWithCertificate() ([]*ClientDetails, error) {
+	o := orm.NewOrm()
+
+	// Query clients with non-nil CertificateName
+	var clients []*ClientDetails
+	_, err := o.QueryTable("client_details").
+		Filter("CertificateName__isnull", false).
+		All(&clients)
+
+	if err != nil {
+		return nil, err
+	}
+
+	// Load the associated RouteDetails for each client
+	for _, client := range clients {
+		o.LoadRelated(client, "Routes")
+	}
+
+	return clients, nil
+}
+
 // Custom function defined in the controller
 func GetConnectedRoutes(inputId int) []*RouteDetails {
 	// id, _ := strconv.Atoi(inputId)

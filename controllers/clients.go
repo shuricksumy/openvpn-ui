@@ -8,6 +8,7 @@ import (
 	"github.com/beego/beego/v2/server/web"
 	"github.com/shuricksumy/openvpn-ui/lib"
 	"github.com/shuricksumy/openvpn-ui/models"
+	mi "github.com/shuricksumy/openvpn-ui/pkg/openvpn-server-config/server/mi"
 	"github.com/shuricksumy/openvpn-ui/state"
 )
 
@@ -204,9 +205,9 @@ func (c *ClientsController) RenderModalRaw() {
 	}
 
 	client, err_client := models.GetClientDetailsByCertificate(clientName)
-	if err_client != nil {
+	if client != nil {
 		providedRoutes, _ := models.GetAllRoutesProvided(client.Id)
-		c.Data["RouterProvideRouts"] = providedRoutes
+		c.Data["RouterProvideRouts"] = &providedRoutes
 	} else {
 		logs.Error(err_client)
 		flash.Error("Cannot find Client in DB")
@@ -309,5 +310,42 @@ func (c *ClientsController) DelClient() {
 	flash.Success("Client was successfuly deleted:" + clientID)
 	flash.Store(&c.Controller)
 
+	c.ShowClients()
+}
+
+// @router /clients/updatefiles [get]
+func (c *ClientsController) UpdateFiles() {
+	flash := web.NewFlash()
+	wasError := false
+
+	//update files
+	err_save := lib.ApplyClientsConfigToFS()
+	if err_save != nil {
+		logs.Error(err_save)
+		flash.Error("ERROR SAVING CLIENTS TO FS !")
+		flash.Store(&c.Controller)
+		wasError = true
+	}
+
+	// //UpdateJSON with new MD5
+	// err_upd_md5 := lib.UpdateJSONWithLatestMD5()
+	// if err_upd_md5 != nil {
+	// 	logs.Error(err_upd_md5)
+	// 	flash.Error("ERROR UPATING MD5 TO JSON ! ", err_upd_md5)
+	// 	flash.Store(&c.Controller)
+	// 	wasError = true
+	// }
+
+	if !wasError {
+		// Redirect to the main page after successful file save.
+		flash.Success("Clients were updated. Please restart OPENVPN server!")
+		flash.Store(&c.Controller)
+		client := mi.NewClient(state.GlobalCfg.MINetwork, state.GlobalCfg.MIAddress)
+		if err := client.Signal("SIGTERM"); err != nil {
+			flash.Warning("Config has been updated but OpenVPN server was NOT reloaded: " + err.Error())
+		}
+	}
+
+	c.TplName = "clients.html"
 	c.ShowClients()
 }
