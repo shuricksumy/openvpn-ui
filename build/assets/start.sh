@@ -63,13 +63,13 @@ else
     fi
 fi
 
-if [ ! -f ${OVDIR}/clientDetails.json ]; then
-    touch ${OVDIR}/clientDetails.json
-fi
+# if [ ! -f ${OVDIR}/clientDetails.json ]; then
+#     touch ${OVDIR}/clientDetails.json
+# fi
 
-if [ ! -f ${OVDIR}/routesDetails.json ]; then
-    touch ${OVDIR}/routesDetails.json
-fi
+# if [ ! -f ${OVDIR}/routesDetails.json ]; then
+#     touch ${OVDIR}/routesDetails.json
+# fi
 
 # wait for openvpn server ready
 # until [ -f ${OVDIR}/server.conf ]
