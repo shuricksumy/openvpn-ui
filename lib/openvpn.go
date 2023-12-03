@@ -18,34 +18,47 @@ import (
 
 var (
 	OpenVPNProcessID int
-	OpenVPNStatus    string
 	ProcessMutex     sync.Mutex
 )
 
 func IsOpenVPNRunning() bool {
-	ProcessMutex.Lock()
-	defer ProcessMutex.Unlock()
+	pid, err := GetOpenVPNProcessIDFromPS()
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
 
-	return OpenVPNProcessID != 0
-}
-
-func SetOpenVPNStatus(status string) {
-	ProcessMutex.Lock()
-	OpenVPNStatus = status
-	ProcessMutex.Unlock()
+	return pid != 0
 }
 
 func GetOpenVPNStatus() string {
+	pid, err := GetOpenVPNProcessIDFromPS()
+	if err != nil {
+		logs.Error(err)
+		return fmt.Sprintf("Error getting OpenVPN status: %s", err)
+	}
+
 	ProcessMutex.Lock()
 	defer ProcessMutex.Unlock()
-	return OpenVPNStatus
+
+	if pid != 0 {
+		OpenVPNProcessID = pid
+		return "OpenVPN is running"
+	}
+
+	OpenVPNProcessID = 0
+	return "OpenVPN is stopped"
 }
 
 func StartOpenVPN() error {
+	if IsOpenVPNRunning() {
+		return nil
+	}
+
 	cmd := exec.Command("/usr/sbin/openvpn", "--daemon", "openvpnserver", "--cd", "/etc/openvpn", "--config", "/etc/openvpn/server.conf")
 	err := cmd.Run()
 	if err != nil {
-		SetOpenVPNStatus(fmt.Sprintf("Failed to start OpenVPN: %s", err))
+		logs.Error(fmt.Sprintf("Failed to start OpenVPN: %s", err))
 		logs.Error(err)
 		return err
 	}
@@ -53,7 +66,7 @@ func StartOpenVPN() error {
 	// Get the PID of the newly started OpenVPN process
 	pid, err := GetOpenVPNProcessIDFromPS()
 	if err != nil {
-		SetOpenVPNStatus(fmt.Sprintf("Error getting OpenVPN PID: %s", err))
+		logs.Error(fmt.Sprintf("Error getting OpenVPN PID: %s", err))
 		logs.Error(err)
 		return err
 	}
@@ -62,13 +75,13 @@ func StartOpenVPN() error {
 	OpenVPNProcessID = pid
 	ProcessMutex.Unlock()
 
-	SetOpenVPNStatus("OpenVPN is running now")
+	logs.Warn("OpenVPN is running now")
 	return nil
 }
 
 func StopOpenVPN() error {
 	if !IsOpenVPNRunning() {
-		SetOpenVPNStatus("OpenVPN is stopped")
+		logs.Error("OpenVPN is stopped")
 		return nil
 	}
 
@@ -83,7 +96,6 @@ func StopOpenVPN() error {
 	OpenVPNProcessID = 0
 	ProcessMutex.Unlock()
 
-	SetOpenVPNStatus("OpenVPN stopped")
 	return nil
 }
 
