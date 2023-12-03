@@ -347,7 +347,7 @@ func (c *ClientsController) UpdateFiles() {
 		flash.Success("Clients were updated. Please restart OPENVPN server!")
 		flash.Store(&c.Controller)
 		client := mi.NewClient(state.GlobalCfg.MINetwork, state.GlobalCfg.MIAddress)
-		if err := client.Signal("SIGTERM"); err != nil {
+		if err := client.Signal("SIGUSR1"); err != nil {
 			flash.Warning("Config has been updated but OpenVPN server was NOT reloaded: " + err.Error())
 		}
 	}
