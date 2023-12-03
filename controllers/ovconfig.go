@@ -93,16 +93,6 @@ func (c *OVConfigController) Post() {
 		return
 	}
 
-	// DO NOT SAVE SERVER.CONF
-	//destPath := filepath.Join(state.GlobalCfg.OVConfigPath, "server.conf")
-	//err := config.SaveToFile(filepath.Join(c.ConfigDir, "openvpn-server-config.tpl"), cfg.Config, destPath)
-	//if err != nil {
-	//	logs.Warning(err)
-	//	flash.Error(err.Error())
-	//	flash.Store(&c.Controller)
-	//	return
-	//}
-
 	o := orm.NewOrm()
 	if _, err := o.Update(&cfg); err != nil {
 		flash.Error(err.Error())

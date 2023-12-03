@@ -40,7 +40,7 @@ func (c *RoutesController) showRoutes() {
 	flash := web.NewFlash()
 
 	routes, err := models.GetAllRoutesDetails()
-	lib.Dump(routes)
+	// lib.Dump(routes)
 	if err == nil {
 		c.Data["Routes"] = &routes
 	} else {
@@ -53,7 +53,7 @@ func (c *RoutesController) showRoutes() {
 	}
 
 	routers, err := models.GetRouterClients()
-	lib.Dump(routers)
+	// lib.Dump(routers)
 	if err == nil {
 		c.Data["Routers"] = &routers
 	} else {

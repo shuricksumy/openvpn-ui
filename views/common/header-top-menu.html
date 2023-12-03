@@ -1,9 +1,20 @@
 <ul class="navbar-nav">
 
   <li class="nav-item">
-    <a href="{{urlfor "MainController.Get"}}" class="nav-link {{if compare .RouterPattern "/"}}active{{end}}">Home <span class="sr-only">(current)</span></a>
+    <a href="{{urlfor "MainController.Get"}}" class="nav-link {{if compare .RouterPattern "/"}}active{{end}}">Dashboard<span class="sr-only">(current)</span></a>
   </li>
 
+  <li class="nav-item">
+    <a href="{{urlfor "ClientsController.Get"}}" class="nav-link {{if compare .RouterPattern "/clients"}}active{{end}}">Clients</a>
+  </li>
+
+  <li class="nav-item">
+    <a href="{{urlfor "CertificatesController.Get"}}" class="nav-link {{if compare .RouterPattern "/certificates"}}active{{end}}">Certificates</a>
+  </li>
+
+  <li class="nav-item">
+    <a href="{{urlfor "RoutesController.Get"}}" class="nav-link {{if compare .RouterPattern "/routes"}}active{{end}}">Routes</a>
+  </li>
 
   <li class="dropdown">
     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
@@ -28,27 +39,6 @@
       </li>
     </ul>
   </li>
-
-  <li class="dropdown">
-    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-      Clients <span class="caret"></span>
-    </a>
-
-    <ul class="dropdown-menu" role="menu">
-      <li class="nav-item">
-        <a href="{{urlfor "ClientsController.Get"}}" class="dropdown-item {{if compare .RouterPattern "/clients"}}active{{end}}">Details</a>
-      </li>
-
-      <li class="nav-item">
-        <a href="{{urlfor "CertificatesController.Get"}}" class="dropdown-item {{if compare .RouterPattern "/certificates"}}active{{end}}">Certificates</a>
-      </li>
-
-      <li class="nav-item">
-        <a href="{{urlfor "RoutesController.Get"}}" class="dropdown-item {{if compare .RouterPattern "/routes"}}active{{end}}">Routes</a>
-      </li>
-    
-    </ul>  
-  </li>  
 
   <li class="nav-item">
     <a href="{{urlfor "LogsController.Get"}}" class="nav-link {{if compare .RouterPattern "/logs"}}active{{end}}">Logs</a>

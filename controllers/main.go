@@ -52,7 +52,7 @@ func (c *MainController) Get() {
 	} else {
 		c.Data["ovpid"] = pid
 	}
-	lib.Dump(pid)
+	// lib.Dump(pid)
 
 	loadStats, err := client.GetLoadStats()
 	if err != nil {

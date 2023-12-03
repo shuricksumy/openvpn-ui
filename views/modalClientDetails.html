@@ -82,7 +82,7 @@ pre.mypre {
             </div>
             <div class="modal-body">
                 <!-- FORM START -->
-                <form id="editForm" action="/clients/save_details_data" method="post">
+                <form id="editForm" action="{{urlfor "ClientsController.SaveClientDetailsData"}}" method="post">
                     
                     <!-- Hidden fields for proper form usage -->
                     <input type="hidden" name="client_id" id="client_id" value="{{$c.Id}}">
@@ -184,39 +184,7 @@ pre.mypre {
                                         data-content="Set if want to send all trafic via VPN network."></i>
                                     </label>
                                 </div>
-
-                                
                             </div>
-
-                            
-                            <div class="col-sm-4" hidden>
-                                <!-- <div class="form-check mychekbox" hidden>
-                                    <input name="is_router1" id="is_router1" class="form-check-input" type="checkbox" 
-                                        {{if $c.IsRouter}} checked {{else}} {{end}}>
-                                    <label class="form-check-label my-label" for="is_router1">
-                                        Device is router  &nbsp;
-                                        <i class='fa fa-info-circle'  data-toggle="popover" data-placement="bottom" 
-                                        data-content="Set if client is router with own internal subnet."></i>
-                                    </label>
-                                </div> -->
-   
-                                <!-- <label class="form-check-label" for="router_subnet">
-                                    Subnet:  &nbsp;
-                                    <span class="glyphicon glyphicon-info-sign" data-toggle="popover" data-placement="bottom" 
-                                    data-content="Specify Router internal Subnet and Mask"></span>
-                                </label> -->
-                                <input class="form-control" id="router_subnet" name="router_subnet" value="{{.RouterSubnet}}" 
-                                data-inputmask="'alias': 'ip'" data-mask 
-                                pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" 
-                                placeholder="Enter Subnet: x.x.x.x" onfocusout="this.value = this.value.trim()" hidden>
-
-                                <!-- <label class="form-check-label" for="router_mask">Mask:</label> -->
-                                <input class="form-control" id="router_mask" name="router_mask" value="{{.RouterMask}}" 
-                                data-inputmask="'alias': 'ip'" data-mask 
-                                pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" 
-                                placeholder="Enter Subnet Mask: x.x.x.x" onfocusout="this.value = this.value.trim()" hidden>
-                            </div>
-
 
                             <div class="col-sm-6">
                                 <label class="form-check-label" for="route_list_selected">
@@ -324,8 +292,6 @@ pre.mypre {
                         </div>
                     </div>      
 
-
-                   
 
                     <div class="panel-body"></div>   
 

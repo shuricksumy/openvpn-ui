@@ -13,9 +13,9 @@ cd ../
 #rm ./data.db
 rm ./openvpn-ui
 
-if [ ! -f ${OVDIR}/clientDetails.json ]; then
-    touch ${OVDIR}/clientDetails.json
-fi
+# if [ ! -f ${OVDIR}/clientDetails.json ]; then
+#     touch ${OVDIR}/clientDetails.json
+# fi
 
 go mod tidy
 $GOPATH/bin/bee run -gendoc=false

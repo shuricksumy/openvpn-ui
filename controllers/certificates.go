@@ -93,21 +93,6 @@ func (c *CertificatesController) showCerts() {
 		flash.Store(&c.Controller)
 	}
 
-	// //get clientsDetails from file
-	// clientsDetails, err_read := lib.GetClientsDetailsFromFiles()
-	// if err_read != nil {
-	// 	logs.Error(err_read)
-	// 	flash.Error("ERROR WHILE READING CLIENTS FROM FILE !")
-	// 	flash.Store(&c.Controller)
-	// }
-
-	// get md5 sums from file system
-	// md5hashs := lib.GetMD5StructureFromFS(clientsDetails)
-	// // lib.Dump(md5hashs)
-	// c.Data["MD5"] = &md5hashs
-
-	// lib.Dump(certs)
-
 	md5Struct := lib.GetMD5StructureFromFS()
 
 	c.TplName = "certificates.html"

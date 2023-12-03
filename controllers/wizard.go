@@ -6,10 +6,12 @@ import (
 	"encoding/gob"
 	"fmt"
 	"os/exec"
+	"path/filepath"
 	"time"
 
 	"github.com/shuricksumy/openvpn-ui/lib"
 	"github.com/shuricksumy/openvpn-ui/models"
+	"github.com/shuricksumy/openvpn-ui/state"
 )
 
 type WizardController struct {
@@ -82,7 +84,7 @@ func (c *WizardController) Step1Post() {
 	//save
 	a := Encode(ovpnWizardData)
 	c.SetSession("ovpnWizardData", a.Bytes())
-	lib.Dump(ovpnWizardData)
+	// lib.Dump(ovpnWizardData)
 
 	c.Redirect("/wizard/step2", 302)
 }
@@ -139,7 +141,7 @@ func (c *WizardController) Step2Post() {
 	//save
 	a := Encode(ovpnWizardData)
 	c.SetSession("ovpnWizardData", a.Bytes())
-	lib.Dump(ovpnWizardData)
+	// lib.Dump(ovpnWizardData)
 
 	c.Redirect("/wizard/step3", 302)
 }
@@ -158,11 +160,13 @@ func (c *WizardController) Step3Get() {
 
 	var wizardByte = c.GetSession("ovpnWizardData").([]byte)
 	ovpnWizardData := Decode(wizardByte)
-	lib.Dump(ovpnWizardData)
+	// lib.Dump(ovpnWizardData)
 
 	setupScript := GenerateEnvFile(ovpnWizardData)
 	c.Data["EnvString"] = setupScript
 	lib.RawSaveToFile("/tmp/setup.sh", setupScript)
+	installDetails := filepath.Join(state.GlobalCfg.OVConfigPath, "setupScript.sh")
+	lib.RawSaveToFile(installDetails, setupScript)
 }
 
 func (c *WizardController) Setup() {

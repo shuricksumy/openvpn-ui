@@ -190,13 +190,13 @@ func RestartOpenVpnUI() (string, error) {
 }
 
 func RawReadClientFile(clientName string) (string, error) {
-	InitGlobalVars()
+	//InitGlobalVars()
 	destPathClientConfig := filepath.Join(CCD_DIR_PATH, clientName)
 	return RawReadFile(destPathClientConfig)
 }
 
 func ApplyClientsConfigToFS() error {
-	InitGlobalVars()
+	//InitGlobalVars()
 	serverConf, err_read := RawReadFile(SERVER_CONFIG_PATH)
 	if err_read != nil {
 		logs.Error("Issue with reading config server file: ", SERVER_CONFIG_PATH)
@@ -273,11 +273,6 @@ func ApplyClientsConfigToFS() error {
 			}
 		}
 
-		// Debug results
-		// logs.Error("==========START==============")
-		// logs.Error(buffer.String())
-		// logs.Error("==========END================")
-
 		fileCCD := filepath.Join(CCD_DIR_PATH, client.ClientName)
 		err_save := RawSaveToFile(fileCCD, buffer.String())
 		if err_save != nil {
@@ -294,22 +289,6 @@ type FileData struct {
 	FileName string
 	MD5sum   string
 }
-
-// // createFileMap creates a map with FileName as the key and FileData as the value.
-// func createFileMap(files ...FileData) map[string]FileData {
-// 	fileMap := make(map[string]FileData)
-// 	for _, file := range files {
-// 		fileMap[file.FileName] = file
-// 	}
-// 	return fileMap
-// }
-
-// // calculateMD5Sum calculates the MD5 sum of a file content (dummy implementation for illustration).
-// func calculateMD5Sum(content string) string {
-// 	hasher := md5.New()
-// 	hasher.Write([]byte(content))
-// 	return hex.EncodeToString(hasher.Sum(nil))
-// }
 
 func UpdateDBWithLatestMD5() error {
 	clients, err_cl := models.GetAllClientsWithCertificate()
@@ -337,6 +316,7 @@ func UpdateDBWithLatestMD5() error {
 }
 
 func GetMD5StructureFromFS() map[string]bool {
+	//InitGlobalVars()
 	result := make(map[string]bool)
 
 	clients, err_cl := models.GetAllClientsWithCertificate()
@@ -353,6 +333,9 @@ func GetMD5StructureFromFS() map[string]bool {
 
 		// Compare MD5 sums
 		isMD5Valid := c.MD5Sum == md5Client
+		// Dump(c.MD5Sum)
+		// Dump(md5Client)
+
 		// Add result to the map
 		result[c.ClientName] = isMD5Valid
 
@@ -361,25 +344,3 @@ func GetMD5StructureFromFS() map[string]bool {
 	return result
 
 }
-
-// func UpdateDBWithLatestMD5() error {
-// 	clientsDetails, err_read := models.GetAllClientsWithCertificate()
-// 	if err_read != nil {
-// 		return err_read
-// 	}
-
-// 	md5hashs := GetMD5StructureFromFS(clientsDetails)
-
-// 	for _, c := range clientsDetails {
-
-// 		// models.UpdateMD5SumForClientDetails()
-
-// 		for _, h := range md5hashs {
-// 			if c.ClientName == h.ClientName {
-// 				c.MD5Sum = h.MD5Hash
-// 			}
-// 		}
-// 	}
-
-// 	return nil
-// }

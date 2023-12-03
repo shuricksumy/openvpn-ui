@@ -16,17 +16,19 @@
     <div class="card-header with-border table-responsive">
       <table>
         <tr>
-          <td class="col-md-1 text-left"><button class="btn btn-sm bg-gradient-navy btn150" data-toggle="collapse" href="#newClient" role="button"  aria-expanded="false"
+          <td class="col-md-1 text-left">
+            <button class="btn btn-sm bg-gradient-navy btn150" data-toggle="collapse" href="#newClient" role="button"  aria-expanded="false"
                   aria-controls="newClient" style="margin-left: 0.5%;">Add New Client</button>
-                  {{template "common/fvalid.html" field_error_message .validation "Name" }}</td>
-          <td class="col-md-10 text-right font90 sb"><i>ClName StaticIP IsRouterDef IsRouter Description</i></td>
+                  {{template "common/fvalid.html" field_error_message .validation "Name" }}
+          </td>
+          <td class="col-md-10 text-right font90 sb"><i>You shuld start from creating a new client and then certificate</i></td>
           <td class="col-md-1 text-right">
             <a href="{{urlfor "ClientsController.UpdateFiles"}}" class="btn btn-warning btn-sm btn-group-sm bg-gradient-yellow btn150"
             data-title="Update ALL Clients?" title="Apply Clients Configuration" style="margin-right: 23px;">Apply Configurations</a>
           </td>
           <td class="col-md-1 text-right">
-            <a href="{{urlfor "ClientsController.Restart"}}" class="btn btn-danger btn-sm btn-group-sm bg-gradient-red btn150" data-title="Restart OpenVPN container?" 
-                  title="Restart OpenVPN container" style="margin-right: 23px;">Restart Server</a>
+            <a href="{{urlfor "LogsController.RestartLocalService"}}" class="btn btn-danger btn-sm btn-group-sm bg-gradient-red btn150" 
+              data-title="Restart OpenVPN container?" title="Restart OpenVPN container" id="start" style="margin-right: 23px;">Restart Server</a>
           </td>
         </tr>
       </table>
@@ -100,7 +102,7 @@
         <!-- /.card-body -->
     
         <div class="card-footer">
-          <button type="submit" class="btn btn-sm bg-gradient-lightblue btn80 form-to-confirm" 
+          <button type="submit" class="btn btn-sm bg-gradient-lightblue btn80" 
             style="margin-right: 23px; float: right;" data-title="Create new client?" id="create_client">Create</button>
         </div>
       </form>
@@ -266,22 +268,6 @@
        </div>
         <!-- /.table-responsive -->
       </div>
-      <!--else
-          Fix your configuration
-      end-->
-
-     <!--
-      <div class="card-footer clearfix">
-        
-      </div>
-      -->
-
-      <!--
-      <div class="card-footer clearfix">
-        <a href="javascript:void(0)" class="btn btn-sm btn-info btn-flat pull-left">Place New Order</a>
-        <a href="javascript:void(0)" class="btn btn-sm btn-default btn-flat pull-right">View All Orders</a>
-      </div>
-    -->
       <!-- /.card-footer -->
     </div>
     <!-- /.card -->
@@ -304,11 +290,11 @@
 
 {{end}}
 
-<!-- <div id="overlay">
+<div id="overlay">
   <div class="cv-spinner">
     <span class="spinner"></span>
   </div>
-</div> -->
+</div>
 
 <script type="text/javascript">
   var actionURL="/certificates/save_client_data" 

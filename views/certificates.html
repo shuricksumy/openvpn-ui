@@ -21,7 +21,7 @@
           </td>
           <td class="col-md-12 text-right sb"><i>Restart server after revocation:</i>
           </td>
-          <td class="col-md-1 text-right"><a href="{{urlfor "CertificatesController.Restart"}}" 
+          <td class="col-md-1 text-right"><a href="{{urlfor "LogsController.RestartLocalService"}}" 
             class="btn btn-danger btn-sm btn-group-sm bg-gradient-red btn150" data-title="Restart OpenVPN container?" 
                   title="Restart OpenVPN container" style="margin-right: 23px;">Restart Server</a>
           </td>
@@ -59,7 +59,7 @@
       <!-- /.card-body -->
 
       <div class="card-footer">
-        <button type="submit" class="btn btn-sm bg-gradient-lightblue btn80 form-to-confirm" 
+        <button type="submit" class="btn btn-sm bg-gradient-lightblue btn80" 
           style="margin-right: 23px; float: right;" data-title="Create new client?" id="create_crt">Create</button>
       </div>
     </form>
@@ -138,7 +138,7 @@
 
                     <!-- 3 sell -->
                     <td class="font75">
-                      {{ .Details.Description }}
+                      Certificate is generated for <b>{{.Details.CN}}</b> client 
                     </td>
 
                    <!-- 4 sell -->
@@ -146,18 +146,7 @@
                       <span class="btn btn-xs btn-group-xs bg-gray-light">{{ dateformat .ExpirationT "2006-01-02 15:04"}}</span>
                     </td>
 
-                    <!-- 5 sell -->
-                     <!-- <td>
-                      {{ .Serial }}
-                     </td> -->
-
-                <!--    <td>
-                      <span class="label label-warning">CN: {{ .Details.CN }}</span>
-                      Comented until bypass of client email to DB will be implemented 
-                      <span class="label label-warning">Email: {{ .Details.Email }}</span>
-                    </td> -->
-
-                   <!-- 6 sell -->
+                    <!-- 6 sell -->
                   {{if eq .EntryType "V"}}
                     <td class="textcenter">
                       <a href="{{urlfor "CertificatesController.Revoke" ":key" .Details.CN}}" data-title="Disable access for user?" 
@@ -244,22 +233,6 @@
        </div>
         <!-- /.table-responsive -->
       </div>
-      <!--else
-          Fix your configuration
-      end-->
-
-     <!--
-      <div class="card-footer clearfix">
-        
-      </div>
-      -->
-
-      <!--
-      <div class="card-footer clearfix">
-        <a href="javascript:void(0)" class="btn btn-sm btn-info btn-flat pull-left">Place New Order</a>
-        <a href="javascript:void(0)" class="btn btn-sm btn-default btn-flat pull-right">View All Orders</a>
-      </div>
-    -->
       <!-- /.card-footer -->
     </div>
     <!-- /.card -->
@@ -300,7 +273,7 @@ $(document).ready(function() {
   $(document).ready(function () {
       $('#form-to-confirm').validate({ // initialize the plugin
         rules: {
-          Nmae: {
+          client_name: {
                 required: true,
             }
         },
@@ -332,8 +305,8 @@ $(document).ready(function() {
 {{end}}
 
 
-<!-- <div id="overlay">
+<div id="overlay">
   <div class="cv-spinner">
     <span class="spinner"></span>
   </div>
-</div> -->
+</div>

@@ -10,7 +10,17 @@
 
 <div class="card card-lightblue">
   <div class="card-header with-border">
-    <h3 class="card-title">Last 500 lines of OpenVPN log</h3>
+    <table>
+      <tr>
+        <td class="col-md-10 text-left">
+          <h3 class="card-title">Last 500 lines of OpenVPN log</h3>
+        </td>
+        <td class="col-md-1 text-right">
+          <a href="{{urlfor "LogsController.RestartLocalService"}}" class="btn btn-danger btn-sm btn-group-sm bg-gradient-red btn150" 
+            data-title="Restart OpenVPN container?" title="Restart OpenVPN container" id="start" style="margin-right: 23px;">Restart Server</a>
+        </td>
+      </tr>
+    </table>
   </div>
 
   <form role="form">

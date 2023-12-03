@@ -1065,8 +1065,9 @@ verb 3" >>${OVPN_PATH}/client-template.txt
 	fi
 
 	# Generate the custom client.ovpn
-	newClient
-	echo "If you want to add more clients, you simply need to run this script another time!"
+	# skip default generation
+	#newClient
+	echo "If you want to add clients, you simply need to run this script another time!"
 }
 
 function setFWRules() {
@@ -1234,12 +1235,12 @@ function newClient() {
 		echo "Client $CLIENT added."
 	fi
 
-	geberateOpenVPNFile
+	generateOpenVPNFile
 
 	exit 0
 }
 
-function geberateOpenVPNFile() {
+function generateOpenVPNFile() {
 
 	if [[ -z  $CLIENT ]]; then
 		exit 1
@@ -1653,7 +1654,7 @@ if [[ $DOCKER_COMMAND != "" ]]; then
 		exit 0
 		;;
 	4)
-		geberateOpenVPNFile
+		generateOpenVPNFile
 		exit 0
 		;;
 	5)

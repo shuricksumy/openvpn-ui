@@ -42,7 +42,7 @@ func (c *ClientsController) Get() {
 func (c *ClientsController) ShowClients() {
 	flash := web.NewFlash()
 	clients, err := models.GetAllClientDetails()
-	lib.Dump(clients)
+	// lib.Dump(clients)
 	if err == nil {
 		c.Data["Clients"] = &clients
 	} else {
@@ -267,8 +267,8 @@ func (c *ClientsController) DelClient() {
 
 	flash := web.NewFlash()
 	clientID := c.GetString(":key")
-	lib.Dump("---DELETE CLIENT")
-	lib.Dump(clientID)
+	// lib.Dump("---DELETE CLIENT")
+	// lib.Dump(clientID)
 
 	id, _ := strconv.Atoi(clientID)
 	client, err := models.GetClientDetailsById(id)

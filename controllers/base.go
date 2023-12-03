@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/beego/beego/v2/server/web"
+	"github.com/shuricksumy/openvpn-ui/lib"
 	"github.com/shuricksumy/openvpn-ui/models"
 	"github.com/shuricksumy/openvpn-ui/state"
 )
@@ -24,23 +25,16 @@ type NestFinisher interface {
 func (c *BaseController) Prepare() {
 	c.SetParams()
 
-	c.Data["SiteName"] = state.GlobalCfg.ServerName 
+	c.Data["SiteName"] = state.GlobalCfg.ServerName
 
 	c.IsLogin = c.GetSession("userinfo") != nil
 	if c.IsLogin {
 		c.Userinfo = c.GetLogin()
+		lib.InitGlobalVars()
 	}
 
 	c.Data["IsLogin"] = c.IsLogin
 	c.Data["Userinfo"] = c.Userinfo
-
-	//c.Data["HeadStyles"] = []string{}
-	//c.Data["HeadScripts"] = []string{}
-
-	//c.Layout = "base.tpl"
-	//c.LayoutSections = make(map[string]string)
-	//c.LayoutSections["BaseHeader"] = "header.tpl"
-	//c.LayoutSections["BaseFooter"] = "footer.tpl"
 
 	if app, ok := c.AppController.(NestPreparer); ok {
 		app.NestPrepare()

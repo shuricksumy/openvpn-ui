@@ -7,8 +7,8 @@ import (
 
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-	mi "github.com/shuricksumy/openvpn-ui/pkg/openvpn-server-config/server/mi"
 	"github.com/shuricksumy/openvpn-ui/lib"
+	mi "github.com/shuricksumy/openvpn-ui/pkg/openvpn-server-config/server/mi"
 	"github.com/shuricksumy/openvpn-ui/state"
 )
 
@@ -57,23 +57,13 @@ func (c *ServerConfigController) Post() {
 	if err2 != nil {
 		logs.Error(err2)
 		return
-	}else{
+	} else {
 		flash.Success("Config has been updated")
 		client := mi.NewClient(state.GlobalCfg.MINetwork, state.GlobalCfg.MIAddress)
 		if err := client.Signal("SIGTERM"); err != nil {
 			flash.Warning("Config has been updated but OpenVPN server was NOT reloaded: " + err.Error())
 		}
 	}
-
-	// DO NOT SAVE SERVER.CONF
-	//destPath := filepath.Join(state.GlobalCfg.OVConfigPath, "server.conf")
-	//err := config.SaveToFile(filepath.Join(c.ConfigDir, "openvpn-server-config.tpl"), cfg.Config, destPath)
-	//if err != nil {
-	//	logs.Warning(err)
-	//	flash.Error(err.Error())
-	//	flash.Store(&c.Controller)
-	//	return
-	//}
 
 	serverConfig, err := os.ReadFile(destPathServerConfig)
 	if err != nil {
