@@ -143,7 +143,7 @@ func GetAllRoutesDetails() ([]*RouteDetails, error) {
 	o := orm.NewOrm()
 
 	var routers []*RouteDetails
-	if _, err := o.QueryTable(new(RouteDetails)).All(&routers); err == nil {
+	if _, err := o.QueryTable(new(RouteDetails)).OrderBy("Name").All(&routers); err == nil {
 		return routers, nil
 	}
 
@@ -162,7 +162,7 @@ func GetAllRoutesProvided(routerID int) ([]*RouteDetails, error) {
 
 	// Query RouteDetails with the given RouterId
 	var routes []*RouteDetails
-	_, err := o.QueryTable("route_details").Filter("RouterId", routerID).All(&routes)
+	_, err := o.QueryTable("route_details").Filter("RouterId", routerID).OrderBy("Name").All(&routes)
 
 	if err != nil {
 		// Handle error, e.g., database query error

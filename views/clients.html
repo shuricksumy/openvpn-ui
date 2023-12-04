@@ -162,13 +162,13 @@
                   <td class="my-centered first-cap">
                     {{ if .CertificateStatus }}
                       {{if eq (printf .CertificateStatus) "Active"}}
-                        <span class="btn btn-xs btn-group-xs bg-olive btn40">Acive</span>
+                        <span class="btn btn-xs btn-group-xs bg-olive btn60">Acive</span>
                       {{end}}
                       {{if eq (printf .CertificateStatus) "Revoked"}}
-                        <span class="btn btn-xs btn-group-xs bg-yellow btn40">Revoked</span>
+                        <span class="btn btn-xs btn-group-xs bg-yellow btn60">Revoked</span>
                       {{end}}
                     {{else}}
-                        <span class="btn btn-xs bg-red btn-group-xs btn40">False</span>
+                        <span class="btn btn-xs bg-red btn-group-xs btn60">False</span>
                     {{end}}
                   </td>
 

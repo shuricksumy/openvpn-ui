@@ -131,7 +131,7 @@ func GetRouterClients() ([]*ClientDetails, error) {
 	o := orm.NewOrm()
 
 	var clients []*ClientDetails
-	if _, err := o.QueryTable(new(ClientDetails)).Filter("IsRouter", true).All(&clients); err == nil {
+	if _, err := o.QueryTable(new(ClientDetails)).Filter("IsRouter", true).OrderBy("ClientName").All(&clients); err == nil {
 
 		// Load the associated RouteDetails for each client
 		for _, client := range clients {
@@ -151,7 +151,7 @@ func GetConnectedRouteDetails(clientID int) ([]*RouteDetails, error) {
 	client := &ClientDetails{Id: clientID}
 	if err := o.Read(client); err == nil {
 		var routeDetails []*RouteDetails
-		o.QueryTable(new(RouteDetails)).Filter("Client__ClientDetails__Id", clientID).Distinct().All(&routeDetails)
+		o.QueryTable(new(RouteDetails)).Filter("Client__ClientDetails__Id", clientID).Distinct().OrderBy("Name").All(&routeDetails)
 		return routeDetails, nil
 	}
 
@@ -172,7 +172,7 @@ func GetDisconnectedRouteDetails(clientID int) ([]*RouteDetails, error) {
 
 	// Get all routes
 	allRoutes := make([]*RouteDetails, 0)
-	_, err := o.QueryTable("route_details").All(&allRoutes)
+	_, err := o.QueryTable("route_details").OrderBy("Name").All(&allRoutes)
 	if err != nil {
 		return nil, err
 	}
@@ -211,7 +211,7 @@ func GetAllClientDetails() ([]*ClientDetails, error) {
 	o := orm.NewOrm()
 
 	var clients []*ClientDetails
-	if _, err := o.QueryTable(new(ClientDetails)).All(&clients); err == nil {
+	if _, err := o.QueryTable(new(ClientDetails)).OrderBy("ClientName").All(&clients); err == nil {
 
 		// Load the associated RouteDetails for each client
 		for _, client := range clients {
@@ -314,7 +314,7 @@ func GetClientsDetailsWithoutCertificate() ([]*ClientDetails, error) {
 
 	// Query ClientDetails where CertificateName is nil
 	var clients []*ClientDetails
-	_, err := o.QueryTable("client_details").Filter("CertificateName__isnull", true).All(&clients)
+	_, err := o.QueryTable("client_details").Filter("CertificateName__isnull", true).OrderBy("ClientName").All(&clients)
 
 	if err != nil {
 		// Handle error, e.g., database query error
@@ -412,7 +412,7 @@ func GetAllClientsWithCertificate() ([]*ClientDetails, error) {
 	// Query clients with non-nil CertificateName
 	var clients []*ClientDetails
 	_, err := o.QueryTable("client_details").
-		Filter("CertificateName__isnull", false).
+		Filter("CertificateName__isnull", false).OrderBy("ClientName").
 		All(&clients)
 
 	if err != nil {
