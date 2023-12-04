@@ -1,6 +1,6 @@
 # OpenVPN WEB UI
 
-![Status page](screenshots/1.png?raw=true)
+![Status page](screenshots/main_img.gif?raw=true)
 
 ## Updates
 
