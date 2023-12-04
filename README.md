@@ -106,18 +106,3 @@ services:
 References:
 - The project is originally based on [https://github.com/d3vilh/openvpn-ui](https://github.com/d3vilh/openvpn-ui)  - big thanks for a great job
 - The bash script for setup OpenVPN is based on [https://github.com/angristan/openvpn-install](https://github.com/angristan/openvpn-install) - big thanks for a great job
-
-## Screenshots
-
-![Status page](screenshots/0.png?raw=true)
-![Status page](screenshots/1.png?raw=true)
-![Status page](screenshots/2.png?raw=true)
-![Status page](screenshots/3.png?raw=true)
-![Status page](screenshots/4.png?raw=true)
-![Status page](screenshots/5.png?raw=true)
-![Status page](screenshots/6.png?raw=true)
-![Status page](screenshots/7.png?raw=true)
-![Status page](screenshots/8.png?raw=true)
-![Status page](screenshots/9.png?raw=true)
-![Status page](screenshots/10.png?raw=true)
-![Status page](screenshots/11.png?raw=true)
