@@ -13,6 +13,7 @@
 </script>
 
 {{$c := .Client}}
+{{$MD5 := .MD5}} 
 {{$routes := .RouterProvideRouts}}
 {{$connectedRoutes := GetConnectedRoutes $c.Id}}
 {{$disConnectedRoutes := GetDisConnectedRoutes $c.Id}}
@@ -27,7 +28,7 @@
             <div class="modal-body">
                 <div>
                     <div class="form-group mylables">
-                        {{if not .IsMD5Valid }}
+                        {{ if not (GetBoolValueByKey $c.ClientName $MD5) }} 
                             <span class="btn btn-xs bg-gradient-red" style="min-width: 100%;">Currently configured but not applied:</span>
                         {{else}}
                             <span class="btn btn-xs bg-gradient-olive" style="min-width: 100%;">Currently configured:</span>

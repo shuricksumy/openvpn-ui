@@ -18,8 +18,6 @@ services:
             - OPENVPN_ADMIN_USERNAME=admin # Leave this default as-is and update on first-run
             - OPENVPN_ADMIN_PASSWORD=admin # Leave this default as-is and update on first-run
             - SITE_NAME=Admin
-            # - OPENVPN_SERVER_DOCKER_NAME=openvpn-ui
-            # - OPENVPN_MANAGEMENT_ADDRESS=openvpn-ui:2080
         ports:
             - "8080:8080/tcp"
         restart: always
@@ -32,6 +30,6 @@ services:
             - NET_ADMIN
         volumes:
          -  /var/run/docker.sock:/var/run/docker.sock
-        #  - ./openvpn/openvpn1:/etc/openvpn
+        #  - ./openvpn/openvpn:/etc/openvpn
         #  - ./openvpn/easy-rsa:/etc/openvpn/easy-rsa
-        #  - ./openvpn/openvpn1/db:/opt/openvpn-gui/db
+        #  - ./openvpn/openvpn/db:/opt/openvpn-gui/db

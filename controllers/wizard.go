@@ -51,7 +51,12 @@ func (c *WizardController) Step1Get() {
 	//lib.Dump(ovpnWizardData)
 
 	//get extIP
-	ipEndpoint, _ := lib.GetExtIP()
+	ipEndpoint := ovpnWizardData.OvpnEndpoint
+
+	if ovpnWizardData.OvpnEndpoint == "" {
+		ipEndpoint, _ = lib.GetExtIP()
+	}
+
 	c.Data["IpEndpoint"] = ipEndpoint
 
 	c.Data["OvpnWizardData"] = ovpnWizardData

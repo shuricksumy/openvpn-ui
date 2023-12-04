@@ -255,7 +255,7 @@ func GetTLSsigList(selected string) []string {
 }
 
 var defaultOVPNConfig = OvpnServerBaseSetting{
-	OvpnEndpoint:                       "TODO",                     //ENDPOINT
+	OvpnEndpoint:                       "",                         //ENDPOINT
 	ApproveIP:                          false,                      //APPROVE_IP
 	DisableDefRouteForClientsByDefault: true,                       //DISABLE_DEF_ROUTE_FOR_CLIENTS
 	ClientToClientConfigIsUsed:         true,                       //CLIENT_TO_CLIENT

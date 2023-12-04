@@ -223,9 +223,8 @@ func (c *ClientsController) RenderModalRaw() {
 	c.Data["Client"] = &client
 	c.Data["ClientData"] = string(data)
 
-	// // get md5 sums from file system
-	// isMD5valid := lib.GetMD5StatusForClient(clients, clientName)
-	// c.Data["IsMD5Valid"] = isMD5valid
+	md5Struct := lib.GetMD5StructureFromFS()
+	c.Data["MD5"] = &md5Struct
 
 	c.TplName = "modalClientRaw.html"
 	c.Render()
