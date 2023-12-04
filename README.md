@@ -1,13 +1,25 @@
 # OpenVPN WEB UI
 
-- There is the original [README.md](https://github.com/shuricksumy/openvpn-ui/blob/my_main/README_ORIGINAL.md) file
-- The project was cloned from [https://github.com/d3vilh/openvpn-ui](https://github.com/d3vilh/openvpn-ui)  - big thanks for a great job
-- The Docker builder with the Server part is here [**OPENVPN-SERVER-DOCKER**](https://github.com/shuricksumy/openvpn-server-docker)
-- The base example for docker-compose is here [***DOCKER-COMPOSE***](https://github.com/shuricksumy/openvpn-server-docker/tree/main/examples/basic)
-
 ![Status page](screenshots/1.png?raw=true)
 
 ## Updates
+
+#### December 2023 (v4.0)
+> **Warning**
+ There is no back compatibility with previous versions. Need to recreate service from scratch.
+ 
+- Now it's a solid solution: OpenVPN server is included to docker
+- UI can see the OpenVPN server status and restart it
+- For better UX, Wizard was added to configure the OpenVPN server the first time
+- Add Clients as first-level entities, stored in DB
+- Certificates now can be generated only for created Clients
+- Add Routes system management to provide each client with Route rules, stored in DB
+- Refactored code a bit
+- Redesigned UI a bit
+
+<details>
+
+<summary>Previous versions details</summary>
 
 #### September 2023 (v3.0)
 - New UI web components
@@ -47,6 +59,8 @@
   OPENVPN_MANAGEMENT_ADDRESS="IP:PORT" # The preconfigured address to connect OpenVPN manager
   ```
   
+</details>
+
 ## Example docker-compose file
 
 ### It's only UI part - full configuration will be here soon [TODO]
@@ -64,28 +78,34 @@ networks:
             config:
                 - subnet: 172.18.0.0/24
 services:
-    gui:
-        image: shuricksumy/openvpn-ui
+  gui:
+        image: shuricksumy/openvpn-ui:latest
         container_name: openvpn-ui
         working_dir: /etc/openvpn/easy-rsa
         environment:
             - OPENVPN_ADMIN_USERNAME=admin # Leave this default as-is and update on first-run
             - OPENVPN_ADMIN_PASSWORD=admin # Leave this default as-is and update on first-run
-            - SITE_NAME=UDP Server
-            - OPENVPN_SERVER_DOCKER_NAME=openvpn-server-1
-            - OPENVPN_MANAGEMENT_ADDRESS=172.18.0.1:2080
+            - SITE_NAME=Admin
         ports:
             - "8080:8080/tcp"
         restart: always
         networks:
             npm_proxy:
-                ipv4_address: 172.18.0.12
+                ipv4_address: 172.18.0.10
+        devices:
+            - /dev/net/tun
+        cap_add:
+            - NET_ADMIN
         volumes:
-         - /var/run/docker.sock:/var/run/docker.sock
-         - ./openvpn/openvpn1:/etc/openvpn
-         - ./openvpn/easy-rsa:/etc/openvpn/easy-rsa
-         - ./openvpn/openvpn1/db:/opt/openvpn-gui-tap/db
+         -  /var/run/docker.sock:/var/run/docker.sock
+        #  - ./openvpn/openvpn:/etc/openvpn
+        #  - ./openvpn/easy-rsa:/etc/openvpn/easy-rsa
+        #  - ./openvpn/openvpn/db:/opt/openvpn-gui/db
 ```
+
+References:
+- The project is originally based on [https://github.com/d3vilh/openvpn-ui](https://github.com/d3vilh/openvpn-ui)  - big thanks for a great job
+- The bash script for setup OpenVPN is based on [https://github.com/angristan/openvpn-install](https://github.com/angristan/openvpn-install) - big thanks for a great job
 
 ## Screenshots
 
