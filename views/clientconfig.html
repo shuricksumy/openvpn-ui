@@ -14,7 +14,7 @@
   </div> ->>
   <!-- /.card-header -->
   <!-- form start -->
-  <form id="form-to-confirm" role="form" action="{{urlfor "OVConfigController.Post"}}" method="post">
+  <form id="form-to-confirm" role="form" action="{{urlfor "ClientConfigController.Post"}}" method="post">
     <div class="card-body">
 
       <div class="form-group" >
@@ -51,7 +51,7 @@
   if (localStorage.getItem('theme') != null ) {
     editTheme = "_midnight"
   };
-  createEditor("ClientTemplate", "600px", "clouds" + editTheme, "space", false)
+  createEditor("ClientTemplate", "500px", "clouds" + editTheme, "space", false)
 </script>
 
 

@@ -21,6 +21,7 @@ func Init(configDir string) {
 	web.Router("/settings", &controllers.SettingsController{})
 	web.Router("/ov/serverconfig", &controllers.ServerConfigController{ConfigDir: configDir})
 	web.Router("/ov/clientconfig", &controllers.ClientConfigController{ConfigDir: configDir})
+	web.Router("/ov/easyrsa", &controllers.EasyRSAConfigController{ConfigDir: configDir})
 	web.Router("/logs", &controllers.LogsController{})
 
 	web.Include(&controllers.CertificatesController{ConfigDir: configDir})

@@ -11,45 +11,45 @@ import (
 	"github.com/shuricksumy/openvpn-ui/state"
 )
 
-type ClientConfigController struct {
+type EasyRSAConfigController struct {
 	BaseController
 	ConfigDir string
 }
 
-func (c *ClientConfigController) NestPrepare() {
+func (c *EasyRSAConfigController) NestPrepare() {
 	if !c.IsLogin {
 		c.Ctx.Redirect(302, c.LoginPath())
 		return
 	}
 
 	c.Data["breadcrumbs"] = &BreadCrumbs{
-		Title: "OpenVPN Client Configuration",
+		Title: "OpenVPN EasyRSA Variables",
 	}
 }
 
-func (c *ClientConfigController) Get() {
-	c.TplName = "clientconfig.html"
+func (c *EasyRSAConfigController) Get() {
+	c.TplName = "easyrsa.html"
 	flash := web.NewFlash()
-	destPathClientTempl := filepath.Join(state.GlobalCfg.OVConfigPath, "client-template.txt")
-	clientTemplate, err := os.ReadFile(destPathClientTempl)
+	destPathEasyrsaVars := filepath.Join(state.GlobalCfg.OVConfigPath, "easy-rsa/vars")
+	easyrsaVars, err := os.ReadFile(destPathEasyrsaVars)
 	if err != nil {
 		logs.Error(err)
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
 		return
 	}
-	c.Data["ClientTemplate"] = string(clientTemplate)
+	c.Data["EasyRSAenv"] = string(easyrsaVars)
 
 	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
 }
 
-func (c *ClientConfigController) Post() {
-	c.TplName = "clientconfig.html"
+func (c *EasyRSAConfigController) Post() {
+	c.TplName = "easyrsa.html"
 
 	flash := web.NewFlash()
 
-	destPathClientTempl := filepath.Join(state.GlobalCfg.OVConfigPath, "client-template.txt")
-	err1 := lib.BackupFile(destPathClientTempl)
+	destPathEasyrsaVars := filepath.Join(state.GlobalCfg.OVConfigPath, "easy-rsa/vars")
+	err1 := lib.BackupFile(destPathEasyrsaVars)
 	if err1 != nil {
 		logs.Error(err1)
 		flash.Error("Error with creating backup file: ", err1)
@@ -57,7 +57,7 @@ func (c *ClientConfigController) Post() {
 		return
 	}
 
-	err2 := lib.RawSaveToFile(destPathClientTempl, c.GetString("ClientTemplate"))
+	err2 := lib.RawSaveToFile(destPathEasyrsaVars, c.GetString("EasyRSAVars"))
 	if err2 != nil {
 		logs.Error(err2)
 		flash.Error("Error with updating file: ", err2)
@@ -65,7 +65,7 @@ func (c *ClientConfigController) Post() {
 		return
 	}
 
-	clientTemplate, err := os.ReadFile(destPathClientTempl)
+	easyrsaVars, err := os.ReadFile(destPathEasyrsaVars)
 	if err != nil {
 		logs.Error(err)
 		flash.Error("Error with reading new file: ", err)
@@ -73,7 +73,7 @@ func (c *ClientConfigController) Post() {
 		return
 	}
 
-	c.Data["ClientTemplate"] = string(clientTemplate)
+	c.Data["EasyRSAenv"] = string(easyrsaVars)
 
 	flash.Success("Config has been updated")
 	flash.Store(&c.Controller)

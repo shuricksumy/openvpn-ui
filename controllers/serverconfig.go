@@ -51,26 +51,35 @@ func (c *ServerConfigController) Post() {
 	err1 := lib.BackupFile(destPathServerConfig)
 	if err1 != nil {
 		logs.Error(err1)
+		flash.Error("Error creating backup file: ", err1)
+		flash.Store(&c.Controller)
 		return
 	}
+
 	err2 := lib.RawSaveToFile(destPathServerConfig, c.GetString("ServerConfig"))
 	if err2 != nil {
 		logs.Error(err2)
+		flash.Error("Error saving config file: ", err2)
+		flash.Store(&c.Controller)
 		return
-	} else {
-		flash.Success("Config has been updated")
-		client := mi.NewClient(state.GlobalCfg.MINetwork, state.GlobalCfg.MIAddress)
-		if err := client.Signal("SIGUSR1"); err != nil {
-			flash.Warning("Config has been updated but OpenVPN server was NOT reloaded: " + err.Error())
-		}
 	}
 
 	serverConfig, err := os.ReadFile(destPathServerConfig)
 	if err != nil {
 		logs.Error(err)
+		flash.Error("Error with reading new config file: ", err)
+		flash.Store(&c.Controller)
 		return
 	}
-	c.Data["ServerConfig"] = string(serverConfig)
 
+	client := mi.NewClient(state.GlobalCfg.MINetwork, state.GlobalCfg.MIAddress)
+	if err := client.Signal("SIGUSR1"); err != nil {
+		flash.Warning("Config has been updated but OpenVPN server was NOT reloaded: " + err.Error())
+	} else {
+		flash.Success("Config were updated and OpenVPN reloaded it")
+		flash.Store(&c.Controller)
+	}
+
+	c.Data["ServerConfig"] = string(serverConfig)
 	flash.Store(&c.Controller)
 }

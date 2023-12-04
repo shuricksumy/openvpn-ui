@@ -16,16 +16,16 @@
     <a href="{{urlfor "RoutesController.Get"}}" class="nav-link {{if compare .RouterPattern "/routes"}}active{{end}}">Routes</a>
   </li>
 
+  <li class="nav-item">
+    <a href="{{urlfor "LogsController.Get"}}" class="nav-link {{if compare .RouterPattern "/logs"}}active{{end}}">Logs</a>
+  </li>
+
   <li class="dropdown">
     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
       Configuration <span class="caret"></span>
     </a>
 
     <ul class="dropdown-menu" role="menu">
-      <li class="nav-item">
-        <a href="{{urlfor "SettingsController.Get"}}" class="dropdown-item {{if compare .RouterPattern "/settings"}}active{{end}}">App Settings</a>
-      </li>
-
       <li class="nav-item">
         <a href="{{urlfor "SystemController.Get"}}" class="dropdown-item {{if compare .RouterPattern "/ov/system"}}active{{end}}">System Utils</a>
       </li>
@@ -37,10 +37,16 @@
       <li class="nav-item">
         <a href="{{urlfor "ClientConfigController.Get"}}" class="dropdown-item {{if compare .RouterPattern "/ov/clientconfig"}}active{{end}}">Client Config</a>
       </li>
+
+      <li class="nav-item">
+        <a href="{{urlfor "EasyRSAConfigController.Get"}}" class="dropdown-item {{if compare .RouterPattern "/ov/easyrsa"}}active{{end}}">EasyRSA Config</a>
+      </li>
+    
+      <li class="nav-item">
+        <a href="{{urlfor "SettingsController.Get"}}" class="dropdown-item {{if compare .RouterPattern "/settings"}}active{{end}}">App Settings</a>
+      </li>
+    
     </ul>
   </li>
 
-  <li class="nav-item">
-    <a href="{{urlfor "LogsController.Get"}}" class="nav-link {{if compare .RouterPattern "/logs"}}active{{end}}">Logs</a>
-  </li>
 </ul>

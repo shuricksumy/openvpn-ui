@@ -1,7 +1,7 @@
 {{ template "layout/base.html" . }}
 
 {{define "head"}}
-<title>OpenVPN - Server Config</title>
+<title>OpenVPN - EasyRSA</title>
 {{end}}
 
 {{define "body"}}
@@ -14,14 +14,14 @@
   </div> ->>
   <!-- /.card-header -->
   <!-- form start -->
-  <form id="form-to-confirm" role="form" action="{{urlfor "ServerConfigController.Post"}}" method="post">
+  <form id="form-to-confirm" role="form" action="{{urlfor "EasyRSAConfigController.Post"}}" method="post">
     <div class="card-body">
 
       <div class="form-group">
-        <label for="name">server.conf</label>
-        <textarea type="text" class="form-control my-textarea" name="ServerConfig" 
-          id="ServerConfig"  spellcheck="false" rows="15">{{ .ServerConfig }}</textarea>
-        <span id="helpBlock" class="help-block font90">This is actual server config file. You can add/delete/modify any parameter. 
+        <label for="name">easy-rsa/vars</label>
+        <textarea type="text" class="form-control my-textarea" name="EasyRSAVars" 
+          id="EasyRSAVars"  spellcheck="false" rows="15">{{ .EasyRSAenv }}</textarea>
+        <span id="helpBlock" class="help-block font90">This is actual EasyRSA env vars. Please change it if you know what you do. 
           The beckup file of previous version will be saved before new aon be applied.
         </span>
       </div>
@@ -50,7 +50,7 @@
     if (localStorage.getItem('theme') != null ) {
       editTheme = "_midnight"
     };
-    createEditor("ServerConfig", "500px", "clouds" + editTheme, "space", false)
+    createEditor("EasyRSAVars", "500px", "clouds" + editTheme, "space", false)
 </script>
 
 
