@@ -16,6 +16,7 @@
 - Add Routes system management to provide each client with Route rules, stored in DB
 - Refactored code a bit
 - Redesigned UI a bit
+- Base bash script for installing is [openvpn-install.sh](https://github.com/shuricksumy/openvpn-install)
 
 <details>
 
