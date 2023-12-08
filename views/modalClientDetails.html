@@ -126,8 +126,7 @@ pre.mypre {
                                     data-content=" Use this phrase to import Certificate on clien side"></i>
                                 <div class="input-group" id="show_hide_password">
                                   <input type="password" class="form-control" placeholder="Passphrase" id="passphrase" 
-                                    name="passphrase" data-inputmask="'mask': '*' ,'repeat': 35, 'greedy' : false" 
-                                    data-mask onfocusout="this.value = this.value.trim()" 
+                                    name="passphrase" data-mask-text onfocusout="this.value = this.value.trim()" 
                                         value="{{$c.Passphrase}}" {{if $c.CertificateName}}readonly{{end}}>
                                   <span class="input-group-btn">
                                     <button class="btn btn-default reveal" type="button">
@@ -322,6 +321,17 @@ pre.mypre {
 <script type="text/javascript">
     $(function () {
         $('[data-mask]').inputmask();
+
+        $('[data-mask-text]').inputmask({
+          mask: "*",
+          greedy: false,
+          repeat: 35,
+          definitions: {
+            '*': {
+              validator: "[0-9A-Za-z_-]",
+            }
+          }
+        });
     });
 
     $(function() {

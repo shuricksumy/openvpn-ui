@@ -44,8 +44,7 @@
               <div class="form-group col-md-4">
                 <label for="client_name">Client Name*</label>
                 <input type="text" class="form-control" placeholder="Set route name" id="client_name" 
-                  name="client_name" data-inputmask="'mask': '*' ,'repeat': 35, 'greedy' : false" 
-                  data-mask required onfocusout="this.value = this.value.trim()">
+                  name="client_name" data-mask-text required onfocusout="this.value = this.value.trim()">
                 <span class="help-block font75">The unique Client Name</span>
               </div>
               
@@ -87,8 +86,7 @@
                     <label for="cert_pass">Passphrase</label>
                     <div class="input-group" id="show_hide_password">
                       <input type="password" class="form-control" placeholder="Passphrase" id="cert_pass" 
-                        name="cert_pass" data-inputmask="'mask': '*' ,'repeat': 35, 'greedy' : false" 
-                        data-mask onfocusout="this.value = this.value.trim()">
+                        name="cert_pass" data-mask-text onfocusout="this.value = this.value.trim()">
                       <span class="input-group-btn">
                         <button class="btn btn-default reveal" type="button">
                           <i class="fa fa-eye-slash"></i></button>
@@ -301,6 +299,18 @@
   
   $(function () {
         $('[data-mask]').inputmask();
+
+        $('[data-mask-text]').inputmask({
+          mask: "*",
+          greedy: false,
+          repeat: 35,
+          definitions: {
+            '*': {
+              validator: "[0-9A-Za-z_-]",
+            }
+          }
+        });
+
   });
 
 
