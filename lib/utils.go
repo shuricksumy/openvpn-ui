@@ -129,9 +129,21 @@ func Backup() (string, error) {
 	src := state.GlobalCfg.OVConfigPath
 	dest := path.Join("/tmp/", backupFileName)
 
-	cmd := exec.Command("/bin/bash", "-c",
-		fmt.Sprintf(
-			"/bin/tar -cjvf "+dest+" "+src))
+	dbName, _ := web.AppConfig.String("DbPath")
+	backupFileNameSQL := filepath.Join(state.GlobalCfg.OVConfigPath, fmt.Sprintf("backup_%s.sql", timestamp))
+
+	err := DumpSQLiteDatabaseToFile(backupFileNameSQL, dbName)
+	if err != nil {
+		// Handle error, e.g., command execution error
+		logs.Error("Error dumping database")
+		return dest, err
+	} else {
+		// Successful database dump
+		logs.Warn("Database dumped successfully")
+	}
+
+	cmd := exec.Command("/bin/bash", "-c", fmt.Sprintf("/bin/tar -cjvf %s %s", dest, src))
+
 	cmd.Dir = state.GlobalCfg.OVConfigPath
 	output, err := cmd.CombinedOutput()
 	if err != nil {
@@ -218,4 +230,40 @@ func StringToNilString(input string) *string {
 func NilStringToString(input *string) string {
 	pointerToString := &input
 	return **pointerToString
+}
+
+// DumpSQLiteDatabaseToFile dumps the entire SQLite database to a file
+func DumpSQLiteDatabaseToFile(backupFileName string, dbName string) error {
+
+	// Check if the SQLite database file exists
+	if _, err := os.Stat(dbName); os.IsNotExist(err) {
+		logs.Error(fmt.Errorf("SQLite database file does not exist: %s", dbName))
+		return fmt.Errorf("SQLite database file does not exist: %s", dbName)
+	}
+
+	// Prepare the sqlite3 command
+	cmd := exec.Command("/bin/bash", "-c",
+		fmt.Sprintf("/usr/bin/sqlite3 %s .dump", dbName))
+
+	cmd.Dir = state.GlobalCfg.OVConfigPath
+	outputFile, err := os.Create(backupFileName)
+	if err != nil {
+		logs.Error(fmt.Sprintf("/usr/bin/sqlite3 %s .dump", dbName))
+		logs.Error(outputFile)
+		logs.Error(err)
+	}
+	defer outputFile.Close()
+
+	// Set the command's output to the file
+	cmd.Stdout = outputFile
+
+	// Run the sqlite3 command
+	err = cmd.Run()
+	if err != nil {
+		logs.Error(err)
+		return err
+	}
+
+	logs.Warning("Database dumped successfully to %s\n", backupFileName)
+	return nil
 }

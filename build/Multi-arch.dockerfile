@@ -27,7 +27,7 @@ WORKDIR /opt
 EXPOSE 8080
 
 
-RUN apt-get update && apt-get install -y curl bzip2 jq git wget openvpn iptables openssl wget ca-certificates iproute2
+RUN apt-get update && apt-get install -y curl bzip2 jq git wget openvpn iptables openssl wget ca-certificates iproute2 sqlite3
 
 COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/start.sh /opt/start.sh
 COPY --from=0  /go/src/github.com/shuricksumy/openvpn-ui/build/assets/vars.template /opt/scripts/vars.template

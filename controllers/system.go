@@ -32,17 +32,20 @@ func (c *SystemController) Get() {
 // @router /ov/system/backup [get]
 func (c *SystemController) Backup() {
 	flash := web.NewFlash()
+	c.TplName = "system.html"
 
 	destFile, err := lib.Backup()
 	if err != nil {
 		logs.Error(err)
-		flash.Success("Backup process has been broken")
+		flash.Error("Backup process has been broken: ", err)
 		flash.Store(&c.Controller)
+		return
 	}
 
 	if _, err := os.Stat(destFile); err != nil {
-		flash.Success("File not found to download")
+		flash.Error("File not found to download:", err)
 		flash.Store(&c.Controller)
+		return
 	}
 
 	c.Ctx.Output.Header("Content-Disposition", "attachment; filename="+destFile)
