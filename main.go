@@ -24,6 +24,9 @@ func main() {
 		fmt.Println("Error apply FireWall rules:", err)
 	}
 
+	// Start the watchdog in a goroutine
+	go lib.Watchdog()
+
 	configDir := flag.String("config", "conf", "Path to config dir")
 	flag.Parse()
 

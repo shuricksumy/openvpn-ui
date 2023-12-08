@@ -356,3 +356,19 @@ func GetMD5StructureFromFS() map[string]bool {
 	return result
 
 }
+
+func Watchdog() {
+	for {
+		time.Sleep(60 * time.Second) // Check every 60 seconds
+
+		if !IsOpenVPNRunning() {
+			logs.Error("OpenVPN is not running. Restarting...")
+			err := StartOpenVPN()
+			if err != nil {
+				logs.Error(err)
+			} else {
+				logs.Error("OpenVPN restarted successfully.")
+			}
+		}
+	}
+}
