@@ -63,6 +63,18 @@ else
     fi
 fi
 
+# Set site name
+if ! grep -qs "^httpport=" /opt/openvpn-gui/conf/app.conf; then
+    if [[ -n $APP_PORT ]]; then
+        echo "" >> /opt/openvpn-gui/conf/app.conf
+        echo "httpport=${APP_PORT}" >> /opt/openvpn-gui/conf/app.conf
+    fi
+else
+    if [[ -n $APP_PORT ]]; then
+        sed -i '/httpport=/s/.*/httpport='"$APP_PORT"'/' /opt/openvpn-gui/conf/app.conf
+    fi
+fi
+
 # if [ ! -f ${OVDIR}/clientDetails.json ]; then
 #     touch ${OVDIR}/clientDetails.json
 # fi

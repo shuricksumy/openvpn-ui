@@ -8,7 +8,6 @@ import (
 	"github.com/beego/beego/v2/server/web"
 	"github.com/shuricksumy/openvpn-ui/lib"
 	"github.com/shuricksumy/openvpn-ui/models"
-	mi "github.com/shuricksumy/openvpn-ui/pkg/openvpn-server-config/server/mi"
 	"github.com/shuricksumy/openvpn-ui/state"
 )
 
@@ -345,13 +344,14 @@ func (c *ClientsController) UpdateFiles() {
 		// Redirect to the main page after successful file save.
 		flash.Success("Clients were updated. Please restart OPENVPN server!")
 		flash.Store(&c.Controller)
-		client := mi.NewClient(state.GlobalCfg.MINetwork, state.GlobalCfg.MIAddress)
-		if err := client.Signal("SIGUSR1"); err != nil {
-			flash.Warning("Config has been updated but OpenVPN server was NOT reloaded: " + err.Error())
-		} else {
-			flash.Success("Files were updated and OpenVPN reloaded it")
-			flash.Store(&c.Controller)
-		}
+		// client := mi.NewClient(state.GlobalCfg.MINetwork, state.GlobalCfg.MIAddress)
+		// if err := client.Signal("SIGUSR1"); err != nil {
+		// 	flash.Warning("Config has been updated but OpenVPN server was NOT reloaded: " + err.Error())
+		// } else {
+		// 	flash.Success("Files were updated and OpenVPN reloaded it")
+		// 	flash.Store(&c.Controller)
+		// }
+		flash.Warning("Config has been updated but OpenVPN server was NOT reloaded")
 	}
 
 	c.TplName = "clients.html"

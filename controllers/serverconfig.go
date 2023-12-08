@@ -8,7 +8,6 @@ import (
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
 	"github.com/shuricksumy/openvpn-ui/lib"
-	mi "github.com/shuricksumy/openvpn-ui/pkg/openvpn-server-config/server/mi"
 	"github.com/shuricksumy/openvpn-ui/state"
 )
 
@@ -72,13 +71,15 @@ func (c *ServerConfigController) Post() {
 		return
 	}
 
-	client := mi.NewClient(state.GlobalCfg.MINetwork, state.GlobalCfg.MIAddress)
-	if err := client.Signal("SIGUSR1"); err != nil {
-		flash.Warning("Config has been updated but OpenVPN server was NOT reloaded: " + err.Error())
-	} else {
-		flash.Success("Config were updated and OpenVPN reloaded it")
-		flash.Store(&c.Controller)
-	}
+	// client := mi.NewClient(state.GlobalCfg.MINetwork, state.GlobalCfg.MIAddress)
+	// if err := client.Signal("SIGUSR1"); err != nil {
+	// 	flash.Warning("Config has been updated but OpenVPN server was NOT reloaded: " + err.Error())
+	// } else {
+	// 	flash.Success("Config were updated and OpenVPN reloaded it")
+	// 	flash.Store(&c.Controller)
+	// }
+
+	flash.Warning("Config has been updated but OpenVPN server was NOT reloaded")
 
 	c.Data["ServerConfig"] = string(serverConfig)
 	flash.Store(&c.Controller)
