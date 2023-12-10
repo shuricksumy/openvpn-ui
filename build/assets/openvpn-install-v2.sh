@@ -1110,6 +1110,7 @@ fi
 
 if [[ ! \$(iptables -t nat -C POSTROUTING -s $IP_RANGE/24 -o \$NIC -j MASQUERADE) ]]; then
   iptables -t nat -I POSTROUTING 1 -s $IP_RANGE/24 -o \$NIC -j MASQUERADE
+  iptables -t nat -I POSTROUTING 1 -o tun$TUN_NUMBER -j MASQUERADE
   iptables -I INPUT 1 -i tun$TUN_NUMBER -j ACCEPT
   iptables -I FORWARD 1 -i \$NIC -o tun$TUN_NUMBER -j ACCEPT
   iptables -I FORWARD 1 -i tun$TUN_NUMBER -o \$NIC -j ACCEPT
@@ -1138,6 +1139,7 @@ fi
 
 if [[ \$(iptables -t nat -C POSTROUTING -s $IP_RANGE/24 -o \$NIC -j MASQUERADE) ]]; then
   iptables -t nat -D POSTROUTING -s $IP_RANGE/24 -o \$NIC -j MASQUERADE
+  iptables -t nat -D POSTROUTING -o tun$TUN_NUMBER -j MASQUERADE
   iptables -D INPUT -i tun$TUN_NUMBER -j ACCEPT
   iptables -D FORWARD -i \$NIC -o tun$TUN_NUMBER -j ACCEPT
   iptables -D FORWARD -i tun$TUN_NUMBER -o \$NIC -j ACCEPT
