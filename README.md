@@ -63,9 +63,6 @@
 </details>
 
 ## Example docker-compose file
-
-### It's only UI part - full configuration will be here soon [TODO]
-
 ```docker
 version: '3'
 
@@ -87,8 +84,10 @@ services:
             - OPENVPN_ADMIN_USERNAME=admin # Leave this default as-is and update on first-run
             - OPENVPN_ADMIN_PASSWORD=admin # Leave this default as-is and update on first-run
             - SITE_NAME=Admin
+            #- APP_PORT=8080 # Use if need to specify the custom one
         ports:
             - "8080:8080/tcp"
+            - "1194:1194/udp"
         restart: always
         networks:
             npm_proxy:
@@ -98,10 +97,10 @@ services:
         cap_add:
             - NET_ADMIN
         volumes:
-         -  /var/run/docker.sock:/var/run/docker.sock
-        #  - ./openvpn/openvpn:/etc/openvpn
-        #  - ./openvpn/easy-rsa:/etc/openvpn/easy-rsa
-        #  - ./openvpn/openvpn/db:/opt/openvpn-gui/db
+            -  /var/run/docker.sock:/var/run/docker.sock
+            - ./openvpn/db:/opt/openvpn-gui/db
+            - ./openvpn:/etc/openvpn
+            #- ./openvpn/easy-rsa:/etc/openvpn/easy-rsa
 ```
 
 References:
