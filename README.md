@@ -8,14 +8,14 @@
 > **Warning**
  There is no back compatibility with previous versions. Need to recreate service from scratch.
  
-- Now it's a solid solution: OpenVPN server is included to docker
+- Now it's a solid solution: OpenVPN server is added to docker image
 - UI can see the OpenVPN server status and restart it
 - For better UX, Wizard was added to configure the OpenVPN server the first time
-- Add Clients as first-level entities, stored in DB
+- The Clients are the first-level entities, stored in DB
 - Certificates now can be generated only for created Clients
-- Add Routes system management to provide each client with Route rules, stored in DB
-- Refactored code a bit
-- Redesigned UI a bit
+- Routes system management was added to provide each client with route rules, stored in DB
+- Refactored code
+- Redesigned UI
 - Base bash script for installing is [openvpn-install.sh](https://github.com/shuricksumy/openvpn-install)
 
 <details>
