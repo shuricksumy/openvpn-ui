@@ -22,8 +22,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/beego/beego/v2/client/orm/internal/logs"
-
 	"github.com/beego/beego/v2/client/orm/internal/models"
 
 	"github.com/beego/beego/v2/client/orm/hints"
@@ -80,12 +78,12 @@ var _ dbBaser = new(dbBaseSqlite)
 // override base db read for update behavior as SQlite does not support syntax
 func (d *dbBaseSqlite) Read(ctx context.Context, q dbQuerier, mi *models.ModelInfo, ind reflect.Value, tz *time.Location, cols []string, isForUpdate bool) error {
 	if isForUpdate {
-		logs.DebugLog.Println("[WARN] SQLite does not support SELECT FOR UPDATE query, isForUpdate param is ignored and always as false to do the work")
+		DebugLog.Println("[WARN] SQLite does not support SELECT FOR UPDATE query, isForUpdate param is ignored and always as false to do the work")
 	}
 	return d.dbBase.Read(ctx, q, mi, ind, tz, cols, false)
 }
 
-// get sqlite operator.
+// Get sqlite operator.
 func (d *dbBaseSqlite) OperatorSQL(operator string) string {
 	return sqliteOperators[operator]
 }
@@ -108,17 +106,17 @@ func (d *dbBaseSqlite) MaxLimit() uint64 {
 	return 9223372036854775807
 }
 
-// get column types in sqlite.
+// Get column types in sqlite.
 func (d *dbBaseSqlite) DbTypes() map[string]string {
 	return sqliteTypes
 }
 
-// get show tables sql in sqlite.
+// Get show tables sql in sqlite.
 func (d *dbBaseSqlite) ShowTablesQuery() string {
 	return "SELECT name FROM sqlite_master WHERE type = 'table'"
 }
 
-// get Columns in sqlite.
+// Get Columns in sqlite.
 func (d *dbBaseSqlite) GetColumns(ctx context.Context, db dbQuerier, table string) (map[string][3]string, error) {
 	query := d.ins.ShowColumnsQuery(table)
 	rows, err := db.QueryContext(ctx, query)
@@ -139,7 +137,7 @@ func (d *dbBaseSqlite) GetColumns(ctx context.Context, db dbQuerier, table strin
 	return columns, rows.Err()
 }
 
-// get show Columns sql in sqlite.
+// Get show Columns sql in sqlite.
 func (d *dbBaseSqlite) ShowColumnsQuery(table string) string {
 	return fmt.Sprintf("pragma table_info('%s')", table)
 }
@@ -175,7 +173,7 @@ func (d *dbBaseSqlite) GenerateSpecifyIndex(tableName string, useIndex int, inde
 	case hints.KeyUseIndex, hints.KeyForceIndex:
 		return fmt.Sprintf(` INDEXED BY %s `, strings.Join(s, `,`))
 	default:
-		logs.DebugLog.Println("[WARN] Not a valid specifying action, so that action is ignored")
+		DebugLog.Println("[WARN] Not a valid specifying action, so that action is ignored")
 		return ``
 	}
 }

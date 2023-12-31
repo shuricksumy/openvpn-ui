@@ -21,8 +21,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/beego/beego/v2/client/orm/internal/logs"
-
 	lru "github.com/hashicorp/golang-lru"
 )
 
@@ -42,13 +40,13 @@ const (
 // database driver string.
 type driver string
 
-// get type constant int of current driver..
+// Get type constant int of current driver..
 func (d driver) Type() DriverType {
 	a, _ := dataBaseCache.get(string(d))
 	return a.Driver
 }
 
-// get name of current driver
+// Get name of current driver
 func (d driver) Name() string {
 	return string(d)
 }
@@ -322,11 +320,11 @@ func detectTZ(al *alias) {
 					al.TZ = t.Location()
 				}
 			} else {
-				logs.DebugLog.Printf("Detect DB timezone: %s %s\n", tz, err.Error())
+				DebugLog.Printf("Detect DB timezone: %s %s\n", tz, err.Error())
 			}
 		}
 
-		// get default engine from current database
+		// Get default engine from current database
 		row = al.DB.QueryRow("SELECT ENGINE, TRANSACTIONS FROM information_schema.engines WHERE SUPPORT = 'DEFAULT'")
 		var engine string
 		var tx bool
@@ -349,7 +347,7 @@ func detectTZ(al *alias) {
 		if err == nil {
 			al.TZ = loc
 		} else {
-			logs.DebugLog.Printf("Detect DB timezone: %s %s\n", tz, err.Error())
+			DebugLog.Printf("Detect DB timezone: %s %s\n", tz, err.Error())
 		}
 	}
 }
@@ -410,7 +408,7 @@ func newAliasWithDb(aliasName, driverName string, db *sql.DB, params ...DBOption
 
 	err := db.Ping()
 	if err != nil {
-		return nil, fmt.Errorf("register db Ping `%s`, %s", aliasName, err.Error())
+		return nil, fmt.Errorf("Register db Ping `%s`, %s", aliasName, err.Error())
 	}
 
 	detectTZ(al)
@@ -465,7 +463,7 @@ func RegisterDataBase(aliasName, driverName, dataSource string, params ...DBOpti
 
 	db, err = sql.Open(driverName, dataSource)
 	if err != nil {
-		err = fmt.Errorf("register db `%s`, %s", aliasName, err.Error())
+		err = fmt.Errorf("Register db `%s`, %s", aliasName, err.Error())
 		goto end
 	}
 
@@ -481,7 +479,7 @@ end:
 		if db != nil {
 			db.Close()
 		}
-		logs.DebugLog.Println(err.Error())
+		DebugLog.Println(err.Error())
 	}
 
 	return err
@@ -510,7 +508,7 @@ func SetDataBaseTZ(aliasName string, tz *time.Location) error {
 }
 
 // GetDB Get *sql.DB from registered database by db alias name.
-// Use "default" as alias name if you not set.
+// Use "default" as alias name if you not Set.
 func GetDB(aliasNames ...string) (*sql.DB, error) {
 	var name string
 	if len(aliasNames) > 0 {

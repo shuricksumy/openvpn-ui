@@ -20,8 +20,6 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/beego/beego/v2/client/orm/internal/logs"
-
 	"github.com/beego/beego/v2/client/orm/internal/models"
 )
 
@@ -76,12 +74,12 @@ type dbBaseMysql struct {
 
 var _ dbBaser = new(dbBaseMysql)
 
-// OperatorSQL get mysql operator.
+// OperatorSQL Get mysql operator.
 func (d *dbBaseMysql) OperatorSQL(operator string) string {
 	return mysqlOperators[operator]
 }
 
-// DbTypes get mysql table field types.
+// DbTypes Get mysql table field types.
 func (d *dbBaseMysql) DbTypes() map[string]string {
 	return mysqlTypes
 }
@@ -163,7 +161,7 @@ func (d *dbBaseMysql) InsertOrUpdate(ctx context.Context, q dbQuerier, mi *model
 		if err == nil {
 			lastInsertId, err := res.LastInsertId()
 			if err != nil {
-				logs.DebugLog.Println(ErrLastInsertIdUnavailable, ':', err)
+				DebugLog.Println(ErrLastInsertIdUnavailable, ':', err)
 				return lastInsertId, ErrLastInsertIdUnavailable
 			} else {
 				return lastInsertId, nil

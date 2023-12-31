@@ -52,7 +52,7 @@ tasks:
   tidy:
     desc: Tidies the go.mod file.
     cmds:
-      - go mod tidy -compat={{ .GO_VERSION }}
+      - go mod tidy
       - task: install
     sources:
       - "go.{mod,sum}"
@@ -62,8 +62,8 @@ tasks:
     cmds:
       - go clean -cache
       - go clean -modcache
-      - rm -f {{ .BINARY_DIR }}/*
-      - rm -f example/*
+      - rm -rf {{ .BINARY_DIR }}/*
+      - rm -rf example/*
 
   test:
     desc: Tests the given application.

@@ -19,8 +19,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/beego/beego/v2/client/orm/internal/logs"
-
 	"github.com/beego/beego/v2/client/orm/internal/models"
 
 	"github.com/beego/beego/v2/client/orm/hints"
@@ -72,17 +70,17 @@ func newdbBaseOracle() dbBaser {
 	return b
 }
 
-// OperatorSQL get oracle operator.
+// OperatorSQL Get oracle operator.
 func (d *dbBaseOracle) OperatorSQL(operator string) string {
 	return oracleOperators[operator]
 }
 
-// DbTypes get oracle table field types.
+// DbTypes Get oracle table field types.
 func (d *dbBaseOracle) DbTypes() map[string]string {
 	return oracleTypes
 }
 
-// ShowTablesQuery show all the tables in database
+// ShowTablesQuery show All the tables in database
 func (d *dbBaseOracle) ShowTablesQuery() string {
 	return "SELECT TABLE_NAME FROM USER_TABLES"
 }
@@ -120,7 +118,7 @@ func (d *dbBaseOracle) GenerateSpecifyIndex(tableName string, useIndex int, inde
 	case hints.KeyIgnoreIndex:
 		hint = `NO_INDEX`
 	default:
-		logs.DebugLog.Println("[WARN] Not a valid specifying action, so that action is ignored")
+		DebugLog.Println("[WARN] Not a valid specifying action, so that action is ignored")
 		return ``
 	}
 
@@ -160,7 +158,7 @@ func (d *dbBaseOracle) InsertValue(ctx context.Context, q dbQuerier, mi *models.
 
 			lastInsertId, err := res.LastInsertId()
 			if err != nil {
-				logs.DebugLog.Println(ErrLastInsertIdUnavailable, ':', err)
+				DebugLog.Println(ErrLastInsertIdUnavailable, ':', err)
 				return lastInsertId, ErrLastInsertIdUnavailable
 			} else {
 				return lastInsertId, nil
