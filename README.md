@@ -4,6 +4,10 @@
 
 ## Updates
 
+#### December 2023 (v4.1)
+- Small updates in Docker builder files.
+- Adding Tasks
+
 #### December 2023 (v4.0)
 > **Warning**
  There is no back compatibility with previous versions. Need to recreate service from scratch.

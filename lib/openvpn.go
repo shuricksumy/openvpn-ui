@@ -100,7 +100,7 @@ func StopOpenVPN() error {
 }
 
 func GetOpenVPNProcessIDFromPS() (int, error) {
-	cmd := exec.Command("bash", "-c", "/usr/bin/ps -ef | /usr/bin/grep openvpnserver | /usr/bin/grep -v grep")
+	cmd := exec.Command("bash", "-c", "/bin/ps -ef | /bin/grep openvpnserver | /bin/grep -v grep")
 	// logs.Error("CMD:", cmd)
 
 	output, err := cmd.CombinedOutput()

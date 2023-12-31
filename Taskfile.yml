@@ -1,0 +1,154 @@
+---
+# https://taskfile.dev
+
+version: "3"
+
+vars:
+  GO_LD_FLAGS: -w -s
+  BINARY_DIR: dist
+  BINARY_NAME: openvpn-ui
+  BINARY_APPEND_OS: true
+  BINARY_APPEND_ARCH: true
+
+env:
+  CGO_ENABLED: 0
+
+tasks:
+  submodules:
+    desc: Init/update git submodules.
+    cmds:
+      - git submodule init
+      - git submodule update --recursive --remote
+      - git submodule status
+
+  install:
+    desc: Installs the required dependencies on pull.
+    cmds:
+      - go mod vendor
+    sources:
+      - go.{sum,mod}
+    generates:
+      - "vendor/**"
+
+  format:
+    desc: Formats the current code base.
+    cmds:
+      - goimports -w .
+      - golangci-lint run --fix
+
+  lint:
+    desc: Lints the codebase with predefined rules.
+    cmds:
+      - golangci-lint run
+    sources:
+      - "**/*.go"
+
+  update:
+    desc: Updates all the dependencies to their latest minor version.
+    cmds:
+      - go get -u all
+      - task: tidy
+
+  tidy:
+    desc: Tidies the go.mod file.
+    cmds:
+      - go mod tidy -compat={{ .GO_VERSION }}
+      - task: install
+    sources:
+      - "go.{mod,sum}"
+
+  clean:
+    desc: Cleans the output binary folder and build cache.
+    cmds:
+      - go clean -cache
+      - go clean -modcache
+      - rm -f {{ .BINARY_DIR }}/*
+      - rm -f example/*
+
+  test:
+    desc: Tests the given application.
+    cmds:
+      - go test -v -p 1 ./...
+
+  build:
+    desc: Builds the application.
+    deps:
+      - task: build.platform
+        vars:
+          os: linux
+          arch: amd64
+      - task: build.platform
+        vars:
+          os: linux
+          arch: arm64
+
+  build.platform:
+    internal: true
+    env:
+      CGO_ENABLED: true
+    vars:
+      binary_output: '{{ .BINARY_DIR }}/{{ .BINARY_NAME }}{{ if eq .BINARY_APPEND_OS "true" }}-{{ .os }}{{ end }}{{ if eq .BINARY_APPEND_ARCH "true" }}-{{ .arch }}{{ end }}'
+    cmds:
+      - GOOS={{ .os }} GOARCH={{ .arch }} bee pack -exr='^vendor|^data.db|^build|^README.md|^docs|^README_ORIGINAL.md|^screenshots|^pkg|^bin|^dist|^Taskfile|^example|^swagger|^docker-compose|^Dockerfile' -o {{ .binary_output }}
+    sources:
+      - "**/*.go"
+      - "go.{mod,sum}"
+    generates:
+      - "{{ .binary_output }}"
+
+  start:
+    desc: Starts the given application.
+    interactive: true
+    env:
+      LOG_LEVEL: debug
+      OPENVPN_ADMIN_USERNAME: admin
+      OPENVPN_ADMIN_PASSWORD: admin
+      OVDIR: /etc/openvpn
+      CGO_ENABLED: true
+    cmds:
+      - bee run -gendoc=false
+
+  help:
+    desc: Generates help for the application.
+    cmds:
+      - go run . --help
+
+  docker.build:
+    desc: Builds the docker container for the application for testing.
+    cmds:
+      - task: build
+      - docker-compose build
+    sources:
+      - "dist/**"
+      - "Dockerfile*"
+
+  docker.push:
+    desc: Builds the docker container for the application for testing.
+    cmds:
+      - task: build
+      - docker buildx build --platform linux/amd64,linux/arm64 -f Dockerfile -t shuricksumy/openvpn-ui:latest . --push --no-cache
+    sources:
+      - "dist/**"
+      - "Dockerfile*"
+
+  docker.push.beta:
+    desc: Builds the docker container for the application for testing.
+    cmds:
+      - task: build
+      - docker buildx build --platform linux/amd64,linux/arm64 -f Dockerfile -t shuricksumy/openvpn-ui:beta . --push --no-cache
+    sources:
+      - "dist/**"
+      - "Dockerfile*"
+
+  docker.up:
+    desc: Runs the docker-compose application.
+    interactive: true
+    env:
+      TZ: Europe/Kyiv
+      PUID: 1000
+      PGID: 1000
+      IP_GUI: 172.18.0.139
+    cmds:
+      - task: build
+      - task: docker.build
+      - docker-compose -f ./docker-compose.yml up
