@@ -21,19 +21,19 @@
 
 <div class="row">
   <div class="col-md-3 col-sm-6 col-xs-12">
-    <div class="info-box" style="min-height: 100px;">
+    <div class="info-box" style="min-height: 85px;">
       <span class="info-box-icon bg-gradient-lightblue" style="width: 80px; font-size: 3rem;">
         <i class="fa-solid fa-satellite-dish"></i>
       </span>
-      <div class="info-box-content">
+      <div class="info-box-content font75">
         <span class="info-box-text">
           Clients count: <span class="info-box-number2">{{ .ovstats.NClients }}</span>
         </span>
-        <span class="info-box-text font90">
-          In: <span class="info-box-number2 font75">{{ printmb .ovstats.BytesIn }} MB</span>
+        <span class="info-box-text">
+          In: <span class="info-box-number2">{{ printmb .ovstats.BytesIn }} MB</span>
         </span>
-        <span class="info-box-text font90">
-          Out: <span class="info-box-number2 font75">{{ printmb .ovstats.BytesOut }} MB </span>
+        <span class="info-box-text">
+          Out: <span class="info-box-number2">{{ printmb .ovstats.BytesOut }} MB </span>
         </span>
       </div>
       <!-- /.info-box-content -->
@@ -43,13 +43,13 @@
   <!-- /.col -->
 
     <div class="col-md-3 col-sm-6 col-xs-12">
-      <div class="info-box" style="min-height: 100px;">
+      <div class="info-box" style="min-height: 85px;">
         <span class="info-box-icon bg-gradient-lightblue" style="width: 80px; font-size: 3rem;">
           <i class="fa-solid fa-chart-simple"></i>
         </span>
-        <div class="info-box-content">
+        <div class="info-box-content font75">
           <span class="info-box-text">Load Average:</span>
-          <span class="info-box-number2 font75">
+          <span class="info-box-number">
             {{ .sysinfo.LoadAvg.One }},
             {{ .sysinfo.LoadAvg.Five }},
             {{ .sysinfo.LoadAvg.Fifteen }}<br/>
@@ -68,7 +68,7 @@
 
 
     <div class="col-md-3 col-sm-6 col-xs-12">
-      <div class="info-box" style="min-height: 100px;">
+      <div class="info-box" style="min-height: 85px;">
         <span class="info-box-icon bg-gradient-lightblue" style="width: 80px; font-size: 3rem;">
           <i class="fa-regular fa-lightbulb"></i>
         </span>
@@ -83,7 +83,7 @@
     <!-- /.col -->
 
     <div class="col-md-3 col-sm-6 col-xs-12" >
-      <div class="info-box" style="min-height: 100px;">
+      <div class="info-box" style="min-height: 85px;">
         <span class="info-box-icon bg-gradient-lightblue" style="width: 80px; font-size: 3rem;">
           <i class="fa-regular fa-clock"></i>
         </span>
@@ -91,7 +91,7 @@
           <span class="info-box-text">
             Server time:
           </span>
-          <span class="info-box-number2 font90">
+          <span class="info-box-number font90">
               {{ dateformat .sysinfo.CurrentTime "2006-01-02 15:04:05"}}
           </span>
         </div>
@@ -108,9 +108,6 @@
 <div class="row">
   <div class="col-md-12">
     <div class="card card-default">
-      <div class="card-header with-border">
-        <h3 class="card-title">Memory usage</h3>
-      </div>
       <!-- <div class="card-body">-->
         <div class="float-container">
           <div class="float-child-no-border">
@@ -235,14 +232,14 @@
 
 <div class="row">
   <div class="col-md-6 col-sm-12 col-xs-12">
-    <div class="info-box" style="min-height: 100px;">
-      <span class="info-box-icon bg-gradient-olive" style="width: 80px; font-size: 3rem;">
+    <div class="info-box" style="min-height: 75px;">
+      <span class="info-box-icon bg-gradient-olive" style="width: 75px; font-size: 2rem;">
         <i class="fa-solid fa-info"></i>
       </span>
-      <div class="info-box-content">
+      <div class="info-box-content font75">
       </span>
-      <span class="info-box-text">
-        OpenVPN version: <span class="info-box-number3">{{ .ovversion }}
+      <span class="info-box-text3">
+        OpenVPN version: <span class="info-box-number font75">{{ .ovversion }}
       </span>
       </div>
       <!-- /.info-card-content -->
@@ -252,11 +249,11 @@
   <!-- /.col -->
 
   <div class="col-md-6 col-sm-12 col-xs-12">
-    <div class="info-box"  style="min-height: 100px;">
-      <span class="info-box-icon bg-gradient-olive" style="width: 80px; font-size: 3rem;">
+    <div class="info-box" style="min-height: 75px;">
+      <span class="info-box-icon bg-gradient-olive" style="width: 75px; font-size: 2rem;">
         <i class="fa-solid fa-gears"></i>
       </span>
-      <div class="info-box-content">
+      <div class="info-box-content font75">
         <div class="btn-group">
           <span class="info-box-text">Operating system:</span><span class="info-box-number2">{{ .sysinfo.Os }}</span>
         </div>

@@ -69,7 +69,7 @@
   const checkbox = document.getElementById('switch-input');
 
   // Get a reference to the label element
-	const themeLabel = document.getElementById('theme-label');
+  const themeLabel = document.getElementById('theme-label');
 
 
   // Get a reference to the body element
@@ -81,6 +81,20 @@
     body.classList.add('dark-mode');
     checkbox.checked = true;
     themeLabel.textContent = 'Dark';
+
+    // Replace classes for beauty
+    var elems_light = document.querySelectorAll(".bg-gray-light");
+    var elems_dark = document.querySelectorAll(".bg-gray");
+
+    var elemCountLight = elems_light.length;
+    for (var i = 0; i < elemCountLight; i++) {
+      elems_light[i].classList.replace("bg-gray-light","bg-gray")
+    }
+
+    var elemCountDark = elems_dark.length;
+    for (var i = 0; i < elemCountDark; i++) {
+      elems_dark[i].classList.replace("bg-gray","bg-gray-light")
+    }
   }
 
   // Add an event listener to the checkbox for changes
@@ -94,8 +108,10 @@
     // Save the user's preference in localStorage
     if (checkbox.checked) {
       localStorage.setItem('theme', 'dark');
+      document.location.reload();
     } else {
       localStorage.removeItem('theme');
+      document.location.reload();
     }
   });
 </script>
