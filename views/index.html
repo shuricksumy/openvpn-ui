@@ -111,41 +111,46 @@
       <div class="card-header with-border">
         <h3 class="card-title">Memory usage</h3>
       </div>
-      <div class="card-body">
-
-        <div class="col-md-12">
-          <div class="progress-group">
-            <span class="progress-text">Memory</span>
-            <span class="progress-number">
-              <b>{{ printmb .sysinfo.Memory.Used }}</b> / {{ printmb .sysinfo.Memory.Total }} MB - {{percent .sysinfo.Memory.Used .sysinfo.Memory.Total}}%
-            </span>
-            <div class="progress sm">
-              <div class="progress-bar bg-gradient-lightblue"
-                style="width: {{percent .sysinfo.Memory.Used .sysinfo.Memory.Total}}%"></div>
-            </div>
-          </div>
-        </div>
-          <!-- /.col -->
-
-        <div class="col-md-12">
-          <div class="progress-group">
-            <span class="progress-text">Swap</span>
-            <span class="progress-number">
-              <b>{{ printmb .sysinfo.Swap.Used }}</b> / {{ printmb .sysinfo.Swap.Total }} MB - {{percent .sysinfo.Swap.Used .sysinfo.Swap.Total}}%
-            </span>
-
-            <div class="progress sm">
-              <div class="progress-bar bg-gradient-red"
-                style="width: {{percent .sysinfo.Swap.Used .sysinfo.Swap.Total}}%">
+      <!-- <div class="card-body">-->
+        <div class="float-container">
+          <div class="float-child-no-border">
+            <div class="col-md-12">
+              <div class="progress-group">
+                <span class="progress-text">Memory</span>
+                <span class="progress-number">
+                  <b>{{ printmb .sysinfo.Memory.Used }}</b> / {{ printmb .sysinfo.Memory.Total }} MB - {{percent .sysinfo.Memory.Used .sysinfo.Memory.Total}}%
+                </span>
+                <div class="progress sm">
+                  <div class="progress-bar bg-gradient-lightblue"
+                    style="width: {{percent .sysinfo.Memory.Used .sysinfo.Memory.Total}}%"></div>
+                </div>
               </div>
             </div>
-
           </div>
-        </div>
+              <!-- /.col -->
+          <div class="float-child-no-border">
+            <div class="col-md-12">
+              <div class="progress-group">
+                <span class="progress-text">Swap</span>
+                <span class="progress-number">
+                  <b>{{ printmb .sysinfo.Swap.Used }}</b> / {{ printmb .sysinfo.Swap.Total }} MB - {{percent .sysinfo.Swap.Used .sysinfo.Swap.Total}}%
+                </span>
+
+                <div class="progress sm">
+                  <div class="progress-bar bg-gradient-red"
+                    style="width: {{percent .sysinfo.Swap.Used .sysinfo.Swap.Total}}%">
+                  </div>
+                </div>
+
+              </div>
+              </div>
+            </div>
           <!-- /.col -->
+          <div>
+          <!-- float cont -->
       </div>
       <!-- /.card-body -->
-    </div>
+      <!--    </div>-->
     <!-- /.card -->
   </div>
   <!-- /.col -->
@@ -162,7 +167,7 @@
       <div class="card-body p-0">
         {{if .ovstatus}}
         <div class="table-responsive">
-          <table class="table m-0">
+          <table class="table table-sm m-0">
             <thead>
             <tr class="font90">
               <th>Common Name</th>
@@ -179,7 +184,7 @@
 
             {{range .ovstatus.ClientList}}
             <tr class="font90">
-                <td><span class="badge bg-gradient-lightblue btn120">{{.CommonName}}</span></td>
+                <td><span class="btn btn-xs btn-group-xs bg-lightblue btn120">{{.CommonName}}</span></td>
                 <td>{{.RealAddress}}</td>
                 <td>
                   <span class="badge bg-olive btn100">{{.VirtualAddress}}</span>
