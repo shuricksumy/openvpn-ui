@@ -43,11 +43,18 @@
                                             name="description" onfocusout="this.value = this.value.trim()" value="{{$r.Description}}">
                                           <span class="help-block font75">Describe the route details</span>
                                     </div>
-                                    
-                                    <div class="form-group col-xs-2"><span class="btn btn-xs btn-group-xs bg-gradient-lightblue btn40">Used by:</div>
-                                        {{range $connectedRouters}}                                            
-                                                <div class="form-group col-xs-1"><span class="btn btn-xs btn-group-xs bg-gray-light btn40">{{.}}</span></div>
-                                        {{end}}
+                                    <div class="float-container" style="width: 100%">
+                                        <div class="float-child-no-border" style="width: 10%;">
+                                            <div class="form-group col-xs-2"><span class="btn btn-sm bg-lightblue btn40">Used by:</div>
+                                        </div>
+                                        <div class="float-child-no-border" style="width: 90%;">
+                                            <div class="form-group col-xs-1">
+                                            {{range $connectedRouters}}
+                                                    <span class="badge bg-gray btn40">{{.}}</span>
+                                            {{end}}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                       
                             </div>

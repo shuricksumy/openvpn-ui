@@ -4,13 +4,15 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $('#route_list_selected').multiselect({
-            buttonWidth: '340px',
+            //buttonWidth: '340px',
             maxHeight: 250,
             buttonClass: '',
+            numberDisplayed: 1,
+            buttonContainer: '<div class="btn-group w-100" />',
             templates: {
-                button: '<button type="button" class="multiselect dropdown-toggle form-control right-icon-holder font90" data-toggle="dropdown">\
+                button: '<button type="button" class="multiselect dropdown-toggle form-control right-icon-holder-rel font90" data-toggle="dropdown">\
                     <span class="multiselect-selected-text"></span><i class="fa fa-angle-down" aria-hidden="true"></i></button>',
-                ul: '<div class="multiselect-container dropdown-menu form-control font90" style="width:310px;height:250px;"></div>',
+                ul: '<div class="multiselect-container dropdown-menu form-control font90" style="height:250px"></div>',
             },
             includeSelectAllOption: true,
             // inheritClass: true,
@@ -98,18 +100,18 @@ pre.mypre {
                                 <div class="input-group">
                                     <div class="btn-group" role="group" style="flex: 1 0 auto; margin-top: 3px;">
                                             {{if $c.CertificateName}}
-                                                <span class="btn btn-sm btn-group-sm bg-gradient-lightblue" id="cert_name">{{$c.CertificateName}}</span>                       
+                                                <span class="btn btn-sm btn-group-sm bg-gradient-lightblue" id="cert_name">{{$c.CertificateName}}</span>
                                             {{else}}
                                                 <span class="btn btn-sm btn-group-sm bg-gray-light" id="cert_name">No Certificates</span>
                                             {{end}}
                                             
                                             {{if $c.CertificateStatus}}
                                                 {{if eq (printf $c.CertificateStatus) "Active"}}
-                                                    <span class="btn btn-sm btn-group-sm bg-gradient-olive" 
+                                                    <span class="btn btn-sm btn-group-sm bg-gradient-olive"
                                                         id="cert_status">{{$c.CertificateStatus}}</span>
                                                 {{end}}
                                                 {{if eq (printf $c.CertificateStatus) "Revoked"}}
-                                                    <span class="btn btn-sm btn-group-sm bg-gradient-yellow" 
+                                                    <span class="btn btn-sm btn-group-sm bg-gradient-yellow"
                                                         id="cert_status">{{$c.CertificateStatus}}</span>
                                                 {{end}}
                                             {{else}}
@@ -137,7 +139,26 @@ pre.mypre {
                             </div>
 
 
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
+                                <label class="form-check-label" for="is_route_default">
+                                    Default route &nbsp;
+                                    <i class='fa fa-info-circle' data-toggle="popover" data-placement="bottom"
+                                       data-content="Set if want to send all trafic via VPN network."></i>
+                                </label>
+                                <select class="form-select form-control" name="is_route_default" id="is_route_default">
+                                    {{if $c.IsRouteDefault}}
+                                        <option selected value="true">Set VPN as default route</option>
+                                        <option value="false">VPN is not default route</option>
+                                    {{else}}
+                                        <option selected value="false">VPN is not default route</option>
+                                        <option value="true">Set VPN as default route</option>
+                                    {{end}}
+                                </select>
+
+                            </div>
+
+
+                            <div class="col-sm-4">
                                 <label class="form-check-label" for="static_ip">
                                     Static IP: &nbsp;    
                                 </label>
@@ -173,23 +194,13 @@ pre.mypre {
                                 data-inputmask="'alias': 'ip'" data-mask 
                                 pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" 
                                     placeholder="Enter Static IP" onfocusout="this.value = this.value.trim()">
-
-                                <div class="form-check mychekbox mychekbox-md">
-                                    <input name="is_route_default" id="is_route_default" class="form-check-input" type="checkbox" value="true" 
-                                        {{if $c.IsRouteDefault}} checked {{else}} {{end}}>
-                                    <label class="form-check-label my-label" for="is_route_default">
-                                        Use as default route &nbsp;
-                                        <i class='fa fa-info-circle' data-toggle="popover" data-placement="bottom" 
-                                        data-content="Set if want to send all trafic via VPN network."></i>
-                                    </label>
-                                </div>
                             </div>
 
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 <label class="form-check-label" for="route_list_selected">
                                     Routes: &nbsp;
-                                    <i class='fa fa-info-circle' data-toggle="popover" data-placement="bottom" 
-                                    data-content="Select devices you want to have access to their internal networks."></i>
+                                    <i class='fa fa-info-circle' data-toggle="popover" data-placement="bottom"
+                                       data-content="Select devices you want to have access to their internal networks."></i>
                                 </label>
                                 <select class="form-control" name="route_list_selected" id="route_list_selected" multiple="multiple">
                                     {{range  $val := $connectedRoutes}}
@@ -239,8 +250,8 @@ pre.mypre {
                             <table class="table-sm table-bordered table-striped m-0">
                                 <thead>
                                 <tr class="font75 textcenter">
-                                    <th class="first-sm" style="width:5%">ID</th>
-                                    <th style="width:5%">ROUTER</th>
+<!--                                    <th class="first-sm" style="width:5%">ID</th>-->
+                                    <th class="first-sm" style="width:5%">ROUTER</th>
                                     <th style="width:5%">IP</th>
                                     <th style="width:5%">MASK</th>
                                     <th class="last-sm" style="width:20%">DESCRIPTION</th>
@@ -249,7 +260,7 @@ pre.mypre {
                                 <tbody>
                                     {{range  $val := $rp}}
                                         <tr class="font75">
-                                            <td>{{$val.Name}}</td>
+<!--                                            <td>{{$val.Name}}</td>-->
                                             <td>{{$val.RouterName}}</td>
                                             <td>{{$val.RouteIP}}</td>
                                             <td>{{$val.RouteMask}}</td>
@@ -269,8 +280,8 @@ pre.mypre {
                           <table class="table-sm table-bordered table-striped m-0">
                             <thead>
                             <tr class="font75 textcenter">
-                              <th class="first-sm" style="width:5%">ID</th>
-                              <th style="width:5%">ROUTER</th>
+<!--                              <th class="first-sm" style="width:5%">ID</th>-->
+                              <th class="first-sm" style="width:5%">ROUTER</th>
                               <th style="width:5%">IP</th>
                               <th style="width:5%">MASK</th>
                               <th class="last-sm" style="width:20%">DESCRIPTION</th>
@@ -279,7 +290,7 @@ pre.mypre {
                             <tbody>
                                 {{range  $val := $connectedRoutes}}
                                     <tr class="font75">
-                                        <td>{{$val.Name}}</td>
+<!--                                        <td>{{$val.Name}}</td>-->
                                         <td>{{$val.RouterName}}</td>
                                         <td>{{$val.RouteIP}}</td>
                                         <td>{{$val.RouteMask}}</td>

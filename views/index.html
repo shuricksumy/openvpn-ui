@@ -179,10 +179,10 @@
 
             {{range .ovstatus.ClientList}}
             <tr class="font90">
-                <td><span class="btn btn-xs btn-group-xs bg-gradient-lightblue btn120">{{.CommonName}}</span></td>
+                <td><span class="badge bg-gradient-lightblue btn120">{{.CommonName}}</span></td>
                 <td>{{.RealAddress}}</td>
                 <td>
-                  <span class="btn btn-success btn-xs btn-group-xs bg-olive btn100">{{.VirtualAddress}}</span>
+                  <span class="badge bg-olive btn100">{{.VirtualAddress}}</span>
                   <button class="btn btn-xs button-transparent button-copy" data-clipboard-text="{{.VirtualAddress}}">
                       <img class="clippy" src="static/img/clippy.svg" width="13" alt="Copy to clipboard">
                   </button>

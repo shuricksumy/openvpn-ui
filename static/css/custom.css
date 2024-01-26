@@ -93,7 +93,7 @@
 
 .custom-modal-dialog {
   position: relative;
-  width: 700px; 
+  width: 960px;
   max-width: 100%;
   height: 90%;
   background-color: transparent;
@@ -110,10 +110,14 @@
 
 .custom-modal-dialog-form {
  position: relative;
- width: 700px; 
+ width: 960px;
  max-width: 100%;
  height: 90%;
  background-color: transparent;
+}
+
+.modal-dialog {
+    margin: 3.75rem auto !important;
 }
 
 .btn24 {
@@ -142,6 +146,10 @@ min-width: 60px;
 
 .btn150 {
  min-width: 150px;
+}
+
+.btn1000 {
+    min-width: 100%;
 }
 
 .textcenter {
@@ -202,10 +210,23 @@ min-width: 60px;
   left: 10px;
 }
 
+.right-icon-holder-rel {
+    position:relative;
+}
+
+.right-icon-holder-rel .fa {
+    position:absolute;
+    line-height: 24px;
+    top:50%;
+    margin-top: -12px; /* Half of line height to keep left middle postion of container */
+    right: 10px;
+}
+
 .right-icon-holder {
   position:relative;
   margin-right: 30px;
 }
+
 .right-icon-holder .fa {
   position:absolute;
   line-height: 24px;
@@ -388,4 +409,31 @@ a.disabled {
 button.disabled {
   pointer-events: none;
   cursor: default;
+}
+
+.badge {
+    font-weight: 400 !important;
+    padding: .35em .4em !important;
+}
+
+.float-container {
+    padding: 10px;
+}
+
+.float-child {
+    width: 50%;
+    float: left;
+    padding: 5px;
+    border: 1px solid gray;
+}
+
+.float-child-no-border {
+    width: 50%;
+    float: left;
+    padding: 5px;
+}
+
+.popup-table-header {
+    font-weight: 400;
+    font-size: 1rem;
 }
