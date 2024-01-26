@@ -183,35 +183,35 @@
             <tbody>
 
             {{range .ovstatus.ClientList}}
-            <tr class="font90">
-                <td><span class="btn btn-xs btn-group-xs bg-lightblue btn120">{{.CommonName}}</span></td>
-                <td>{{.RealAddress}}</td>
-                <td>
-                  <span class="badge bg-olive btn100">{{.VirtualAddress}}</span>
-                  <button class="btn btn-xs button-transparent button-copy" data-clipboard-text="{{.VirtualAddress}}">
-                      <img class="clippy" src="static/img/clippy.svg" width="13" alt="Copy to clipboard">
-                  </button>
-                </td>
-                <td align="right" style="padding-right:20px">
-                    {{printkb .BytesReceived}}
-                </td>
-                <td align="right" style="padding-right:20px">
-                    {{printkb .BytesSent}}
-                </td>
-                <td>{{.ConnectedSince}}</td>
-                <td>
+            <tr>
+              <td><span class="btn btn-xs btn-group-xs bg-lightblue btn120">{{.CommonName}}</span></td>
+              <td><span class="badge bg-gray-light btn150">{{.RealAddress}}</span></td>
+              <td>
+                <span class="badge bg-olive btn100">{{.VirtualAddress}}</span>
+                <button class="btn btn-xs button-transparent button-copy" data-clipboard-text="{{.VirtualAddress}}">
+                  <img class="clippy" src="static/img/clippy.svg" width="13" alt="Copy to clipboard">
+                </button>
+              </td>
+              <td>
+                <span class="badge bg-gray-light btn100">{{printkb .BytesReceived}}</span>
+              </td>
+              <td>
+                <span class="badge bg-gray-light btn100">{{printkb .BytesSent}}</span>
+              </td>
+              <td><span class="badge bg-gray-light btn120">{{.ConnectedSince}}</span></td>
+              <td><span class="badge bg-gray-light btn120">
                   {{if eq .Username "UNDEF"}}
                     -
                   {{else}}
                     {{.Username}}
                   {{end}}
-                </td>
-                <td class="textcenter">
-                  <a href="javascript:$.MyAPP.Disconnect('{{.CommonName}}')"
-                    data-title="Disconect {{.CommonName}} client ?"
-                    class="btn btn-xs btn-group-xs btn-danger bg-red-gradient btn24"
-                    title="Disconnect">X</a>
-                </td>
+                </span></td>
+              <td class="textcenter">
+                <a href="javascript:$.MyAPP.Disconnect('{{.CommonName}}')"
+                   data-title="Disconect {{.CommonName}} client ?"
+                   class="btn btn-xs btn-group-xs btn-danger bg-red-gradient btn24"
+                   title="Disconnect">X</a>
+              </td>
             </tr>
             {{end}}
 
