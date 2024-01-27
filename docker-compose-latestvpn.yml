@@ -1,0 +1,43 @@
+version: '3'
+
+networks:
+    default:
+        driver: bridge
+    npm_proxy:
+        name: npm_proxy
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 172.18.0.0/24
+services:
+  gui:
+      image: shuricksumy/openvpn-ui-latestvpn:latest
+      build:
+        context: .
+        dockerfile: Dockerfile-latestvpn
+        args:
+          TARGETOS: linux
+          TARGETARCH: amd64
+      container_name: openvpn-ui-latestvpn
+      working_dir: /etc/openvpn/easy-rsa
+      environment:
+          - OPENVPN_ADMIN_USERNAME=admin # Leave this default as-is and update on first-run
+          - OPENVPN_ADMIN_PASSWORD=admin # Leave this default as-is and update on first-run
+          - SITE_NAME=Admin
+          #- APP_PORT=8080 # Use if need to specify the custom one
+      ports:
+          - "8080:8080/tcp"
+          - "1194:1194/udp"
+      restart: always
+      networks:
+          npm_proxy:
+              ipv4_address: 172.18.0.10
+      devices:
+          - /dev/net/tun
+      cap_add:
+          - NET_ADMIN
+      volumes:
+          -  /var/run/docker.sock:/var/run/docker.sock
+          - ./example/db:/opt/openvpn-gui/db
+          - ./example:/etc/openvpn
+          #- ./openvpn/easy-rsa:/etc/openvpn/easy-rsa

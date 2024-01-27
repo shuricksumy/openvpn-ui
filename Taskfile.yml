@@ -140,6 +140,15 @@ tasks:
       - "dist/**"
       - "Dockerfile*"
 
+  docker.push.latestvpn:
+    desc: Builds the docker container for the application for testing.
+    cmds:
+      - task: build
+      - docker buildx build --platform linux/amd64,linux/arm64 -f Dockerfile-latestvpn -t shuricksumy/openvpn-ui-latestvpn:latest . --push --no-cache
+    sources:
+      - "dist/**"
+      - "Dockerfile*"
+
   docker.up:
     desc: Runs the docker-compose application.
     interactive: true
@@ -152,3 +161,16 @@ tasks:
       - task: build
       - task: docker.build
       - docker-compose -f ./docker-compose.yml up
+
+  docker-latestvpn.up:
+    desc: Runs the docker-compose application.
+    interactive: true
+    env:
+      TZ: Europe/Kyiv
+      PUID: 1000
+      PGID: 1000
+      IP_GUI: 172.18.0.139
+    cmds:
+      - task: build
+      - task: docker.build
+      - docker-compose -f ./docker-compose-latestvpn.yml up

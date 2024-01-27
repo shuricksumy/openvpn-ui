@@ -19,6 +19,7 @@ COPY ./build/assets/renew.sh /opt/scripts/renew.sh
 COPY ./build/assets/install_latest_openvpn.sh /opt/scripts/install_latest_openvpn.sh
 
 RUN /opt/scripts/install_pkg.sh
+RUN /opt/scripts/install_latest_openvpn.sh
 
 
 RUN apt-get autoremove -y \
