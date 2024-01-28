@@ -1,0 +1,14 @@
+FROM golang:1.21.6-alpine
+
+ENV WORK_DIR=$GOPATH/src/github.com/shuricksumy/openvpn-ui
+WORKDIR $WORK_DIR
+COPY . .
+
+RUN go install github.com/beego/bee@latest && bee update
+RUN go mod tidy && go mod vendor && bee pack bee pack  \
+    -exr='^vendor|^data.db|^build|^README.md|^docs|^README_ORIGINAL.md|^screenshots|^pkg|^bin|^dist|^Taskfile|^example|^swagger|^docker-compose|^Dockerfile'
+RUN ls -lah $WORK_DIR
+
+FROM scratch
+ENV WORK_DIR=/go/src/github.com/shuricksumy/openvpn-ui
+COPY --from=0 $WORK_DIR/openvpn-ui.tar.gz /openvpn-ui.tar.gz

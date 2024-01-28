@@ -85,11 +85,12 @@ tasks:
   build.platform:
     internal: true
     env:
-      CGO_ENABLED: true
+      CGO_ENABLED: 0
     vars:
       binary_output: '{{ .BINARY_DIR }}/{{ .BINARY_NAME }}{{ if eq .BINARY_APPEND_OS "true" }}-{{ .os }}{{ end }}{{ if eq .BINARY_APPEND_ARCH "true" }}-{{ .arch }}{{ end }}'
     cmds:
       - GOOS={{ .os }} GOARCH={{ .arch }} bee pack -exr='^vendor|^data.db|^build|^README.md|^docs|^README_ORIGINAL.md|^screenshots|^pkg|^bin|^dist|^Taskfile|^example|^swagger|^docker-compose|^Dockerfile' -o {{ .binary_output }}
+      # - docker buildx build --platform {{ .os }}/{{ .arch }} -f ./Dockerfile-builder -o {{ .binary_output }} .
     sources:
       - "**/*.go"
       - "go.{mod,sum}"
@@ -104,7 +105,7 @@ tasks:
       OPENVPN_ADMIN_USERNAME: admin
       OPENVPN_ADMIN_PASSWORD: admin
       OVDIR: /etc/openvpn
-      CGO_ENABLED: true
+      CGO_ENABLED: 0
     cmds:
       - bee run -gendoc=false
 
