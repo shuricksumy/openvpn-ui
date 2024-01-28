@@ -1,8 +1,12 @@
-FROM golang:1.21.6-alpine
+FROM golang:1.21.6-bookworm
 
 ENV WORK_DIR=$GOPATH/src/github.com/shuricksumy/openvpn-ui
+ENV CGO_ENABLED=1
+#ENV CGO_CFLAGS="-D_LARGEFILE64_SOURCE"
 WORKDIR $WORK_DIR
 COPY . .
+
+RUN apt-get update && apt-get install build-essential -y
 
 RUN go install github.com/beego/bee@latest && bee update
 RUN go mod tidy && go mod vendor && bee pack bee pack  \
