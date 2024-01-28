@@ -4,6 +4,12 @@
 
 ## Updates
 
+#### January 2024 (v4.2)
+- Small updates of UI interface: popups, colors, tables, etc..
+- Adding Docker builder to use the lates openvpn server
+- Adding new docker builder script to support arm64 and go-sqlite3 compilation issues
+- Updating task config to support new build scenarious
+
 #### December 2023 (v4.1)
 - Small updates in Docker builder files.
 - Adding Tasks
