@@ -9,7 +9,7 @@ import (
 )
 
 type Settings struct {
-	Id           int64
+	Id           string    `orm:"pk;type(uuid);default(uuid_generate_v4());unique"`
 	Profile      string    `orm:"size(64);unique" form:"Profile" valid:"Required;"`
 	MIAddress    string    `orm:"size(64);unique" form:"MIAddress" valid:"Required;"`
 	MINetwork    string    `orm:"size(64);unique" form:"MINetwork" valid:"Required;"`

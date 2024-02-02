@@ -3,13 +3,13 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/shuricksumy/openvpn-ui/state"
 	"path/filepath"
 
 	"github.com/beego/beego/v2/server/web"
 	"github.com/shuricksumy/openvpn-ui/lib"
 	"github.com/shuricksumy/openvpn-ui/models"
 	"github.com/shuricksumy/openvpn-ui/routers"
-	"github.com/shuricksumy/openvpn-ui/state"
 )
 
 func main() {

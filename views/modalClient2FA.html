@@ -1,0 +1,182 @@
+<!-- views/modal.tpl -->
+
+<!-- Initialize the plugin: -->
+<script type="text/javascript">
+
+</script>
+<style>
+    .copy-success {
+        border: 3px solid cornflowerblue; /* Set a 2px green border for success */
+    }
+</style>
+{{$c := .Client}}
+<div class="modal fade" id="editClient2FAModal" role="dialog">
+    <div class="modal-dialog custom-modal-dialog-form"> <!-- Apply custom CSS style for the modal width -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit 2FA config for user<strong> {{ $c.ClientName }}</strong></font></h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- FORM START -->
+                {{ if .IsOTPNew }}
+                <form id="editForm2FA" action="{{urlfor "ClientsController.SaveClient2FAData"}}" method="post">
+                {{ else }}
+                <form id="editForm2FA" action="{{urlfor "ClientsController.DeleteClient2FAData"}}" method="post">
+                {{ end }}
+
+                    <div class="panel-body">
+                        <div class="form-row">
+                            {{ if .IsOTPNew }}
+                            <div class="form-group col-sm-12">
+                                <span class="badge bg-red btn1000" style="font-size: medium;font-weight: bold !important;">
+                                    2FA will be enabled. Then apply configuration and share new .ovpn profile to the client.
+                                </span>
+                            </div>
+                            {{ end }}
+                            <div class="form-group col-sm-4 px-0">
+                                <div class="form-group col-sm-12">
+                                    <span class="badge btn1000" style="font-size: medium;">
+                                        <strong>Scan code by auth mobile app</strong>
+                                    </span>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <div style="text-align: center;">
+                                        <img id="imageToCopy" class="img-fluid" src="data:image/png;base64, {{ .IMG }}" alt="Red dot" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <span class="btn btn-sm bg-gradient-lightblue btn1000" onclick="copyImageToClipboard()">
+                                       Click to copy image
+                                    </span>
+                                </div>
+
+                            </div>
+
+                            <div class="form-group col-sm-8">
+                                <div class="form-group col-sm-12">
+                                    <span class="badge btn1000" style="font-size: medium;">
+                                         &nbsp;
+                                    </span>
+                                </div>
+
+                                <div class="form-group col-sm-12" hidden="hidden">
+                                    <label class="form-check-label" for="otp_key">
+                                        KEY [hidden]
+                                    </label>
+                                    <input id="otp_key" class="form-control" name="otp_key" value="{{ .Key }}"
+                                           placeholder="Secret" onfocusout="this.value = this.value.trim()">
+                                </div>
+
+                                <!-- Hidden fields for proper form usage -->
+                                <input type="hidden" name="client_id" id="client_id" value="{{ $c.Id }}">
+                                <input type="hidden" name="otp_user_name" id="otp_user_name" value="{{ .OtpUserName }}">
+
+
+                                <div class="form-group col-sm-12">
+                                    <label for="static_pass" class="form-check-label">Static password (optional)</label>
+                                    <div class="input-group" id="show_hide_static_pass">
+                                        <input type="password" class="form-control" placeholder="Passphrase" id="static_pass"
+                                               name="static_pass" data-mask-text onfocusout="this.value = this.value.trim()"
+                                               value="{{ if $c.StaticPass }}{{ $c.StaticPass }}{{ end }}" {{ if not .IsOTPNew }}readonly{{end}}>
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default reveal" type="button">
+                                                <i class="fa fa-eye-slash"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                    <span class="help-block font75">Use this to add static part of password: [static_pass][otp code]</span>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+
+                                    <div class="form-check mychekbox">
+                                        <input name="otp_disabled" id="otp_disabled" class="form-check-input" type="checkbox" value="false">
+<!--                                             //TODO-->
+                                        <label class="form-check-label my-label" for="otp_disabled">
+                                            Disable OTP functionality (TODO)
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="form-check-label" for="url">
+                                        Auth URL
+                                    </label>
+                                    <div class="input-group">
+                                        <input id="url" class="form-control" name="url" value="{{ .URL }}"
+                                               placeholder="Secret" onfocusout="this.value = this.value.trim()">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default reveal" type="button" onclick="copyInputValueToClipboard('url')">
+                                                <i class="fa fa-file-clipboard"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                    <span class="help-block font75">This is full URL for auth application, but QR code is preferable.</span>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <span class="badge btn1000" style="font-size: medium;">
+                                         &nbsp;
+                                    </span>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <span class="help-block">Some very useful information here.
+                                        Some very useful information here. Some very useful information here.
+                                        Some very useful information here.
+                                    </span>
+                                </div>
+
+                            </div>
+                    </div>
+
+
+
+                    <div class="modal-footer">
+                            <div class="btn-group" role="group">
+                                {{ if .IsOTPNew }}
+                                    <button type="button" class="btn btn-sm btn-default btn100" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-sm bg-gradient-olive btn100" id="on_2fa"
+                                            data-title="Enable 2FA?">Enable 2FA</button>
+                                {{ else }}
+                                    <a type="submit" class="btn btn-sm btn-danger bg-gradient-red btn100" id="off_2fa"
+                                       data-title="Disable 2FA?" >Disable 2FA</a>
+                                    <button type="button" class="btn btn-sm btn-default btn100" data-dismiss="modal">Close</button>
+                                {{ end }}
+                            </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('[data-mask]').inputmask();
+
+        $('[data-mask-text]').inputmask({
+          mask: "*",
+          greedy: false,
+          repeat: 35,
+          definitions: {
+            '*': {
+              validator: "[0-9A-Za-z_-]",
+            }
+          }
+        });
+    });
+
+    customConfirmPopUpByIdForm('off_2fa','editForm2FA',"Are you sure? This has a huge impact on client.");
+    customConfirmPopUpByIdForm('on_2fa','editForm2FA',"Are you sure? This has a huge impact on client.");
+</script>
+
+<script>
+    $(document).ready(function() {
+        togglePasswordVisibility("show_hide_static_pass");
+    });
+</script>

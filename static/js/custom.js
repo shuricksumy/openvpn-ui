@@ -1,21 +1,29 @@
+// MyAPP namespace
 $.MyAPP = {};
 
-$.MyAPP.Disconnect = function (cname){
-  console.log(cname)
-  $.ajax({
-    type: "DELETE",
-    dataType: "json",
-    url: "api/v1/session",
-    data: JSON.stringify({ "cname": cname }),
-    success: function(data) {
-      location.reload();
-      console.log(data);
-    },
-    error: function(a,b,c) {
-      console.log(a,b,c)
-      location.reload();
-    }
-  });
+// Disconnect function
+$.MyAPP.Disconnect = function (cname) {
+    console.log(cname);
+    $.ajax({
+        type: "DELETE",
+        dataType: "json",
+        url: "api/v1/session",
+        data: JSON.stringify({ "cname": cname }),
+        success: handleAjaxSuccess,
+        error: handleAjaxError
+    });
+};
+
+// Common success handler for AJAX requests
+function handleAjaxSuccess(data) {
+    location.reload();
+    console.log(data);
+}
+
+// Common error handler for AJAX requests
+function handleAjaxError(a, b, c) {
+    console.log(a, b, c);
+    location.reload();
 }
 
 $(function() {
@@ -28,72 +36,88 @@ $(function() {
 });
 
 $(function() {
- $('a.btn-danger').confirm({
-    content: "Are you sure? This cannot be reverted.",
-    type: 'red',
-    icon: 'fa fa-hand-o-right',
-    title: 'font-awesome',
-    theme: 'bootstrap',
-    columnClass: 'small',
-    animateFromElement: false,
-    animation: 'RotateXR',
-    closeAnimation: 'rotateXR',
-    buttons: {
-        Confirm: {
-            btnClass: 'btn-red bg-red-gradient btn80 myspiner',
-            action: function(){location.href = this.$target.attr('href');}
-        },
-        Cancel: {
-            btnClass: 'btn80',
-            action: function(){}
-        },
-    }
-   });
+    window.commonFunctionConfirmPopUp = function() {
+        $('a.btn-danger').confirm({
+            content: "Are you sure? This cannot be reverted.",
+            type: 'red',
+            icon: 'fa fa-hand-o-right',
+            title: 'font-awesome',
+            theme: 'bootstrap',
+            columnClass: 'small',
+            animateFromElement: false,
+            animation: 'RotateXR',
+            closeAnimation: 'rotateXR',
+            offsetBottom: 300,
+            buttons: {
+                Confirm: {
+                    btnClass: 'btn-red bg-red-gradient btn80 myspiner',
+                    action: function () {
+                        location.href = this.$target.attr('href');
+                    }
+                },
+                Cancel: {
+                    btnClass: 'btn80',
+                    action: function () {
+                    }
+                },
+            }
+        });
 
-  $('a.btn-warning').confirm({
-    content: "Confirm, if you are 100% sure.",
-    type: 'orange',
-    icon: 'fa fa-hand-o-right',
-    title: 'font-awesome',
-    columnClass: 'small',
-    theme: 'bootstrap',
-    animateFromElement: false,
-    animation: 'RotateXR',
-    closeAnimation: 'rotateXR',
-    buttons: {
-        Confirm: {
-            btnClass: 'btn-orange bg-yellow-gradient btn80 setloader myspiner',
-            action: function(){location.href = this.$target.attr('href');}
-        },
-        Cancel: {
-            btnClass: 'btn80',
-            action: function(){}
-        },
+        $('a.btn-warning').confirm({
+            content: "Confirm, if you are 100% sure.",
+            type: 'orange',
+            icon: 'fa fa-hand-o-right',
+            title: 'font-awesome',
+            columnClass: 'small',
+            theme: 'bootstrap',
+            animateFromElement: false,
+            animation: 'RotateXR',
+            closeAnimation: 'rotateXR',
+            offsetBottom: 300,
+            buttons: {
+                Confirm: {
+                    btnClass: 'btn-orange bg-yellow-gradient btn80 setloader myspiner',
+                    action: function () {
+                        location.href = this.$target.attr('href');
+                    }
+                },
+                Cancel: {
+                    btnClass: 'btn80',
+                    action: function () {
+                    }
+                },
+            }
+        });
     }
-   });
 
-   $('button.form-to-confirm').confirm({
-    content: "Confirm, if you are 100% sure.",
-    type: 'blue',
-    icon: 'fa fa-hand-o-right',
-    title: 'font-awesome',
-    columnClass: 'small',
-    theme: 'bootstrap',
-    animateFromElement: false,
-    animation: 'RotateXR',
-    closeAnimation: 'rotateXR',
-    buttons: {
-        Confirm: {
-            btnClass: 'btn-primary bg-light-blue-gradient btn80 setloader myspiner',
-            action: function(){  $('#form-to-confirm').submit(); }
-        },
-        Cancel: {
-            btnClass: 'btn80',
-            action: function(){}
-        },
-    }
-   });
+    // Call the common function
+    commonFunctionConfirmPopUp();
 })
+
+function customConfirmPopUpByIdForm( idButton, idForm, content) {
+    $('#' + idButton).confirm({
+        content: content,
+        type: 'red',
+        icon: 'fa fa-hand-o-right',
+        title: 'font-awesome',
+        theme: 'bootstrap',
+        columnClass: 'small',
+        animateFromElement: false,
+        animation: 'RotateXR',
+        closeAnimation: 'rotateXR',
+        offsetBottom: 300,
+        buttons: {
+            Confirm: {
+                btnClass: 'btn-red bg-red-gradient btn80 myspiner', action:
+                    function(){$('#' + idForm).submit();}
+            },
+            Cancel: {
+                btnClass: 'btn80',
+                action: function(){}
+            },
+        },
+    });
+}
 
 
 // FUNCTION EDIT CLIENT DETAILS POPUP RAW TEXT EDITOR
@@ -146,6 +170,31 @@ $(function() {
     }
 });
 
+// FUNCTION EDIT CLIENT 2FA POPUP FORM WITH ROUTES
+$(function() {
+    $(document).ready(function () {
+        $("button#openModalEditClient2FA").on("click", function () {
+            var clientName = $(this).data("client-name");
+            showModalWithDataClient2FA(clientName);
+        });
+    }); $()
+
+    function showModalWithDataClient2FA(clientName) {
+        // Make an AJAX request to get the data for the client
+        $.post("/clients/render_twofa_modal/", {"client-name": clientName}, function (data) {
+            // Update the modal content with the retrieved data
+            $("#modal-2fa-client").html(data);
+            // Show the modal
+            $("#editClient2FAModal").modal("show");
+        }).fail(function () {
+            alert("Error loading data for the client.");
+        }).always(function() {
+            // Show the modal
+            $("#editClient2FAModal").modal("show");
+        });
+    }
+});
+
 $(function() {
     $(document).ready(function () {
         $("button#getRouteEditModal").on("click", function () {
@@ -186,11 +235,11 @@ $(document).ready(function() {
     });
 });
 
-function createEditor(name, size, theme, mode, readonly) {
+function createEditor(textAreaName, size, theme, mode, readonly) {
     // find the textarea
-    var textarea = document.querySelector("form textarea[name=" + name + "]");
+    var textarea = document.querySelector("form textarea[name=" + textAreaName + "]");
 
-    // create ace editor 
+    // create ace editor
     var editor = ace.edit()
     editor.container.style.height = size
 
@@ -232,7 +281,7 @@ jQuery(function(){
         $("#overlay").fadeIn(300);
     });
 
-  
+
   $('.myspiner').click(function(){
     $.ajax({
       type: 'GET',
@@ -244,7 +293,7 @@ jQuery(function(){
         $("#overlay").fadeOut(300);
       },500);
     });
-  });	
+  });
 });
 
 
@@ -269,41 +318,120 @@ $(document).ready(function() {
           }
       });
   }
-  
+
   function startOpenVPN() {
       $.ajax({
           url: "/openvpn/start",
           type: "GET",
           success: function(response) {
               updateStatus();
-              $("#start-stop-messages").css("color", "green");
-              $("#start-stop-messages").text(response);
+              $("#start-stop-messages").css("color", "green")
+                  .text(response);
           },
           error: function(err) {
-              $("#start-stop-messages").css("color", "red");
-              $("#start-stop-messages").text("Error starting OpenVPN: " + err.responseText);
+              $("#start-stop-messages").css("color", "red")
+                  .text("Error starting OpenVPN: " + err.responseText);
           }
       });
   }
-  
+
   function stopOpenVPN() {
       $.ajax({
           url: "/openvpn/stop",
           type: "GET",
           success: function(response) {
               updateStatus();
-              $("#start-stop-messages").css("color", "green");
-              $("#start-stop-messages").text(response);
+              $("#start-stop-messages").css("color", "green")
+                  .text(response);
           },
           error: function(err) {
-              $("#start-stop-messages").css("color", "red");
-              $("#start-stop-messages").text("Error stopping OpenVPN: " + err.responseText);
+              $("#start-stop-messages").css("color", "red")
+                  .text("Error stopping OpenVPN: " + err.responseText);
           }
       });
   }
-  
+
   // Update status every minute
   setInterval(updateStatus, 60000);
-  
+
   // Initial update
   updateStatus();
+
+function togglePasswordVisibility(id) {
+    $("#" + id + " button").on('click', function(event) {
+        event.preventDefault();
+        var inputElement = $("#" + id + " input");
+        var iconElement = $("#" + id + " i");
+
+        if (inputElement.attr("type") == "text") {
+            inputElement.attr('type', 'password');
+            iconElement.addClass("fa-eye-slash");
+            iconElement.removeClass("fa-eye");
+        } else if (inputElement.attr("type") == "password") {
+            inputElement.attr('type', 'text');
+            iconElement.removeClass("fa-eye-slash");
+            iconElement.addClass("fa-eye");
+        }
+    });
+}
+
+function toggleElementVisibility(checkboxId, elementId) {
+    var cb = $('#' + checkboxId).is(':checked');
+    $('#' + elementId).prop('hidden', !cb);
+
+    $('#' + checkboxId).on('click', function() {
+        var cb = $('#' + checkboxId).is(':checked');
+        $('#' + elementId).prop('hidden', !cb);
+    });
+}
+
+async function copyImageToClipboard() {
+    var imageElement = document.getElementById('imageToCopy');
+    var base64Image = imageElement.src.split(',')[1];
+
+    // Convert base64 to Blob
+    var response = await fetch(`data:image/png;base64,${base64Image}`);
+    var blob = await response.blob();
+
+    // Copy to clipboard
+    try {
+        await navigator.clipboard.write([
+            new ClipboardItem({ 'image/png': blob })
+        ]);
+
+        // Visual confirmation
+        imageElement.classList.add('copy-success');
+        setTimeout(function() {
+            imageElement.classList.remove('copy-success');
+        }, 2000); // Remove the success style after 2 seconds
+
+        console.log('Image copied to clipboard!');
+    } catch (err) {
+        console.error('Unable to copy image to clipboard', err);
+    }
+}
+
+function copyInputValueToClipboard(inputID) {
+    var inputElement = document.getElementById(inputID);
+
+    // Select the input text
+    inputElement.select();
+    inputElement.setSelectionRange(0, 99999); // For mobile devices
+
+    try {
+        // Copy to clipboard
+        document.execCommand('copy');
+
+        // Deselect the input
+        inputElement.setSelectionRange(0, 0);
+
+        // Visual confirmation
+        inputElement.classList.add('copy-success');
+        setTimeout(function() {
+            inputElement.classList.remove('copy-success');
+        }, 2000); // Remove the success style after 2 seconds
+        console.log('Input value copied to clipboard:', inputElement.value);
+    } catch (err) {
+        console.error('Unable to copy input value to clipboard', err);
+    }
+}

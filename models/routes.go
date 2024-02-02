@@ -5,14 +5,15 @@ import (
 
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/validation"
+	"github.com/google/uuid"
 	_ "github.com/mattn/go-sqlite3"
 )
 
 type RouteDetails struct {
-	Id          int              `orm:"auto;pk"`
+	Id          string           `orm:"pk;type(uuid);default(uuid_generate_v4());unique"`
 	Name        string           `orm:"unique"`
 	RouterName  string           `valid:"Required" form:"router_name"`
-	RouterId    int              `valid:"Required"`
+	RouterId    string           `valid:"Required"`
 	RouteIP     string           `orm:"unique" form:"route_ip"`
 	RouteMask   string           `form:"route_mask"`
 	Description string           `form:"description"`
@@ -36,14 +37,14 @@ func (r *RouteDetails) Validate() error {
 }
 
 // GetRouteDetailsByID retrieves a RouteDetails by its ID
-func GetRouteDetailsByID(routeDetailsID int) (*RouteDetails, error) {
+func GetRouteDetailsByID(routeDetailsID string) (*RouteDetails, error) {
 	var routeDetails RouteDetails
 	err := orm.NewOrm().QueryTable(new(RouteDetails)).Filter("Id", routeDetailsID).RelatedSel().One(&routeDetails)
 	return &routeDetails, err
 }
 
 // UpdateRouteDetails updates specified parameters for a RouteDetails instance by its ID
-func UpdateRouteDetails(routeID int, routeIP, routeMask, description string) error {
+func UpdateRouteDetails(routeID string, routeIP, routeMask, description string) error {
 	o := orm.NewOrm()
 
 	// Get the existing route
@@ -64,10 +65,11 @@ func UpdateRouteDetails(routeID int, routeIP, routeMask, description string) err
 }
 
 // AddNewRouteDetails creates a new route and adds it to the database
-func AddNewRouteDetails(name string, routerName string, routerId int, routeIP string, routeMask string, description string) error {
+func AddNewRouteDetails(name string, routerName string, routerId string, routeIP string, routeMask string, description string) error {
 	o := orm.NewOrm()
 
 	route := &RouteDetails{
+		Id:          uuid.New().String(),
 		Name:        name,
 		RouterName:  routerName,
 		RouterId:    routerId,
@@ -81,7 +83,7 @@ func AddNewRouteDetails(name string, routerName string, routerId int, routeIP st
 }
 
 // UpdateRouteDetailsByID updates a route by its ID
-func UpdateRouteDetailsByID(routeID int, updatedDetails *RouteDetails) error {
+func UpdateRouteDetailsByID(routeID string, updatedDetails *RouteDetails) error {
 	o := orm.NewOrm()
 
 	route := &RouteDetails{Id: routeID}
@@ -101,7 +103,7 @@ func UpdateRouteDetailsByID(routeID int, updatedDetails *RouteDetails) error {
 }
 
 // GetClientsForRouteID gets a list of client names that use a specific route by its ID
-func GetClientsForRouteID(routeID int) ([]string, error) {
+func GetClientsForRouteID(routeID string) ([]string, error) {
 	o := orm.NewOrm()
 
 	var clients []*ClientDetails
@@ -117,7 +119,7 @@ func GetClientsForRouteID(routeID int) ([]string, error) {
 }
 
 // DeleteRouteDetailsById deletes a RouteDetails instance by its ID
-func DeleteRouteDetailsById(routeID int) error {
+func DeleteRouteDetailsById(routeID string) error {
 	o := orm.NewOrm()
 
 	// Get the existing route
@@ -151,13 +153,13 @@ func GetAllRoutesDetails() ([]*RouteDetails, error) {
 }
 
 // Custom function defined in the controller
-func RouteIsUsedBy(inputId int) []string {
+func RouteIsUsedBy(inputId string) []string {
 	clients, _ := GetClientsForRouteID(inputId)
 	return clients
 }
 
 // GetAllRoutesProvided retrieves all RouteDetails associated with a specific RouterId
-func GetAllRoutesProvided(routerID int) ([]*RouteDetails, error) {
+func GetAllRoutesProvided(routerID string) ([]*RouteDetails, error) {
 	o := orm.NewOrm()
 
 	// Query RouteDetails with the given RouterId

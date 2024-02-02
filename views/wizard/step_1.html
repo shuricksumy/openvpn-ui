@@ -10,7 +10,7 @@
     <h3 class="card-title">Step 1: Initial parameters</h3>
   </div>
 
-  <form id="form-to-confirm" role="form" action="{{urlfor "WizardController.Step1Post"}}" method="post">
+  <form id="form-step1" role="form" action="{{urlfor "WizardController.Step1Post"}}" method="post">
       <div class="card-body">
           <div class="form-row">
               <!-- IP endpoint -->
@@ -127,7 +127,7 @@
           validateForm();   
         });
         
-        $('#form-to-confirm').validate({ // initialize the plugin
+        $('#form-step1').validate({ // initialize the plugin
         rules: {
             ip_endpoint: {
                 required: true,

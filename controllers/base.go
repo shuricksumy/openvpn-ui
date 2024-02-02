@@ -48,7 +48,7 @@ func (c *BaseController) Finish() {
 }
 
 func (c *BaseController) GetLogin() *models.User {
-	u := &models.User{Id: c.GetSession("userinfo").(int64)}
+	u := &models.User{Id: c.GetSession("userinfo").(string)}
 	u.Read()
 	return u
 }

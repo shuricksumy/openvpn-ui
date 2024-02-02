@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"path/filepath"
-	"strconv"
 	"text/template"
 
 	"github.com/beego/beego/v2/core/logs"
@@ -106,8 +105,7 @@ func (c *CertificatesController) Post() {
 	c.TplName = "certificates.html"
 	flash := web.NewFlash()
 
-	clientIdStr := c.GetString("client_name")
-	clientId, _ := strconv.Atoi(clientIdStr)
+	clientId := c.GetString("client_name")
 
 	client, err_cl := models.GetClientDetailsById(clientId)
 	if err_cl != nil {
@@ -309,6 +307,11 @@ func (c *CertificatesController) saveClientConfig(keysPath string, name string) 
 	} else {
 		flash.Success("Success! Certificate for the name \"" + name + "\" has been created")
 		flash.Store(&c.Controller)
+	}
+
+	client, _ := models.GetClientDetailsByCertificate(name)
+	if client.OTPKey != nil || client.StaticPass != nil {
+		lib.AppendStringToFile(destPath, "\nauth-user-pass\n")
 	}
 
 	return destPath, nil

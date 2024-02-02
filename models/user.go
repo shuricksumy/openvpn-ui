@@ -11,7 +11,7 @@ import (
 )
 
 type User struct {
-	Id            int64
+	Id            string    `orm:"pk;type(uuid);default(uuid_generate_v4());unique"`
 	Login         string    `orm:"size(64);unique" form:"Login" valid:"Required;"`
 	Name          string    `orm:"size(64);unique" form:"Name" valid:"Required;"`
 	Email         string    `orm:"size(64);unique" form:"Email" valid:"Required;Email"`

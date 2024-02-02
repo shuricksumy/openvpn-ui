@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"strconv"
 	"strings"
 
 	"github.com/beego/beego/v2/core/logs"
@@ -87,7 +86,7 @@ func (c *RoutesController) NewRoute() {
 	if len(values) >= 2 {
 		new_route.RouterName = values[1]
 		new_route.Name = values[1] + "_" + lib.GenRandomString(5)
-		new_route.Id, _ = strconv.Atoi(values[0])
+		new_route.Id = values[0]
 	} else {
 		logs.Error(err_parse)
 		flash.Error("ERROR PARSING ROUTERS PARAMS!")
@@ -114,13 +113,12 @@ func (c *RoutesController) GetRouteDetails() {
 	}
 
 	flash := web.NewFlash()
-	routeIDstr := c.GetString(":key")
-	routeID, _ := strconv.Atoi(routeIDstr)
+	routeID := c.GetString(":key")
 	route, _ := models.GetRouteDetailsByID(routeID)
 
 	if route == nil {
 		c.TplName = "routes.html"
-		flash.Error("Route: " + routeIDstr + " was found. ")
+		flash.Error("Route: " + routeID + " was found. ")
 		flash.Store(&c.Controller)
 		c.showRoutes()
 	} else {
@@ -140,7 +138,7 @@ func (c *RoutesController) Post() {
 	c.TplName = "routes.html"
 	flash := web.NewFlash()
 
-	routeID, _ := c.GetInt("route_id")
+	routeID := c.GetString("route_id")
 	routeIP := c.GetString("route_ip")
 	routeMask := c.GetString("route_mask")
 	description := c.GetString("description")
@@ -164,20 +162,19 @@ func (c *RoutesController) Delete() {
 		return
 	}
 	flash := web.NewFlash()
-	routeIDstr := c.GetString(":key")
-	routeID, _ := strconv.Atoi(routeIDstr)
+	routeID := c.GetString(":key")
 
 	routeIsUsed := models.RouteIsUsedBy(routeID)
 	if len(routeIsUsed) != 0 {
-		flash.Error("Route: " + routeIDstr + " was NOT deleted. It's Used !")
+		flash.Error("Route: " + routeID + " was NOT deleted. It's Used !")
 		flash.Store(&c.Controller)
 	} else {
 		err_del := models.DeleteRouteDetailsById(routeID)
 		if err_del != nil {
-			flash.Error("Route: " + routeIDstr + " was NOT deleted. " + string(err_del.Error()))
+			flash.Error("Route: " + routeID + " was NOT deleted. " + string(err_del.Error()))
 			flash.Store(&c.Controller)
 		} else {
-			flash.Success("Route: " + routeIDstr + " was successfully deleted. Please do not forget apply new config at the end of configuration!")
+			flash.Success("Route: " + routeID + " was successfully deleted. Please do not forget apply new config at the end of configuration!")
 			flash.Store(&c.Controller)
 		}
 	}

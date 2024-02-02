@@ -74,4 +74,28 @@ func init() {
 				Router:           `/clients/save_client_data`,
 				AllowHTTPMethods: []string{"post"},
 				Params:           nil})
+
+	web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"] =
+		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"],
+			web.ControllerComments{
+				Method:           "Render2FAModal",
+				Router:           `/clients/render_twofa_modal/`,
+				AllowHTTPMethods: []string{"post"},
+				Params:           nil})
+
+	web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"] =
+		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"],
+			web.ControllerComments{
+				Method:           "SaveClient2FAData",
+				Router:           `/clients/save_2fa_data/`,
+				AllowHTTPMethods: []string{"post"},
+				Params:           nil})
+
+	web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"] =
+		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"],
+			web.ControllerComments{
+				Method:           "DeleteClient2FAData",
+				Router:           `/clients/delete_2fa_data/`,
+				AllowHTTPMethods: []string{"post"},
+				Params:           nil})
 }

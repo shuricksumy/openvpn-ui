@@ -285,6 +285,15 @@ func ApplyClientsConfigToFS() error {
 			}
 		}
 
+		//6. if 2FA is used
+		if client.OTPKey != nil {
+			buffer.WriteString("\n#2FA OTP and/or static pass for auth.\n")
+			buffer.WriteString("#2FA_KEY:" + *client.OTPKey + "\n")
+			buffer.WriteString("#2FA_USER:" + *client.OTPUserName + "\n")
+			buffer.WriteString("#STATIC_PASS:" + *client.StaticPass + "\n")
+		}
+
+		//render file
 		fileCCD := filepath.Join(CCD_DIR_PATH, client.ClientName)
 		err_save := RawSaveToFile(fileCCD, buffer.String())
 		if err_save != nil {

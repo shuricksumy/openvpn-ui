@@ -267,3 +267,22 @@ func DumpSQLiteDatabaseToFile(backupFileName string, dbName string) error {
 	logs.Warning("Database dumped successfully to %s\n", backupFileName)
 	return nil
 }
+
+func AppendStringToFile(filePath, content string) {
+	// Open the file in append mode, create it if it doesn't exist
+	file, err := os.OpenFile(filePath, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
+	if err != nil {
+		fmt.Println("Error opening file:", err)
+		return
+	}
+	defer file.Close()
+
+	// Append the content to the file
+	_, err = file.WriteString(content)
+	if err != nil {
+		fmt.Println("Error appending to file:", err)
+		return
+	}
+
+	fmt.Println("String appended successfully!")
+}

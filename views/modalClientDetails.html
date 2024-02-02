@@ -19,22 +19,8 @@
             selectedClass: "active multiselect-active-item-fallback",
         });
 
-        var cb = $('#is_router').is(':checked');
-        $('#router_subnet').prop('disabled', !cb);
-        $('#router_mask').prop('disabled', !cb);
-        $('#router_config').prop('hidden', !cb);
-        
-
-        $('#is_router').on('click',function() {
-            var cb = $('#is_router').is(':checked');
-            $('#router_subnet').prop('disabled', !cb);
-            $('#router_mask').prop('disabled', !cb);
-            $('#router_config').prop('hidden', !cb);
-            if ( !cb ) {
-                $('#router_subnet').val('');
-                $('#router_mask').val('');
-            };
-
+        $(document).ready(function() {
+            toggleElementVisibility("is_router", "router_config");
         });
 
         options = {html:true, trigger:'hover'};
@@ -46,6 +32,7 @@
         $('.select2').select2();
     });
 </script>
+
 <style> 
 .mychekbox-md{
     margin-top: 10px;
@@ -126,7 +113,7 @@ pre.mypre {
                                 <label for="passphrase" class="form-check-label">Passphrase</label>
                                 <i class="fa fa-info-circle" data-toggle="popover" data-html="true" data-placement="bottom"
                                     data-content=" Use this phrase to import Certificate on clien side"></i>
-                                <div class="input-group" id="show_hide_password">
+                                <div class="input-group" id="show_hide_modal_password">
                                   <input type="password" class="form-control" placeholder="Passphrase" id="passphrase" 
                                     name="passphrase" data-mask-text onfocusout="this.value = this.value.trim()" 
                                         value="{{$c.Passphrase}}" {{if $c.CertificateName}}readonly{{end}}>
@@ -191,7 +178,7 @@ pre.mypre {
 
                 
                                 <input class="form-control" name="static_ip" value="{{$c.StaticIP}}" 
-                                data-inputmask="'alias': 'ip'" data-mask 
+                                data-inputmask="'alias': 'ip'" data-mask id="static_ip"
                                 pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" 
                                     placeholder="Enter Static IP" onfocusout="this.value = this.value.trim()">
                             </div>
@@ -346,43 +333,12 @@ pre.mypre {
     });
 
     $(function() {
-        $('a.btn-danger').confirm({
-            content: "Are you sure? This cannot be reverted.",
-            type: 'red',
-            icon: 'fa fa-hand-o-right',
-            title: 'font-awesome',
-            theme: 'bootstrap',
-            columnClass: 'small',
-            animateFromElement: false,
-            animation: 'RotateXR',
-            closeAnimation: 'rotateXR',
-            buttons: {
-                Confirm: {
-                    btnClass: 'btn-red bg-red-gradient btn80 myspiner',
-                    action: function(){location.href = this.$target.attr('href');}
-                },
-                Cancel: {
-                    btnClass: 'btn80',
-                    action: function(){}
-                },
-            }
-        });
+        commonFunctionConfirmPopUp();
     });
 </script>
 
 <script>
     $(document).ready(function() {
-        $("#show_hide_password button").on('click', function(event) {
-            event.preventDefault();
-            if($('#show_hide_password input').attr("type") == "text"){
-                $('#show_hide_password input').attr('type', 'password');
-                $('#show_hide_password i').addClass( "fa-eye-slash" );
-                $('#show_hide_password i').removeClass( "fa-eye" );
-            }else if($('#show_hide_password input').attr("type") == "password"){
-                $('#show_hide_password input').attr('type', 'text');
-                $('#show_hide_password i').removeClass( "fa-eye-slash" );
-                $('#show_hide_password i').addClass( "fa-eye" );
-            }
-        });
+        togglePasswordVisibility("show_hide_modal_password");
     });
 </script>

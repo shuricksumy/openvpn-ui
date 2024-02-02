@@ -1,14 +1,15 @@
 package controllers
 
 import (
-	"path/filepath"
-	"strconv"
-
+	"bytes"
+	"encoding/base64"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
 	"github.com/shuricksumy/openvpn-ui/lib"
 	"github.com/shuricksumy/openvpn-ui/models"
 	"github.com/shuricksumy/openvpn-ui/state"
+	"image/png"
+	"path/filepath"
 )
 
 type ClientsController struct {
@@ -79,7 +80,7 @@ func (c *ClientsController) NewClient() {
 	new_client.StaticIP = lib.StringToNilString(c.GetString("static_ip"))
 
 	// // Specify the IDs of the routes to associate with the client
-	routeIDs := []int{}
+	routeIDs := []string{}
 
 	if err := models.AddNewClient(new_client.ClientName, new_client.StaticIP, new_client.IsRouteDefault, new_client.IsRouter,
 		new_client.Description, new_client.MD5Sum, new_client.Passphrase, routeIDs); err == nil {
@@ -101,7 +102,7 @@ func (c *ClientsController) RenderModal() {
 	}
 
 	flash := web.NewFlash()
-	id, _ := c.GetInt("client-name")
+	id := c.GetString("client-name")
 
 	//get clientsDetails from file
 	clientsDetails, err_read := models.GetClientDetailsById(id)
@@ -129,7 +130,7 @@ func (c *ClientsController) SaveClientDetailsData() {
 
 	flash := web.NewFlash()
 
-	clientID, _ := c.GetInt("client_id")
+	clientID := c.GetString("client_id")
 	staticIP := lib.StringToNilString(c.GetString("static_ip"))
 	description := c.GetString("description")
 	isRouteDefaultStr := c.GetString("is_route_default")
@@ -153,9 +154,8 @@ func (c *ClientsController) SaveClientDetailsData() {
 	}
 
 	// Specify the IDs of the routes to associate with the client
-	var routeIDs []int
-	for _, r := range usedRoutes {
-		id, _ := strconv.Atoi(r)
+	var routeIDs []string
+	for _, id := range usedRoutes {
 		routeIDs = append(routeIDs, id)
 
 	}
@@ -268,8 +268,7 @@ func (c *ClientsController) DelClient() {
 	// lib.Dump("---DELETE CLIENT")
 	// lib.Dump(clientID)
 
-	id, _ := strconv.Atoi(clientID)
-	client, err := models.GetClientDetailsById(id)
+	client, err := models.GetClientDetailsById(clientID)
 	if err != nil {
 		logs.Error(err)
 		flash.Error("Client is not found")
@@ -277,7 +276,7 @@ func (c *ClientsController) DelClient() {
 		c.ShowClients()
 		return
 	}
-	providedRoutes, err := models.GetAllRoutesProvided(id)
+	providedRoutes, err := models.GetAllRoutesProvided(clientID)
 	if err != nil {
 		logs.Error(err)
 		flash.Error("Error while getting client routes")
@@ -302,7 +301,7 @@ func (c *ClientsController) DelClient() {
 		return
 	}
 
-	err_del := models.DeleteClientDetailsByID(id)
+	err_del := models.DeleteClientDetailsByID(clientID)
 	if err_del != nil {
 		logs.Error("Error while deleteing client", err_del)
 		flash.Error("Error while deleteing client", err_del)
@@ -353,6 +352,104 @@ func (c *ClientsController) UpdateFiles() {
 		// }
 		flash.Warning("Config has been updated but OpenVPN server was NOT reloaded")
 	}
+
+	c.TplName = "clients.html"
+	c.ShowClients()
+}
+
+// @router /clients/render_twofa_modal/ [post]
+func (c *ClientsController) Render2FAModal() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+	flash := web.NewFlash()
+	id := c.GetString("client-name")
+
+	clientOTP, key, isOTPNew, err_otp := lib.Get2FA(id)
+	logs.Error(err_otp)
+
+	var buf bytes.Buffer
+	img, _ := clientOTP.Image(350, 350)
+	png.Encode(&buf, img)
+	img64 := base64.StdEncoding.EncodeToString(buf.Bytes())
+
+	//get clientsDetails from file
+	clientsDetails, err_read := models.GetClientDetailsById(id)
+	if err_read != nil {
+		logs.Error(err_read)
+		flash.Error("ERROR WHILE READING CLIENTS FROM FILE !")
+		flash.Store(&c.Controller)
+	}
+
+	c.Data["Client"] = &clientsDetails
+	c.Data["IsOTPNew"] = isOTPNew
+	c.Data["Key"] = key                   // KEY HEX TO STORE TO DB
+	c.Data["Secret"] = clientOTP.Secret() // KEY SECRET FOR OTP GENERATOR
+	c.Data["URL"] = clientOTP.URL()
+	c.Data["IMG"] = img64
+	c.Data["OtpUserName"] = clientOTP.AccountName()
+
+	c.TplName = "modalClient2FA.html"
+	c.Render()
+	c.ShowClients()
+}
+
+// @router /clients/save_2fa_data/ [post]
+func (c *ClientsController) SaveClient2FAData() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+	c.TplName = "clients.html"
+	flash := web.NewFlash()
+
+	clientID := c.GetString("client_id")
+	otpKey := c.GetString("otp_key")
+	staticPass := c.GetString("static_pass")
+	otpUserName := c.GetString("otp_user_name")
+
+	err_upd_otp := models.UpdateOTPDataByClientId(clientID, otpKey, staticPass, otpUserName)
+	if err_upd_otp != nil {
+		logs.Error(err_upd_otp)
+		flash.Error("Error while enabling 2FA for " + otpUserName)
+		flash.Store(&c.Controller)
+		c.ShowClients()
+		return
+	}
+
+	// Redirect to the main page after successful file save.
+	flash.Warning("2FA enabled successfully to " + otpUserName + ". Don not forget apply configuration.")
+	flash.Store(&c.Controller)
+
+	c.TplName = "clients.html"
+	c.ShowClients()
+
+}
+
+// @router /clients/delete_2fa_data/ [post]
+func (c *ClientsController) DeleteClient2FAData() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+	c.TplName = "clients.html"
+	otpUserName := c.GetString("otp_user_name")
+
+	flash := web.NewFlash()
+	clientID := c.GetString("client_id")
+	err_upd_otp := models.DisableOTPDataByClientId(clientID)
+	if err_upd_otp != nil {
+		logs.Error("Error while disabling 2FA for", err_upd_otp)
+		flash.Error("Error while disabling 2FA for " + otpUserName)
+		flash.Store(&c.Controller)
+		c.ShowClients()
+		return
+	}
+
+	// Redirect to the main page after successful file save.
+	flash.Warning("2FA disabled successfully to " + otpUserName + ". Don not forget apply configuration.")
+	flash.Store(&c.Controller)
 
 	c.TplName = "clients.html"
 	c.ShowClients()

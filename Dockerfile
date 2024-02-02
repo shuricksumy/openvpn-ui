@@ -6,7 +6,7 @@ ARG TARGETOS
 ARG TARGETARCH
 ARG TARGETVARIANT
 
-RUN apt-get update && apt-get install -y curl bzip2 jq git wget openvpn iptables openssl \
+RUN apt-get update && apt-get install -y curl bzip2 jq git wget openvpn iptables openssl oathtool \
 wget ca-certificates iproute2 sqlite3 procps
 
 COPY ./build/assets/start.sh /opt/start.sh

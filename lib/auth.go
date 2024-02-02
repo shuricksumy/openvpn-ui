@@ -8,8 +8,8 @@ import (
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-	"github.com/shuricksumy/openvpn-ui/models"
 	"github.com/go-ldap/ldap/v3"
+	"github.com/shuricksumy/openvpn-ui/models"
 	"gopkg.in/hlandau/passlib.v1"
 )
 
@@ -35,10 +35,10 @@ func authenticateSimple(login string, password string) (*models.User, error) {
 		logs.Error(err)
 		return nil, authError
 	}
-	if user.Id < 1 {
-		logs.Error(err)
-		return nil, authError
-	}
+	//if user.Id < 1 {
+	//	logs.Error(err)
+	//	return nil, authError
+	//}
 	if _, err := passlib.Verify(password, user.Password); err != nil {
 		logs.Error(err)
 		return nil, authError

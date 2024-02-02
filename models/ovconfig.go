@@ -7,7 +7,7 @@ import (
 
 // OVConfig holds values for OpenVPN config file
 type OVConfig struct {
-	Id      int
+	Id      string
 	Profile string `orm:"size(64);unique" valid:"Required;"`
 	config.Config
 }

@@ -9,7 +9,6 @@
     $(document).ready(function() {
         document.getElementById("editForm").action = actionURL;
     });
-
 </script>
 
 {{$c := .Client}}
@@ -52,6 +51,14 @@
                         <span class="badge bg-gray-light"><b>Route list:</b></span>
                         {{range  $val := $c.Routes}}
                             <span class="badge bg-gray-light">{{$val.RouterName}}_{{$val.RouteIP}}</span>
+                        {{end}}
+                    </div>
+                    <div class="form-group mylables">
+                        <span class="badge bg-gray-light"><b>2FA enabled:</b></span>
+                        {{if $c.OTPKey}}
+                            <span class="badge bg-gray-light">Enabled</span>
+                        {{else}}
+                            <span class="badge bg-gray-light">Disabled</span>
                         {{end}}
                     </div>
                 </div>

@@ -14,23 +14,22 @@
   </div> ->>
   <!-- /.card-header -->
   <!-- form start -->
-  <form id="form-to-confirm" role="form" action="{{urlfor "ServerConfigController.Post"}}" method="post">
+  <form id="form_upd_settings" role="form" action="{{urlfor "ServerConfigController.Post"}}" method="post">
     <div class="card-body">
 
       <div class="form-group">
         <label for="name">server.conf</label>
-        <textarea type="text" class="form-control my-textarea" name="ServerConfig" 
+        <textarea type="text" id="name" class="form-control my-textarea" name="ServerConfig"
           id="ServerConfig"  spellcheck="false" rows="15">{{ .ServerConfig }}</textarea>
         <span id="helpBlock" class="help-block font90">This is actual server config file. You can add/delete/modify any parameter. 
-          The beckup file of previous version will be saved before new aon be applied.
+          The backup file of previous version will be saved before new aon be applied.
         </span>
       </div>
 
        {{ .xsrfdata }}
       </div>
      <div class="card-footer">
-       <button type="submit" class="btn bg-gradient-lightblue btn80"
-       data-title="Update server settings?">Save</button>
+       <button type="submit" id="upd_settings" class="btn bg-gradient-lightblue btn80" data-title="Update server settings?">Save</button>
      </div>
         <!-- /.card-body -->
    </form>
@@ -50,6 +49,7 @@
     if (localStorage.getItem('theme') != null ) {
       editTheme = "_midnight"
     };
+    //customConfirmPopUpByIdForm('upd_settings','form_upd_settings');
     createEditor("ServerConfig", "500px", "clouds" + editTheme, "space", false)
 </script>
 

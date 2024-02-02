@@ -6,10 +6,11 @@ import (
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/core/validation"
+	"github.com/google/uuid"
 )
 
 type ClientDetails struct {
-	Id                int             `orm:"auto;pk"`
+	Id                string          `orm:"pk;type(uuid);default(uuid_generate_v4());unique"`
 	ClientName        string          `orm:"unique" form:"client_name"`
 	StaticIP          *string         `orm:"unique;null" form:"static_ip"`
 	IsRouteDefault    bool            `valid:"Required" form:"use_def_routing"`
@@ -20,6 +21,9 @@ type ClientDetails struct {
 	Passphrase        string          `form:"cert_pass"`
 	Routes            []*RouteDetails `orm:"rel(m2m)"`
 	MD5Sum            string          `form:"md5sum"`
+	OTPKey            *string         `orm:"unique;null" form:"otp_key"`
+	StaticPass        *string         `orm:"null" form:"static_pass"`
+	OTPUserName       *string         `orm:"unique;null" form:"otp_user_name"`
 }
 
 // Validate function to perform custom validation
@@ -39,10 +43,11 @@ func (c *ClientDetails) Validate() error {
 }
 
 // AddNewClient creates a new client and adds it to the database
-func AddNewClient(clientName string, staticIP *string, isRouteDefault, isRouter bool, description, md5Sum string, passphrase string, routeIDs []int) error {
+func AddNewClient(clientName string, staticIP *string, isRouteDefault, isRouter bool, description, md5Sum string, passphrase string, routeIDs []string) error {
 	o := orm.NewOrm()
 
 	client := &ClientDetails{
+		Id:             uuid.New().String(),
 		ClientName:     clientName,
 		StaticIP:       staticIP,
 		IsRouteDefault: isRouteDefault,
@@ -66,7 +71,7 @@ func AddNewClient(clientName string, staticIP *string, isRouteDefault, isRouter 
 }
 
 // GetClientDetailsById retrieves a client by its ID from the database
-func GetClientDetailsById(clientID int) (*ClientDetails, error) {
+func GetClientDetailsById(clientID string) (*ClientDetails, error) {
 	o := orm.NewOrm()
 
 	client := &ClientDetails{Id: clientID}
@@ -87,7 +92,7 @@ func GetClientDetailsById(clientID int) (*ClientDetails, error) {
 }
 
 // AssignRoutesToClient assigns one or more routes to a specific client
-func AssignRoutesToClient(clientID int, routeIDs []int) error {
+func AssignRoutesToClient(clientID string, routeIDs []string) error {
 	o := orm.NewOrm()
 
 	client := &ClientDetails{Id: clientID}
@@ -110,7 +115,7 @@ func AssignRoutesToClient(clientID int, routeIDs []int) error {
 }
 
 // DeleteClientDetailsByID deletes a client by its ID
-func DeleteClientDetailsByID(clientID int) error {
+func DeleteClientDetailsByID(clientID string) error {
 	o := orm.NewOrm()
 
 	client := &ClientDetails{Id: clientID}
@@ -145,7 +150,7 @@ func GetRouterClients() ([]*ClientDetails, error) {
 }
 
 // GetConnectedRouteDetails retrieves all RouteDetails connected to a specific client
-func GetConnectedRouteDetails(clientID int) ([]*RouteDetails, error) {
+func GetConnectedRouteDetails(clientID string) ([]*RouteDetails, error) {
 	o := orm.NewOrm()
 
 	client := &ClientDetails{Id: clientID}
@@ -158,7 +163,7 @@ func GetConnectedRouteDetails(clientID int) ([]*RouteDetails, error) {
 	return nil, nil
 }
 
-func GetDisconnectedRouteDetails(clientID int) ([]*RouteDetails, error) {
+func GetDisconnectedRouteDetails(clientID string) ([]*RouteDetails, error) {
 	o := orm.NewOrm()
 
 	// Get the client
@@ -225,7 +230,7 @@ func GetAllClientDetails() ([]*ClientDetails, error) {
 }
 
 // UpdateClientDetails updates specified parameters for a ClientDetails instance
-func UpdateClientDetails(clientID int, staticIP *string, description string, isRouteDefault, isRouter bool) error {
+func UpdateClientDetails(clientID string, staticIP *string, description string, isRouteDefault, isRouter bool) error {
 	o := orm.NewOrm()
 
 	// Get the existing client
@@ -250,7 +255,7 @@ func UpdateClientDetails(clientID int, staticIP *string, description string, isR
 }
 
 // UnassignAllRoutesFromClient unassigns all routes from a specific client
-func UnassignAllRoutesFromClient(clientID int) error {
+func UnassignAllRoutesFromClient(clientID string) error {
 	o := orm.NewOrm()
 
 	client := &ClientDetails{Id: clientID}
@@ -330,7 +335,7 @@ func GetClientsDetailsWithoutCertificate() ([]*ClientDetails, error) {
 }
 
 // UpdateClientCertificateById updates the CertificateName for a client by its ID
-func UpdateClientCertificateById(clientID int, certificateName *string) error {
+func UpdateClientCertificateById(clientID string, certificateName *string) error {
 	o := orm.NewOrm()
 
 	// Get the existing client
@@ -348,7 +353,7 @@ func UpdateClientCertificateById(clientID int, certificateName *string) error {
 	return err
 }
 
-func UpdateClientCertificateStatusById(clientID int, certificateStatus *string) error {
+func UpdateClientCertificateStatusById(clientID string, certificateStatus *string) error {
 	o := orm.NewOrm()
 
 	// Get the existing client
@@ -367,7 +372,7 @@ func UpdateClientCertificateStatusById(clientID int, certificateStatus *string) 
 }
 
 // ClearClientCertificateById clears the CertificateName for a client by its ID
-func ClearClientCertificateById(clientID int) error {
+func ClearClientCertificateById(clientID string) error {
 	o := orm.NewOrm()
 
 	// Get the existing client
@@ -387,7 +392,7 @@ func ClearClientCertificateById(clientID int) error {
 }
 
 // UpdatePassphraseById updates the Passphrase for a client by its ID
-func UpdatePassphraseById(clientID int, passphrase string) error {
+func UpdatePassphraseById(clientID string, passphrase string) error {
 	o := orm.NewOrm()
 
 	// Get the existing client
@@ -450,7 +455,7 @@ func UpdateMD5SumForClientDetails(clientName, newMD5Sum string) error {
 }
 
 // UpdateMD5SumForClientDetailsByID updates the MD5Sum for a client by its Id
-func UpdateMD5SumForClientDetailsByID(clientID int, newMD5Sum string) error {
+func UpdateMD5SumForClientDetailsByID(clientID string, newMD5Sum string) error {
 	o := orm.NewOrm()
 
 	// Get the existing client by Id
@@ -493,14 +498,14 @@ func IsMD5SumValid(clientName, inputMD5Sum string) (bool, error) {
 }
 
 // Custom function defined in the controller
-func GetConnectedRoutes(inputId int) []*RouteDetails {
+func GetConnectedRoutes(inputId string) []*RouteDetails {
 	// id, _ := strconv.Atoi(inputId)
 	routes, _ := GetConnectedRouteDetails(inputId)
 	return routes
 }
 
 // Custom function defined in the controller
-func GetDisConnectedRoutes(inputId int) []*RouteDetails {
+func GetDisConnectedRoutes(inputId string) []*RouteDetails {
 	// id, _ := strconv.Atoi(inputId)
 	routes, _ := GetDisconnectedRouteDetails(inputId)
 	return routes
@@ -510,4 +515,71 @@ func GetDisConnectedRoutes(inputId int) []*RouteDetails {
 func Dump(obj interface{}) {
 	result, _ := json.MarshalIndent(obj, "", "\t")
 	logs.Debug(string(result))
+}
+
+// GetOTPKeyByClientID retrieves the OTPKey by ClientName
+func GetOTPKeyByClientID(id string) (*string, error) {
+	o := orm.NewOrm()
+	client := &ClientDetails{Id: id}
+	err := o.Read(client, "Id")
+	if err == nil {
+		return client.OTPKey, nil
+	}
+	return nil, err
+}
+
+// GetOTPDetailsByClientName retrieves Key, StaticPass and OTPUserName by ClientName
+func GetOTPDetailsByClientName(clientName string) (*string, *string, *string, error) {
+	o := orm.NewOrm()
+	client := &ClientDetails{ClientName: clientName}
+	err := o.Read(client, "ClientName")
+	if err == nil {
+		return client.OTPKey, client.StaticPass, client.OTPUserName, nil
+	}
+	return nil, nil, nil, err
+}
+
+// UpdateOTPDataByClientID updates OTPKey, StaticPass, and OTPUserName by ClientID
+func UpdateOTPDataByClientId(clientId string, otpKey, staticPass, otpUserName string) error {
+	o := orm.NewOrm()
+	client := &ClientDetails{Id: clientId}
+	err := o.Read(client)
+	if err == nil {
+		client.OTPKey = &otpKey
+		client.StaticPass = &staticPass
+		client.OTPUserName = &otpUserName
+		client.MD5Sum = "2FA ADDED"
+		_, err := o.Update(client, "OTPKey", "StaticPass", "OTPUserName", "MD5Sum")
+		return err
+	}
+	return err
+}
+
+// DisableOTPDataByClientID by ClientID
+func DisableOTPDataByClientId(clientId string) error {
+	o := orm.NewOrm()
+	client := &ClientDetails{Id: clientId}
+	err := o.Read(client)
+	if err == nil {
+		client.OTPKey = nil
+		client.StaticPass = nil
+		client.OTPUserName = nil
+		client.MD5Sum = "2FA DELETED"
+		_, err := o.Update(client, "OTPKey", "StaticPass", "OTPUserName", "MD5Sum")
+		return err
+	}
+	return err
+}
+
+// GetIs2FAEnabledByClientName retrieves Is2FAEnabled by ClientName
+func GetIs2FAEnabledByClientName(clientName string) (bool, error) {
+	o := orm.NewOrm()
+	client := &ClientDetails{ClientName: clientName}
+	err := o.Read(client, "ClientName")
+	if err == nil {
+		if client.OTPKey != nil {
+			return true, nil
+		}
+	}
+	return false, err
 }

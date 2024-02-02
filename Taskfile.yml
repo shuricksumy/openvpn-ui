@@ -159,8 +159,6 @@ tasks:
       PGID: 1000
       IP_GUI: 172.18.0.139
     cmds:
-      - task: build
-      - task: docker.build
       - docker-compose -f ./docker-compose.yml up
 
   docker-latestvpn.up:
@@ -172,6 +170,4 @@ tasks:
       PGID: 1000
       IP_GUI: 172.18.0.139
     cmds:
-      - task: build
-      - task: docker.build
       - docker-compose -f ./docker-compose-latestvpn.yml up

@@ -27,7 +27,7 @@
             data-title="Update ALL Clients?" title="Apply Clients Configuration" style="margin-right: 23px;">Apply Configurations</a>
           </td>
           <td class="col-md-1 text-right">
-            <a href="{{urlfor "LogsController.RestartLocalService"}}" class="btn btn-danger btn-sm btn-group-sm bg-gradient-red btn150" 
+            <a href="{{urlfor "LogsController.RestartLocalService"}}" class="btn btn-danger btn-sm btn-group-sm bg-gradient-red btn150"
               data-title="Restart OpenVPN server?" title="Restart OpenVPN server" id="start" style="margin-right: 23px;">Restart Server</a>
           </td>
         </tr>
@@ -36,7 +36,7 @@
     <!-- /.card-header -->
     <!-- form start -->
     <div id="newClient" class="collapse">
-      <form id="form-to-confirm" role="form" action="{{urlfor "ClientsController.NewClient"}}" method="post">
+      <form id="form-create-client" role="form" action="{{urlfor "ClientsController.NewClient"}}" method="post">
         <div class="card-body">
     
             <div class="form-row">
@@ -127,7 +127,8 @@
               <th style="width:5%">Route</th>
               <th style="width:5%">Static IP</th>
               <th style="width:5%">Type</th>
-              <th style="width:45%">Description</th>
+              <th style="width:40%">Description</th>
+              <th style="width:5%">2FA</th>
               <th style="width:5%">Routes</th>
               <th class="last-sm" style="width:5%">File</th>
             </tr>
@@ -142,18 +143,18 @@
                   <td class="my-centered first-sm">
                       {{ $col := "btn-sm btn-group-sm btn-block bg-gradient-lightblue" }}
                       {{ $comment := .ClientName }}
-                      {{ $icon := "fa fa-edit" }}
+                      {{ $icon := "fa fa-edit fa-lg" }}
                       {{ if not (GetBoolValueByKey $c.ClientName $MD5) }}
-                          {{ $col = "btn-danger btn-sm btn-group-sm btn-block bg-gradient-red" }} 
+                          {{ $col = "btn-danger btn-sm btn-group-sm btn-block bg-gradient-red" }}
                           {{ $comment = "Config was changed but not applied !" }}
-                          {{ $icon = "fa fa-warning" }} 
+                          {{ $icon = "fa fa-warning fa-lg" }}
                       {{ end }}
                       {{if not $c.CertificateName}} 
-                        {{ $col = "btn-default btn-sm btn-group-sm btn-block disabled" }}  
+                        {{ $col = "btn-default btn-sm btn-group-sm btn-block disabled" }}
                       {{end}}
                        <button id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .ClientName }}" 
                         class="btn {{ $col }} right-icon-holder font75" 
-                        title="{{ $comment }}">{{ .ClientName }}<i class="{ $icon }"></i>
+                        title="{{ $comment }}">{{ .ClientName }}<i class="{{ $icon }}"></i>
                       </button>
                   </td>
 
@@ -208,12 +209,25 @@
                     <div class=" sb">{{ .Description }}</div>
                   </td>
 
+                <!-- 2FA sell -->
+                <td class="textcenter my-centered">
+                    <div  class="btn-group" role="group">
+                        <button id="openModalEditClient2FA" data-client-name="{{ .Id }}" data-target="#editClient2FAModal"
+                                class="btn btn-sm btn-group-sm bg-gradient-lightblue btn60 font75">
+                            {{ if .OTPKey }}
+                                <i class="fa-solid fa-lock fa-lg" style="color:#10441c;"></i>
+                            {{ else }}
+                                <i class="fa-solid fa-unlock fa-lg" style="color:#700000;"></i>
+                            {{ end }}
+                        </button>
+                    </div>
+                </td>
 
                   <!-- 7 sell -->
                   <td class="textcenter my-centered">
                       <div  class="btn-group" role="group">
                           <button type="button" class="btn btn-sm btn-group-sm bg-gradient-lightblue btn60 font75"
-                            data-toggle="modal" data-target="#popup-{{ .Id }}"><i class="fa-solid fa-shuffle"></i>
+                            data-toggle="modal" data-target="#popup-{{ .Id }}"><i class="fa-solid fa-shuffle fa-lg"></i>
                           </button>
                         </div>
                   </td>
@@ -327,6 +341,7 @@
 <!-- Add an empty modal container -->
 <div id="modal-edit-client-details"></div>
 <div id="modal-edit-client-raw"></div>
+<div id="modal-2fa-client"></div>
 
 {{end}}
 
@@ -356,7 +371,7 @@
 
 
   $(document).ready(function () {
-      $('#form-to-confirm').validate({ // initialize the plugin
+      $('#form-create-client').validate({ // initialize the plugin
         rules: {
             client_name: {
                 required: true,
@@ -382,33 +397,6 @@
 
 <script>
   $(document).ready(function() {
-      $("#show_hide_password button").on('click', function(event) {
-          event.preventDefault();
-          if($('#show_hide_password input').attr("type") == "text"){
-              $('#show_hide_password input').attr('type', 'password');
-              $('#show_hide_password i').addClass( "fa-eye-slash" );
-              $('#show_hide_password i').removeClass( "fa-eye" );
-          }else if($('#show_hide_password input').attr("type") == "password"){
-              $('#show_hide_password input').attr('type', 'text');
-              $('#show_hide_password i').removeClass( "fa-eye-slash" );
-              $('#show_hide_password i').addClass( "fa-eye" );
-          }
-      });
+      togglePasswordVisibility("show_hide_password");
   });
-
-  $(document).ready(function() {
-      // Use $(document).on() to bind the click event to dynamically added elements
-      $(document).on('click', '[data-popup-target]', function() {
-          var targetId = $(this).data('popup-target');
-          var targetPopup = $('#' + targetId);
-
-          // Show the popup
-          targetPopup.show();
-
-          // Hide the popup after 5 seconds
-          setTimeout(function() {
-              targetPopup.hide();
-          }, 5000);
-      });
-  });
-  </script>
+</script>

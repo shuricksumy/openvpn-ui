@@ -13,7 +13,7 @@
   <!-- /.card-header -->
   <!-- form start -->
 
-  <form id="form-to-confirm" role="form" method="post">
+  <form id="form-settings" role="form" method="post">
     <div class="card-body">
       <div class="form-group">
         <label for="Profile">Profile</label>
@@ -41,7 +41,7 @@
 
       <div class="form-group">
         <label for="name">ConfigPath</label>
-        <input type="text" class="form-control" id="OVConfigPath" name="OVConfigPath" placeholder="Enter config path"
+        <input id="name" type="text" class="form-control" id="OVConfigPath" name="OVConfigPath" placeholder="Enter config path"
           value="{{ .Settings.OVConfigPath }}"  onfocusout="this.value = this.value.trim()" disabled>
       </div>
 
@@ -50,7 +50,8 @@
     <!-- /.card-body -->
 
     <div class="card-footer">
-      <button type="submit" class="btn bg-gradient-lightblue form-to-confirm" data-title="Update system settings?" >Save and apply</button>
+      <button type="submit" class="btn bg-gradient-lightblue" id="save_settings"
+              data-title="Update system settings?" >Save and apply</button>
     </div>
   </form>
 
@@ -63,3 +64,7 @@
     <span class="spinner"></span>
   </div>
 </div>
+
+<script>
+  customConfirmPopUpByIdForm('save_settings','form-settings',"Are you sure? This has huge impact.");
+</script>

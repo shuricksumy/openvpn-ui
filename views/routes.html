@@ -36,7 +36,7 @@
     <!-- form start -->
 
     <div id="newCert" class="collapse">
-    <form id="form-to-confirm" role="form" action="{{urlfor "RoutesController.NewRoute"}}" method="post">
+    <form id="form-create-route" role="form" action="{{urlfor "RoutesController.NewRoute"}}" method="post">
       <div class="card-body">
 
           <div class="form-row">
@@ -54,7 +54,7 @@
 
               <div class="form-group col-md-4">        
                 <label for="route_ip">Route IP*</label>
-                <input class="form-control" name="route_ip" value="{{.RouteIP}}" 
+                <input id="route_ip" class="form-control" name="route_ip" value="{{.RouteIP}}"
                                 data-inputmask="'alias': 'ip'" data-mask 
                                 pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" 
                                     placeholder="Enter Static IP" onfocusout="this.value = this.value.trim()">
@@ -63,7 +63,7 @@
 
               <div class="form-group col-md-4">        
                 <label for="route_mask">Route Mask*</label>
-                <input class="form-control" name="route_mask" value="{{.RouteMask}}" 
+                <input id="route_mask" class="form-control" name="route_mask" value="{{.RouteMask}}"
                                 data-inputmask="'alias': 'ip'" data-mask 
                                 pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" 
                                     placeholder="Enter Static IP" onfocusout="this.value = this.value.trim()">
@@ -248,7 +248,7 @@
   });
 
   $(document).ready(function () {
-      $('#form-to-confirm').validate({ // initialize the plugin
+      $('#form-create-route').validate({ // initialize the plugin
         rules: {
             router_name: {
                 required: true,

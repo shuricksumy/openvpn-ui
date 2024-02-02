@@ -12,7 +12,7 @@
             </div>
             <div class="modal-body">
                      <div class="panel-body">
-                        <form id="modal-edit-route_form-to-confirm" role="form" action="{{urlfor "RoutesController.Post"}}" method="post">
+                        <form id="form-edit-route" role="form" action="{{urlfor "RoutesController.Post"}}" method="post">
                             <div class="card-body">
                                 <div class="form-row">
                       
@@ -21,7 +21,7 @@
                                  
                                     <div class="form-group col-md-6">        
                                       <label for="route_ip">Route IP*</label>
-                                      <input class="form-control" name="route_ip" value="{{$r.RouteIP}}" 
+                                      <input class="form-control" id="route_ip" name="route_ip" value="{{$r.RouteIP}}"
                                                       data-inputmask="'alias': 'ip'" data-mask 
                                                       pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" 
                                                           placeholder="Enter Static IP" onfocusout="this.value = this.value.trim()" value="{{$r.RouteIP}}">
@@ -30,7 +30,7 @@
                       
                                     <div class="form-group col-md-6">        
                                       <label for="route_mask">Route Mask*</label>
-                                      <input class="form-control" name="route_mask" value="{{$r.RouteMask}}" 
+                                      <input class="form-control" id="route_mask" name="route_mask" value="{{$r.RouteMask}}"
                                                       data-inputmask="'alias': 'ip'" data-mask 
                                                       pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" 
                                                           placeholder="Enter Static IP" onfocusout="this.value = this.value.trim()" value="{{$r.RouteMask}}">
@@ -89,63 +89,40 @@
           validateForm();   
         });
         
-        $('#modal-edit-route_form-to-confirm').validate({ // initialize the plugin
-        rules: {
-            route_id: {
-                required: true,
-            },
-            route_ip: {
-                required: true,
-            },
-            route_mask: {
-                required: true,
-            },
-        },
-        messages: {
-            route_id: {
-            required: "Automaticaly generated",
-            email: "Please enter a vaild email address"
-            },
-            route_ip: "Please set IP route",
-            route_mask: "Please set IP Mask route",
-        },
-        errorElement: 'span',
-        errorPlacement: function (error, element) {
-            error.addClass('invalid-feedback');
-            element.closest('.form-group').append(error);
-        },
-        highlight: function (element, errorClass, validClass) {
-            $(element).addClass('is-invalid');
-        },
-        unhighlight: function (element, errorClass, validClass) {
-            $(element).removeClass('is-invalid');
-        }
-    });
-  
-    
-    $(function() {
-        $('a.btn-danger').confirm({
-            content: "Are you sure? This cannot be reverted.",
-            type: 'red',
-            icon: 'fa fa-hand-o-right',
-            title: 'font-awesome',
-            theme: 'bootstrap',
-            columnClass: 'small',
-            animateFromElement: false,
-            animation: 'RotateXR',
-            closeAnimation: 'rotateXR',
-            buttons: {
-                Confirm: {
-                    btnClass: 'btn-red bg-red-gradient btn80 myspiner',
-                    action: function(){location.href = this.$target.attr('href');}
+        $('#form-edit-route').validate({ // initialize the plugin
+            rules: {
+                route_id: {
+                    required: true,
                 },
-                Cancel: {
-                    btnClass: 'btn80',
-                    action: function(){}
+                route_ip: {
+                    required: true,
                 },
+                route_mask: {
+                    required: true,
+                },
+            },
+            messages: {
+                route_id: {
+                required: "Automaticaly generated",
+                email: "Please enter a vaild email address"
+                },
+                route_ip: "Please set IP route",
+                route_mask: "Please set IP Mask route",
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
             }
         });
-    });
+
+        commonFunctionConfirmPopUp();
 
   });
   </script>
