@@ -28,12 +28,22 @@ func (c *ProfileController) NestPrepare() {
 }
 
 func (c *ProfileController) Get() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+
 	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
 	c.Data["profile"] = c.Userinfo
 	c.TplName = "profile.html"
 }
 
 func (c *ProfileController) Post() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+
 	c.TplName = "profile.html"
 	c.Data["profile"] = c.Userinfo
 

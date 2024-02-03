@@ -27,6 +27,11 @@ func (c *ServerConfigController) NestPrepare() {
 }
 
 func (c *ServerConfigController) Get() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+
 	c.TplName = "serverconfig.html"
 	flash := web.NewFlash()
 	destPathServerConfig := filepath.Join(state.GlobalCfg.OVConfigPath, "server.conf")
@@ -42,6 +47,11 @@ func (c *ServerConfigController) Get() {
 }
 
 func (c *ServerConfigController) Post() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+
 	c.TplName = "serverconfig.html"
 	flash := web.NewFlash()
 

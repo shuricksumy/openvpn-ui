@@ -28,6 +28,10 @@ func (c *EasyRSAConfigController) NestPrepare() {
 }
 
 func (c *EasyRSAConfigController) Get() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
 	c.TplName = "easyrsa.html"
 	flash := web.NewFlash()
 	destPathEasyrsaVars := filepath.Join(state.GlobalCfg.OVConfigPath, "easy-rsa/vars")
@@ -44,6 +48,11 @@ func (c *EasyRSAConfigController) Get() {
 }
 
 func (c *EasyRSAConfigController) Post() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+
 	c.TplName = "easyrsa.html"
 
 	flash := web.NewFlash()

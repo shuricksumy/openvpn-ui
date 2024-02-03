@@ -437,3 +437,15 @@ button.disabled {
     font-weight: 400;
     font-size: 1rem;
 }
+
+.visibility-mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: white; /* Set the background color of the mask */
+    z-index: 999; /* Adjust z-index as needed */
+    opacity: 0; /* Make the mask transparent */
+    pointer-events: none; /* Allow clicks to pass through to the underlying element */
+}

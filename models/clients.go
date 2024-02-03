@@ -21,9 +21,11 @@ type ClientDetails struct {
 	Passphrase        string          `form:"cert_pass"`
 	Routes            []*RouteDetails `orm:"rel(m2m)"`
 	MD5Sum            string          `form:"md5sum"`
+	OTPIsEnabled      bool            `valid:"Required" form:"otp_is_enabled"`
 	OTPKey            *string         `orm:"unique;null" form:"otp_key"`
-	StaticPass        *string         `orm:"null" form:"static_pass"`
 	OTPUserName       *string         `orm:"unique;null" form:"otp_user_name"`
+	StaticPassIsUsed  bool            `valid:"Required" form:"static_pass_is_enabled"`
+	StaticPass        *string         `orm:"null" form:"static_pass"`
 }
 
 // Validate function to perform custom validation
@@ -540,16 +542,23 @@ func GetOTPDetailsByClientName(clientName string) (*string, *string, *string, er
 }
 
 // UpdateOTPDataByClientID updates OTPKey, StaticPass, and OTPUserName by ClientID
-func UpdateOTPDataByClientId(clientId string, otpKey, staticPass, otpUserName string) error {
+func UpdateOTPDataByClientId(clientId string, OTPIsEnabled bool, StaticPassIsUsed bool, otpKey, staticPass, otpUserName string) error {
 	o := orm.NewOrm()
 	client := &ClientDetails{Id: clientId}
 	err := o.Read(client)
+
+	if !OTPIsEnabled {
+		otpKey = ""
+	}
+
 	if err == nil {
 		client.OTPKey = &otpKey
 		client.StaticPass = &staticPass
 		client.OTPUserName = &otpUserName
+		client.OTPIsEnabled = OTPIsEnabled
+		client.StaticPassIsUsed = StaticPassIsUsed
 		client.MD5Sum = "2FA ADDED"
-		_, err := o.Update(client, "OTPKey", "StaticPass", "OTPUserName", "MD5Sum")
+		_, err := o.Update(client, "OTPKey", "OTPIsEnabled", "StaticPassIsUsed", "StaticPass", "OTPUserName", "MD5Sum")
 		return err
 	}
 	return err
@@ -564,8 +573,10 @@ func DisableOTPDataByClientId(clientId string) error {
 		client.OTPKey = nil
 		client.StaticPass = nil
 		client.OTPUserName = nil
+		client.OTPIsEnabled = false
+		client.StaticPassIsUsed = false
 		client.MD5Sum = "2FA DELETED"
-		_, err := o.Update(client, "OTPKey", "StaticPass", "OTPUserName", "MD5Sum")
+		_, err := o.Update(client, "OTPIsEnabled", "OTPKey", "StaticPassIsUsed", "StaticPass", "OTPUserName", "MD5Sum")
 		return err
 	}
 	return err
@@ -577,7 +588,7 @@ func GetIs2FAEnabledByClientName(clientName string) (bool, error) {
 	client := &ClientDetails{ClientName: clientName}
 	err := o.Read(client, "ClientName")
 	if err == nil {
-		if client.OTPKey != nil {
+		if client.OTPIsEnabled {
 			return true, nil
 		}
 	}

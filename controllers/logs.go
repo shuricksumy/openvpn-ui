@@ -23,6 +23,11 @@ func (c *LogsController) NestPrepare() {
 }
 
 func ShowLogs(c *LogsController) {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+
 	c.TplName = "logs.html"
 	c.Data["breadcrumbs"] = &BreadCrumbs{
 		Title: "Logs",
@@ -64,6 +69,10 @@ func ShowLogs(c *LogsController) {
 }
 
 func (c *LogsController) Get() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
 	ShowLogs(c)
 }
 

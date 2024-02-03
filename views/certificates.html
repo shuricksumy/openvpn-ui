@@ -17,10 +17,13 @@
                   data-toggle="collapse" href="#newCert" role="button"  aria-expanded="false"
                   aria-controls="newCert" style="margin-left: 0.5%;">New Certificate</button>
                   {{template "common/fvalid.html" field_error_message .validation "Name" }}</td>
-          <td class="col-md-1 text-right">
-          </td>
-          <td class="col-md-12 text-right sb"><i>Restart server after revocation:</i>
-          </td>
+            <td class="col-md-10 text-right font90 sb">
+                <i>Restart server after revocation!</i>
+            </td>
+            <td class="col-md-1 text-right">
+                <a href="{{urlfor "CertificatesController.UpdateFiles"}}" class="btn btn-warning btn-sm btn-group-sm bg-gradient-yellow btn150"
+                data-title="Update ALL Clients?" title="Apply Clients Configuration" style="margin-right: 23px;">Apply Configurations</a>
+            </td>
           <td class="col-md-1 text-right"><a href="{{urlfor "LogsController.RestartLocalService"}}" 
             class="btn btn-danger btn-sm btn-group-sm bg-gradient-red btn150" data-title="Restart OpenVPN server?" 
                   title="Restart OpenVPN server" style="margin-right: 23px;">Restart Server</a>

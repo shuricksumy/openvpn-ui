@@ -28,6 +28,11 @@ func (c *ClientConfigController) NestPrepare() {
 }
 
 func (c *ClientConfigController) Get() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+
 	c.TplName = "clientconfig.html"
 	flash := web.NewFlash()
 	destPathClientTempl := filepath.Join(state.GlobalCfg.OVConfigPath, "client-template.txt")
@@ -44,6 +49,11 @@ func (c *ClientConfigController) Get() {
 }
 
 func (c *ClientConfigController) Post() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+
 	c.TplName = "clientconfig.html"
 
 	flash := web.NewFlash()

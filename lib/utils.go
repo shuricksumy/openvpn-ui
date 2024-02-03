@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"bufio"
 	"crypto/md5"
 	"encoding/json"
 	"fmt"
@@ -285,4 +286,177 @@ func AppendStringToFile(filePath, content string) {
 	}
 
 	fmt.Println("String appended successfully!")
+}
+
+func PatchFileAppendAfterLine(filePath, searchString, content string) error {
+	// Open the file in read mode
+	file, err := os.OpenFile(filePath, os.O_RDWR, 0644)
+	if err != nil {
+		return fmt.Errorf("Error opening file: %v", err)
+	}
+	defer file.Close()
+
+	// Create a scanner to read the file line by line
+	scanner := bufio.NewScanner(file)
+	var lines []string
+	lineNotFound := true
+
+	// Read the file line by line
+	for scanner.Scan() {
+		line := scanner.Text()
+		lines = append(lines, line)
+
+		// Check if the line contains the specified string
+		if strings.Contains(line, searchString) {
+			// Append the content after the line
+			lines = append(lines, content)
+			lineNotFound = false
+		}
+	}
+
+	// Error if search searchString does not exist in file
+	if lineNotFound == true {
+		return fmt.Errorf("Searching line not found: %s", searchString)
+	}
+
+	// Check for errors during scanning
+	if err := scanner.Err(); err != nil {
+		return fmt.Errorf("Error scanning file: %v", err)
+	}
+
+	// Rewind the file to the beginning
+	file.Seek(0, 0)
+	file.Truncate(0)
+
+	// Write the modified lines back to the file
+	writer := bufio.NewWriter(file)
+	for _, line := range lines {
+		fmt.Fprintln(writer, line)
+	}
+
+	// Flush and close the writer
+	err = writer.Flush()
+	if err != nil {
+		return fmt.Errorf("Error writing to file: %v", err)
+	}
+
+	return nil
+}
+
+func PatchFileAppendBeforeAndAfterLine(filePath, searchString, contentBefore, contentAfter string) error {
+	// Open the file in read mode
+	file, err := os.OpenFile(filePath, os.O_RDWR, 0644)
+	if err != nil {
+		return fmt.Errorf("Error opening file: %v", err)
+	}
+	defer file.Close()
+
+	// Create a scanner to read the file line by line
+	scanner := bufio.NewScanner(file)
+	var lines []string
+	lineNotFound := true
+
+	// Read the file line by line
+	for scanner.Scan() {
+		line := scanner.Text()
+
+		// Check if the line contains the specified string
+		if strings.Contains(line, searchString) {
+			// Append contentBefore before the line
+			lines = append(lines, contentBefore)
+			lineNotFound = false
+		}
+
+		lines = append(lines, line)
+
+		// Check if the line contains the specified string
+		if strings.Contains(line, searchString) {
+			// Append contentAfter after the line
+			lines = append(lines, contentAfter)
+			lineNotFound = false
+		}
+	}
+
+	// Error if search searchString does not exist in file
+	if lineNotFound == true {
+		return fmt.Errorf("Searching line not found: %s", searchString)
+	}
+
+	// Check for errors during scanning
+	if err := scanner.Err(); err != nil {
+		return fmt.Errorf("Error scanning file: %v", err)
+	}
+
+	// Rewind the file to the beginning
+	file.Seek(0, 0)
+	file.Truncate(0)
+
+	// Write the modified lines back to the file
+	writer := bufio.NewWriter(file)
+	for _, line := range lines {
+		fmt.Fprintln(writer, line)
+	}
+
+	// Flush and close the writer
+	err = writer.Flush()
+	if err != nil {
+		return fmt.Errorf("Error writing to file: %v", err)
+	}
+
+	return nil
+}
+
+func PatchFileAppendBeforeLine(filePath, searchString, contentBefore string) error {
+	// Open the file in read mode
+	file, err := os.OpenFile(filePath, os.O_RDWR, 0644)
+	if err != nil {
+		return fmt.Errorf("Error opening file: %v", err)
+	}
+	defer file.Close()
+
+	// Create a scanner to read the file line by line
+	scanner := bufio.NewScanner(file)
+	var lines []string
+	lineNotFound := true
+
+	// Read the file line by line
+	for scanner.Scan() {
+		line := scanner.Text()
+
+		// Check if the line contains the specified string
+		if strings.Contains(line, searchString) {
+			// Append contentBefore before the line
+			lines = append(lines, contentBefore)
+			lineNotFound = false
+		}
+
+		lines = append(lines, line)
+	}
+	// Error if search searchString does not exist in file
+	if lineNotFound == true {
+		return fmt.Errorf("Searching line not found: %s", searchString)
+	}
+
+	// Check for errors during scanning
+	if err := scanner.Err(); err != nil {
+		return fmt.Errorf("Error scanning file: %v", err)
+	}
+
+	// Rewind the file to the beginning
+	file.Seek(0, 0)
+	file.Truncate(0)
+
+	// Write the modified lines back to the file
+	writer := bufio.NewWriter(file)
+	for _, line := range lines {
+		fmt.Fprintln(writer, line)
+	}
+
+	// Flush and close the writer
+	err = writer.Flush()
+	if err != nil {
+		return fmt.Errorf("Error writing to file: %v", err)
+	}
+
+	return nil
 }

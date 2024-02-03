@@ -352,6 +352,8 @@ func GetScriptEnv() string {
 if [[ ! -e /etc/openvpn/server.conf ]]; then
         bash /opt/scripts/openvpn-install-v2.sh
         echo "" > /etc/openvpn/.provisioned
+        # ADD 2FA AUTH SCRIPT USAGE
+        echo "auth-user-pass-verify /opt/scripts/auth_client.sh via-file" >> /etc/openvpn/server.conf
         echo "    --= SETUP IS DONE ==-"
 fi
 `

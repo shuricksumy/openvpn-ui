@@ -34,12 +34,22 @@ func (c *ClientsController) NestPrepare() {
 
 // @router /clients [get]
 func (c *ClientsController) Get() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+
 	c.TplName = "clients.html"
 	c.ShowClients()
 
 }
 
 func (c *ClientsController) ShowClients() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+
 	flash := web.NewFlash()
 	clients, err := models.GetAllClientDetails()
 	// lib.Dump(clients)
@@ -197,7 +207,10 @@ func (c *ClientsController) SaveClientDetailsData() {
 
 // @router /clients/render_modal_raw/ [post]
 func (c *ClientsController) RenderModalRaw() {
-
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
 	flash := web.NewFlash()
 	clientName := c.GetString("client-name")
 
@@ -232,6 +245,10 @@ func (c *ClientsController) RenderModalRaw() {
 
 // @router /clients/save_client_data [post]
 func (c *ClientsController) SaveClientRawData() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
 	flash := web.NewFlash()
 	clientName := c.GetString("client_name")
 	clientData := c.GetString("client_data")
@@ -318,6 +335,10 @@ func (c *ClientsController) DelClient() {
 
 // @router /clients/updatefiles [get]
 func (c *ClientsController) UpdateFiles() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
 	flash := web.NewFlash()
 	wasError := false
 
@@ -343,13 +364,6 @@ func (c *ClientsController) UpdateFiles() {
 		// Redirect to the main page after successful file save.
 		flash.Success("Clients were updated. Please restart OPENVPN server!")
 		flash.Store(&c.Controller)
-		// client := mi.NewClient(state.GlobalCfg.MINetwork, state.GlobalCfg.MIAddress)
-		// if err := client.Signal("SIGUSR1"); err != nil {
-		// 	flash.Warning("Config has been updated but OpenVPN server was NOT reloaded: " + err.Error())
-		// } else {
-		// 	flash.Success("Files were updated and OpenVPN reloaded it")
-		// 	flash.Store(&c.Controller)
-		// }
 		flash.Warning("Config has been updated but OpenVPN server was NOT reloaded")
 	}
 
@@ -367,7 +381,9 @@ func (c *ClientsController) Render2FAModal() {
 	id := c.GetString("client-name")
 
 	clientOTP, key, isOTPNew, err_otp := lib.Get2FA(id)
-	logs.Error(err_otp)
+	if err_otp != nil {
+		logs.Error(err_otp)
+	}
 
 	var buf bytes.Buffer
 	img, _ := clientOTP.Image(350, 350)
@@ -408,8 +424,10 @@ func (c *ClientsController) SaveClient2FAData() {
 	otpKey := c.GetString("otp_key")
 	staticPass := c.GetString("static_pass")
 	otpUserName := c.GetString("otp_user_name")
+	OTPIsEnabled, _ := c.GetBool("otp_is_enabled")
+	StaticPassIsUsed, _ := c.GetBool("static_pass_is_enabled")
 
-	err_upd_otp := models.UpdateOTPDataByClientId(clientID, otpKey, staticPass, otpUserName)
+	err_upd_otp := models.UpdateOTPDataByClientId(clientID, OTPIsEnabled, StaticPassIsUsed, otpKey, staticPass, otpUserName)
 	if err_upd_otp != nil {
 		logs.Error(err_upd_otp)
 		flash.Error("Error while enabling 2FA for " + otpUserName)

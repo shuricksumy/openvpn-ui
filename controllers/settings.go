@@ -25,6 +25,10 @@ func (c *SettingsController) NestPrepare() {
 }
 
 func (c *SettingsController) Get() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
 	c.TplName = "settings.html"
 	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
 	settings := models.Settings{Profile: "default"}
@@ -33,6 +37,10 @@ func (c *SettingsController) Get() {
 }
 
 func (c *SettingsController) Post() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
 	c.TplName = "settings.html"
 
 	flash := web.NewFlash()

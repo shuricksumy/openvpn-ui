@@ -41,31 +41,52 @@ func (c *CertificatesController) NestPrepare() {
 
 // @router /certificates/:key [get]
 func (c *CertificatesController) Download() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+	flash := web.NewFlash()
+	c.TplName = "certificates.html"
+
 	name := c.GetString(":key")
 	filename := fmt.Sprintf("%s.ovpn", name)
 
-	c.Ctx.Output.Header("Content-Type", "application/octet-stream")
-	c.Ctx.Output.Header("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"", filename))
+	//keysPath := filepath.Join(state.GlobalCfg.OVConfigPath, "easy-rsa/pki/issued")
 
-	keysPath := filepath.Join(state.GlobalCfg.OVConfigPath, "easy-rsa/pki/issued")
-
-	cfgPath, err := c.saveClientConfig(keysPath, name)
+	cfgPath, err := c.saveClientConfig(name)
 	if err != nil {
 		logs.Error(err)
+		flash.Error(err.Error())
+		flash.Store(&c.Controller)
+		c.showCerts()
 		return
 	}
 	data, err := lib.RawReadFile(cfgPath)
 	if err != nil {
 		logs.Error(err)
+		flash.Error(err.Error())
+		flash.Store(&c.Controller)
+		c.showCerts()
 		return
 	}
+
+	c.Ctx.Output.Header("Content-Type", "application/octet-stream")
+	c.Ctx.Output.Header("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"", filename))
 	if _, err = c.Controller.Ctx.ResponseWriter.Write([]byte(data)); err != nil {
 		logs.Error(err)
+		flash.Error(err.Error())
+		flash.Store(&c.Controller)
+		c.showCerts()
 	}
 }
 
 // @router /certificates [get]
 func (c *CertificatesController) Get() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+
 	c.TplName = "certificates.html"
 	c.showCerts()
 }
@@ -102,6 +123,10 @@ func (c *CertificatesController) showCerts() {
 
 // @router /certificates [post]
 func (c *CertificatesController) Post() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
 	c.TplName = "certificates.html"
 	flash := web.NewFlash()
 
@@ -137,6 +162,10 @@ func (c *CertificatesController) Post() {
 
 // @router /certificates/revoke/:key [get]
 func (c *CertificatesController) Revoke() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
 	c.TplName = "certificates.html"
 	flash := web.NewFlash()
 	name := c.GetString(":key")
@@ -170,6 +199,10 @@ func (c *CertificatesController) Revoke() {
 
 // @router /certificates/unrevoke/:key [get]
 func (c *CertificatesController) UnRevoke() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
 	c.TplName = "certificates.html"
 	flash := web.NewFlash()
 	name := c.GetString(":key")
@@ -203,6 +236,10 @@ func (c *CertificatesController) UnRevoke() {
 
 // @router /certificates/restart [get]
 func (c *CertificatesController) Restart() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
 	lib.Restart()
 	c.Redirect(c.URLFor("CertificatesController.Get"), 302)
 	// return
@@ -210,6 +247,10 @@ func (c *CertificatesController) Restart() {
 
 // @router /certificates/burn/:key/:serial [get]
 func (c *CertificatesController) Burn() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
 	c.TplName = "certificates.html"
 	flash := web.NewFlash()
 	CN := c.GetString(":key")
@@ -242,6 +283,11 @@ func (c *CertificatesController) Burn() {
 
 // @router /certificates/revoke/:key [get]
 func (c *CertificatesController) Renew() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+
 	c.TplName = "certificates.html"
 	flash := web.NewFlash()
 	name := c.GetString(":key")
@@ -259,6 +305,11 @@ func (c *CertificatesController) Renew() {
 
 // @router /certificates/save_client_data [post]
 func (c *CertificatesController) SaveClientRawData() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+
 	flash := web.NewFlash()
 	clientName := c.GetString("client_name")
 	clientData := c.GetString("client_data")
@@ -295,7 +346,12 @@ func validateCertParams(cert NewCertParams) map[string]map[string]string {
 	return nil
 }
 
-func (c *CertificatesController) saveClientConfig(keysPath string, name string) (string, error) {
+func (c *CertificatesController) saveClientConfig(name string) (string, error) {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return "", nil
+	}
+
 	flash := web.NewFlash()
 	destPath := filepath.Join(state.GlobalCfg.OVConfigPath, "clients", name+".ovpn")
 
@@ -310,8 +366,14 @@ func (c *CertificatesController) saveClientConfig(keysPath string, name string) 
 	}
 
 	client, _ := models.GetClientDetailsByCertificate(name)
-	if client.OTPKey != nil || client.StaticPass != nil {
-		lib.AppendStringToFile(destPath, "\nauth-user-pass\n")
+	if client.OTPIsEnabled || client.StaticPassIsUsed {
+		err_patch := lib.PatchFileAppendBeforeLine(destPath, "<ca>", "auth-user-pass\n")
+		if err_patch != nil {
+			logs.Error(err_patch)
+			flash.Error(err_patch.Error())
+			flash.Store(&c.Controller)
+			return "", err_patch
+		}
 	}
 
 	return destPath, nil
@@ -343,4 +405,43 @@ func SaveToFile(tplPath string, c config.Config, destPath string) error {
 	}
 
 	return lib.RawSaveToFile(destPath, str)
+}
+
+// @router /certificates/updatefiles [get]
+func (c *CertificatesController) UpdateFiles() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+
+	flash := web.NewFlash()
+	wasError := false
+
+	//update files
+	err_save := lib.ApplyClientsConfigToFS()
+	if err_save != nil {
+		logs.Error(err_save)
+		flash.Error("ERROR SAVING CLIENTS TO FS !")
+		flash.Store(&c.Controller)
+		wasError = true
+	}
+
+	// Update DB with new MD5
+	err_upd_md5 := lib.UpdateDBWithLatestMD5()
+	if err_upd_md5 != nil {
+		logs.Error(err_upd_md5)
+		flash.Error("ERROR UPATING MD5 TO JSON ! ", err_upd_md5)
+		flash.Store(&c.Controller)
+		wasError = true
+	}
+
+	if !wasError {
+		// Redirect to the main page after successful file save.
+		flash.Success("Clients were updated. Please restart OPENVPN server!")
+		flash.Store(&c.Controller)
+		flash.Warning("Config has been updated but OpenVPN server was NOT reloaded")
+	}
+
+	c.TplName = "certificates.html"
+	c.showCerts()
 }

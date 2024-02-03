@@ -25,12 +25,20 @@ func (c *SystemController) NestPrepare() {
 
 // @router /ov/system [get]
 func (c *SystemController) Get() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
 	c.TplName = "system.html"
 	//c.showCerts()
 }
 
 // @router /ov/system/backup [get]
 func (c *SystemController) Backup() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
 	flash := web.NewFlash()
 	c.TplName = "system.html"
 
@@ -55,6 +63,10 @@ func (c *SystemController) Backup() {
 
 // @router /ov/system/restart [get]
 func (c *SystemController) Restart() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
 	lib.Restart()
 	c.Redirect(c.URLFor("SystemController.Get"), 302)
 	// return

@@ -77,4 +77,12 @@ func init() {
 				Router:           `/certificates/save_client_data`,
 				AllowHTTPMethods: []string{"post"},
 				Params:           nil})
+
+	web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:CertificatesController"] =
+		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:CertificatesController"],
+			web.ControllerComments{
+				Method:           "UpdateFiles",
+				Router:           `/certificates/updatefiles`,
+				AllowHTTPMethods: []string{"get"},
+				Params:           nil})
 }

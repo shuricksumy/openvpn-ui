@@ -17,6 +17,7 @@ COPY ./build/assets/restart.sh /opt/scripts/restart.sh
 COPY ./build/assets/rmcert.sh /opt/scripts/rmcert.sh
 COPY ./build/assets/renew.sh /opt/scripts/renew.sh
 COPY ./build/assets/install_latest_openvpn.sh /opt/scripts/install_latest_openvpn.sh
+COPY ./build/assets/auth_client.sh /opt/scripts/auth_client.sh
 
 RUN /opt/scripts/install_pkg.sh
 RUN /opt/scripts/install_latest_openvpn.sh

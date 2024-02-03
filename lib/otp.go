@@ -19,7 +19,7 @@ func Get2FA(clientID string) (*otp.Key, *string, bool, error) {
 		return nil, nil, true, err_get_client
 	}
 
-	if client.OTPKey != nil {
+	if client.OTPIsEnabled || client.StaticPassIsUsed {
 		//USE IT
 		isOTPNew = false
 		key, _ := hex.DecodeString(NilStringToString(client.OTPKey))

@@ -27,6 +27,11 @@ func (c *WizardController) NestPrepare() {
 }
 
 func (c *WizardController) Step1Get() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+
 	c.TplName = "wizard/step_1.html"
 	c.Data["breadcrumbs"] = &BreadCrumbs{
 		Title: "Wizard: Step 1",
@@ -71,6 +76,11 @@ func (c *WizardController) Step1Get() {
 }
 
 func (c *WizardController) Step1Post() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+
 	//get data from session
 	var wizardByte = c.GetSession("ovpnWizardData").([]byte)
 	ovpnWizardData := Decode(wizardByte)
@@ -95,6 +105,11 @@ func (c *WizardController) Step1Post() {
 }
 
 func (c *WizardController) Step2Get() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+
 	c.TplName = "wizard/step_2.html"
 	c.Data["breadcrumbs"] = &BreadCrumbs{
 		Title: "Wizard: Step 2",
@@ -126,6 +141,11 @@ func (c *WizardController) Step2Get() {
 }
 
 func (c *WizardController) Step2Post() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+
 	//get data from session
 	var wizardByte = c.GetSession("ovpnWizardData").([]byte)
 	ovpnWizardData := Decode(wizardByte)
@@ -152,6 +172,11 @@ func (c *WizardController) Step2Post() {
 }
 
 func (c *WizardController) Step3Get() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+
 	c.TplName = "wizard/step_3.html"
 	c.Data["breadcrumbs"] = &BreadCrumbs{
 		Title: "Wizard: Step 3",
@@ -175,6 +200,11 @@ func (c *WizardController) Step3Get() {
 }
 
 func (c *WizardController) Setup() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+
 	// Create a new HTTP client with a custom timeout
 	ctx, cancel := context.WithTimeout(context.Background(), 660*time.Second)
 	defer cancel()
@@ -196,6 +226,11 @@ func (c *WizardController) Setup() {
 // GET ENDPOINTS FOR JSON PARAMS
 
 func (c *WizardController) Step2GetHmacAlg() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+
 	CipherChoice := c.GetString(":cipher")
 	HMACAlgorithm := c.GetString(":selcted_hmac")
 	response := models.GetHMACAlgorithmList(CipherChoice, HMACAlgorithm)
@@ -204,6 +239,11 @@ func (c *WizardController) Step2GetHmacAlg() {
 }
 
 func (c *WizardController) Step2GetCrtParam() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+
 	certType := c.GetString(":type")
 	selectedParam := c.GetString(":selcted_option")
 	response := models.GetCertParamList(certType, selectedParam)
@@ -212,6 +252,11 @@ func (c *WizardController) Step2GetCrtParam() {
 }
 
 func (c *WizardController) Step2GetCrtCipher() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+
 	certType := c.GetString(":type")
 	selectedParam := c.GetString(":selcted_option")
 	response := models.GetCCCipherChoiceList(certType, selectedParam)
@@ -220,6 +265,11 @@ func (c *WizardController) Step2GetCrtCipher() {
 }
 
 func (c *WizardController) Step2GetDhParamr() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+
 	dhType := c.GetString(":type")
 	selectedParam := c.GetString(":selcted_option")
 	response := models.GetDHParamList(dhType, selectedParam)
