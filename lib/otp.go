@@ -25,7 +25,7 @@ func Get2FA(clientID string) (*otp.Key, *string, bool, error) {
 		var hashInBytes []byte
 
 		if client.OTPKey == nil {
-			hashInBytes, _ = GenerateHashInByte()
+			hashInBytes, client.OTPKey = GenerateHashInByte()
 		} else {
 			hashInBytes, _ = hex.DecodeString(NilStringToString(client.OTPKey))
 		}
