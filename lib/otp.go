@@ -22,28 +22,25 @@ func Get2FA(clientID string) (*otp.Key, *string, bool, error) {
 	if client.OTPIsEnabled || client.StaticPassIsUsed {
 		//USE IT
 		isOTPNew = false
-		key, _ := hex.DecodeString(NilStringToString(client.OTPKey))
+		var hashInBytes []byte
+
+		if client.OTPKey == nil {
+			hashInBytes, _ = GenerateHashInByte()
+		} else {
+			hashInBytes, _ = hex.DecodeString(NilStringToString(client.OTPKey))
+		}
+
 		userOTP, _ = totp.Generate(totp.GenerateOpts{
 			Issuer:      "Example.com",
 			AccountName: NilStringToString(client.OTPUserName),
 			Algorithm:   otp.AlgorithmSHA256,
-			Secret:      key,
+			Secret:      hashInBytes,
 		})
 		return userOTP, client.OTPKey, isOTPNew, nil
-		//TODO
-		//} else if *client.OTPKey == "" {
-		//	isOTPNew = false
-		//	return nil, nil, isOTPNew, nil
 	} else {
 		//Create new
 		isOTPNew = true
-		randomBytes := make([]byte, 32)
-		rand.Read(randomBytes)
-		hash := sha256.New()
-		hash.Write(randomBytes)
-		hashInBytes := hash.Sum(nil) // KEY byte
-		strKey := hex.EncodeToString(hashInBytes)
-		key := StringToNilString(strKey)
+		hashInBytes, key := GenerateHashInByte()
 
 		userOTP, _ = totp.Generate(totp.GenerateOpts{
 			Issuer:      "Example.com",
@@ -53,4 +50,17 @@ func Get2FA(clientID string) (*otp.Key, *string, bool, error) {
 		})
 		return userOTP, key, isOTPNew, nil
 	}
+}
+
+func GenerateHashInByte() ([]byte, *string) {
+	randomBytes := make([]byte, 32)
+	rand.Read(randomBytes)
+	hash := sha256.New()
+	hash.Write(randomBytes)
+	hashInBytes := hash.Sum(nil) // KEY byte
+
+	strKey := hex.EncodeToString(hashInBytes)
+	hexKey := StringToNilString(strKey)
+
+	return hashInBytes, hexKey
 }
