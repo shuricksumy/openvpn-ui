@@ -547,12 +547,12 @@ func UpdateOTPDataByClientId(clientId string, OTPIsEnabled bool, StaticPassIsUse
 	client := &ClientDetails{Id: clientId}
 	err := o.Read(client)
 
-	if !OTPIsEnabled {
-		otpKey = ""
-	}
-
 	if err == nil {
-		client.OTPKey = &otpKey
+		if !OTPIsEnabled {
+			client.OTPKey = nil
+		} else {
+			client.OTPKey = &otpKey
+		}
 		client.StaticPass = &staticPass
 		client.OTPUserName = &otpUserName
 		client.OTPIsEnabled = OTPIsEnabled

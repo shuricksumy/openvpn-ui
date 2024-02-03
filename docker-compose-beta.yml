@@ -10,14 +10,14 @@ networks:
                 - subnet: 172.18.0.0/24
 services:
   gui:
-      image: shuricksumy/openvpn-ui-latestvpn:latest
-      build:
-        context: .
-        dockerfile: Dockerfile-latestvpn
-        args:
-          TARGETOS: linux
-          TARGETARCH: amd64
-      container_name: openvpn-ui-latestvpn
+      image: shuricksumy/openvpn-ui:beta
+#      build:
+#        context: .
+#        dockerfile: Dockerfile-latestvpn
+#        args:
+#          TARGETOS: linux
+#          TARGETARCH: amd64
+      container_name: openvpn-ui-beta
       working_dir: /etc/openvpn/easy-rsa
       environment:
           - OPENVPN_ADMIN_USERNAME=admin # Leave this default as-is and update on first-run

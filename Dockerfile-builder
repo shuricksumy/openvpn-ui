@@ -8,7 +8,7 @@ COPY . .
 
 RUN apt-get update && apt-get install build-essential -y
 
-RUN go install github.com/beego/bee@latest && bee update
+RUN go install github.com/beego/bee/v2@latest && bee update
 RUN go mod tidy && go mod vendor && bee pack bee pack  \
     -exr='^vendor|^data.db|^build|^README.md|^docs|^README_ORIGINAL.md|^screenshots|^pkg|^bin|^dist|^Taskfile|^example|^swagger|^docker-compose|^Dockerfile'
 RUN ls -lah $WORK_DIR
