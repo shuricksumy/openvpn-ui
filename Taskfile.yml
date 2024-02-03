@@ -136,7 +136,7 @@ tasks:
     desc: Builds the docker container for the application for testing.
     cmds:
       - task: build
-      - docker buildx build --platform linux/amd64,linux/arm64 -f Dockerfile -t shuricksumy/openvpn-ui:beta . --push --no-cache
+      - docker buildx build --platform linux/amd64,linux/arm64 -f Dockerfile-latestvpn -t shuricksumy/openvpn-ui:beta . --push --no-cache
     sources:
       - "dist/**"
       - "Dockerfile*"
