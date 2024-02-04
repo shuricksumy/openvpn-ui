@@ -285,7 +285,7 @@ func ApplyClientsConfigToFS() error {
 			}
 		}
 
-		//6. if 2FA is used
+		//6. if Auth is used
 		if client.OTPIsEnabled || client.StaticPassIsUsed {
 			buffer.WriteString("\n#2FA OTP and/or static pass for auth.\n")
 			buffer.WriteString("#2FA_KEY:" + NilStringToString(client.OTPKey) + "\n")

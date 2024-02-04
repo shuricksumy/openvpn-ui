@@ -2,7 +2,6 @@ package models
 
 import (
 	"encoding/json"
-
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/core/validation"
@@ -45,18 +44,21 @@ func (c *ClientDetails) Validate() error {
 }
 
 // AddNewClient creates a new client and adds it to the database
-func AddNewClient(clientName string, staticIP *string, isRouteDefault, isRouter bool, description, md5Sum string, passphrase string, routeIDs []string) error {
+func AddNewClient(clientName string, staticIP *string, isRouteDefault, isRouter bool, description, md5Sum string, passphrase string, routeIDs []string, staticPass *string) error {
 	o := orm.NewOrm()
 
 	client := &ClientDetails{
-		Id:             uuid.New().String(),
-		ClientName:     clientName,
-		StaticIP:       staticIP,
-		IsRouteDefault: isRouteDefault,
-		IsRouter:       isRouter,
-		Description:    description,
-		MD5Sum:         md5Sum,
-		Passphrase:     passphrase,
+		Id:               uuid.New().String(),
+		ClientName:       clientName,
+		StaticIP:         staticIP,
+		IsRouteDefault:   isRouteDefault,
+		IsRouter:         isRouter,
+		Description:      description,
+		MD5Sum:           md5Sum,
+		Passphrase:       passphrase,
+		OTPUserName:      &clientName,
+		StaticPassIsUsed: true,
+		StaticPass:       staticPass,
 	}
 
 	// Add routes to the client
@@ -557,7 +559,7 @@ func UpdateOTPDataByClientId(clientId string, OTPIsEnabled bool, StaticPassIsUse
 		client.OTPUserName = &otpUserName
 		client.OTPIsEnabled = OTPIsEnabled
 		client.StaticPassIsUsed = StaticPassIsUsed
-		client.MD5Sum = "2FA ADDED"
+		client.MD5Sum = "Auth ADDED"
 		_, err := o.Update(client, "OTPKey", "OTPIsEnabled", "StaticPassIsUsed", "StaticPass", "OTPUserName", "MD5Sum")
 		return err
 	}
@@ -575,15 +577,15 @@ func DisableOTPDataByClientId(clientId string) error {
 		client.OTPUserName = nil
 		client.OTPIsEnabled = false
 		client.StaticPassIsUsed = false
-		client.MD5Sum = "2FA DELETED"
+		client.MD5Sum = "Auth DELETED"
 		_, err := o.Update(client, "OTPIsEnabled", "OTPKey", "StaticPassIsUsed", "StaticPass", "OTPUserName", "MD5Sum")
 		return err
 	}
 	return err
 }
 
-// GetIs2FAEnabledByClientName retrieves Is2FAEnabled by ClientName
-func GetIs2FAEnabledByClientName(clientName string) (bool, error) {
+// GetIsAuthEnabledByClientName retrieves Is2FAEnabled by ClientName
+func GetIsAuthEnabledByClientName(clientName string) (bool, error) {
 	o := orm.NewOrm()
 	client := &ClientDetails{ClientName: clientName}
 	err := o.Read(client, "ClientName")

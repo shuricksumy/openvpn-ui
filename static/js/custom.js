@@ -170,27 +170,27 @@ $(function() {
     }
 });
 
-// FUNCTION EDIT CLIENT 2FA POPUP FORM WITH ROUTES
+// FUNCTION EDIT CLIENT AUTH POPUP FORM WITH ROUTES
 $(function() {
     $(document).ready(function () {
-        $("button#openModalEditClient2FA").on("click", function () {
+        $("button#openModalEditClientAuth").on("click", function () {
             var clientName = $(this).data("client-name");
-            showModalWithDataClient2FA(clientName);
+            showModalWithDataClientAuth(clientName);
         });
     }); $()
 
-    function showModalWithDataClient2FA(clientName) {
+    function showModalWithDataClientAuth(clientName) {
         // Make an AJAX request to get the data for the client
-        $.post("/clients/render_twofa_modal/", {"client-name": clientName}, function (data) {
+        $.post("/clients/render_auth_modal/", {"client-name": clientName}, function (data) {
             // Update the modal content with the retrieved data
-            $("#modal-2fa-client").html(data);
+            $("#modal-auth-client").html(data);
             // Show the modal
-            $("#editClient2FAModal").modal("show");
+            $("#editClientAuthModal").modal("show");
         }).fail(function () {
             alert("Error loading data for the client.");
         }).always(function() {
             // Show the modal
-            $("#editClient2FAModal").modal("show");
+            $("#editClientAuthModal").modal("show");
         });
     }
 });

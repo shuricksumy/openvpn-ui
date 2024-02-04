@@ -14,6 +14,8 @@ auth-nocache
 tls-client
 redirect-gateway def1
 verb 3
+auth-user-pass
+
 <ca>
 {{ .Ca }}
 </ca>

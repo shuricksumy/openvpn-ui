@@ -9,7 +9,7 @@ ARG TARGETVARIANT
 RUN apt-get update && apt-get install -y curl bzip2 jq git wget openvpn iptables openssl oathtool \
 wget ca-certificates iproute2 sqlite3 procps
 
-COPY ./build/assets/EasyRSA-3.1.7.tgz ~/EasyRSA-3.1.7.tgz
+COPY ./build/assets/EasyRSA-3.1.7.tgz /root/EasyRSA-3.1.7.tgz
 COPY ./build/assets/start.sh /opt/start.sh
 COPY ./build/assets/vars.template /opt/scripts/vars.template
 COPY ./build/assets/openvpn-install-v2.sh /opt/scripts/openvpn-install-v2.sh

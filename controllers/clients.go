@@ -88,12 +88,13 @@ func (c *ClientsController) NewClient() {
 	}
 
 	new_client.StaticIP = lib.StringToNilString(c.GetString("static_ip"))
+	new_client.StaticPass = lib.StringToNilString(c.GetString("new_static_pass"))
 
 	// // Specify the IDs of the routes to associate with the client
 	routeIDs := []string{}
 
 	if err := models.AddNewClient(new_client.ClientName, new_client.StaticIP, new_client.IsRouteDefault, new_client.IsRouter,
-		new_client.Description, new_client.MD5Sum, new_client.Passphrase, routeIDs); err == nil {
+		new_client.Description, new_client.MD5Sum, new_client.Passphrase, routeIDs, new_client.StaticPass); err == nil {
 		flash.Success("New client added successfully")
 		flash.Store(&c.Controller)
 	} else {
@@ -371,8 +372,8 @@ func (c *ClientsController) UpdateFiles() {
 	c.ShowClients()
 }
 
-// @router /clients/render_twofa_modal/ [post]
-func (c *ClientsController) Render2FAModal() {
+// @router /clients/render_auth_modal/ [post]
+func (c *ClientsController) RenderAuthModal() {
 	if !c.IsLogin {
 		c.Ctx.Redirect(302, c.LoginPath())
 		return
@@ -406,13 +407,13 @@ func (c *ClientsController) Render2FAModal() {
 	c.Data["IMG"] = img64
 	c.Data["OtpUserName"] = clientOTP.AccountName()
 
-	c.TplName = "modalClient2FA.html"
+	c.TplName = "modalClientAuth.html"
 	c.Render()
 	c.ShowClients()
 }
 
-// @router /clients/save_2fa_data/ [post]
-func (c *ClientsController) SaveClient2FAData() {
+// @router /clients/save_auth_data/ [post]
+func (c *ClientsController) SaveClientAuthData() {
 	if !c.IsLogin {
 		c.Ctx.Redirect(302, c.LoginPath())
 		return
@@ -430,14 +431,14 @@ func (c *ClientsController) SaveClient2FAData() {
 	err_upd_otp := models.UpdateOTPDataByClientId(clientID, OTPIsEnabled, StaticPassIsUsed, otpKey, staticPass, otpUserName)
 	if err_upd_otp != nil {
 		logs.Error(err_upd_otp)
-		flash.Error("Error while enabling 2FA for " + otpUserName)
+		flash.Error("Error while enabling Auth for " + otpUserName)
 		flash.Store(&c.Controller)
 		c.ShowClients()
 		return
 	}
 
 	// Redirect to the main page after successful file save.
-	flash.Warning("2FA enabled successfully to " + otpUserName + ". Don not forget apply configuration.")
+	flash.Warning("Auth enabled successfully to " + otpUserName + ". Don not forget apply configuration.")
 	flash.Store(&c.Controller)
 
 	c.TplName = "clients.html"
@@ -445,8 +446,8 @@ func (c *ClientsController) SaveClient2FAData() {
 
 }
 
-// @router /clients/delete_2fa_data/ [post]
-func (c *ClientsController) DeleteClient2FAData() {
+// @router /clients/delete_auth_data/ [post]
+func (c *ClientsController) DeleteClientAuthData() {
 	if !c.IsLogin {
 		c.Ctx.Redirect(302, c.LoginPath())
 		return
@@ -458,15 +459,15 @@ func (c *ClientsController) DeleteClient2FAData() {
 	clientID := c.GetString("client_id")
 	err_upd_otp := models.DisableOTPDataByClientId(clientID)
 	if err_upd_otp != nil {
-		logs.Error("Error while disabling 2FA for", err_upd_otp)
-		flash.Error("Error while disabling 2FA for " + otpUserName)
+		logs.Error("Error while disabling Auth for", err_upd_otp)
+		flash.Error("Error while disabling Auth for " + otpUserName)
 		flash.Store(&c.Controller)
 		c.ShowClients()
 		return
 	}
 
 	// Redirect to the main page after successful file save.
-	flash.Warning("2FA disabled successfully to " + otpUserName + ". Don not forget apply configuration.")
+	flash.Warning("Auth disabled successfully to " + otpUserName + ". Don not forget apply configuration.")
 	flash.Store(&c.Controller)
 
 	c.TplName = "clients.html"

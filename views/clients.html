@@ -41,14 +41,14 @@
     
             <div class="form-row">
     
-              <div class="form-group col-md-4">
+              <div class="form-group col-md-3">
                 <label for="client_name">Client Name*</label>
-                <input type="text" class="form-control" placeholder="Set route name" id="client_name" 
+                <input type="text" class="form-control" placeholder="Set user name" id="client_name"
                   name="client_name" data-mask-text required onfocusout="this.value = this.value.trim()">
-                <span class="help-block font75">The unique Client Name</span>
+                <span class="help-block font75">The unique User Name</span>
               </div>
               
-               <div class="form-group col-md-4">        
+               <div class="form-group col-md-3">
                   <label for="static_ip">Static IP</label>
                   <input class="form-control" name="static_ip" id="static_ip"
                                   data-inputmask="'alias': 'ip'" data-mask 
@@ -56,44 +56,59 @@
                                       placeholder="Enter Static IP" onfocusout="this.value = this.value.trim()">
                   <span class="help-block font75">Inernal VPN network Static IP</span>
                 </div>
-    
-                <div class="col-md-4">
-                  <div class="form-check" style="margin-top: 25px;">
-                    <input name="use_def_routing" id="use_def_routing" class="form-check-input" type="checkbox" value="true" 
-                        {{if .OvpnWizardData.DisableDefRouteForClientsByDefault}} checked {{else}} {{end}}>
-                    <label class="form-check-label" for="use_def_routing">
-                      Client uses VPN as Default Route
-                    </label>
-                  </div>
-  
-                  <div class="form-check">
-                    <input name="client_is_router" id="client_is_router" class="form-check-input" type="checkbox" value="true" 
-                        {{if .OvpnWizardData.ClientToClientConfigIsUsed}} checked {{else}} {{end}}>
-                    <label class="form-check-label" for="client_is_router">
-                      Client is Router with internal subnets
-                    </label>
-                  </div>
+
+                <div class="form-group col-md-6">
+                    <label for="description">Description</label>
+                    <input type="text" class="form-control" placeholder="Add description" id="description"
+                           name="description" onfocusout="this.value = this.value.trim()">
+                    <span class="help-block font75">Describe the client details</span>
                 </div>
 
-                <div class="form-group col-md-8">
-                      <label for="description">Description</label>
-                      <input type="text" class="form-control" placeholder="Add description" id="description" 
-                        name="description" onfocusout="this.value = this.value.trim()">
-                      <span class="help-block font75">Describe the route details</span>
-                </div>
-    
-                <div class="form-group col-md-4">
-                    <label for="cert_pass">Passphrase</label>
-                    <div class="input-group" id="show_hide_password">
-                      <input type="password" class="form-control" placeholder="Passphrase" id="cert_pass" 
-                        name="cert_pass" data-mask-text onfocusout="this.value = this.value.trim()">
+                <div class="form-group col-md-3">
+                    <label for="new_static_pass">User Password</label>
+                    <div class="input-group" id="show_hide_user_password">
+                      <input type="password" class="form-control" placeholder="Password" id="new_static_pass"
+                        name="new_static_pass" data-mask-text onfocusout="this.value = this.value.trim()">
                       <span class="input-group-btn">
+                        <button class="btn btn-default reveal" type="button">
+                          <i class="fa fa-eye-slash"></i></button>
+                      </span>
+                    </div>
+                    <span class="help-block font75">Static user password for auth</span>
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label for="cert_pass">Certificate Passphrase</label>
+                    <div class="input-group" id="show_hide_password">
+                        <input type="password" class="form-control" placeholder="Passphrase" id="cert_pass"
+                               name="cert_pass" data-mask-text onfocusout="this.value = this.value.trim()">
+                        <span class="input-group-btn">
                         <button class="btn btn-default reveal" type="button">
                           <i class="fa fa-eye-slash"></i></button>
                       </span>
                     </div>
                     <span class="help-block font75">Passphrase for the certificate</span>
                 </div>
+
+
+                <div class="col-md-4">
+                    <div class="form-check" style="margin-top: 25px;">
+                        <input name="use_def_routing" id="use_def_routing" class="form-check-input" type="checkbox" value="true"
+                               {{if .OvpnWizardData.DisableDefRouteForClientsByDefault}} checked {{else}} {{end}}>
+                        <label class="form-check-label" for="use_def_routing">
+                            Client uses VPN as Default Route
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input name="client_is_router" id="client_is_router" class="form-check-input" type="checkbox" value="true"
+                               {{if .OvpnWizardData.ClientToClientConfigIsUsed}} checked {{else}} {{end}}>
+                        <label class="form-check-label" for="client_is_router">
+                            Client is Router with internal subnets
+                        </label>
+                    </div>
+                </div>
+
             </div>
 
         </div>
@@ -128,7 +143,7 @@
               <th style="width:5%">Static IP</th>
               <th style="width:5%">Type</th>
               <th style="width:40%">Description</th>
-              <th style="width:5%">2FA</th>
+              <th style="width:5%">Auth</th>
               <th style="width:5%">Routes</th>
               <th class="last-sm" style="width:5%">File</th>
             </tr>
@@ -209,16 +224,18 @@
                     <div class=" sb">{{ .Description }}</div>
                   </td>
 
-                <!-- 2FA sell -->
+                <!-- Auth sell -->
                 <td class="textcenter my-centered">
                     <div  class="btn-group" role="group">
-                        <button id="openModalEditClient2FA" data-client-name="{{ .Id }}" data-target="#editClient2FAModal"
+                        <button id="openModalEditClientAuth" data-client-name="{{ .Id }}" data-target="#editClientAuthModal"
+                            {{ if .OTPIsEnabled  }}
+                                class="btn btn-sm btn-group-sm bg-gradient-olive btn60 font75">
+                            {{ else if .StaticPassIsUsed }}
                                 class="btn btn-sm btn-group-sm bg-gradient-lightblue btn60 font75">
-                            {{ if or .OTPIsEnabled .StaticPassIsUsed }}
-                                <i class="fa-solid fa-lock fa-lg" style="color:#10441c;"></i>
                             {{ else }}
-                                <i class="fa-solid fa-unlock fa-lg" style="color:#700000;"></i>
+                                class="btn btn-sm btn-group-sm bg-gradient-red btn60 font75">
                             {{ end }}
+                            <i class="fa-solid fa-unlock fa-lg"></i>
                         </button>
                     </div>
                 </td>
@@ -341,7 +358,7 @@
 <!-- Add an empty modal container -->
 <div id="modal-edit-client-details"></div>
 <div id="modal-edit-client-raw"></div>
-<div id="modal-2fa-client"></div>
+<div id="modal-auth-client"></div>
 
 {{end}}
 
@@ -398,5 +415,6 @@
 <script>
   $(document).ready(function() {
       togglePasswordVisibility("show_hide_password");
+      togglePasswordVisibility("show_hide_user_password");
   });
 </script>

@@ -365,16 +365,17 @@ func (c *CertificatesController) saveClientConfig(name string) (string, error) {
 		flash.Store(&c.Controller)
 	}
 
-	client, _ := models.GetClientDetailsByCertificate(name)
-	if client.OTPIsEnabled || client.StaticPassIsUsed {
-		err_patch := lib.PatchFileAppendBeforeLine(destPath, "<ca>", "auth-user-pass\n")
-		if err_patch != nil {
-			logs.Error(err_patch)
-			flash.Error(err_patch.Error())
-			flash.Store(&c.Controller)
-			return "", err_patch
-		}
-	}
+	// USE USER TEMPLATE
+	//client, _ := models.GetClientDetailsByCertificate(name)
+	//if client.OTPIsEnabled || client.StaticPassIsUsed {
+	//	err_patch := lib.PatchFileAppendBeforeLine(destPath, "<ca>", "auth-user-pass\n")
+	//	if err_patch != nil {
+	//		logs.Error(err_patch)
+	//		flash.Error(err_patch.Error())
+	//		flash.Store(&c.Controller)
+	//		return "", err_patch
+	//	}
+	//}
 
 	return destPath, nil
 }
