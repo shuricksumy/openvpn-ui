@@ -229,6 +229,9 @@ func StringToNilString(input string) *string {
 }
 
 func NilStringToString(input *string) string {
+	if input == nil {
+		return ""
+	}
 	pointerToString := &input
 	return **pointerToString
 }

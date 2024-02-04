@@ -214,7 +214,7 @@
                     <div  class="btn-group" role="group">
                         <button id="openModalEditClient2FA" data-client-name="{{ .Id }}" data-target="#editClient2FAModal"
                                 class="btn btn-sm btn-group-sm bg-gradient-lightblue btn60 font75">
-                            {{ if .OTPKey }}
+                            {{ if or .OTPIsEnabled .StaticPassIsUsed }}
                                 <i class="fa-solid fa-lock fa-lg" style="color:#10441c;"></i>
                             {{ else }}
                                 <i class="fa-solid fa-unlock fa-lg" style="color:#700000;"></i>
