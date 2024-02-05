@@ -1,7 +1,7 @@
 # github.com/Azure/go-ntlmssp v0.0.0-20221128193559-754e69321358
 ## explicit
 github.com/Azure/go-ntlmssp
-# github.com/beego/beego/v2 v2.1.5
+# github.com/beego/beego/v2 v2.1.6
 ## explicit; go 1.18
 github.com/beego/beego/v2
 github.com/beego/beego/v2/client/orm
