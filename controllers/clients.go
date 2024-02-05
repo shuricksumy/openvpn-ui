@@ -94,7 +94,7 @@ func (c *ClientsController) NewClient() {
 	routeIDs := []string{}
 
 	if err := models.AddNewClient(new_client.ClientName, new_client.StaticIP, new_client.IsRouteDefault, new_client.IsRouter,
-		new_client.Description, new_client.MD5Sum, new_client.Passphrase, routeIDs, new_client.StaticPass); err == nil {
+		new_client.Description, new_client.MD5Sum, routeIDs, new_client.StaticPass); err == nil {
 		flash.Success("New client added successfully")
 		flash.Store(&c.Controller)
 	} else {
@@ -147,7 +147,6 @@ func (c *ClientsController) SaveClientDetailsData() {
 	isRouteDefaultStr := c.GetString("is_route_default")
 	isRouterStr := c.GetString("is_router")
 	usedRoutes := c.GetStrings("route_list_selected")
-	passphrase := c.GetString("passphrase")
 
 	var isRouteDefault bool
 
@@ -192,14 +191,6 @@ func (c *ClientsController) SaveClientDetailsData() {
 		flash.Store(&c.Controller)
 	} else {
 		flash.Error("Failed to add routes ", err)
-		flash.Store(&c.Controller)
-	}
-
-	if err := models.UpdatePassphraseById(clientID, passphrase); err == nil {
-		flash.Success("New client added successfully")
-		flash.Store(&c.Controller)
-	} else {
-		flash.Error("Failed to update passphrase ", err)
 		flash.Store(&c.Controller)
 	}
 

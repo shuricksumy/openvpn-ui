@@ -1,39 +1,6 @@
 <!-- views/modal.tpl -->
 
-<!-- Initialize the plugin: -->
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#route_list_selected').multiselect({
-            //buttonWidth: '340px',
-            maxHeight: 250,
-            buttonClass: '',
-            numberDisplayed: 1,
-            buttonContainer: '<div class="btn-group w-100" />',
-            templates: {
-                button: '<button type="button" class="multiselect dropdown-toggle form-control right-icon-holder-rel font90" data-toggle="dropdown">\
-                    <span class="multiselect-selected-text"></span><i class="fa fa-angle-down" aria-hidden="true"></i></button>',
-                ul: '<div class="multiselect-container dropdown-menu form-control font90" style="height:250px"></div>',
-            },
-            includeSelectAllOption: true,
-            // inheritClass: true,
-            selectedClass: "active multiselect-active-item-fallback",
-        });
-
-        $(document).ready(function() {
-            toggleElementVisibility("is_router", "router_config");
-        });
-
-        options = {html:true, trigger:'hover'};
-        $('[data-toggle="popover"]').popover(options);
-
-    });
-
-    $(document).ready(function() {
-        $('.select2').select2();
-    });
-</script>
-
-<style> 
+<style>
 .mychekbox-md{
     margin-top: 10px;
 }
@@ -110,19 +77,18 @@ pre.mypre {
 
 
                             <div class="form-group col-sm-6">
-                                <label for="passphrase" class="form-check-label">Passphrase</label>
+                                <label for="passphrase" class="form-check-label">Certificate Passphrase</label>
                                 <i class="fa fa-info-circle" data-toggle="popover" data-html="true" data-placement="bottom"
                                     data-content=" Use this phrase to import Certificate on clien side"></i>
                                 <div class="input-group" id="show_hide_modal_password">
                                   <input type="password" class="form-control" placeholder="Passphrase" id="passphrase" 
                                     name="passphrase" data-mask-text onfocusout="this.value = this.value.trim()" 
-                                        value="{{$c.Passphrase}}" {{if $c.CertificateName}}readonly{{end}}>
+                                        value="{{$c.Passphrase}}" disabled="disabled">
                                   <span class="input-group-btn">
                                     <button class="btn btn-default reveal" type="button">
                                       <i class="fa fa-eye-slash"></i></button>
                                   </span>
                                 </div>
-                                <span class="help-block font75">Can be changed if user has no Certificates</span>
                             </div>
 
 
@@ -230,13 +196,12 @@ pre.mypre {
                             data-content="Set if client is router with own internal subnet."></i>
                         </label>
                     </div>
-                    <div id="router_config">
-                        <div class="modal-title"><b>The next routes are provided by this device:</b></div>
+                    <div>
                         <div class="card-body p-0">
                             <div class="table-responsive">
-                            <table class="table-sm table-bordered table-striped m-0">
+                            <table class="table-sm table-bordered m-0">
                                 <thead>
-                                <tr class="font75 textcenter">
+                                <tr class="font75 textcenter bg-gradient-lightblue">
 <!--                                    <th class="first-sm" style="width:5%">ID</th>-->
                                     <th class="first-sm" style="width:5%">ROUTER</th>
                                     <th style="width:5%">IP</th>
@@ -245,8 +210,9 @@ pre.mypre {
                                 </tr>
                                 </thead>
                                 <tbody>
+                                <tr class="routerData"><td colspan="4" class="bg-gray-light">The next routes are provided by this device:</td></tr>
                                     {{range  $val := $rp}}
-                                        <tr class="font75">
+                                        <tr class="font75 routerData">
 <!--                                            <td>{{$val.Name}}</td>-->
                                             <td>{{$val.RouterName}}</td>
                                             <td>{{$val.RouteIP}}</td>
@@ -254,28 +220,8 @@ pre.mypre {
                                             <td>{{$val.Description}}</td>
                                         </tr>
                                     {{end}}
-                                </tbody>
-                            </table>
-                            </div>
-                        </div>      
-                    </div>
-
-                    <br>
-                    <div class="modal-title"><b>The next routing was applied:</b></div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                          <table class="table-sm table-bordered table-striped m-0">
-                            <thead>
-                            <tr class="font75 textcenter">
-<!--                              <th class="first-sm" style="width:5%">ID</th>-->
-                              <th class="first-sm" style="width:5%">ROUTER</th>
-                              <th style="width:5%">IP</th>
-                              <th style="width:5%">MASK</th>
-                              <th class="last-sm" style="width:20%">DESCRIPTION</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                {{range  $val := $connectedRoutes}}
+                                <tr><td colspan="4" class="bg-gray-light">The next routing was applied:</td></tr>
+                                    {{range  $val := $connectedRoutes}}
                                     <tr class="font75">
 <!--                                        <td>{{$val.Name}}</td>-->
                                         <td>{{$val.RouterName}}</td>
@@ -340,5 +286,38 @@ pre.mypre {
 <script>
     $(document).ready(function() {
         togglePasswordVisibility("show_hide_modal_password");
+    });
+</script>
+
+        <!-- Initialize the plugin: -->
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#route_list_selected').multiselect({
+            //buttonWidth: '340px',
+            maxHeight: 250,
+            buttonClass: '',
+            numberDisplayed: 1,
+            buttonContainer: '<div class="btn-group w-100" />',
+            templates: {
+                button: '<button type="button" class="multiselect dropdown-toggle form-control right-icon-holder-rel font90" data-toggle="dropdown">\
+            <span class="multiselect-selected-text"></span><i class="fa fa-angle-down" aria-hidden="true"></i></button>',
+                ul: '<div class="multiselect-container dropdown-menu form-control font90" style="height:250px"></div>',
+            },
+            includeSelectAllOption: true,
+            // inheritClass: true,
+            selectedClass: "active multiselect-active-item-fallback",
+        });
+
+        $(document).ready(function() {
+            toggleElementsVisibilityByClass("is_router", "routerData");
+        });
+
+        options = {html:true, trigger:'hover'};
+        $('[data-toggle="popover"]').popover(options);
+
+    });
+
+    $(document).ready(function() {
+        $('.select2').select2();
     });
 </script>

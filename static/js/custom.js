@@ -385,6 +385,33 @@ function toggleElementVisibility(checkboxId, elementId) {
     });
 }
 
+function toggleElementsVisibilityByClass(checkboxId, className) {
+    var checkbox = $('#' + checkboxId);
+    var elements = $('.' + className);
+
+    // Initial state check and set
+    updateElementState();
+
+    // Event listener for checkbox changes
+    checkbox.on('change', function () {
+        updateElementState();
+    });
+
+    // Function to update element state based on checkbox
+    function updateElementState() {
+        var isChecked = checkbox.is(':checked');
+
+        // Show/hide each element based on the checkbox state
+        elements.each(function () {
+            $(this).prop('hidden', !isChecked);
+        });
+    }
+
+    // Initial hide based on checkbox state when the page loads
+    updateElementState();
+}
+
+
 function replaceElementVisibility(checkboxId, hideId, unhideId) {
     var checkbox = $('#' + checkboxId);
     var hideElement = $('#' + hideId);

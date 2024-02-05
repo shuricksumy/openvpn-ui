@@ -44,7 +44,7 @@ func (c *ClientDetails) Validate() error {
 }
 
 // AddNewClient creates a new client and adds it to the database
-func AddNewClient(clientName string, staticIP *string, isRouteDefault, isRouter bool, description, md5Sum string, passphrase string, routeIDs []string, staticPass *string) error {
+func AddNewClient(clientName string, staticIP *string, isRouteDefault, isRouter bool, description, md5Sum string, routeIDs []string, staticPass *string) error {
 	o := orm.NewOrm()
 
 	client := &ClientDetails{
@@ -55,7 +55,6 @@ func AddNewClient(clientName string, staticIP *string, isRouteDefault, isRouter 
 		IsRouter:         isRouter,
 		Description:      description,
 		MD5Sum:           md5Sum,
-		Passphrase:       passphrase,
 		OTPUserName:      &clientName,
 		StaticPassIsUsed: true,
 		StaticPass:       staticPass,
@@ -339,7 +338,7 @@ func GetClientsDetailsWithoutCertificate() ([]*ClientDetails, error) {
 }
 
 // UpdateClientCertificateById updates the CertificateName for a client by its ID
-func UpdateClientCertificateById(clientID string, certificateName *string) error {
+func UpdateClientCertificateById(clientID string, certificateName *string, passphrase string) error {
 	o := orm.NewOrm()
 
 	// Get the existing client
@@ -351,6 +350,8 @@ func UpdateClientCertificateById(clientID string, certificateName *string) error
 
 	// Update the CertificateName
 	client.CertificateName = certificateName
+	client.Passphrase = passphrase
+	client.MD5Sum = "NEW CERT CREATED"
 
 	// Save the updated client
 	_, err = o.Update(client)
@@ -389,6 +390,7 @@ func ClearClientCertificateById(clientID string) error {
 	// Clear the CertificateName
 	client.CertificateName = nil
 	client.CertificateStatus = nil
+	client.Passphrase = ""
 
 	// Save the updated client
 	_, err = o.Update(client)

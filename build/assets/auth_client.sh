@@ -51,11 +51,11 @@ else
 fi
 
 # Check if we have any code to verify
-if [ -z "$key" ] && [ -z "$static_pass" ]; then
-  echo "${DATE} (AUTH SCRIPT) OTP KEY and STATIC PASS are empty: nothing to verify" | tee -a $LOG_FILE
-  echo "${DATE} (AUTH SCRIPT) DISABLE AUTH AND ALLOW ACCESS FOR ${user}" | tee -a $LOG_FILE
-  exit 0
-fi
+#if [ -z "$key" ] && [ -z "$static_pass" ]; then
+#  echo "${DATE} (AUTH SCRIPT) OTP KEY and STATIC PASS are empty: nothing to verify" | tee -a $LOG_FILE
+#  echo "${DATE} (AUTH SCRIPT) DISABLE AUTH AND ALLOW ACCESS FOR ${user}" | tee -a $LOG_FILE
+#  exit 0
+#fi
 
 if [ "${static_pass}${code}" = "${pass}" ];
 then

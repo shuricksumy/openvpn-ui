@@ -131,6 +131,7 @@ func (c *CertificatesController) Post() {
 	flash := web.NewFlash()
 
 	clientId := c.GetString("client_name")
+	passphrase := c.GetString("cert_pass")
 
 	client, err_cl := models.GetClientDetailsById(clientId)
 	if err_cl != nil {
@@ -138,13 +139,13 @@ func (c *CertificatesController) Post() {
 		flash.Error(err_cl.Error())
 		flash.Store(&c.Controller)
 	} else {
-		if err := lib.CreateCertificate(client.ClientName, client.Passphrase); err != nil {
+		if err := lib.CreateCertificate(client.ClientName, passphrase); err != nil {
 			logs.Error(err)
 			flash.Error(err.Error())
 			flash.Store(&c.Controller)
 		} else {
 			clName := lib.StringToNilString(client.ClientName)
-			err_upd_cl := models.UpdateClientCertificateById(clientId, clName)
+			err_upd_cl := models.UpdateClientCertificateById(clientId, clName, passphrase)
 			if err_upd_cl != nil {
 				logs.Error(err_cl)
 				flash.Error(err_cl.Error())

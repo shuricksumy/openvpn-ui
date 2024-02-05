@@ -138,7 +138,7 @@
                                             Static password
                                         </label>
                                         <div class="input-group" id="show_hide_static_pass">
-                                            <input type="password" class="form-control" placeholder="Passphrase" id="static_pass"
+                                            <input type="password" class="form-control" placeholder="No Password" id="static_pass"
                                                    name="static_pass" data-mask-text onfocusout="this.value = this.value.trim()"
                                                    value="{{ if $c.StaticPass }}{{ $c.StaticPass }}{{ end }}" {{ if not .IsOTPNew }}readonly{{end}}>
                                             <span class="input-group-btn">
@@ -168,32 +168,54 @@
 
                                     <div class="form-group col-sm-12">
                                         {{ if .IsOTPNew }}
-                                        <span class="help-block font90">
+                                        <div class="help-block font90">
                                                 - Use Static Password: can be empty, but client app may not allow an empty password.<br>
                                                 - Use OTP Code: Scan QR code to generate new code each time of login <br>
                                                 - Use both: Password has next patterned [Static Password][OTP Code]
-                                        </span>
+                                        </div>
                                         {{ end }}
-                                        {{ if and $c.OTPIsEnabled  $c.StaticPassIsUsed }}
-                                        <span class="help-block">
-                                            <b>User name:</b> <span class="badge bg-olive btn250">{{$c.OTPUserName}}</span><br>
-                                            <b>Password:&nbsp;&nbsp;</b>
-                                                <span class="badge bg-olive btn150">[Static password]</span>
-                                                <span class="badge bg-olive btn100">[OTP code]</span>
-                                        </span>
-                                        {{ end }}
-                                        {{ if and $c.OTPIsEnabled (not $c.StaticPassIsUsed)  }}
-                                        <span class="help-block">
-                                            <b>User name:</b> <span class="badge bg-olive btn250">{{$c.OTPUserName}}</span><br>
-                                            <b>Password:&nbsp;&nbsp;</b> <span class="badge bg-olive btn250">[OTP code]</span>
-                                        </span>
-                                        {{ end }}
-                                        {{ if and (not $c.OTPIsEnabled) $c.StaticPassIsUsed  }}
-                                        <span class="help-block">
-                                            <b>User name:</b> <span class="badge bg-olive btn250">{{$c.OTPUserName}}</span><br>
-                                            <b>Password:&nbsp;&nbsp;</b> <span class="badge bg-olive btn250">[Static password]</span>
-                                        </span>
-                                        {{ end }}
+                                            {{ if and $c.OTPIsEnabled  $c.StaticPassIsUsed }}
+                                            <div class="help-block" style="text-align: center">
+                                                <span class="badge bg-lightblue btn120">Certificate:</span>
+                                                <span class="badge bg-olive btn200">
+                                                    {{ if eq $c.Passphrase "" }}Not protected{{else}}Protected by passphrase{{end}}
+                                                </span><br>
+
+                                                <span class="badge bg-lightblue btn120">User name:</span>
+                                                <span class="badge bg-olive btn200">{{$c.OTPUserName}}</span><br>
+
+                                                <span class="badge bg-lightblue btn120">Password:</span>
+                                                <span class="badge bg-olive btn200">[Static password][OTP code]</span>
+                                            </div>
+                                            {{ end }}
+
+                                            {{ if and $c.OTPIsEnabled (not $c.StaticPassIsUsed)  }}
+                                            <div class="help-block" style="text-align: center">
+                                                <span class="badge bg-lightblue btn120">Certificate:</span>
+                                                <span class="badge bg-olive btn200">
+                                                      {{ if eq $c.Passphrase "" }}Not protected{{else}}Protected by passphrase{{end}}</span><br>
+
+                                                <span class="badge bg-lightblue btn120">User name:</span>
+                                                <span class="badge bg-olive btn200">{{$c.OTPUserName}}</span><br>
+
+                                                <span class="badge bg-lightblue btn120">Password:&nbsp;&nbsp;</span>
+                                                <span class="badge bg-olive btn200">[OTP code]</span>
+                                            </div>
+                                            {{ end }}
+
+                                            {{ if and (not $c.OTPIsEnabled) $c.StaticPassIsUsed  }}
+                                            <div class="help-block" style="text-align: center">
+                                                <span class="badge bg-lightblue btn120">Certificate:</span>
+                                                <span class="badge bg-olive btn200">
+                                                     {{ if eq $c.Passphrase "" }}Not protected{{else}}Protected by passphrase{{end}}</span><br>
+
+                                                <span class="badge bg-lightblue btn120">User name:</span>
+                                                <span class="badge bg-olive btn200">{{$c.OTPUserName}}</span><br>
+
+                                                <span class="badge bg-lightblue btn120">Password:&nbsp;&nbsp;</span>
+                                                <span class="badge bg-olive btn200">[Static password]</span>
+                                            </div>
+                                            {{ end }}
                                     </div>
 
                                 </div>
