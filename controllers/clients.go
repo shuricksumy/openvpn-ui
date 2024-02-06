@@ -113,7 +113,7 @@ func (c *ClientsController) RenderModal() {
 	}
 
 	flash := web.NewFlash()
-	id := c.GetString("client-name")
+	id := c.GetString("client-id")
 
 	//get clientsDetails from file
 	clientsDetails, err_read := models.GetClientDetailsById(id)
@@ -204,17 +204,17 @@ func (c *ClientsController) RenderModalRaw() {
 		return
 	}
 	flash := web.NewFlash()
-	clientName := c.GetString("client-name")
+	clientID := c.GetString("client-id")
+	client, err_client := models.GetClientDetailsById(clientID)
 
 	// Load data from the client-name.txt file.
-	data, err := lib.RawReadClientFile(clientName)
+	data, err := lib.RawReadClientFile(client.ClientName)
 	if err != nil {
 		logs.Error(err)
-		flash.Error("Cannot read " + clientName + " file !")
+		flash.Error("Cannot read " + client.ClientName + " file !")
 		flash.Store(&c.Controller)
 	}
 
-	client, err_client := models.GetClientDetailsByCertificate(clientName)
 	if client != nil {
 		providedRoutes, _ := models.GetAllRoutesProvided(client.Id)
 		c.Data["RouterProvideRouts"] = &providedRoutes
@@ -370,7 +370,7 @@ func (c *ClientsController) RenderAuthModal() {
 		return
 	}
 	flash := web.NewFlash()
-	id := c.GetString("client-name")
+	id := c.GetString("client-id")
 
 	clientOTP, key, isOTPNew, err_otp := lib.Get2FA(id)
 	if err_otp != nil {
@@ -462,5 +462,29 @@ func (c *ClientsController) DeleteClientAuthData() {
 	flash.Store(&c.Controller)
 
 	c.TplName = "clients.html"
+	c.ShowClients()
+}
+
+// @router /clients/render_routing/ [post]
+func (c *ClientsController) RenderModalClientRouting() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+	flash := web.NewFlash()
+	id := c.GetString("client-id")
+
+	//get clientsDetails from file
+	clientsDetails, err_read := models.GetClientDetailsById(id)
+	if err_read != nil {
+		logs.Error(err_read)
+		flash.Error("ERROR WHILE READING CLIENTS FROM FILE !")
+		flash.Store(&c.Controller)
+	}
+
+	c.Data["Client"] = &clientsDetails
+
+	c.TplName = "modalClientRouting.html"
+	c.Render()
 	c.ShowClients()
 }

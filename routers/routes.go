@@ -23,8 +23,8 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:RoutesController"],
 			web.ControllerComments{
 				Method:           "GetRouteDetails",
-				Router:           `/routes/get/:key`,
-				AllowHTTPMethods: []string{"get"},
+				Router:           `/routes/get`,
+				AllowHTTPMethods: []string{"post"},
 				Params:           nil})
 
 	web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:RoutesController"] =

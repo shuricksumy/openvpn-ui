@@ -15,6 +15,7 @@ type Settings struct {
 	MINetwork    string    `orm:"size(64);unique" form:"MINetwork" valid:"Required;"`
 	OVConfigPath string    `orm:"size(64);unique" form:"OVConfigPath" valid:"Required;"`
 	ServerName   string    `orm:"size(64);unique" form:"ServerName" valid:"Required;"`
+	SiteName     string    `orm:"size(64);unique" form:"SiteName" valid:"Required;"`
 	Created      time.Time `orm:"auto_now_add;type(datetime)"`
 	Updated      time.Time `orm:"auto_now;type(datetime)"`
 }

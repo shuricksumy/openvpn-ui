@@ -77,52 +77,48 @@
 </div>
 
 <script type="text/javascript">
-    $(function () {
-        $('[data-mask]').inputmask();
+$(document).ready(function () {
+
+    $('[data-mask]').inputmask();
+
+    $('#updateRoute').click(function(){
+      validateForm();
     });
+
+    $('#form-edit-route').validate({ // initialize the plugin
+        rules: {
+            route_id: {
+                required: true,
+            },
+            route_ip: {
+                required: true,
+            },
+            route_mask: {
+                required: true,
+            },
+        },
+        messages: {
+            route_id: {
+            required: "Automaticaly generated",
+            email: "Please enter a vaild email address"
+            },
+            route_ip: "Please set IP route",
+            route_mask: "Please set IP Mask route",
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+            error.addClass('invalid-feedback');
+            element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
+        }
+    });
+
+    commonFunctionConfirmPopUp();
+
+});
 </script>
-
-<script>
-    $(document).ready(function () {
-    
-        $('#updateRoute').click(function(){
-          validateForm();   
-        });
-        
-        $('#form-edit-route').validate({ // initialize the plugin
-            rules: {
-                route_id: {
-                    required: true,
-                },
-                route_ip: {
-                    required: true,
-                },
-                route_mask: {
-                    required: true,
-                },
-            },
-            messages: {
-                route_id: {
-                required: "Automaticaly generated",
-                email: "Please enter a vaild email address"
-                },
-                route_ip: "Please set IP route",
-                route_mask: "Please set IP Mask route",
-            },
-            errorElement: 'span',
-            errorPlacement: function (error, element) {
-                error.addClass('invalid-feedback');
-                element.closest('.form-group').append(error);
-            },
-            highlight: function (element, errorClass, validClass) {
-                $(element).addClass('is-invalid');
-            },
-            unhighlight: function (element, errorClass, validClass) {
-                $(element).removeClass('is-invalid');
-            }
-        });
-
-        commonFunctionConfirmPopUp();
-
-  });
-  </script>

@@ -1,0 +1,79 @@
+<!-- views/modal.tpl -->
+{{$c := .Client}}
+<div class="modal fade" id="modalClientRouting" role="dialog">
+                <div class="modal-body">
+                    <div id="popup-{{ .Id }}" role="dialog">
+                        <div class="modal-dialog" style="max-width: 450px;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Routing details for "{{ $c.ClientName }}"</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-form-type="" data-dashlane-label="true">
+                                        <span aria-hidden="false">×</span>
+                                    </button>
+                                </div>
+
+                                <div class="modal-body font90">
+
+                                    {{$connectedRoutes := GetConnectedRoutes $c.Id}}
+                                    {{$disConnectedRoutes := GetDisConnectedRoutes $c.Id}}
+
+
+                                    <div class="float-container">
+                                        <div><b>Selected:</b></div>
+                                        <div class="float-child bg-gradient-lightblue" style="text-align: center">
+                                            <div class="popup-table-header font90">TO IP:</div>
+                                        </div>
+                                        <div class="float-child bg-gradient-lightblue" style="text-align: center">
+                                            <div class="popup-table-header font90">VIA DEVICE:</div>
+                                        </div>
+
+                                        {{ if .IsRouteDefault }}
+                                        <div class="float-child">
+                                            <span class="btn btn-xs btn-group-xs     bg-olive btn1000">0.0.0.0</span>
+                                        </div>
+                                        <div class="float-child">
+                                            <span class="btn btn-xs btn-group-xs bg-olive btn1000">VPN Server</span>
+                                        </div>
+                                        {{ end }}
+
+                                        {{range $val := $connectedRoutes}}
+                                        <div class="float-child">
+                                            <span class="btn btn-xs btn-group-xs bg-olive btn1000">{{ $val.RouteIP }}</span>
+                                        </div>
+                                        <div class="float-child">
+                                            <span class="btn btn-xs btn-group-xs bg-olive btn1000">{{ $val.RouterName }}</span>
+                                        </div>
+                                        {{end}}
+                                    </div>
+
+                                    <div class="float-container">
+                                        <div><b>&nbsp;<br>Not selected:</b></div>
+                                        <div class="float-child bg-gradient-lightblue" style="text-align: center">
+                                            <div class="popup-table-header font90">TO IP:</div>
+                                        </div>
+                                        <div class="float-child bg-gradient-lightblue" style="text-align: center">
+                                            <div class="popup-table-header font90">VIA DEVICE:</div>
+                                        </div>
+
+                                        {{range  $val := $disConnectedRoutes}}
+                                        <div class="float-child">
+                                            <span class="btn btn-xs btn-group-xs bg-gray-light btn1000">{{ $val.RouteIP }}</span>
+                                        </div>
+                                        <div class="float-child">
+                                            <span class="btn btn-xs btn-group-xs bg-gray-light btn1000">{{ $val.RouterName }}</span>
+                                        </div>
+                                        {{end}}
+                                    </div>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <!-- Copy button -->
+                                    <button class="btn btn-sm bg-gradient-lightblue btn80" data-dismiss="modal">Close</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    <!-- modal-body -->
+</div>

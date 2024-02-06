@@ -202,7 +202,6 @@ pre.mypre {
                             <table class="table-sm table-bordered m-0">
                                 <thead>
                                 <tr class="font75 textcenter bg-gradient-lightblue">
-<!--                                    <th class="first-sm" style="width:5%">ID</th>-->
                                     <th class="first-sm" style="width:5%">ROUTER</th>
                                     <th style="width:5%">IP</th>
                                     <th style="width:5%">MASK</th>
@@ -213,7 +212,6 @@ pre.mypre {
                                 <tr class="routerData"><td colspan="4" class="bg-gray-light">The next routes are provided by this device:</td></tr>
                                     {{range  $val := $rp}}
                                         <tr class="font75 routerData">
-<!--                                            <td>{{$val.Name}}</td>-->
                                             <td>{{$val.RouterName}}</td>
                                             <td>{{$val.RouteIP}}</td>
                                             <td>{{$val.RouteMask}}</td>
@@ -223,7 +221,6 @@ pre.mypre {
                                 <tr><td colspan="4" class="bg-gray-light">The next routing was applied:</td></tr>
                                     {{range  $val := $connectedRoutes}}
                                     <tr class="font75">
-<!--                                        <td>{{$val.Name}}</td>-->
                                         <td>{{$val.RouterName}}</td>
                                         <td>{{$val.RouteIP}}</td>
                                         <td>{{$val.RouteMask}}</td>
@@ -260,38 +257,28 @@ pre.mypre {
     <div class="cv-spinner">
       <span class="spinner"></span>
     </div>
-  </div>
+</div>
 
 <script type="text/javascript">
-    $(function () {
+    $(document).ready(function() {
+        togglePasswordVisibility("show_hide_modal_password");
+        commonFunctionConfirmPopUp();
+
+
         $('[data-mask]').inputmask();
 
         $('[data-mask-text]').inputmask({
-          mask: "*",
-          greedy: false,
-          repeat: 35,
-          definitions: {
-            '*': {
-              validator: "[0-9A-Za-z_-]",
+            mask: "*",
+            greedy: false,
+            repeat: 35,
+            definitions: {
+                '*': {
+                    validator: "[0-9A-Za-z_-]",
+                }
             }
-          }
         });
-    });
 
-    $(function() {
-        commonFunctionConfirmPopUp();
-    });
-</script>
 
-<script>
-    $(document).ready(function() {
-        togglePasswordVisibility("show_hide_modal_password");
-    });
-</script>
-
-        <!-- Initialize the plugin: -->
-<script type="text/javascript">
-    $(document).ready(function() {
         $('#route_list_selected').multiselect({
             //buttonWidth: '340px',
             maxHeight: 250,
@@ -300,7 +287,7 @@ pre.mypre {
             buttonContainer: '<div class="btn-group w-100" />',
             templates: {
                 button: '<button type="button" class="multiselect dropdown-toggle form-control right-icon-holder-rel font90" data-toggle="dropdown">\
-            <span class="multiselect-selected-text"></span><i class="fa fa-angle-down" aria-hidden="true"></i></button>',
+                <span class="multiselect-selected-text"></span><i class="fa fa-angle-down" aria-hidden="true"></i></button>',
                 ul: '<div class="multiselect-container dropdown-menu form-control font90" style="height:250px"></div>',
             },
             includeSelectAllOption: true,
@@ -315,9 +302,7 @@ pre.mypre {
         options = {html:true, trigger:'hover'};
         $('[data-toggle="popover"]').popover(options);
 
-    });
-
-    $(document).ready(function() {
         $('.select2').select2();
+
     });
 </script>

@@ -27,9 +27,9 @@
           value="{{ .Settings.MIAddress }}"  onfocusout="this.value = this.value.trim()">
       </div>
 
-      <div class="form-group">
+      <div class="form-group" hidden>
         <label for="MINetwork">Management interface network</label>
-        <input type="text" class="form-control" id="MINetwork" name="MINetwork" placeholder="Enter network name" disabled hidden
+        <input type="text" class="form-control" id="MINetwork" name="MINetwork" placeholder="Enter network name" disabled
           value="{{ .Settings.MINetwork }}">
       </div>
 
@@ -37,6 +37,12 @@
         <label for="ServerName">Server Name</label>
         <input type="text" class="form-control" id="ServerName" name="ServerName" placeholder="Enter server Name"
           value="{{ .Settings.ServerName }}">
+      </div>
+
+      <div class="form-group">
+        <label for="SiteName">Site Name (OTP issuer)</label>
+        <input type="text" class="form-control" id="SiteName" name="SiteName" placeholder="Enter Site Name"
+               value="{{ .Settings.SiteName }}">
       </div>
 
       <div class="form-group">
@@ -66,5 +72,7 @@
 </div>
 
 <script>
-  customConfirmPopUpByIdForm('save_settings','form-settings',"Are you sure? This has huge impact.");
+  $(document).ready(function() {
+    customConfirmPopUpByIdForm('save_settings', 'form-settings', "Are you sure? This has huge impact.");
+  });
 </script>

@@ -87,6 +87,7 @@ func CreateDefaultSettings() (*Settings, error) {
 		MINetwork:    miNetwork,
 		ServerName:   serverName,
 		OVConfigPath: ovConfigPath,
+		SiteName:     "example.com",
 	}
 
 	// Check if the settings already exist

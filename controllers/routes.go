@@ -117,7 +117,7 @@ func (c *RoutesController) GetRouteDetails() {
 	}
 
 	flash := web.NewFlash()
-	routeID := c.GetString(":key")
+	routeID := c.GetString("route-id")
 	route, _ := models.GetRouteDetailsByID(routeID)
 
 	if route == nil {

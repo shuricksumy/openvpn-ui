@@ -1,9 +1,6 @@
 <!-- views/modal.tpl -->
 
 <!-- Initialize the plugin: -->
-<script type="text/javascript">
-
-</script>
 <style>
     .copy-success {
         border: 3px solid cornflowerblue; /* Set a 2px green border for success */
@@ -249,30 +246,28 @@
 </div>
 
 <script type="text/javascript">
-    $(function () {
-        $('[data-mask]').inputmask();
-
-        $('[data-mask-text]').inputmask({
-          mask: "*",
-          greedy: false,
-          repeat: 35,
-          definitions: {
-            '*': {
-              validator: "[0-9A-Za-z_-]",
-            }
-          }
-        });
-    });
-
-    customConfirmPopUpByIdForm('off_auth','editFormAuth',"Are you sure? This has a huge impact on client.");
-    customConfirmPopUpByIdForm('on_auth','editFormAuth',"Are you sure? This has a huge impact on client.");
-</script>
-
-<script>
     $(document).ready(function() {
         togglePasswordVisibility("show_hide_static_pass");
         replaceElementVisibility("otp_is_enabled","qr-image-mock","qr-image")
         disableElementOnCheckboxUncheck("static_pass_is_enabled", "static_pass")
         disableElementOnAllCheckboxesUncheck(['otp_is_enabled', 'static_pass_is_enabled'], 'on_auth');
+        customConfirmPopUpByIdForm('off_auth','editFormAuth',"Are you sure? This has a huge impact on client.");
+        customConfirmPopUpByIdForm('on_auth','editFormAuth',"Are you sure? This has a huge impact on client.");
+
+        $(function () {
+            $('[data-mask]').inputmask();
+
+            $('[data-mask-text]').inputmask({
+                mask: "*",
+                greedy: false,
+                repeat: 35,
+                definitions: {
+                    '*': {
+                        validator: "[0-9A-Za-z_-]",
+                    }
+                }
+            });
+        });
+
     });
 </script>

@@ -1,0 +1,24 @@
+<!-- views/modal.tpl -->
+
+<!-- Initialize the plugin: -->
+
+{{$c := .Client}}
+<div class="modal fade" id="modalClientRouting" role="dialog">
+    <div class="modal-dialog custom-modal-dialog-form"> <!-- Apply custom CSS style for the modal width -->
+        <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Routing for user<strong> {{ $c.ClientName }}</strong></font></h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="modal-body">
+
+                </div> <!-- modal-body -->
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-default btn100" data-dismiss="modal">Close</button>
+                </div>
+        </div>
+    </div>
+</div>

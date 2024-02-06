@@ -10,6 +10,8 @@ import (
 )
 
 func Get2FA(clientID string) (*otp.Key, *string, bool, error) {
+	settings := models.Settings{Profile: "default"}
+	settings.Read("Profile")
 
 	client, err_get_client := models.GetClientDetailsById(clientID)
 	var userOTP *otp.Key
@@ -31,7 +33,7 @@ func Get2FA(clientID string) (*otp.Key, *string, bool, error) {
 		}
 
 		userOTP, _ = totp.Generate(totp.GenerateOpts{
-			Issuer:      "Example.com",
+			Issuer:      settings.SiteName,
 			AccountName: NilStringToString(client.OTPUserName),
 			Algorithm:   otp.AlgorithmSHA256,
 			Secret:      hashInBytes,
@@ -43,7 +45,7 @@ func Get2FA(clientID string) (*otp.Key, *string, bool, error) {
 		hashInBytes, key := GenerateHashInByte()
 
 		userOTP, _ = totp.Generate(totp.GenerateOpts{
-			Issuer:      "Example.com",
+			Issuer:      settings.SiteName,
 			AccountName: client.ClientName,
 			Algorithm:   otp.AlgorithmSHA256,
 			Secret:      hashInBytes,

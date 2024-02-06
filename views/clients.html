@@ -153,7 +153,7 @@
                       {{if not $c.CertificateName}} 
                         {{ $col = "btn-default btn-sm btn-group-sm btn-block disabled" }}
                       {{end}}
-                       <button id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .ClientName }}" 
+                       <button id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-id="{{ .Id }}"
                         class="btn {{ $col }} right-icon-holder font75" 
                         title="{{ $comment }}">{{ .ClientName }}<i class="{{ $icon }}"></i>
                       </button>
@@ -213,7 +213,7 @@
                 <!-- Auth sell -->
                 <td class="textcenter my-centered">
                     <div  class="btn-group" role="group">
-                        <button id="openModalEditClientAuth" data-client-name="{{ .Id }}" data-target="#editClientAuthModal"
+                        <button id="openModalEditClientAuth" data-client-id="{{ .Id }}" data-target="#editClientAuthModal"
                             {{ if .OTPIsEnabled  }}
                                 class="btn btn-sm btn-group-sm bg-gradient-olive btn60 font75">
                             {{ else if .StaticPassIsUsed }}
@@ -229,8 +229,9 @@
                   <!-- 7 sell -->
                   <td class="textcenter my-centered">
                       <div  class="btn-group" role="group">
-                          <button type="button" class="btn btn-sm btn-group-sm bg-gradient-lightblue btn60 font75"
-                            data-toggle="modal" data-target="#popup-{{ .Id }}"><i class="fa-solid fa-shuffle fa-lg"></i>
+                          <button type="button" id="openModalClientRouting" data-target="#modalClientRouting" data-client-id="{{ .Id }}"
+                                  class="btn btn-sm btn-group-sm bg-gradient-lightblue btn60 font75" title="Routing">
+                              <i class="fa-solid fa-shuffle fa-lg"></i>
                           </button>
                         </div>
                   </td>
@@ -238,85 +239,12 @@
                   <!-- 8 sell -->
                   <td class="textcenter my-centered">
                     <div class="btn-group" role="group">
-                        <button  id="openModalEditClientDetails" data-target="#editClientDetailsModal" data-client-name="{{ .Id }}"
+                        <button  id="openModalEditClientDetails" data-target="#editClientDetailsModal" data-client-id="{{ .Id }}"
                         class="btn btn-sm btn-group-sm bg-gradient-lightblue btn60 font75" title="Edit">Edit</button>
                     </div>
                   </td>
                   
                 </tr>
-
-            <div id="popup-{{ .Id }}" class="modal fade" role="dialog">
-                <div class="modal-dialog" style="max-width: 450px;">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Routing details for "{{ .ClientName }}"</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-form-type="" data-dashlane-label="true">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-
-                        <div class="modal-body font90">
-
-                                        {{$connectedRoutes := GetConnectedRoutes $c.Id}}
-                                        {{$disConnectedRoutes := GetDisConnectedRoutes $c.Id}}
-
-
-                                        <div class="float-container">
-                                            <div><b>Selected:</b></div>
-                                            <div class="float-child bg-lightblue" style="text-align: center">
-                                                <div class="popup-table-header">To IP:</div>
-                                            </div>
-                                            <div class="float-child bg-lightblue" style="text-align: center">
-                                                <div class="popup-table-header">Via Device:</div>
-                                            </div>
-
-                                            {{ if .IsRouteDefault }}
-                                                <div class="float-child">
-                                                    <span class="btn btn-xs btn-group-xs     bg-olive btn1000">0.0.0.0</span>
-                                                </div>
-                                                <div class="float-child">
-                                                    <span class="btn btn-xs btn-group-xs bg-olive btn1000">VPN Server</span>
-                                                </div>
-                                            {{ end }}
-
-                                            {{range $val := $connectedRoutes}}
-                                                    <div class="float-child">
-                                                        <span class="btn btn-xs btn-group-xs bg-olive btn1000">{{ $val.RouteIP }}</span>
-                                                    </div>
-                                                    <div class="float-child">
-                                                        <span class="btn btn-xs btn-group-xs bg-olive btn1000">{{ $val.RouterName }}</span>
-                                                    </div>
-                                            {{end}}
-                                        </div>
-
-                                        <div class="float-container">
-                                            <div><b>&nbsp;<br>Not selected:</b></div>
-                                            <div class="float-child bg-lightblue" style="text-align: center">
-                                                <div class="popup-table-header">To IP:</div>
-                                            </div>
-                                            <div class="float-child bg-lightblue" style="text-align: center">
-                                                <div class="popup-table-header">Via Device:</div>
-                                            </div>
-
-                                            {{range  $val := $disConnectedRoutes}}
-                                                <div class="float-child">
-                                                    <span class="btn btn-xs btn-group-xs bg-gray-light btn1000">{{ $val.RouteIP }}</span>
-                                                </div>
-                                                <div class="float-child">
-                                                    <span class="btn btn-xs btn-group-xs bg-gray-light btn1000">{{ $val.RouterName }}</span>
-                                                </div>
-                                            {{end}}
-                                        </div>
-                        </div>
-
-                        <div class="modal-footer">
-                            <!-- Copy button -->
-                            <button class="btn btn-sm bg-gradient-lightblue btn80" data-dismiss="modal">Close</button>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
 
             {{end}}
             </tbody>
@@ -332,19 +260,15 @@
 
 <!-- </div> -->
 
-<script type="text/javascript">
-  var actionURL="/clients/save_client_data" 
-</script>
-
-<script type="text/javascript">
-  options = {html:true, trigger:'focus'};
-  $('[data-toggle="popover"]').popover(options);
-</script>
-
 <!-- Add an empty modal container -->
 <div id="modal-edit-client-details"></div>
-<div id="modal-edit-client-raw"></div>
+<div id="modal-edit-client-raw">
+    <script>
+        var actionURL="/clients/save_client_data"
+    </script>
+</div>
 <div id="modal-auth-client"></div>
+<div id="modal-client-routing"></div>
 
 {{end}}
 
@@ -355,26 +279,12 @@
 </div>
 
 <script type="text/javascript">
-  var actionURL="/certificates/save_client_data" 
-  
-  $(function () {
-        $('[data-mask]').inputmask();
+$(document).ready(function () {
 
-        $('[data-mask-text]').inputmask({
-          mask: "*",
-          greedy: false,
-          repeat: 35,
-          definitions: {
-            '*': {
-              validator: "[0-9A-Za-z_-]",
-            }
-          }
-        });
-  });
+    options = {html:true, trigger:'focus'};
+    $('[data-toggle="popover"]').popover(options);
 
-
-  $(document).ready(function () {
-      $('#form-create-client').validate({ // initialize the plugin
+    $('#form-create-client').validate({ // initialize the plugin
         rules: {
             client_name: {
                 required: true,
@@ -394,12 +304,80 @@
         unhighlight: function (element, errorClass, validClass) {
           $(element).removeClass('is-invalid');
         }
-  });
-});
-</script>
+    });
 
-<script>
-  $(document).ready(function() {
-      togglePasswordVisibility("show_hide_user_password");
-  });
+    $(function () {
+        $('[data-mask]').inputmask();
+
+        $('[data-mask-text]').inputmask({
+            mask: "*",
+            greedy: false,
+            repeat: 35,
+            definitions: {
+                '*': {
+                    validator: "[0-9A-Za-z_-]",
+                }
+            }
+        });
+    });
+
+    togglePasswordVisibility("show_hide_user_password");
+
+    $(function() {
+      $(document).ready(function () {
+          $("button#openModalClientRouting").on("click", function () {
+              var clientID = $(this).data("client-id");
+              showModalWithData(
+                  "/clients/render_routing/",
+                  {"client-id": clientID},
+                  "#modal-client-routing",
+                  "#modalClientRouting"
+              );
+          });
+      });
+    });
+
+    $(function() {
+      $(document).ready(function () {
+          $("button#openModalEditClientRaw").on("click", function () {
+              var clientID = $(this).data("client-id");
+              showModalWithData(
+                  "/clients/render_modal_raw",
+                  {"client-id": clientID},
+                  "#modal-edit-client-raw",
+                  "#editClientModalRaw"
+              );
+          });
+      });
+    });
+
+    $(function() {
+      $(document).ready(function () {
+          $("button#openModalEditClientDetails").on("click", function () {
+              var clientID = $(this).data("client-id");
+              showModalWithData(
+                  "/clients/render_modal",
+                  {"client-id": clientID},
+                  "#modal-edit-client-details",
+                  "#editClientDetailsModal"
+              );
+          });
+      });
+    });
+
+    $(function() {
+      $(document).ready(function () {
+          $("button#openModalEditClientAuth").on("click", function () {
+              var clientID = $(this).data("client-id");
+              showModalWithData(
+                  "/clients/render_auth_modal",
+                  {"client-id": clientID},
+                  "#modal-auth-client",
+                  "#editClientAuthModal"
+              );
+          });
+      });
+    });
+
+});
 </script>

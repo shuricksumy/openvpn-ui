@@ -42,15 +42,6 @@
    </form>
 </div>
 
-<script>
-  editTheme = ""
-  if (localStorage.getItem('theme') != null ) {
-    editTheme = "_midnight"
-  };
-  createEditor("Logs", "600px", "clouds" + editTheme, "space", false)
-</script>
-
-
 <!-- /.card -->
 {{end}}
 
@@ -59,3 +50,11 @@
     <span class="spinner"></span>
   </div>
 </div>
+
+<script>
+  editTheme = ""
+  if (localStorage.getItem('theme') != null ) {
+    editTheme = "_midnight"
+  };
+  createEditor("Logs", "600px", "clouds" + editTheme, "space", false)
+</script>

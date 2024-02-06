@@ -5,11 +5,6 @@
     margin-bottom: 5px;
 }
 </style>
-<script type="text/javascript">
-    $(document).ready(function() {
-        document.getElementById("editForm").action = actionURL;
-    });
-</script>
 
 {{$c := .Client}}
 {{$MD5 := .MD5}} 
@@ -87,11 +82,15 @@
     </div>
   </div>
 
-<script>
-    editTheme = ""
-    if (localStorage.getItem('theme') != null ) {
-      editTheme = "_midnight"
-    };
-    createEditor("client_data", "300px", "clouds" + editTheme, "space", false)
-  </script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        document.getElementById("editForm").action = actionURL;
+
+        editTheme = ""
+        if (localStorage.getItem('theme') != null ) {
+            editTheme = "_midnight"
+        };
+        createEditor("client_data", "300px", "clouds" + editTheme, "space", false)
+    });
+</script>
   
