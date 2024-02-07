@@ -37,6 +37,15 @@ pre.mypre {
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
+            {{ if .CertHasIssue }}
+                <div class="form-group col-sm-12">
+                        <a class="btn bg-gradient-red btn1000" style="font-size: medium;font-weight: bold !important;"
+                           href="{{urlfor "ClientsController.ResetCertificate" ":key" $c.Id}}">
+                            Certificate is not found. Press here to reset certificate settings!
+                        </a>
+                </div>
+            {{else}}
+
                 <!-- FORM START -->
                 <form id="editForm" action="{{urlfor "ClientsController.SaveClientDetailsData"}}" method="post">
                     
@@ -248,6 +257,7 @@ pre.mypre {
                     </div>
 
                 </form>
+            {{end}}
             </div>
         </div>
     </div>

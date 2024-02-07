@@ -342,3 +342,19 @@ func RenewCertificate(name string, serial string) error {
 	}
 	return nil
 }
+
+func ReadCertByName(certName string, path string) (*Cert, error) {
+
+	certs, err_read_all := ReadCerts(path)
+	if err_read_all != nil {
+		logs.Error(err_read_all)
+		return nil, err_read_all
+	}
+
+	for _, c := range certs {
+		if c.Details.CN == certName {
+			return c, nil
+		}
+	}
+	return nil, errors.New(certName + " is not found !")
+}

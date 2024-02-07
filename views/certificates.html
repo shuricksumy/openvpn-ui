@@ -109,8 +109,8 @@
 
             {{$MD5 := .MD5}}  
             {{range $c := .certificates}}
+                {{ $client := GetClientDetailsByName .Details.CN }}
               <tr>
-
                   <!-- 1 sell -->
                   {{if eq .EntryType "V"}}
                   <td class="first-sm">
@@ -198,14 +198,16 @@
                           {{ end }}
                   {{if eq .EntryType "V"}}
                     <td class="textcenter last-sm">
-                      <button  id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .Details.CN }}" 
+                      <button  id="openModalEditClientRaw" data-target="#editClientModalRaw"
+                               data-client-id="{{ if $client }}{{ $client.Id }}{{ else }}no-user-in-db{{end}}"
                         class="btn {{ $col }} btn80 but-center right-icon-holder font75" title="{{ $comment }}">Edit
                       {{if not $isValid }} <i class='fa fa-warning fa-lg'></i> {{end}}
                       </button>
                     </td>
                   {{else}}
                     <td class="textcenter last-sm">
-                      <button  id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-name="{{ .Details.CN }}"  
+                      <button  id="openModalEditClientRaw" data-target="#editClientModalRaw"
+                               data-client-id="{{ if $client }}{{ $client.Id }}{{ else }}no-user-in-db{{end}}"
                         class="btn btn-default btn-sm btn-group-sm edit-button btn80 but-center right-icon-holder font75" title="{{ $comment }}">Edit
                         {{if not $isValid }} <i class='fa fa-warning fa-lg'></i> {{end}}
                       </button>
@@ -226,12 +228,34 @@
                           </div>
 
                           <div class="modal-body font90">
-                             <span class="param-name"><b>Name:</b></span><span class="param-value"> {{ .Details.CN }}</span><br>
-                             <span class="param-name"><b>Type:</b></span><span class="param-value"> {{ .EntryType }}</span><br>
-                             <span class="param-name"><b>Status:</b></span><span class="param-value">{{if eq .EntryType "V"}}  Active {{else if eq .EntryType "R"}} Revoked {{else}} Unknown {{end}}</span><br>
-                             <span class="param-name"><b>Serial:</b></span><span class="param-value"> {{ .Serial }}</span><br>
-                             <span class="param-name"><b>Expiration Date:</b></span><span class="param-value"> {{ dateformat .ExpirationT "2006-01-02 15:04"}}</span><br>
-                             <span class="param-name"><b>Revoke Date:</b></span><span class="param-value">{{if ne .Revocation ""}} {{ dateformat .RevocationT "2006-01-02 15:04"}} {{else}} none {{end}}</span><br>
+                              <span class="param-name"><b>Name:</b></span>
+                              <span class="param-value"> {{ .Details.CN }}</span><br>
+
+                              <span class="param-name"><b>Type:</b>
+                              </span><span class="param-value"> {{ .EntryType }}</span><br>
+
+                              <span class="param-name"><b>Status:</b>
+                              </span><span class="param-value">
+                                {{if eq .EntryType "V"}}  Active {{else if eq .EntryType "R"}} Revoked {{else}} Unknown {{end}}</span><br>
+
+                              <span class="param-name"><b>Serial:</b></span>
+                              <span class="param-value"> {{ .Serial }}</span><br>
+
+                              <span class="param-name"><b>Expiration Date:</b></span>
+                              <span class="param-value"> {{ dateformat .ExpirationT "2006-01-02 15:04"}}</span><br>
+
+                              <span class="param-name"><b>Revoke Date:</b></span>
+                              <span class="param-value">
+                                  {{if ne .Revocation ""}} {{ dateformat .RevocationT "2006-01-02 15:04"}} {{else}} none {{end}}</span><br>
+
+                              <span class="param-name"><b>Passphrase:</b></span>
+                              <span class="param-value">
+                                  {{ if $client }}
+                                    {{if eq $client.Passphrase ""}} none {{else}} set {{end}}
+                                  {{ else }}
+                                    error
+                                  {{ end }}
+                              </span><br>
                           </div>
 
                           <div class="modal-footer">   
@@ -307,6 +331,19 @@ $(document).ready(function () {
             $(element).removeClass('is-invalid');
         }
     });
+
+
+
+    $("button#openModalEditClientRaw").on("click", function () {
+        var clientID = $(this).data("client-id");
+        showModalWithData(
+            "/clients/render_modal_raw",
+            {"client-id": clientID},
+            "#modal-edit-client-raw",
+            "#editClientModalRaw"
+        );
+    });
+
 
 });
 </script>

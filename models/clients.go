@@ -598,3 +598,25 @@ func GetIsAuthEnabledByClientName(clientName string) (bool, error) {
 	}
 	return false, err
 }
+
+// Reset Client Certificate By Id
+func ResetClientCertificateById(clientID string) error {
+	o := orm.NewOrm()
+
+	// Get the existing client by Id
+	client := &ClientDetails{Id: clientID}
+	err := o.Read(client)
+	if err != nil {
+		return err
+	}
+
+	// Reset certificate details
+	client.CertificateName = nil
+	client.CertificateStatus = nil
+	client.Passphrase = ""
+	client.MD5Sum = "CERTIFICATE IS RESET"
+
+	// Save the updated client
+	_, err = o.Update(client)
+	return err
+}

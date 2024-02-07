@@ -55,6 +55,7 @@ func main() {
 	web.AddFuncMap("GetConnectedRoutes", models.GetConnectedRoutes)
 	web.AddFuncMap("GetDisConnectedRoutes", models.GetDisConnectedRoutes)
 	web.AddFuncMap("GetBoolValueByKey", models.GetBoolValueByKey)
+	web.AddFuncMap("GetClientDetailsByName", models.GetClientDetailsByCertificate)
 
 	web.Run()
 }

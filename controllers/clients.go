@@ -123,7 +123,16 @@ func (c *ClientsController) RenderModal() {
 		flash.Store(&c.Controller)
 	}
 
+	//Check if Cert exist
+	var certHasIssue bool
+	path := filepath.Join(state.GlobalCfg.OVConfigPath, "easy-rsa/pki/index.txt")
+	_, cert_error := lib.ReadCertByName(clientsDetails.ClientName, path)
+	if clientsDetails.CertificateStatus != nil && *clientsDetails.CertificateStatus != "" && cert_error != nil {
+		certHasIssue = true
+	}
+
 	c.Data["Client"] = &clientsDetails
+	c.Data["CertHasIssue"] = certHasIssue
 	c.Data["ProvidedRoutes"], _ = models.GetAllRoutesProvided(id)
 
 	c.TplName = "modalClientDetails.html"
@@ -207,25 +216,25 @@ func (c *ClientsController) RenderModalRaw() {
 	clientID := c.GetString("client-id")
 	client, err_client := models.GetClientDetailsById(clientID)
 
-	// Load data from the client-name.txt file.
-	data, err := lib.RawReadClientFile(client.ClientName)
-	if err != nil {
-		logs.Error(err)
-		flash.Error("Cannot read " + client.ClientName + " file !")
-		flash.Store(&c.Controller)
-	}
-
 	if client != nil {
 		providedRoutes, _ := models.GetAllRoutesProvided(client.Id)
 		c.Data["RouterProvideRouts"] = &providedRoutes
+
+		// Load data from the client-name.txt file.
+		data, err := lib.RawReadClientFile(client.ClientName)
+		if err != nil {
+			logs.Error(err)
+			flash.Error("Cannot read " + client.ClientName + " file !")
+			flash.Store(&c.Controller)
+		}
+		c.Data["ClientData"] = string(data)
+		c.Data["Client"] = &client
+
 	} else {
 		logs.Error(err_client)
 		flash.Error("Cannot find Client in DB")
 		flash.Store(&c.Controller)
 	}
-
-	c.Data["Client"] = &client
-	c.Data["ClientData"] = string(data)
 
 	md5Struct := lib.GetMD5StructureFromFS()
 	c.Data["MD5"] = &md5Struct
@@ -486,5 +495,31 @@ func (c *ClientsController) RenderModalClientRouting() {
 
 	c.TplName = "modalClientRouting.html"
 	c.Render()
+	c.ShowClients()
+}
+
+// @router /clients/reset_cert/:key [get]
+func (c *ClientsController) ResetCertificate() {
+	if !c.IsLogin {
+		c.Ctx.Redirect(302, c.LoginPath())
+		return
+	}
+	c.TplName = "clients.html"
+
+	flash := web.NewFlash()
+	clientID := c.GetString(":key")
+
+	reset_err := models.ResetClientCertificateById(clientID)
+	if reset_err != nil {
+		logs.Error(reset_err)
+		flash.Error("Certificate is not reset")
+		flash.Store(&c.Controller)
+		c.ShowClients()
+		return
+	}
+
+	flash.Success("Client certificate was successfully reset:" + clientID)
+	flash.Store(&c.Controller)
+
 	c.ShowClients()
 }
