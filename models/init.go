@@ -29,7 +29,6 @@ func InitDB() {
 	orm.RegisterModel(
 		new(User),
 		new(Settings),
-		new(OVConfig),
 		new(RouteDetails),
 		new(ClientDetails),
 	)
