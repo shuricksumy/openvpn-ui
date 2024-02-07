@@ -51,10 +51,10 @@ func (c *ClientsController) ShowClients() {
 	}
 
 	flash := web.NewFlash()
-	clients, err := models.GetAllClientDetails()
+	clientsExtended, err := GetExtendedClientDetails()
 	// lib.Dump(clients)
 	if err == nil {
-		c.Data["Clients"] = &clients
+		c.Data["ClientsExtended"] = &clientsExtended
 	} else {
 		c.Data["Clients"] = map[string]string{"error": "Failed to get all ClientDetails"}
 	}
@@ -522,4 +522,48 @@ func (c *ClientsController) ResetCertificate() {
 	flash.Store(&c.Controller)
 
 	c.ShowClients()
+}
+
+func GetExtendedClientDetails() ([]models.ClientDetailsExtended, error) {
+	clientExtendedDetails := make([]models.ClientDetailsExtended, 0)
+
+	//getAllClientDetails
+	clients, err_clients := models.GetAllClientDetails()
+	if err_clients != nil {
+		return nil, err_clients
+	}
+
+	//getAllCertificates
+	path := filepath.Join(state.GlobalCfg.OVConfigPath, "easy-rsa/pki/index.txt")
+	certs, err_cert := lib.ReadCerts(path)
+	if err_cert != nil {
+		return nil, err_cert
+	}
+
+	//For each client
+	for _, clt := range clients {
+		cde := models.ClientDetailsExtended{}
+		crtIsFound := false
+		crtHasIssue := false
+
+		//Try to find certificate
+		for _, crt := range certs {
+			if clt.ClientName == crt.Details.CN {
+				crtIsFound = true
+				break
+			}
+		}
+
+		if clt.CertificateStatus != nil && *clt.CertificateStatus != "" && crtIsFound != true {
+			crtHasIssue = true
+		}
+
+		cde.ClientDetails = *clt
+		cde.CertificateHasIssue = crtHasIssue
+
+		clientExtendedDetails = append(clientExtendedDetails, cde)
+	}
+
+	return clientExtendedDetails, nil
+
 }

@@ -104,6 +104,9 @@
           <button type="submit" class="btn btn-sm bg-gradient-lightblue btn80" 
             style="margin-right: 23px; float: right;" data-title="Create new client?" id="create_client">Create</button>
         </div>
+
+        {{ .xsrfdata }}
+
       </form>
     </div>
     <!-- form end -->
@@ -136,45 +139,51 @@
             </thead>
             <tbody>
 
-            {{$MD5 := .MD5}} 
-            {{range $c := .Clients}}
+            {{$MD5 := .MD5}}
+            {{range $ce := .ClientsExtended}}
+                {{$c := $ce.ClientDetails}}
                 <!-- <tr data-widget="expandable-table" aria-expanded="false"> -->
                 <tr> 
                   <!-- 1 sell -->
                   <td class="my-centered first-sm">
                       {{ $col := "btn-sm btn-group-sm btn-block bg-gradient-lightblue" }}
-                      {{ $comment := .ClientName }}
+                      {{ $comment := $c.ClientName }}
                       {{ $icon := "fa fa-edit fa-lg" }}
                       {{ if not (GetBoolValueByKey $c.ClientName $MD5) }}
                           {{ $col = "btn-danger btn-sm btn-group-sm btn-block bg-gradient-red" }}
                           {{ $comment = "Config was changed but not applied !" }}
                           {{ $icon = "fa fa-warning fa-lg" }}
                       {{ end }}
-                      {{if not $c.CertificateName}} 
+                      {{if not $c.CertificateName}}
                         {{ $col = "btn-default btn-sm btn-group-sm btn-block disabled" }}
                       {{end}}
-                       <button id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-id="{{ .Id }}"
+                       <button id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-id="{{ $c.Id }}"
                         class="btn {{ $col }} right-icon-holder font75" 
-                        title="{{ $comment }}">{{ .ClientName }}<i class="{{ $icon }}"></i>
+                        title="{{ $comment }}">{{ $c.ClientName }}<i class="{{ $icon }}"></i>
                       </button>
                   </td>
 
                   <td class="my-centered first-cap">
-                    {{ if .CertificateStatus }}
-                      {{if eq (printf .CertificateStatus) "Active"}}
-                        <span class="badge bg-olive btn60">Active{{ if not (eq $c.Passphrase "") }} (p){{end}}</span>
+                      {{ if eq $ce.CertificateHasIssue true }}
+                                <span class="badge bg-red btn60">Error</span>
+                      {{else}}
+                          {{ if $c.CertificateStatus }}
+                              {{if eq (printf $c.CertificateStatus) "Active"}}
+                                <span class="badge bg-olive btn60">Active
+                                    {{ if not (eq $c.Passphrase "") }} (p){{end}}</span>
+                              {{end}}
+                              {{if eq (printf $c.CertificateStatus) "Revoked"}}
+                                <span class="badge bg-yellow btn60">Revoked</span>
+                              {{end}}
+                          {{else}}
+                                <span class="badge bg-red btn60">No Cert</span>
+                          {{end}}
                       {{end}}
-                      {{if eq (printf .CertificateStatus) "Revoked"}}
-                        <span class="badge bg-yellow btn60">Revoked</span>
-                      {{end}}
-                    {{else}}
-                        <span class="badge bg-red btn60">No Cert</span>
-                    {{end}}
                   </td>
 
                   <!-- 2 sell -->
                   <td class="my-centered first-cap">
-                    {{ if .IsRouteDefault }}
+                    {{ if $c.IsRouteDefault }}
                       <span class="badge bg-gray btn60">Default</span>
                     {{else}}
                       <span class="badge bg-gray-light btn60">Custom</span>
@@ -183,11 +192,11 @@
 
                   <!-- 3 sell -->
                   <td class="my-centered">
-                      {{  if .StaticIP }}
-                        {{  if eq (printf .StaticIP) "" }}
+                      {{  if $c.StaticIP }}
+                        {{  if eq (printf $c.StaticIP) "" }}
                           <span class="badge bg-gray-light btn100">random</span>
                         {{else}}
-                          <span class="badge bg-gray-light btn100">{{.StaticIP}}</span>
+                          <span class="badge bg-gray-light btn100">{{$c.StaticIP}}</span>
                         {{end}}
                       {{else}}
                         <span class="badge bg-gray-light btn100">random</span>
@@ -197,7 +206,7 @@
 
                   <!-- 5 sell -->
                   <td class="my-centered">
-                    {{ if .IsRouter }}
+                    {{ if $c.IsRouter }}
                       <span class="badge bg-gray btn60">Router</span>
                       <!-- <span class="btn btn-xs bg-purple btn80">.RouterMask</span> -->
                     {{else}}
@@ -207,16 +216,16 @@
 
                   <!-- 6 sell -->
                   <td class="first-cap font75">
-                    <div class=" sb">{{ .Description }}</div>
+                    <div class=" sb">{{ $c.Description }}</div>
                   </td>
 
                 <!-- Auth sell -->
                 <td class="textcenter my-centered">
                     <div  class="btn-group" role="group">
-                        <button id="openModalEditClientAuth" data-client-id="{{ .Id }}" data-target="#editClientAuthModal"
-                            {{ if .OTPIsEnabled  }}
+                        <button id="openModalEditClientAuth" data-client-id="{{ $c.Id }}" data-target="#editClientAuthModal"
+                            {{ if $c.OTPIsEnabled  }}
                                 class="btn btn-sm btn-group-sm bg-gradient-olive btn60 font75">
-                            {{ else if .StaticPassIsUsed }}
+                            {{ else if $c.StaticPassIsUsed }}
                                 class="btn btn-sm btn-group-sm bg-gradient-lightblue btn60 font75">
                             {{ else }}
                                 class="btn btn-sm btn-group-sm bg-gradient-red btn60 font75">
@@ -229,7 +238,7 @@
                   <!-- 7 sell -->
                   <td class="textcenter my-centered">
                       <div  class="btn-group" role="group">
-                          <button type="button" id="openModalClientRouting" data-target="#modalClientRouting" data-client-id="{{ .Id }}"
+                          <button type="button" id="openModalClientRouting" data-target="#modalClientRouting" data-client-id="{{ $c.Id }}"
                                   class="btn btn-sm btn-group-sm bg-gradient-lightblue btn60 font75" title="Routing">
                               <i class="fa-solid fa-shuffle fa-lg"></i>
                           </button>
@@ -239,7 +248,7 @@
                   <!-- 8 sell -->
                   <td class="textcenter my-centered">
                     <div class="btn-group" role="group">
-                        <button  id="openModalEditClientDetails" data-target="#editClientDetailsModal" data-client-id="{{ .Id }}"
+                        <button  id="openModalEditClientDetails" data-target="#editClientDetailsModal" data-client-id="{{ $c.Id }}"
                         class="btn btn-sm btn-group-sm bg-gradient-lightblue btn60 font75" title="Edit">Edit</button>
                     </div>
                   </td>

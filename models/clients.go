@@ -27,6 +27,11 @@ type ClientDetails struct {
 	StaticPass        *string         `orm:"null" form:"static_pass"`
 }
 
+type ClientDetailsExtended struct {
+	ClientDetails       ClientDetails
+	CertificateHasIssue bool
+}
+
 // Validate function to perform custom validation
 func (c *ClientDetails) Validate() error {
 	valid := validation.Validation{}
