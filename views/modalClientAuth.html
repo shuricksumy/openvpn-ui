@@ -135,7 +135,7 @@
                                             Static password
                                         </label>
                                         <div class="input-group" id="show_hide_static_pass">
-                                            <input type="password" class="form-control" placeholder="No Password" id="static_pass"
+                                            <input type="password" autocomplete="off" role="presentation" class="form-control" placeholder="No Password" id="static_pass"
                                                    name="static_pass" data-mask-text onfocusout="this.value = this.value.trim()"
                                                    value="{{ if $c.StaticPass }}{{ $c.StaticPass }}{{ end }}" {{ if not .IsOTPNew }}readonly{{end}}>
                                             <span class="input-group-btn">

@@ -6,9 +6,12 @@ DATE=$(date +"%Y-%m-%d %H:%M:%S")
 # VARIABLES
 PASS_FILE=$1    # Password file passed by openvpn-server with "auth-user-pass-verify /opt/scripts/auth_client.sh via-file" in server.conf
 
+echo "${DATE} (AUTH SCRIPT) START"
+
 if [ ! -e "$1" ] || [ ! -s "$1" ]; then
     echo "${DATE} (AUTH SCRIPT) Argument for PASS_FILE either does not exist or is empty."
     echo "${DATE} (AUTH SCRIPT) There is no auth file. Exit with error."
+    echo "${DATE} (AUTH SCRIPT) ERROR: STOP"
     exit 1
 else
     echo "${DATE} (AUTH SCRIPT) Argument for PASS_FILE exists and is not empty. It is: $1"
@@ -26,6 +29,7 @@ if [ -f "${OATH_DATA_FILE}" ]; then
 else
     echo "${DATE} (AUTH SCRIPT) OATH_DATA_FILE either does not exist or is not a regular file: ${OATH_DATA_FILE}"
     echo "${DATE} (AUTH SCRIPT) DISABLE AUTH AND ALLOW ACCESS FOR ${user}"
+    echo "${DATE} (AUTH SCRIPT) STOP"
     exit 0
 fi
 
@@ -52,6 +56,7 @@ fi
 if [ "${static_pass}${code}" = "${pass}" ];
 then
     echo "${DATE} (AUTH SCRIPT) Authentication is DONE for user $user"
+    echo "${DATE} (AUTH SCRIPT) STOP"
     exit 0
 else
     echo "${DATE} (AUTH SCRIPT) Password is incorrect."
@@ -59,4 +64,5 @@ fi
 
 # If we make it here, auth hasn't succeeded, don't grant access
 echo "${DATE} (AUTH SCRIPT) Authentication failed for user $user"
+echo "${DATE} (AUTH SCRIPT) ERROR: STOP"
 exit 1

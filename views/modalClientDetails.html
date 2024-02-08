@@ -90,7 +90,7 @@ pre.mypre {
                                 <i class="fa fa-info-circle" data-toggle="popover" data-html="true" data-placement="bottom"
                                     data-content=" Use this phrase to import Certificate on clien side"></i>
                                 <div class="input-group" id="show_hide_modal_password">
-                                  <input type="password" class="form-control" placeholder="Passphrase" id="passphrase" 
+                                  <input type="password" autocomplete="off" role="presentation" class="form-control" placeholder="Passphrase" id="passphrase"
                                     name="passphrase" data-mask-text onfocusout="this.value = this.value.trim()" 
                                         value="{{$c.Passphrase}}" disabled="disabled">
                                   <span class="input-group-btn">
