@@ -1,7 +1,6 @@
 # OpenVPN WEB UI
 
-<video src="screenshots/ovpn-ui-v5.0.mp4" controls="controls" style="max-width: 730px;">
-</video>
+[![Watch the video](/screenshots/main.png)](screenshots/ovpn-ui-v5.0.mp4)
 
 ## Updates
 #### February 2024 (v5.0)
