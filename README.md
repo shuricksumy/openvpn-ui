@@ -1,6 +1,6 @@
 # OpenVPN WEB UI
 
-[![Watch the video](/screenshots/main.png)](screenshots/ovpn-ui-v5.0.mp4)
+[![Watch the video](/screenshots/main.png)](https://github.com/shuricksumy/openvpn-ui/assets/12009686/06d96239-c7f8-4dc2-ab27-f3e4e2b0b6bf)
 
 ## Updates
 #### February 2024 (v5.0)
@@ -21,7 +21,7 @@ There is no back compatibility with previous versions. Need to recreate service 
 - Small updates of UI interface: popups, colors, tables, etc..
 - Adding Docker builder to use the lates openvpn server
 - Adding new docker builder script to support arm64 and go-sqlite3 compilation issues
-- Updating task config to support new build scenarious
+- Updating task config to support new build scenarios
 
 #### December 2023 (v4.1)
 - Small updates in Docker builder files.
@@ -48,7 +48,7 @@ There is no back compatibility with previous versions. Need to recreate service 
 - Fixed some issues
 - Add script based on go for client's file generation
 - Small improvements 
-- Added md5 sum checker for client config files to be sure that current config is used or not
+- Added md5 sum checker for client config files to be sure that the current config is used or not
 - Fixed small issue
 - Now is possible to organize routing between devices on Web UI
     - Added Client details page with Static IP, Routes, Subnet settings, Default Route
