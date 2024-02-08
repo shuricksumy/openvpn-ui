@@ -12,9 +12,9 @@
         <div class="modal-content">
             <!-- FORM START -->
             {{ if .IsOTPNew }}
-            <form id="editFormAuth" action="{{urlfor "ClientsController.SaveClientAuthData"}}" method="post">
+            <form id="editFormAuth" autocomplete="off" action="{{urlfor "ClientsController.SaveClientAuthData"}}" method="post">
             {{ else }}
-            <form id="editFormAuth" action="{{urlfor "ClientsController.DeleteClientAuthData"}}" method="post">
+            <form id="editFormAuth" autocomplete="off" action="{{urlfor "ClientsController.DeleteClientAuthData"}}" method="post">
             {{ end }}
 
                 <div class="modal-header">

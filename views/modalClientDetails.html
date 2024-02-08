@@ -47,7 +47,7 @@ pre.mypre {
             {{else}}
 
                 <!-- FORM START -->
-                <form id="editForm" action="{{urlfor "ClientsController.SaveClientDetailsData"}}" method="post">
+                <form id="editForm" autocomplete="off" action="{{urlfor "ClientsController.SaveClientDetailsData"}}" method="post">
                     
                     <!-- Hidden fields for proper form usage -->
                     <input type="hidden" name="client_id" id="client_id" value="{{$c.Id}}">

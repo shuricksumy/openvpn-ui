@@ -12,7 +12,7 @@
   <!-- /.card-header -->
   <!-- form start -->
   {{template "common/alert.html" .}}
-  <form role="form" action="{{urlfor "ProfileController.Post"}}" method="post">
+  <form role="form" autocomplete="off" action="{{urlfor "ProfileController.Post"}}" method="post">
     <div class="card-body">
       <div class="form-group">
         <label for="name">Login</label>

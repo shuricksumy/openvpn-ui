@@ -75,6 +75,17 @@ func (c *Client) Signal(signal string) error {
 	return ParseSignal(str)
 }
 
+// Restarts the OpenVPN server
+func (c *Client) RestartServer() error {
+	// Send SIGUSR1 signal to restart the server
+	err := c.Signal("SIGUSR1")
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // Execute connects to the OpenVPN server, sends command and reads response
 func (c *Client) Execute(cmd string) (string, error) {
 	conn, err := net.Dial(c.MINetwork, c.MIAddress)
