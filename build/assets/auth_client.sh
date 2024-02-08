@@ -28,7 +28,7 @@ if [ -f "${OATH_DATA_FILE}" ]; then
     echo "${DATE} (AUTH SCRIPT) OATH_DATA_FILE exists and is a regular file: ${OATH_DATA_FILE}"
 else
     echo "${DATE} (AUTH SCRIPT) OATH_DATA_FILE either does not exist or is not a regular file: ${OATH_DATA_FILE}"
-    echo "${DATE} (AUTH SCRIPT) DISABLE AUTH AND ALLOW ACCESS FOR ${user}"
+    echo "${DATE} (AUTH SCRIPT) DISABLE ACCESS FOR ${user}"
     echo "${DATE} (AUTH SCRIPT) ERROR: STOP"
     exit 1
 fi
