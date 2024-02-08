@@ -1,8 +1,22 @@
 # OpenVPN WEB UI
 
-![Status page](screenshots/main_img.gif?raw=true)
+<video src="screenshots/ovpn-ui-v5.0.mp4" controls="controls" style="max-width: 730px;">
+</video>
 
 ## Updates
+#### February 2024 (v5.0)
+> **Warning**
+There is no back compatibility with previous versions. Need to recreate service from scratch.
+
+- Redesigned UI a bit
+- Updated DB to use UUID for entities
+- Added Authorization layer: Static Password and/or OTP code
+
+
+### Previous versions
+<details>
+
+<summary>Previous versions details</summary>
 
 #### January 2024 (v4.2)
 - Small updates of UI interface: popups, colors, tables, etc..
@@ -27,10 +41,6 @@
 - Refactored code
 - Redesigned UI
 - Base bash script for installing is [openvpn-install.sh](https://github.com/shuricksumy/openvpn-install)
-
-<details>
-
-<summary>Previous versions details</summary>
 
 #### September 2023 (v3.0)
 - New UI web components
@@ -72,7 +82,37 @@
   
 </details>
 
+## Password/OTP/Passphrase usage
+
+<details>
+
+<summary>Password/OTP/Passphrase usage</summary>
+
+### 3 way implemented to protect connection:
+- protect certificate by passphrase
+- protect connection by static login/password
+- use One Time Password (OTP)
+
+All these methods can be used separately or simultaneously
+
+
+<img width="730px" alt="Pass Phrase" src="screenshots/passphrase.png">
+
+<img width="730px" alt="Pass OTP" src="screenshots/OTP_PASS.png">
+
+![Pass OTP](screenshots/ovpn-client-app.png)
+
+
+
+</details>
+
+
 ## Example docker-compose file
+
+<details>
+
+<summary>Example docker-compose file</summary>
+
 ```docker
 version: '3'
 
@@ -80,13 +120,12 @@ networks:
     default:
         driver: bridge
     npm_proxy:
-        name: npm_proxy
         driver: bridge
         ipam:
             config:
                 - subnet: 172.18.0.0/24
 services:
-  gui:
+  ovpn:
         image: shuricksumy/openvpn-ui:latest
         container_name: openvpn-ui
         working_dir: /etc/openvpn/easy-rsa
@@ -112,6 +151,8 @@ services:
             - ./openvpn:/etc/openvpn
             #- ./openvpn/easy-rsa:/etc/openvpn/easy-rsa
 ```
+
+</details>
 
 References:
 - The project is originally based on [https://github.com/d3vilh/openvpn-ui](https://github.com/d3vilh/openvpn-ui)  - big thanks for a great job
