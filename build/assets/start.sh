@@ -1,5 +1,5 @@
 #!/bin/bash
-x# Exit immediately if a command exits with a non-zero status
+# Exit immediately if a command exits with a non-zero status
 set -e
 
 # Directory where OpenVPN configuration files are stored
