@@ -285,7 +285,7 @@
 <!-- Add an empty modal container -->
 <div id="modal-edit-client-raw">
     <script>
-        var actionURL="/certificates/save_client_data"
+        var actionURL={{urlfor "CertificatesController.SaveClientRawData"}}
     </script>
 </div>
 {{end}}
@@ -340,7 +340,7 @@ $(document).ready(function () {
     $("button#openModalEditClientRaw").on("click", function () {
         var clientID = $(this).data("client-id");
         showModalWithData(
-            "/clients/render_modal_raw",
+            {{urlfor "ClientsController.RenderModalRaw"}},
             {"client-id": clientID},
             "#modal-edit-client-raw",
             "#editClientModalRaw"

@@ -265,7 +265,7 @@
         $("button#getRouteEditModal").on("click", function () {
             var routeID = $(this).data("route-id");
             showModalWithData(
-                "/routes/get",
+                {{urlfor "RoutesController.GetRouteDetails"}},
                 {"route-id": routeID},
                 "#modal-edit-route-details",
                 "#showEditRouteModal"

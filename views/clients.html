@@ -273,7 +273,7 @@
 <div id="modal-edit-client-details"></div>
 <div id="modal-edit-client-raw">
     <script>
-        var actionURL="/clients/save_client_data"
+        var actionURL={{urlfor "ClientsController.SaveClientRawData"}}
     </script>
 </div>
 <div id="modal-auth-client"></div>
@@ -337,7 +337,7 @@ $(document).ready(function () {
           $("button#openModalClientRouting").on("click", function () {
               var clientID = $(this).data("client-id");
               showModalWithData(
-                  "/clients/render_routing/",
+                  {{urlfor "ClientsController.RenderModalClientRouting"}},
                   {"client-id": clientID},
                   "#modal-client-routing",
                   "#modalClientRouting"
@@ -351,7 +351,7 @@ $(document).ready(function () {
           $("button#openModalEditClientRaw").on("click", function () {
               var clientID = $(this).data("client-id");
               showModalWithData(
-                  "/clients/render_modal_raw",
+                  {{urlfor "ClientsController.RenderModalRaw"}},
                   {"client-id": clientID},
                   "#modal-edit-client-raw",
                   "#editClientModalRaw"
@@ -365,7 +365,7 @@ $(document).ready(function () {
           $("button#openModalEditClientDetails").on("click", function () {
               var clientID = $(this).data("client-id");
               showModalWithData(
-                  "/clients/render_modal",
+                  {{urlfor "ClientsController.RenderModal"}},
                   {"client-id": clientID},
                   "#modal-edit-client-details",
                   "#editClientDetailsModal"
@@ -379,7 +379,7 @@ $(document).ready(function () {
           $("button#openModalEditClientAuth").on("click", function () {
               var clientID = $(this).data("client-id");
               showModalWithData(
-                  "/clients/render_auth_modal",
+                  {{urlfor "ClientsController.RenderAuthModal"}},
                   {"client-id": clientID},
                   "#modal-auth-client",
                   "#editClientAuthModal"

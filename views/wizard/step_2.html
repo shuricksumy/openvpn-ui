@@ -160,7 +160,7 @@
     
         var selectedValue = $('#cipher_choice').val()
         // Load options for the second selector based on the selected value of the first selector
-        $.get("/wizard/step2/alg/" + selectedValue  + "/nul", function (data) {
+        $.get({{urlfor "WizardController.Step2GetHmacAlg"}} + selectedValue  + "/nul", function (data) {
             updateSelectorOptions("#hmac_algorithm", data);
         });
 
@@ -172,11 +172,11 @@
         var selectedValue = $('#cert_type').val()
 
         // Load options for the second selector based on the selected value of the first selector
-        $.get("/wizard/step2/crtparam/" + selectedValue  + "/nul", function (data) {
+        $.get({{urlfor "WizardController.Step2GetCrtParam"}} + selectedValue  + "/nul", function (data) {
             updateSelectorOptions("#cert_params", data);
         });
 
-        $.get("/wizard/step2/crtcipher/" + selectedValue  + "/nul", function (data2) {
+        $.get({{urlfor "WizardController.Step2GetCrtCipher"}} + selectedValue  + "/nul", function (data2) {
             updateSelectorOptions("#cert_cipher", data2);
         });
     });
@@ -187,7 +187,7 @@
       var selectedValue = $('#dh_type').val()
 
       // Load options for the second selector based on the selected value of the first selector
-      $.get("/wizard/step2/dhparam/" + selectedValue  + "/nul", function (data) {
+      $.get({{urlfor "WizardController.Step2GetDhParamr"}} + selectedValue  + "/nul", function (data) {
           updateSelectorOptions("#dh_params", data);
       });
 

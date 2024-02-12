@@ -39,3 +39,12 @@
     <script src="/static/js/ace/ace.js"></script>
     <script src="/static/js/custom.js"></script>
 
+    <script>
+        $(document).ready(function() {
+            // Update status every minute
+            setInterval(updateStatus({{urlfor "OpenVPNController.GetOpenVPNStatus"}}), 60000);
+
+            // Initial update
+            updateStatus({{urlfor "OpenVPNController.GetOpenVPNStatus"}});
+        });
+    </script>
