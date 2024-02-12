@@ -6,11 +6,16 @@ import (
 
 func init() {
 
+	prefixURL, err := web.AppConfig.String("BaseURLPrefix")
+	if err != nil {
+		prefixURL = ""
+	}
+
 	web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:CertificatesController"] =
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:CertificatesController"],
 			web.ControllerComments{
 				Method:           "Download",
-				Router:           `/certificates/ovpn/:key`,
+				Router:           prefixURL + `/certificates/ovpn/:key`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
 
@@ -18,7 +23,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:CertificatesController"],
 			web.ControllerComments{
 				Method:           "Get",
-				Router:           `/certificates`,
+				Router:           prefixURL + `/certificates`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
 
@@ -26,7 +31,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:CertificatesController"],
 			web.ControllerComments{
 				Method:           "Post",
-				Router:           `/certificates`,
+				Router:           prefixURL + `/certificates`,
 				AllowHTTPMethods: []string{"post"},
 				Params:           nil})
 
@@ -34,7 +39,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:CertificatesController"],
 			web.ControllerComments{
 				Method:           "Revoke",
-				Router:           `/certificates/revoke/:key`,
+				Router:           prefixURL + `/certificates/revoke/:key`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
 
@@ -42,7 +47,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:CertificatesController"],
 			web.ControllerComments{
 				Method:           "UnRevoke",
-				Router:           `/certificates/unrevoke/:key`,
+				Router:           prefixURL + `/certificates/unrevoke/:key`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
 
@@ -50,7 +55,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:CertificatesController"],
 			web.ControllerComments{
 				Method:           "Restart",
-				Router:           `/certificates/restart`,
+				Router:           prefixURL + `/certificates/restart`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
 
@@ -58,7 +63,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:CertificatesController"],
 			web.ControllerComments{
 				Method:           "Burn",
-				Router:           `/certificates/burn/:key/:serial`,
+				Router:           prefixURL + `/certificates/burn/:key/:serial`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
 
@@ -66,7 +71,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:CertificatesController"],
 			web.ControllerComments{
 				Method:           "Renew",
-				Router:           `/certificates/renew/:key/:serial`,
+				Router:           prefixURL + `/certificates/renew/:key/:serial`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
 
@@ -74,7 +79,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:CertificatesController"],
 			web.ControllerComments{
 				Method:           "SaveClientRawData",
-				Router:           `/certificates/save_client_data`,
+				Router:           prefixURL + `/certificates/save_client_data`,
 				AllowHTTPMethods: []string{"post"},
 				Params:           nil})
 
@@ -82,7 +87,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:CertificatesController"],
 			web.ControllerComments{
 				Method:           "UpdateFiles",
-				Router:           `/certificates/updatefiles`,
+				Router:           prefixURL + `/certificates/updatefiles`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
 }

@@ -13,16 +13,22 @@ import (
 )
 
 func Init(configDir string) {
-	web.SetStaticPath("/swagger", "swagger")
-	web.Router("/", &controllers.MainController{})
-	web.Router("/login", &controllers.LoginController{}, "get,post:Login")
-	web.Router("/logout", &controllers.LoginController{}, "get:Logout")
-	web.Router("/profile", &controllers.ProfileController{})
-	web.Router("/settings", &controllers.SettingsController{})
-	web.Router("/ov/serverconfig", &controllers.ServerConfigController{ConfigDir: configDir})
-	web.Router("/ov/clientconfig", &controllers.ClientConfigController{ConfigDir: configDir})
-	web.Router("/ov/easyrsa", &controllers.EasyRSAConfigController{ConfigDir: configDir})
-	web.Router("/logs", &controllers.LogsController{})
+
+	prefixURL, err := web.AppConfig.String("BaseURLPrefix")
+	if err != nil {
+		prefixURL = ""
+	}
+
+	web.SetStaticPath(prefixURL+"/swagger", "swagger")
+	web.Router(prefixURL+"/", &controllers.MainController{})
+	web.Router(prefixURL+"/login", &controllers.LoginController{}, "get,post:Login")
+	web.Router(prefixURL+"/logout", &controllers.LoginController{}, "get:Logout")
+	web.Router(prefixURL+"/profile", &controllers.ProfileController{})
+	web.Router(prefixURL+"/settings", &controllers.SettingsController{})
+	web.Router(prefixURL+"/ov/serverconfig", &controllers.ServerConfigController{ConfigDir: configDir})
+	web.Router(prefixURL+"/ov/clientconfig", &controllers.ClientConfigController{ConfigDir: configDir})
+	web.Router(prefixURL+"/ov/easyrsa", &controllers.EasyRSAConfigController{ConfigDir: configDir})
+	web.Router(prefixURL+"/logs", &controllers.LogsController{})
 
 	web.Include(&controllers.CertificatesController{ConfigDir: configDir})
 	web.Include(&controllers.ClientsController{ConfigDir: configDir})
@@ -32,23 +38,23 @@ func Init(configDir string) {
 	web.Include(&controllers.LogsController{})
 	web.Include(&controllers.SystemController{})
 
-	web.Router("/openvpn/start", &controllers.OpenVPNController{}, "get:StartOpenVPN")
-	web.Router("/openvpn/stop", &controllers.OpenVPNController{}, "get:StopOpenVPN")
-	web.Router("/openvpn/restart", &controllers.OpenVPNController{}, "get:RestartOpenVPN")
-	web.Router("/openvpn/status", &controllers.OpenVPNController{}, "get:GetOpenVPNStatus")
+	web.Router(prefixURL+"/openvpn/start", &controllers.OpenVPNController{}, "get:StartOpenVPN")
+	web.Router(prefixURL+"/openvpn/stop", &controllers.OpenVPNController{}, "get:StopOpenVPN")
+	web.Router(prefixURL+"/openvpn/restart", &controllers.OpenVPNController{}, "get:RestartOpenVPN")
+	web.Router(prefixURL+"/openvpn/status", &controllers.OpenVPNController{}, "get:GetOpenVPNStatus")
 
-	ns := web.NewNamespace("/api/v1",
-		web.NSNamespace("/session",
+	ns := web.NewNamespace(prefixURL+"/api/v1",
+		web.NSNamespace(prefixURL+"/session",
 			web.NSInclude(
 				&controllers.APISessionController{},
 			),
 		),
-		web.NSNamespace("/sysload",
+		web.NSNamespace(prefixURL+"/sysload",
 			web.NSInclude(
 				&controllers.APISysloadController{},
 			),
 		),
-		web.NSNamespace("/signal",
+		web.NSNamespace(prefixURL+"/signal",
 			web.NSInclude(
 				&controllers.APISignalController{},
 			),

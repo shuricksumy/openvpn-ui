@@ -3,6 +3,10 @@
 [![Watch the video](/screenshots/main.png)](https://github.com/shuricksumy/openvpn-ui/assets/12009686/06d96239-c7f8-4dc2-ab27-f3e4e2b0b6bf)
 
 ## Updates
+#### February 2024 (v5.1)
+  
+ - Added env variable **URL_PREFIX** to add leading url prefix for easy configuration proxy pass based on nginx, traefik
+
 #### February 2024 (v5.0)
 > **Warning**
 There is no back compatibility with previous versions. Need to recreate service from scratch.
@@ -133,6 +137,7 @@ services:
             - OPENVPN_ADMIN_PASSWORD=admin # Leave this default as-is and update on first-run
             - SITE_NAME=Admin
             #- APP_PORT=8080 # Use if need to specify the custom one
+            #- URL_PREFIX="/ovpn" # Use general prefix for nginx,traefik proxy pass configuration
         ports:
             - "8080:8080/tcp"
             - "1194:1194/udp"

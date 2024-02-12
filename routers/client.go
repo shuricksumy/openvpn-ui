@@ -3,11 +3,17 @@ package routers
 import "github.com/beego/beego/v2/server/web"
 
 func init() {
+
+	prefixURL, err := web.AppConfig.String("BaseURLPrefix")
+	if err != nil {
+		prefixURL = ""
+	}
+
 	web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"] =
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"],
 			web.ControllerComments{
 				Method:           "Get",
-				Router:           `/clients`,
+				Router:           prefixURL + `/clients`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
 
@@ -15,7 +21,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"],
 			web.ControllerComments{
 				Method:           "NewClient",
-				Router:           `/clients/newclient`,
+				Router:           prefixURL + `/clients/newclient`,
 				AllowHTTPMethods: []string{"post"},
 				Params:           nil})
 
@@ -23,7 +29,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"],
 			web.ControllerComments{
 				Method:           "DelClient",
-				Router:           `/clients/delclient/:key`,
+				Router:           prefixURL + `/clients/delclient/:key`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
 
@@ -31,7 +37,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"],
 			web.ControllerComments{
 				Method:           "RenderModalRaw",
-				Router:           `/clients/render_modal_raw`,
+				Router:           prefixURL + `/clients/render_modal_raw`,
 				AllowHTTPMethods: []string{"post"},
 				Params:           nil})
 
@@ -39,7 +45,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"],
 			web.ControllerComments{
 				Method:           "RenderModal",
-				Router:           `/clients/render_modal`,
+				Router:           prefixURL + `/clients/render_modal`,
 				AllowHTTPMethods: []string{"post"},
 				Params:           nil})
 
@@ -47,7 +53,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"],
 			web.ControllerComments{
 				Method:           "SaveClientDetailsData",
-				Router:           `/clients/save_details_data`,
+				Router:           prefixURL + `/clients/save_details_data`,
 				AllowHTTPMethods: []string{"post"},
 				Params:           nil})
 
@@ -55,7 +61,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"],
 			web.ControllerComments{
 				Method:           "UpdateFiles",
-				Router:           `/clients/updatefiles`,
+				Router:           prefixURL + `/clients/updatefiles`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
 
@@ -63,7 +69,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"],
 			web.ControllerComments{
 				Method:           "SaveClientRawData",
-				Router:           `/clients/save_client_data`,
+				Router:           prefixURL + `/clients/save_client_data`,
 				AllowHTTPMethods: []string{"post"},
 				Params:           nil})
 
@@ -71,7 +77,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"],
 			web.ControllerComments{
 				Method:           "RenderAuthModal",
-				Router:           `/clients/render_auth_modal/`,
+				Router:           prefixURL + `/clients/render_auth_modal/`,
 				AllowHTTPMethods: []string{"post"},
 				Params:           nil})
 
@@ -79,7 +85,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"],
 			web.ControllerComments{
 				Method:           "SaveClientAuthData",
-				Router:           `/clients/save_auth_data/`,
+				Router:           prefixURL + `/clients/save_auth_data/`,
 				AllowHTTPMethods: []string{"post"},
 				Params:           nil})
 
@@ -87,7 +93,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"],
 			web.ControllerComments{
 				Method:           "DeleteClientAuthData",
-				Router:           `/clients/delete_auth_data/`,
+				Router:           prefixURL + `/clients/delete_auth_data/`,
 				AllowHTTPMethods: []string{"post"},
 				Params:           nil})
 
@@ -95,7 +101,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"],
 			web.ControllerComments{
 				Method:           "RenderModalClientRouting",
-				Router:           `/clients/render_routing`,
+				Router:           prefixURL + `/clients/render_routing`,
 				AllowHTTPMethods: []string{"post"},
 				Params:           nil})
 
@@ -103,7 +109,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:ClientsController"],
 			web.ControllerComments{
 				Method:           "ResetCertificate",
-				Router:           `/clients/reset_cert/:key`,
+				Router:           prefixURL + `/clients/reset_cert/:key`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
 }

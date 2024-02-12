@@ -5,12 +5,16 @@ import (
 )
 
 func init() {
+	prefixURL, err := web.AppConfig.String("BaseURLPrefix")
+	if err != nil {
+		prefixURL = ""
+	}
 
 	web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:APISessionController"] =
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:APISessionController"],
 			web.ControllerComments{
 				Method:           "Get",
-				Router:           `/`,
+				Router:           prefixURL + `/`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
 
@@ -18,7 +22,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:APISessionController"],
 			web.ControllerComments{
 				Method:           "Kill",
-				Router:           `/`,
+				Router:           prefixURL + `/`,
 				AllowHTTPMethods: []string{"delete"},
 				Params:           nil})
 
@@ -26,7 +30,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:APISignalController"],
 			web.ControllerComments{
 				Method:           "Send",
-				Router:           `/`,
+				Router:           prefixURL + `/`,
 				AllowHTTPMethods: []string{"post"},
 				Params:           nil})
 
@@ -34,7 +38,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:APISysloadController"],
 			web.ControllerComments{
 				Method:           "Get",
-				Router:           `/`,
+				Router:           prefixURL + `/`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
 }

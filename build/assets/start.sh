@@ -75,6 +75,19 @@ else
     fi
 fi
 
+# Set URL PREFIX
+if ! grep -qs "^BaseURLPrefix=" /opt/openvpn-gui/conf/app.conf; then
+    if [[ -n $URL_PREFIX ]]; then
+        echo "" >> /opt/openvpn-gui/conf/app.conf
+        echo "BaseURLPrefix=${URL_PREFIX}" >> /opt/openvpn-gui/conf/app.conf
+    fi
+else
+    if [[ -n $URL_PREFIX ]]; then
+        sed -i '/BaseURLPrefix=/s/.*/BaseURLPrefix='"$URL_PREFIX"'/' /opt/openvpn-gui/conf/app.conf
+    fi
+fi
+
+
 # if [ ! -f ${OVDIR}/clientDetails.json ]; then
 #     touch ${OVDIR}/clientDetails.json
 # fi
