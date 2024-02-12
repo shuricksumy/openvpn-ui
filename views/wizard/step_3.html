@@ -86,7 +86,7 @@
   
       // Perform the AJAX request without a timeout
       $.ajax({
-        url: '/wizard/setup',  // Replace with your actual API endpoint
+        url: {{urlfor "WizardController.Setup"}},  // Replace with your actual API endpoint
         method: 'GET',
         success: function(response) {
           // Clear the progress interval
