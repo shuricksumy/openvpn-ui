@@ -9,7 +9,7 @@
       <nav class="main-header navbar navbar-expand-md navbar-dark navbar-light">
         <div class="container">
             <a href="{{urlfor "MainController.Get"}}" class="navbar-brand" style="color: white;">
-              <img src="/static/img/openvpn.svg" alt="OpenVPN UI Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+              <img src="{{urlfor "MainController.Get"}}static/img/openvpn.svg" alt="OpenVPN UI Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
               <span class="brand-text font-weight-light"><b>OpenVPN </b>{{ .SiteName }}</span>
             </a>
             <div id="openvpn-status" class="stopped" style="min-width: 20px; min-height: 20px;">      
