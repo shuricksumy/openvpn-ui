@@ -41,17 +41,17 @@ func Init(configDir string, prefixURL string) {
 	web.Router(prefixURL+"/openvpn/status", &controllers.OpenVPNController{}, "get:GetOpenVPNStatus")
 
 	ns := web.NewNamespace(prefixURL+"/api/v1",
-		web.NSNamespace(prefixURL+"/session",
+		web.NSNamespace("/session",
 			web.NSInclude(
 				&controllers.APISessionController{},
 			),
 		),
-		web.NSNamespace(prefixURL+"/sysload",
+		web.NSNamespace("/sysload",
 			web.NSInclude(
 				&controllers.APISysloadController{},
 			),
 		),
-		web.NSNamespace(prefixURL+"/signal",
+		web.NSNamespace("/signal",
 			web.NSInclude(
 				&controllers.APISignalController{},
 			),

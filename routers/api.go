@@ -2,7 +2,6 @@ package routers
 
 import (
 	"github.com/beego/beego/v2/server/web"
-	"github.com/shuricksumy/openvpn-ui/lib"
 )
 
 func init() {
@@ -10,7 +9,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:APISessionController"],
 			web.ControllerComments{
 				Method:           "Get",
-				Router:           lib.ParsePrefixURL() + `/`,
+				Router:           `/`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
 
@@ -18,7 +17,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:APISessionController"],
 			web.ControllerComments{
 				Method:           "Kill",
-				Router:           lib.ParsePrefixURL() + `/`,
+				Router:           `/`,
 				AllowHTTPMethods: []string{"delete"},
 				Params:           nil})
 
@@ -26,7 +25,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:APISignalController"],
 			web.ControllerComments{
 				Method:           "Send",
-				Router:           lib.ParsePrefixURL() + `/`,
+				Router:           `/`,
 				AllowHTTPMethods: []string{"post"},
 				Params:           nil})
 
@@ -34,7 +33,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:APISysloadController"],
 			web.ControllerComments{
 				Method:           "Get",
-				Router:           lib.ParsePrefixURL() + `/`,
+				Router:           `/`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
 }
