@@ -186,7 +186,7 @@
               <td>
                 <span class="badge bg-olive btn100">{{.VirtualAddress}}</span>
                 <button class="btn btn-xs button-transparent button-copy" data-clipboard-text="{{.VirtualAddress}}">
-                  <img class="clippy" src="static/img/clippy.svg" width="13" alt="Copy to clipboard">
+                  <img class="clippy" src="{{urlfor "MainController.Get"}}static/img/clippy.svg" width="13" alt="Copy to clipboard">
                 </button>
               </td>
               <td>

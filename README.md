@@ -6,6 +6,7 @@
 #### February 2024 (v5.1)
   
  - Added env variable **URL_PREFIX** to add leading url prefix for easy configuration proxy pass based on nginx, traefik
+ - Fix start script
 
 #### February 2024 (v5.0)
 > **Warning**
