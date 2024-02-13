@@ -2,20 +2,15 @@ package routers
 
 import (
 	"github.com/beego/beego/v2/server/web"
+	"github.com/shuricksumy/openvpn-ui/lib"
 )
 
 func init() {
-
-	prefixURL, err := web.AppConfig.String("BaseURLPrefix")
-	if err != nil {
-		prefixURL = ""
-	}
-
 	web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:CertificatesController"] =
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:CertificatesController"],
 			web.ControllerComments{
 				Method:           "Download",
-				Router:           prefixURL + `/certificates/ovpn/:key`,
+				Router:           lib.ParsePrefixURL() + `/certificates/ovpn/:key`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
 
@@ -23,7 +18,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:CertificatesController"],
 			web.ControllerComments{
 				Method:           "Get",
-				Router:           prefixURL + `/certificates`,
+				Router:           lib.ParsePrefixURL() + `/certificates`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
 
@@ -31,7 +26,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:CertificatesController"],
 			web.ControllerComments{
 				Method:           "Post",
-				Router:           prefixURL + `/certificates`,
+				Router:           lib.ParsePrefixURL() + `/certificates`,
 				AllowHTTPMethods: []string{"post"},
 				Params:           nil})
 
@@ -39,7 +34,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:CertificatesController"],
 			web.ControllerComments{
 				Method:           "Revoke",
-				Router:           prefixURL + `/certificates/revoke/:key`,
+				Router:           lib.ParsePrefixURL() + `/certificates/revoke/:key`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
 
@@ -47,7 +42,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:CertificatesController"],
 			web.ControllerComments{
 				Method:           "UnRevoke",
-				Router:           prefixURL + `/certificates/unrevoke/:key`,
+				Router:           lib.ParsePrefixURL() + `/certificates/unrevoke/:key`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
 
@@ -55,7 +50,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:CertificatesController"],
 			web.ControllerComments{
 				Method:           "Restart",
-				Router:           prefixURL + `/certificates/restart`,
+				Router:           lib.ParsePrefixURL() + `/certificates/restart`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
 
@@ -63,7 +58,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:CertificatesController"],
 			web.ControllerComments{
 				Method:           "Burn",
-				Router:           prefixURL + `/certificates/burn/:key/:serial`,
+				Router:           lib.ParsePrefixURL() + `/certificates/burn/:key/:serial`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
 
@@ -71,7 +66,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:CertificatesController"],
 			web.ControllerComments{
 				Method:           "Renew",
-				Router:           prefixURL + `/certificates/renew/:key/:serial`,
+				Router:           lib.ParsePrefixURL() + `/certificates/renew/:key/:serial`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
 
@@ -79,7 +74,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:CertificatesController"],
 			web.ControllerComments{
 				Method:           "SaveClientRawData",
-				Router:           prefixURL + `/certificates/save_client_data`,
+				Router:           lib.ParsePrefixURL() + `/certificates/save_client_data`,
 				AllowHTTPMethods: []string{"post"},
 				Params:           nil})
 
@@ -87,7 +82,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:CertificatesController"],
 			web.ControllerComments{
 				Method:           "UpdateFiles",
-				Router:           prefixURL + `/certificates/updatefiles`,
+				Router:           lib.ParsePrefixURL() + `/certificates/updatefiles`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
 }

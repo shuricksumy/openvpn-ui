@@ -186,7 +186,7 @@
               <td>
                 <span class="badge bg-olive btn100">{{.VirtualAddress}}</span>
                 <button class="btn btn-xs button-transparent button-copy" data-clipboard-text="{{.VirtualAddress}}">
-                  <img class="clippy" src="{{urlfor "MainController.Get"}}static/img/clippy.svg" width="13" alt="Copy to clipboard">
+                  <img class="clippy" src="{{urlfor "InitAPIRoutes.Get"}}/static/img/clippy.svg" width="13" alt="Copy to clipboard">
                 </button>
               </td>
               <td>
@@ -204,7 +204,7 @@
                   {{end}}
                 </span></td>
               <td class="textcenter">
-                <a href="javascript:$.MyAPP.Disconnect('{{.CommonName}}', {{urlfor "MainController.Get"}})"
+                <a href="javascript:$.MyAPP.Disconnect('{{.CommonName}}', '{{urlfor "MainController.Get"}}')"
                    data-title="Disconect {{.CommonName}} client ?"
                    class="btn btn-xs btn-group-xs btn-danger bg-red-gradient btn24"
                    title="Disconnect">X</a>

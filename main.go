@@ -46,7 +46,8 @@ func main() {
 
 	state.GlobalCfg = *defaultSettings
 
-	routers.Init(*configDir)
+	prefixURL := lib.ParsePrefixURL()
+	routers.Init(*configDir, prefixURL)
 
 	lib.AddFuncMaps()
 

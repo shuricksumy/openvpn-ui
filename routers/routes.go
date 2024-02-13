@@ -1,19 +1,16 @@
 package routers
 
-import "github.com/beego/beego/v2/server/web"
+import (
+	"github.com/beego/beego/v2/server/web"
+	"github.com/shuricksumy/openvpn-ui/lib"
+)
 
 func init() {
-
-	prefixURL, err := web.AppConfig.String("BaseURLPrefix")
-	if err != nil {
-		prefixURL = ""
-	}
-
 	web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:RoutesController"] =
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:RoutesController"],
 			web.ControllerComments{
 				Method:           "Get",
-				Router:           prefixURL + `/routes`,
+				Router:           lib.ParsePrefixURL() + `/routes`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
 
@@ -21,7 +18,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:RoutesController"],
 			web.ControllerComments{
 				Method:           "NewRoute",
-				Router:           prefixURL + `/routes/newroute`,
+				Router:           lib.ParsePrefixURL() + `/routes/newroute`,
 				AllowHTTPMethods: []string{"post"},
 				Params:           nil})
 
@@ -29,7 +26,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:RoutesController"],
 			web.ControllerComments{
 				Method:           "GetRouteDetails",
-				Router:           prefixURL + `/routes/get`,
+				Router:           lib.ParsePrefixURL() + `/routes/get`,
 				AllowHTTPMethods: []string{"post"},
 				Params:           nil})
 
@@ -37,7 +34,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:RoutesController"],
 			web.ControllerComments{
 				Method:           "Post",
-				Router:           prefixURL + `/routes`,
+				Router:           lib.ParsePrefixURL() + `/routes`,
 				AllowHTTPMethods: []string{"post"},
 				Params:           nil})
 
@@ -45,7 +42,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:RoutesController"],
 			web.ControllerComments{
 				Method:           "Delete",
-				Router:           prefixURL + `/routes/delete/:key`,
+				Router:           lib.ParsePrefixURL() + `/routes/delete/:key`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
 
@@ -53,7 +50,7 @@ func init() {
 		append(web.GlobalControllerRouter["github.com/shuricksumy/openvpn-ui/controllers:RoutesController"],
 			web.ControllerComments{
 				Method:           "UpdateFiles",
-				Router:           prefixURL + `/routes/updatefiles`,
+				Router:           lib.ParsePrefixURL() + `/routes/updatefiles`,
 				AllowHTTPMethods: []string{"get"},
 				Params:           nil})
 }

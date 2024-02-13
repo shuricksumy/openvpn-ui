@@ -12,17 +12,12 @@ import (
 	"github.com/shuricksumy/openvpn-ui/controllers"
 )
 
-func Init(configDir string) {
+func Init(configDir string, prefixURL string) {
 
-	prefixURL, err := web.AppConfig.String("BaseURLPrefix")
-	if err != nil {
-		prefixURL = ""
-	}
-
-	web.SetStaticPath(prefixURL+"static", "static")
-
-	web.SetStaticPath(prefixURL+"/swagger", "swagger")
 	web.Router(prefixURL+"/", &controllers.MainController{})
+	web.SetStaticPath(prefixURL+"/static", "static")
+	web.SetStaticPath(prefixURL+"/swagger", "swagger")
+
 	web.Router(prefixURL+"/login", &controllers.LoginController{}, "get,post:Login")
 	web.Router(prefixURL+"/logout", &controllers.LoginController{}, "get:Logout")
 	web.Router(prefixURL+"/profile", &controllers.ProfileController{})

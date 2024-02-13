@@ -463,3 +463,18 @@ func PatchFileAppendBeforeLine(filePath, searchString, contentBefore string) err
 
 	return nil
 }
+
+func ParsePrefixURL() string {
+	prefixURL, err := web.AppConfig.String("BaseURLPrefix")
+	if err != nil {
+		prefixURL = ""
+	}
+
+	if !strings.HasPrefix(prefixURL, "/") {
+		prefixURL = "/" + prefixURL
+	}
+	if strings.HasSuffix(prefixURL, "/") {
+		prefixURL = strings.TrimSuffix(prefixURL, "/")
+	}
+	return prefixURL
+}

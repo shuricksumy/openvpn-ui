@@ -7,7 +7,7 @@ $.MyAPP.Disconnect = function (cname, link) {
     $.ajax({
         type: "DELETE",
         dataType: "json",
-        url: link + "api/v1/session",
+        url: link + "/api/v1/session",
         data: JSON.stringify({ "cname": cname }),
         success: handleAjaxSuccess,
         error: handleAjaxError
