@@ -3,7 +3,7 @@
   <!-- Menu Toggle Button -->
   <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
     <!-- The user image in the navbar-->
-    <img src="{{urlfor "InitAPIRoutes.Get"}}/static/img/person.png" class="user-image" alt="User Image">
+    <img src="{{.PrefixURL}}/static/img/person.png" class="user-image" alt="User Image">
     <!-- hidden-xs hides the username on small devices so only the image appears. -->
     <span class="hidden-xs">{{ .Userinfo.Name}}</span>
   </a>
@@ -12,7 +12,7 @@
     <div class="card card-primary card-outline" style="margin-bottom: 0rem;">
       <div class="card-body box-profile">
       <div class="text-center">
-        <img class="profile-user-img img-fluid img-circle" src="{{urlfor "InitAPIRoutes.Get"}}/static/img/person.png"
+        <img class="profile-user-img img-fluid img-circle" src="{{.PrefixURL}}/static/img/person.png"
             alt="User profile picture" style="background-color: white;">
       </div>
       <h3 class="profile-username text-center">{{ .Userinfo.Name }}</h3>

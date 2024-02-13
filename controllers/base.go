@@ -36,6 +36,8 @@ func (c *BaseController) Prepare() {
 	c.Data["IsLogin"] = c.IsLogin
 	c.Data["Userinfo"] = c.Userinfo
 
+	c.Data["PrefixURL"] = lib.ParsePrefixURL()
+
 	if app, ok := c.AppController.(NestPreparer); ok {
 		app.NestPrepare()
 	}
