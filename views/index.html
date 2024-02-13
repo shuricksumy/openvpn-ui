@@ -204,7 +204,7 @@
                   {{end}}
                 </span></td>
               <td class="textcenter">
-                <a href="javascript:$.MyAPP.Disconnect('{{.CommonName}}')"
+                <a href="javascript:$.MyAPP.Disconnect('{{.CommonName}}', {{urlfor "MainController.Get"}})"
                    data-title="Disconect {{.CommonName}} client ?"
                    class="btn btn-xs btn-group-xs btn-danger bg-red-gradient btn24"
                    title="Disconnect">X</a>
