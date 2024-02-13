@@ -1,9 +1,10 @@
 #!/bin/bash
 # Exit immediately if a command exits with a non-zero status
 set -e
+set -x
 
 # Directory where OpenVPN configuration files are stored
-if [[ $OVDIR == "" ]]; then
+if [[ "$OVDIR" == "" ]]; then
 	OVDIR="/etc/openvpn"
 fi
 
@@ -28,61 +29,61 @@ if ! grep -qs "^sessionname=" /opt/openvpn-gui/conf/app.conf; then
 fi
 
 # Set site name
-if ! grep -qs "^sitename=" /opt/openvpn-gui/conf/app.conf; then
-    if [[ -n $SITE_NAME ]]; then
+if ! grep -qs "^SiteName=" /opt/openvpn-gui/conf/app.conf; then
+    if [[ -n "$SITE_NAME" ]]; then
         echo "" >> /opt/openvpn-gui/conf/app.conf
-        echo "sitename=${SITE_NAME}" >> /opt/openvpn-gui/conf/app.conf
+        echo "SiteName=${SITE_NAME}" >> /opt/openvpn-gui/conf/app.conf
     fi
 else
-    if [[ -n $SITE_NAME ]]; then
-        sed -i '/sitename=/s/.*/sitename='"$SITE_NAME"'/' /opt/openvpn-gui/conf/app.conf
+    if [[ -n "$SITE_NAME" ]]; then
+        sed -i '/SiteName=/s/.*/SiteName='"$SITE_NAME"'/' /opt/openvpn-gui/conf/app.conf
     fi
 fi
 
 # Set openvpn docker container name
 if ! grep -qs "^OpenVpnServerDockerName=" /opt/openvpn-gui/conf/app.conf; then
-    if [[ -n $OPENVPN_SERVER_DOCKER_NAME ]]; then
+    if [[ -n "$OPENVPN_SERVER_DOCKER_NAME" ]]; then
         echo "" >> /opt/openvpn-gui/conf/app.conf
         echo "OpenVpnServerDockerName=${OPENVPN_SERVER_DOCKER_NAME}" >> /opt/openvpn-gui/conf/app.conf
     fi
 else
-    if [[ -n $OPENVPN_SERVER_DOCKER_NAME ]]; then
+    if [[ -n "$OPENVPN_SERVER_DOCKER_NAME" ]]; then
         sed -i '/OpenVpnServerDockerName=/s/.*/OpenVpnServerDockerName='"$OPENVPN_SERVER_DOCKER_NAME"'/' /opt/openvpn-gui/conf/app.conf
     fi
 fi
 
 # Set openvpn management address
 if ! grep -qs "^OpenVpnManagementAddress=" /opt/openvpn-gui/conf/app.conf; then
-    if [[ -n $OPENVPN_MANAGEMENT_ADDRESS ]]; then
+    if [[ -n "$OPENVPN_MANAGEMENT_ADDRESS" ]]; then
         echo "" >> /opt/openvpn-gui/conf/app.conf
         echo "OpenVpnManagementAddress=${OPENVPN_MANAGEMENT_ADDRESS}" >> /opt/openvpn-gui/conf/app.conf
     fi
 else
-    if [[ -n $OPENVPN_MANAGEMENT_ADDRESS ]]; then
+    if [[ -n "$OPENVPN_MANAGEMENT_ADDRESS" ]]; then
         sed -i '/OpenVpnManagementAddress=/s/.*/OpenVpnManagementAddress='"$OPENVPN_MANAGEMENT_ADDRESS"'/' /opt/openvpn-gui/conf/app.conf
     fi
 fi
 
 # Set site name
 if ! grep -qs "^httpport=" /opt/openvpn-gui/conf/app.conf; then
-    if [[ -n $APP_PORT ]]; then
+    if [[ -n "$APP_PORT" ]]; then
         echo "" >> /opt/openvpn-gui/conf/app.conf
         echo "httpport=${APP_PORT}" >> /opt/openvpn-gui/conf/app.conf
     fi
 else
-    if [[ -n $APP_PORT ]]; then
+    if [[ -n "$APP_PORT" ]]; then
         sed -i '/httpport=/s/.*/httpport='"$APP_PORT"'/' /opt/openvpn-gui/conf/app.conf
     fi
 fi
 
 # Set URL PREFIX
 if ! grep -qs "^BaseURLPrefix=" /opt/openvpn-gui/conf/app.conf; then
-    if [[ -n $URL_PREFIX ]]; then
+    if [[ -n "$URL_PREFIX" ]]; then
         echo "" >> /opt/openvpn-gui/conf/app.conf
         echo "BaseURLPrefix=${URL_PREFIX}" >> /opt/openvpn-gui/conf/app.conf
     fi
 else
-    if [[ -n $URL_PREFIX ]]; then
+    if [[ -n "$URL_PREFIX" ]]; then
         sed -i '/BaseURLPrefix=/s/.*/BaseURLPrefix='"$URL_PREFIX"'/' /opt/openvpn-gui/conf/app.conf
     fi
 fi

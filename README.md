@@ -137,7 +137,8 @@ services:
             - OPENVPN_ADMIN_PASSWORD=admin # Leave this default as-is and update on first-run
             - SITE_NAME=Admin
             #- APP_PORT=8080 # Use if need to specify the custom one
-            #- URL_PREFIX="/ovpn" # Use general prefix for nginx,traefik proxy pass configuration
+            ## this parameter need to use / for spec regex sybols
+            #- URL_PREFIX="\/ovpn" # Use general prefix for nginx,traefik proxy pass configuration
         ports:
             - "8080:8080/tcp"
             - "1194:1194/udp"
