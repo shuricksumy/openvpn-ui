@@ -24,6 +24,7 @@ services:
           - OPENVPN_ADMIN_USERNAME=admin # Leave this default as-is and update on first-run
           - OPENVPN_ADMIN_PASSWORD=admin # Leave this default as-is and update on first-run
           - SITE_NAME=Admin
+          # - URL_PREFIX=/ovpn
           #- APP_PORT=8080 # Use if need to specify the custom one
       ports:
           - "8080:8080/tcp"

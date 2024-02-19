@@ -29,7 +29,7 @@ RUN apt-get autoremove -y \
 COPY ./dist/openvpn-ui-${TARGETOS}-${TARGETARCH}${TARGETVARIANT}/openvpn-ui.tar.gz /opt/openvpn-gui/
 RUN tar -zxf /opt/openvpn-gui/openvpn-ui.tar.gz --directory /opt/openvpn-gui/
 RUN rm -f /opt/openvpn-gui/openvpn-ui.tar.gz /opt/openvpn-gui/data.db
-COPY ./build/assets/app.conf /opt/openvpn-gui/conf/app.conf
+# COPY ./build/assets/app.conf /opt/openvpn-gui/conf/app.conf
 
 # Advise to open necassary ports
 EXPOSE 1194/udp 8080/tcp

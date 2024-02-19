@@ -21,88 +21,67 @@ pwd
 echo "db dir contents:"
 ls -lrt
 
+CONF_FILE="/opt/openvpn-gui/conf/app.conf"
+
+#Add static configuration
+cat > $CONF_FILE <<- EOM
+; we use this when building the app.
+AppName = "openvpn-ui"
+Theme = "blue"
+OpenVpnManagementNetwork = "tcp"
+OpenVpnServerAddress = "127.0.0.1"
+CopyRequestBody = true
+AuthType = "password"
+DbPath = "/opt/openvpn-gui/db/data.db"
+EasyRsaPath = "/etc/openvpn/easy-rsa"
+OpenVpnPath = "/etc/openvpn"
+RunMode = prod
+EnableGzip = true
+EnableAdmin = false
+SessionOn = true
+
+EOM
+
 # Set random session ID
-if ! grep -qs "^sessionname=" /opt/openvpn-gui/conf/app.conf; then
-    i=$((1 + $RANDOM % 1000))
-    echo "" >> /opt/openvpn-gui/conf/app.conf
-    echo "sessionname=beegosession_$i" >> /opt/openvpn-gui/conf/app.conf
-fi
+i=$((1 + $RANDOM % 1000))
+echo "SessionName = \"beegosession_$i\"" >> $CONF_FILE
 
 # Set site name
-if ! grep -qs "^SiteName=" /opt/openvpn-gui/conf/app.conf; then
-    if [[ -n "$SITE_NAME" ]]; then
-        echo "" >> /opt/openvpn-gui/conf/app.conf
-        echo "SiteName=${SITE_NAME}" >> /opt/openvpn-gui/conf/app.conf
-    fi
+
+if [[ -n "$SITE_NAME" ]]; then
+    echo "SiteName = \"${SITE_NAME}\"" >> $CONF_FILE
 else
-    if [[ -n "$SITE_NAME" ]]; then
-        sed -i '/SiteName=/s/.*/SiteName='"$SITE_NAME"'/' /opt/openvpn-gui/conf/app.conf
-    fi
+    echo "SiteName = \"Admin\"" >> $CONF_FILE
 fi
 
 # Set openvpn docker container name
-if ! grep -qs "^OpenVpnServerDockerName=" /opt/openvpn-gui/conf/app.conf; then
-    if [[ -n "$OPENVPN_SERVER_DOCKER_NAME" ]]; then
-        echo "" >> /opt/openvpn-gui/conf/app.conf
-        echo "OpenVpnServerDockerName=${OPENVPN_SERVER_DOCKER_NAME}" >> /opt/openvpn-gui/conf/app.conf
-    fi
+if [[ -n "$OPENVPN_SERVER_DOCKER_NAME" ]]; then
+    echo "OpenVpnServerDockerName = \"${OPENVPN_SERVER_DOCKER_NAME}\"" >> $CONF_FILE
 else
-    if [[ -n "$OPENVPN_SERVER_DOCKER_NAME" ]]; then
-        sed -i '/OpenVpnServerDockerName=/s/.*/OpenVpnServerDockerName='"$OPENVPN_SERVER_DOCKER_NAME"'/' /opt/openvpn-gui/conf/app.conf
-    fi
+    echo "OpenVpnServerDockerName = \"openvpnserver\"" >> $CONF_FILE
 fi
 
 # Set openvpn management address
-if ! grep -qs "^OpenVpnManagementAddress=" /opt/openvpn-gui/conf/app.conf; then
-    if [[ -n "$OPENVPN_MANAGEMENT_ADDRESS" ]]; then
-        echo "" >> /opt/openvpn-gui/conf/app.conf
-        echo "OpenVpnManagementAddress=${OPENVPN_MANAGEMENT_ADDRESS}" >> /opt/openvpn-gui/conf/app.conf
-    fi
+if [[ -n "$OPENVPN_MANAGEMENT_ADDRESS" ]]; then
+    echo "OpenVpnManagementAddress = \"${OPENVPN_MANAGEMENT_ADDRESS}\"" >> $CONF_FILE
 else
-    if [[ -n "$OPENVPN_MANAGEMENT_ADDRESS" ]]; then
-        sed -i '/OpenVpnManagementAddress=/s/.*/OpenVpnManagementAddress='"$OPENVPN_MANAGEMENT_ADDRESS"'/' /opt/openvpn-gui/conf/app.conf
-    fi
+    echo "OpenVpnManagementAddress = \"127.0.0.1:2080\"" >> $CONF_FILE
 fi
 
 # Set site name
-if ! grep -qs "^httpport=" /opt/openvpn-gui/conf/app.conf; then
-    if [[ -n "$APP_PORT" ]]; then
-        echo "" >> /opt/openvpn-gui/conf/app.conf
-        echo "httpport=${APP_PORT}" >> /opt/openvpn-gui/conf/app.conf
-    fi
+if [[ -n "$APP_PORT" ]]; then
+    echo "httpport = ${APP_PORT}" >> $CONF_FILE
 else
-    if [[ -n "$APP_PORT" ]]; then
-        sed -i '/httpport=/s/.*/httpport='"$APP_PORT"'/' /opt/openvpn-gui/conf/app.conf
-    fi
+    echo "httpport = 8080" >> $CONF_FILE
 fi
 
 # Set URL PREFIX
-if ! grep -qs "^BaseURLPrefix=" /opt/openvpn-gui/conf/app.conf; then
-    if [[ -n "$URL_PREFIX" ]]; then
-        echo "" >> /opt/openvpn-gui/conf/app.conf
-        echo "BaseURLPrefix=${URL_PREFIX}" >> /opt/openvpn-gui/conf/app.conf
-    fi
+if [[ -n "$URL_PREFIX" ]]; then
+    echo "BaseURLPrefix = \"${URL_PREFIX}\"" >> $CONF_FILE
 else
-    if [[ -n "$URL_PREFIX" ]]; then
-        sed -i '/BaseURLPrefix=/s/.*/BaseURLPrefix='"$URL_PREFIX"'/' /opt/openvpn-gui/conf/app.conf
-    fi
+    echo "BaseURLPrefix = \"\"" >> $CONF_FILE
 fi
 
-
-# if [ ! -f ${OVDIR}/clientDetails.json ]; then
-#     touch ${OVDIR}/clientDetails.json
-# fi
-
-# if [ ! -f ${OVDIR}/routesDetails.json ]; then
-#     touch ${OVDIR}/routesDetails.json
-# fi
-
-# wait for openvpn server ready
-# until [ -f ${OVDIR}/server.conf ]
-# do
-#      sleep 1
-# done
-
 # Start the OpenVPN GUI
-echo "Starting openvpn-ui!"
+echo "Starting openvpn-ui !"
 ./openvpn-ui
