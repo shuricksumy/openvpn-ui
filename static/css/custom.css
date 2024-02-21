@@ -457,3 +457,35 @@ button.disabled {
     opacity: 0; /* Make the mask transparent */
     pointer-events: none; /* Allow clicks to pass through to the underlying element */
 }
+
+.dt-info {
+    font-size: 75% !important;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-bottom: 10px;
+}
+
+.dt-paging{
+    font-size: 65% !important;
+}
+
+.dt-length {
+    margin: 5px;
+}
+
+ul.pagination {
+    margin: 5px !important;
+}
+
+.dt-length > label{
+    font-size: 75% !important;
+}
+
+.dt-search {
+    margin-top: 5px;
+}
+
+.justify-content-between {
+    margin-top: 3px !important;
+    margin-bottom: 3px !important;
+}

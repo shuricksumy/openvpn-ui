@@ -157,7 +157,7 @@
 
 <div class="row">
   <div class="col-md-12">
-    <div class="card card-default">
+    <div class="card card-lightblue">
       <div class="card-header with-border">
         <h3 class="card-title">Connected clients</h3>
       </div>
@@ -166,7 +166,7 @@
       <div class="card-body p-0">
         {{if .ovstatus}}
         <div class="table-responsive">
-          <table class="table table-sm m-0">
+          <table class="table table-sm m-0" id="connections" style="width:100%">
             <thead>
             <tr class="font90">
               <th>Common Name</th>
@@ -222,8 +222,6 @@
         <a href="{{urlfor "SystemController.Get"}}" class="col-md-12 btn btn-md btn-group-xs bg-gradient-red">Fix your configuration or restart OpenVPN</a>
       {{end}}
       </div>
-      <div class="card-footer clearfix">
-      </div>
       <!-- /.card-footer -->
     </div>
     <!-- /.card -->
@@ -277,3 +275,47 @@
 
 {{end}}
 
+<script type="text/javascript">
+  $(document).ready(function () {
+
+    new DataTable('#connections', {
+      lengthMenu: [
+        [8, 15, 30, -1],
+        [8, 15, 30, "All"],
+      ],
+      paging: true,
+      // scrollY: 500,
+      columnDefs: [
+        { targets: [0, 1, 2, 6], searchable: true },
+        { targets: '_all', type: 'html', searchable: false }
+      ],
+      language: {
+        "emptyTable": "No data available in table",
+        "lengthMenu": "_MENU_ items on a page",
+        "info": "Showing _START_ to _END_ of _TOTAL_ entries",
+        "infoEmpty": "Showing 0 to 0 of 0 entries",
+        "search": "",
+        "paginate": {
+          "first": "<<",
+          "last": ">>",
+          "next": ">",
+          "previous": "<"
+        },
+      },
+      layout: {
+        topEnd: 'info',
+        topStart: {
+          search: {
+            placeholder: 'Type search here'
+          }
+        },
+        bottomStart: 'pageLength',
+        bottomEnd: {
+          paging: {
+            numbers: 3
+          }
+        }
+      }
+    });
+  });
+</script>

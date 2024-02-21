@@ -102,7 +102,7 @@
 
       <div class="card-body p-0">
         <div class="table-responsive">
-          <table class="table-sm table-bordered table-striped m-0">
+          <table class="table-sm table-bordered table-striped m-0" id="routesTable" style="width:100%">
             <thead>
             <tr class="font90 textcenter">
               <th class="first-sm" style="width:10%">Status</th>
@@ -270,6 +270,46 @@
                 "#modal-edit-route-details",
                 "#showEditRouteModal"
             );
+        });
+
+        new DataTable('#routesTable', {
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, "All"],
+            ],
+            paging: true,
+            // scrollY: 500,
+            columnDefs: [
+                { targets: [1, 2, 3, 4], searchable: true },
+                { targets: '_all', type: 'html', searchable: false }
+            ],
+            language: {
+                "emptyTable": "No data available in table",
+                "lengthMenu": "_MENU_ items on a page",
+                "info": "Showing _START_ to _END_ of _TOTAL_ entries",
+                "infoEmpty": "Showing 0 to 0 of 0 entries",
+                "search": "",
+                "paginate": {
+                    "first": "<<",
+                    "last": ">>",
+                    "next": ">",
+                    "previous": "<"
+                },
+            },
+            layout: {
+                topEnd: 'info',
+                topStart: {
+                    search: {
+                        placeholder: 'Type search here'
+                    }
+                },
+                bottomStart: "pageLength",
+                bottomEnd: {
+                    paging: {
+                        numbers: 3
+                    }
+                }
+            }
         });
 
     });
