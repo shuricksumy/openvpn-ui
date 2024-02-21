@@ -290,8 +290,14 @@
 <script type="text/javascript">
 $(document).ready(function () {
 
-    options = {html:true, trigger:'focus'};
-    $('[data-toggle="popover"]').popover(options);
+    // Function to initialize popover
+    function initializePopover() {
+        $('[data-toggle="popover"]').popover({
+            html: true,
+            trigger: 'focus'
+        });
+    }
+    initializePopover();
 
     $('#form-create-client').validate({ // initialize the plugin
         rules: {
@@ -315,78 +321,71 @@ $(document).ready(function () {
         }
     });
 
-    $(function () {
+    // Function to initialize input masks
+    function initializeInputMasks() {
         $('[data-mask]').inputmask();
-
         $('[data-mask-text]').inputmask({
             mask: "*",
             greedy: false,
             repeat: 35,
             definitions: {
                 '*': {
-                    validator: "[0-9A-Za-z_-]",
+                    validator: "[0-9A-Za-z_-]"
                 }
             }
         });
-    });
+    }
 
     togglePasswordVisibility("show_hide_user_password");
+    initializeInputMasks();
 
-    $(function() {
-      $(document).ready(function () {
-          $("button#openModalClientRouting").on("click", function () {
-              var clientID = $(this).data("client-id");
-              showModalWithData(
-                  {{urlfor "ClientsController.RenderModalClientRouting"}},
-                  {"client-id": clientID},
-                  "#modal-client-routing",
-                  "#modalClientRouting"
-              );
-          });
-      });
+
+    $("button#openModalClientRouting").on("click", function () {
+      var clientID = $(this).data("client-id");
+      showModalWithData(
+          {{urlfor "ClientsController.RenderModalClientRouting"}},
+          {"client-id": clientID},
+          "#modal-client-routing",
+          "#modalClientRouting"
+      );
     });
 
-    $(function() {
-      $(document).ready(function () {
-          $("button#openModalEditClientRaw").on("click", function () {
-              var clientID = $(this).data("client-id");
-              showModalWithData(
-                  {{urlfor "ClientsController.RenderModalRaw"}},
-                  {"client-id": clientID},
-                  "#modal-edit-client-raw",
-                  "#editClientModalRaw"
-              );
-          });
-      });
+
+
+    $("button#openModalEditClientRaw").on("click", function () {
+      var clientID = $(this).data("client-id");
+      showModalWithData(
+          {{urlfor "ClientsController.RenderModalRaw"}},
+          {"client-id": clientID},
+          "#modal-edit-client-raw",
+          "#editClientModalRaw"
+      );
     });
 
-    $(function() {
-      $(document).ready(function () {
-          $("button#openModalEditClientDetails").on("click", function () {
-              var clientID = $(this).data("client-id");
-              showModalWithData(
-                  {{urlfor "ClientsController.RenderModal"}},
-                  {"client-id": clientID},
-                  "#modal-edit-client-details",
-                  "#editClientDetailsModal"
-              );
-          });
-      });
+
+
+    $("button#openModalEditClientDetails").on("click", function () {
+      var clientID = $(this).data("client-id");
+      showModalWithData(
+          {{urlfor "ClientsController.RenderModal"}},
+          {"client-id": clientID},
+          "#modal-edit-client-details",
+          "#editClientDetailsModal"
+      );
     });
 
-    $(function() {
-      $(document).ready(function () {
-          $("button#openModalEditClientAuth").on("click", function () {
-              var clientID = $(this).data("client-id");
-              showModalWithData(
-                  {{urlfor "ClientsController.RenderAuthModal"}},
-                  {"client-id": clientID},
-                  "#modal-auth-client",
-                  "#editClientAuthModal"
-              );
-          });
-      });
+
+
+    $("button#openModalEditClientAuth").on("click", function () {
+      var clientID = $(this).data("client-id");
+      showModalWithData(
+          {{urlfor "ClientsController.RenderAuthModal"}},
+          {"client-id": clientID},
+          "#modal-auth-client",
+          "#editClientAuthModal"
+      );
     });
+
 
     new DataTable('#clientTable', {
         lengthMenu: [
@@ -425,6 +424,10 @@ $(document).ready(function () {
                     numbers: 3
                 }
             }
+        },
+        drawCallback: function (settings) {
+            // Call the common function
+            // commonFunctionConfirmPopUp();
         }
     });
 

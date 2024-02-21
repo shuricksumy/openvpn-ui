@@ -276,20 +276,21 @@ pre.mypre {
         togglePasswordVisibility("show_hide_modal_password");
         commonFunctionConfirmPopUp();
 
-
-        $('[data-mask]').inputmask();
-
-        $('[data-mask-text]').inputmask({
-            mask: "*",
-            greedy: false,
-            repeat: 35,
-            definitions: {
-                '*': {
-                    validator: "[0-9A-Za-z_-]",
+        // Function to initialize input masks
+        function initializeInputMasks() {
+            $('[data-mask]').inputmask();
+            $('[data-mask-text]').inputmask({
+                mask: "*",
+                greedy: false,
+                repeat: 35,
+                definitions: {
+                    '*': {
+                        validator: "[0-9A-Za-z_-]"
+                    }
                 }
-            }
-        });
-
+            });
+        }
+        initializeInputMasks();
 
         $('#route_list_selected').multiselect({
             //buttonWidth: '340px',
@@ -307,14 +308,18 @@ pre.mypre {
             selectedClass: "active multiselect-active-item-fallback",
         });
 
-        $(document).ready(function() {
-            toggleElementsVisibilityByClass("is_router", "routerData");
-        });
-
-        options = {html:true, trigger:'hover'};
-        $('[data-toggle="popover"]').popover(options);
+        toggleElementsVisibilityByClass("is_router", "routerData");
 
         $('.select2').select2();
+
+        // Function to initialize popover
+        function initializePopover() {
+            $('[data-toggle="popover"]').popover({
+                html: true,
+                trigger: 'hover'
+            });
+        }
+        initializePopover();
 
     });
 </script>

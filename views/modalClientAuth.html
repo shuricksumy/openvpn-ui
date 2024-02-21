@@ -256,20 +256,21 @@
         customConfirmPopUpByIdForm('off_auth','editFormAuth',"Are you sure? This has a huge impact on client.");
         customConfirmPopUpByIdForm('on_auth','editFormAuth',"Are you sure? This has a huge impact on client.");
 
-        $(function () {
+        // Function to initialize input masks
+        function initializeInputMasks() {
             $('[data-mask]').inputmask();
-
             $('[data-mask-text]').inputmask({
                 mask: "*",
                 greedy: false,
                 repeat: 35,
                 definitions: {
                     '*': {
-                        validator: "[0-9A-Za-z_-]",
+                        validator: "[0-9A-Za-z_-]"
                     }
                 }
             });
-        });
+        }
+        initializeInputMasks();
 
     });
 </script>

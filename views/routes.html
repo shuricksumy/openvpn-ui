@@ -199,12 +199,18 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        options = {html:true, trigger:'focus'};
-        $('[data-toggle="popover"]').popover(options);
-
 
         $('[data-mask]').inputmask();
 
+
+        // Function to initialize popover
+        function initializePopover() {
+            $('[data-toggle="popover"]').popover({
+                html: true,
+                trigger: 'focus'
+            });
+        }
+        initializePopover();
 
         function makeid(length) {
             let result = '';

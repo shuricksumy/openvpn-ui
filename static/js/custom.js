@@ -390,64 +390,62 @@ $(document).ready(function(){
     //new Clipboard('.button-copy');
 
     //CONFIRMATION FUNCTIONS
-    $(function() {
-        window.commonFunctionConfirmPopUp = function() {
-            $('a.btn-danger').confirm({
-                content: "Are you sure? This cannot be reverted.",
-                type: 'red',
-                icon: 'fa fa-hand-o-right',
-                title: 'font-awesome',
-                theme: 'bootstrap',
-                columnClass: 'small',
-                animateFromElement: false,
-                animation: 'RotateXR',
-                closeAnimation: 'rotateXR',
-                offsetBottom: 300,
-                buttons: {
-                    Confirm: {
-                        btnClass: 'btn-red bg-red-gradient btn80 myspiner',
-                        action: function () {
-                            location.href = this.$target.attr('href');
-                        }
-                    },
-                    Cancel: {
-                        btnClass: 'btn80',
-                        action: function () {
-                        }
-                    },
-                }
-            });
+    window.commonFunctionConfirmPopUp = function() {
+        $('a.btn-danger').confirm({
+            content: "Are you sure? This cannot be reverted.",
+            type: 'red',
+            icon: 'fa fa-hand-o-right',
+            title: 'font-awesome',
+            theme: 'bootstrap',
+            columnClass: 'small',
+            animateFromElement: false,
+            animation: 'RotateXR',
+            closeAnimation: 'rotateXR',
+            offsetBottom: 300,
+            buttons: {
+                Confirm: {
+                    btnClass: 'btn-red bg-red-gradient btn80 myspiner',
+                    action: function () {
+                        location.href = this.$target.attr('href');
+                    }
+                },
+                Cancel: {
+                    btnClass: 'btn80',
+                    action: function () {
+                    }
+                },
+            }
+        });
 
-            $('a.btn-warning').confirm({
-                content: "Confirm, if you are 100% sure.",
-                type: 'orange',
-                icon: 'fa fa-hand-o-right',
-                title: 'font-awesome',
-                columnClass: 'small',
-                theme: 'bootstrap',
-                animateFromElement: false,
-                animation: 'RotateXR',
-                closeAnimation: 'rotateXR',
-                offsetBottom: 300,
-                buttons: {
-                    Confirm: {
-                        btnClass: 'btn-orange bg-yellow-gradient btn80 setloader myspiner',
-                        action: function () {
-                            location.href = this.$target.attr('href');
-                        }
-                    },
-                    Cancel: {
-                        btnClass: 'btn80',
-                        action: function () {
-                        }
-                    },
-                }
-            });
-        }
+        $('a.btn-warning').confirm({
+            content: "Confirm, if you are 100% sure.",
+            type: 'orange',
+            icon: 'fa fa-hand-o-right',
+            title: 'font-awesome',
+            columnClass: 'small',
+            theme: 'bootstrap',
+            animateFromElement: false,
+            animation: 'RotateXR',
+            closeAnimation: 'rotateXR',
+            offsetBottom: 300,
+            buttons: {
+                Confirm: {
+                    btnClass: 'btn-orange bg-yellow-gradient btn80 setloader myspiner',
+                    action: function () {
+                        location.href = this.$target.attr('href');
+                    }
+                },
+                Cancel: {
+                    btnClass: 'btn80',
+                    action: function () {
+                    }
+                },
+            }
+        });
+    }
 
-        // Call the common function
-        commonFunctionConfirmPopUp();
-    })
+    // Call the common function
+    commonFunctionConfirmPopUp();
 
 
     // Use $(document).on() to bind the click event to dynamically added elements
