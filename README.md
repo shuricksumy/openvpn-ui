@@ -3,6 +3,12 @@
 [![Watch the video](/screenshots/main.png)](https://github.com/shuricksumy/openvpn-ui/assets/12009686/06d96239-c7f8-4dc2-ab27-f3e4e2b0b6bf)
 
 ## Updates
+#### February 2024 (v5.2)
+
+- Improve start script to use env vars as is
+- Improved UI: tables refactored to DataTables for better UX
+- Fixed small bugs in JS
+
 #### February 2024 (v5.1)
   
  - Added env variable **URL_PREFIX** to add leading url prefix for easy configuration proxy pass based on nginx, traefik
