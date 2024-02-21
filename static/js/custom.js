@@ -387,7 +387,6 @@ function stopOpenVPN(link) {
 ////////////////////////////////////////////////////////////////////////////////
 // ALL FUNCTION LOADED AFTER PAGE IS DONE
 $(document).ready(function(){
-    //new Clipboard('.button-copy');
 
     //CONFIRMATION FUNCTIONS
     window.commonFunctionConfirmPopUp = function() {
