@@ -1,0 +1,15 @@
+{
+  "name": "openvpn-ui",
+  "version": "5.2.0",
+  "description": "OpenVPN web interface",
+  "main": "index.js",
+  "repository": "git@github.com:shuricksumy/openvpn-ui.git",
+  "author": "Oleksandr Suchkov <suchkov.av@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "ace-code": "^1.32",
+    "admin-lte": "^3.2",
+    "select2": "^4.1.0-rc.0",
+    "yarn": "^1.22.21"
+  }
+}
