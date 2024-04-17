@@ -10,3 +10,4 @@ example/*
 .task
 dist
 */node_modules
+*/dist
