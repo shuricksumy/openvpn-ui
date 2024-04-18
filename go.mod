@@ -1,6 +1,6 @@
 module github.com/shuricksumy/openvpn-ui
 
-go 1.21.7
+go 1.22.2
 
 require (
 	github.com/beego/beego/v2 v2.2.0

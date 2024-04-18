@@ -126,6 +126,14 @@ tasks:
   docker.push:
     desc: Builds the docker container for the application for testing.
     cmds:
+      - docker buildx build --platform linux/amd64,linux/arm64 -f Dockerfile -t shuricksumy/openvpn-ui:latest . --push --no-cache
+    sources:
+      - "dist/**"
+      - "Dockerfile*"
+
+  docker.build.push:
+    desc: Builds the docker container for the application for testing.
+    cmds:
       - task: build
       - docker buildx build --platform linux/amd64,linux/arm64 -f Dockerfile -t shuricksumy/openvpn-ui:latest . --push --no-cache
     sources:
@@ -142,6 +150,14 @@ tasks:
       - "Dockerfile*"
 
   docker.push.latestvpn:
+    desc: Builds the docker container for the application for testing.
+    cmds:
+      - docker buildx build --platform linux/amd64,linux/arm64 -f Dockerfile-latestvpn -t shuricksumy/openvpn-ui-latestvpn:latest . --push --no-cache
+    sources:
+      - "dist/**"
+      - "Dockerfile*"
+
+  docker.build.push.latestvpn:
     desc: Builds the docker container for the application for testing.
     cmds:
       - task: build
