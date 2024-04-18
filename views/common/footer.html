@@ -8,14 +8,39 @@
 <footer class="main-footer" style="padding: 5px;">
   <div class="container">
     <div class="pull-right hidden-xs" style="text-align: center;">
-      Ⓒ 2024 Developer Oleksandr Suchkov | All Rights Reserved. Version: 5.2 <a target=”_blank” href="https://github.com/shuricksumy/openvpn-ui"> GitHub Project</a>
+      Ⓒ 2024 Developer Oleksandr Suchkov | All Rights Reserved. Version: 5.2 (build: <span id="buildNumberSpan">Loading...</span>)<a target=”_blank” href="https://github.com/shuricksumy/openvpn-ui"> GitHub Project</a>
     </div>
   </div>
 
   <!-- /.container -->
-<!--
 </footer>
+<!--
 </div>
 -->
 </body>
+
+<script>
+  // Function to check build.txt and get build number
+  function getBuildNumber(buildFilePath) {
+    $.ajax({
+      url: buildFilePath,
+      type: 'GET',
+      success: function(data) {
+        // If build file exists, set the content of the specified span element
+        $('#buildNumberSpan').html(data.trim());
+      },
+      error: function() {
+        // If build file doesn't exist, set "dev-version" as content
+        $('#buildNumberSpan').html('dev-version');
+      }
+    });
+  }
+
+  // Call the function with the build file path when the page loads
+  $(document).ready(function() {
+    var buildFilePath = "{{.PrefixURL}}/static/build.txt"; // Change this to your build file path
+    getBuildNumber(buildFilePath);
+  });
+</script>
+
 </html>

@@ -31,6 +31,9 @@ RUN tar -zxf /opt/openvpn-gui/openvpn-ui.tar.gz --directory /opt/openvpn-gui/
 RUN rm -f /opt/openvpn-gui/openvpn-ui.tar.gz /opt/openvpn-gui/data.db
 # COPY ./build/assets/app.conf /opt/openvpn-gui/conf/app.conf
 
+#ADD BUILD NUMBER
+RUN date +"%d%m%Y-%H%M%S" > /opt/openvpn-gui/static/build.txt
+
 # Advise to open necassary ports
 EXPOSE 1194/udp 8080/tcp
 
