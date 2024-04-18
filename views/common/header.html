@@ -43,8 +43,10 @@
 
     <script>
         $(document).ready(function() {
-            // Update status every minute
-            setInterval(updateStatus({{urlfor "OpenVPNController.GetOpenVPNStatus"}}), 60000);
+            // Update status every 20sec
+            setInterval( function() {
+                updateStatus({{urlfor "OpenVPNController.GetOpenVPNStatus"}});
+            }, 20000);
 
             // Initial update
             updateStatus({{urlfor "OpenVPNController.GetOpenVPNStatus"}});
