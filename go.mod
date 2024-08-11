@@ -1,10 +1,10 @@
 module github.com/shuricksumy/openvpn-ui
 
-go 1.22.4
+go 1.22.6
 
 require (
-	github.com/beego/beego/v2 v2.2.2
-	github.com/cloudfoundry/gosigar v1.3.63
+	github.com/beego/beego/v2 v2.3.0
+	github.com/cloudfoundry/gosigar v1.3.68
 	github.com/go-ldap/ldap/v3 v3.4.8
 	github.com/google/uuid v1.6.0
 	github.com/mattn/go-sqlite3 v1.14.22
@@ -17,7 +17,7 @@ require (
 require (
 	github.com/Azure/go-ntlmssp v0.0.0-20221128193559-754e69321358 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
-	github.com/boombuler/barcode v1.0.1 // indirect
+	github.com/boombuler/barcode v1.0.2 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/go-asn1-ber/asn1-ber v1.5.7 // indirect
@@ -34,10 +34,10 @@ require (
 	github.com/prometheus/procfs v0.15.1 // indirect
 	github.com/shiena/ansicolor v0.0.0-20230509054315-a9deabde6e02 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
-	golang.org/x/crypto v0.24.0 // indirect
-	golang.org/x/net v0.26.0 // indirect
-	golang.org/x/sys v0.21.0 // indirect
-	golang.org/x/text v0.16.0 // indirect
+	golang.org/x/crypto v0.26.0 // indirect
+	golang.org/x/net v0.28.0 // indirect
+	golang.org/x/sys v0.24.0 // indirect
+	golang.org/x/text v0.17.0 // indirect
 	google.golang.org/protobuf v1.34.2 // indirect
 	gopkg.in/hlandau/easymetric.v1 v1.0.0 // indirect
 	gopkg.in/hlandau/measurable.v1 v1.0.1 // indirect

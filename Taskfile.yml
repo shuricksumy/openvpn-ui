@@ -88,7 +88,7 @@ tasks:
   build.platform:
     internal: true
     vars:
-      binary_output: '{{ .BINARY_DIR }}/{{ .BINARY_NAME }}{{ if eq .BINARY_APPEND_OS "true" }}-{{ .os }}{{ end }}{{ if eq .BINARY_APPEND_ARCH "true" }}-{{ .arch }}{{ end }}'
+      binary_output: '{{ .BINARY_DIR }}/{{ .BINARY_NAME }}{{ if eq .BINARY_APPEND_OS true }}-{{ .os }}{{ end }}{{ if eq .BINARY_APPEND_ARCH true }}-{{ .arch }}{{ end }}'
     cmds:
       #- GOOS={{ .os }} GOARCH={{ .arch }} bee pack -exr='^vendor|^data.db|^build|^README.md|^docs|^README_ORIGINAL.md|^screenshots|^pkg|^bin|^dist|^Taskfile|^example|^swagger|^docker-compose|^Dockerfile' -o {{ .binary_output }}
       - docker buildx build --platform {{ .os }}/{{ .arch }} -f ./Dockerfile-builder -o {{ .binary_output }} .
