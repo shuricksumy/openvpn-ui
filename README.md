@@ -106,6 +106,12 @@ There is no back compatibility with previous versions. Need to recreate service 
 All these methods can be used separately or simultaneously
 
 
+Add auth script usage to `server.conf`
+```editorconfig
+script-security 2
+auth-user-pass-verify /opt/scripts/auth_client.sh via-file
+```
+
 <img width="730px" alt="Pass Phrase" src="screenshots/passphrase.png">
 
 <img width="730px" alt="Pass OTP" src="screenshots/OTP_PASS.png">
