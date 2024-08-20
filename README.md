@@ -130,8 +130,6 @@ auth-user-pass-verify /opt/scripts/auth_client.sh via-file
 <summary>Example docker-compose file</summary>
 
 ```docker
-version: '3'
-
 networks:
     default:
         driver: bridge
@@ -143,14 +141,14 @@ networks:
 services:
   ovpn:
         image: shuricksumy/openvpn-ui:latest
-        container_name: openvpn-ui
+        container_name: openvpn
         working_dir: /etc/openvpn/easy-rsa
         environment:
             - OPENVPN_ADMIN_USERNAME=admin # Leave this default as-is and update on first-run
             - OPENVPN_ADMIN_PASSWORD=admin # Leave this default as-is and update on first-run
             - SITE_NAME=Admin
-            #- APP_PORT=8080 # Use if need to specify the custom one
-            #- URL_PREFIX=/ovpn # Use general prefix for nginx,traefik proxy pass configuration
+            - APP_PORT=8080
+            # - URL_PREFIX=/ovpn
         ports:
             - "8080:8080/tcp"
             - "1194:1194/udp"
@@ -163,10 +161,15 @@ services:
         cap_add:
             - NET_ADMIN
         volumes:
-            -  /var/run/docker.sock:/var/run/docker.sock
+            - /var/run/docker.sock:/var/run/docker.sock
+            - ./openvpn/conf:/etc/openvpn
             - ./openvpn/db:/opt/openvpn-gui/db
-            - ./openvpn:/etc/openvpn
-            #- ./openvpn/easy-rsa:/etc/openvpn/easy-rsa
+        # labels:
+        #    - traefik.enable=true
+        #    - traefik.http.routers.admin.rule=Host(`your_public_host`) && PathPrefix(`/ovpn`)  
+        #    - traefik.http.routers.admin.entrypoints=websecure
+        #    - traefik.http.routers.admin.tls=true
+        #    - traefik.http.services.admin.loadbalancer.server.port=8080
 ```
 
 </details>
