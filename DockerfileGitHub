@@ -1,11 +1,27 @@
-FROM debian:stable
+# Stage 1: Build app
+FROM golang:1.22.6-bookworm AS app_builder
 
-ARG TARGETOS
-ARG TARGETARCH
-ARG TARGETVARIANT
+ENV WORK_DIR=$GOPATH/src/github.com/shuricksumy/openvpn-ui
+ENV CGO_ENABLED=1
+#ENV CGO_CFLAGS="-D_LARGEFILE64_SOURCE"
+WORKDIR $WORK_DIR
+COPY . .
+
+RUN apt-get update && apt-get install build-essential -y
+
+RUN go install github.com/beego/bee/v2@latest && bee update
+RUN go mod tidy && go mod vendor && bee pack bee pack  \
+    -exr='^vendor|^data.db|^build|^README.md|^docs|^README_ORIGINAL.md|^screenshots|^pkg|^bin|^dist|^Taskfile|^example|^swagger|^docker-compose|^Dockerfile|^SECURITY.md'
+RUN ls -lah $WORK_DIR
+
+# Stage 2: Build OpenVPN server
+FROM debian:stable AS server
 
 RUN apt-get update && apt-get upgrade -y && apt-get install -y curl bzip2 jq git wget openvpn iptables openssl oathtool \
     wget ca-certificates iproute2 sqlite3 procps
+
+ENV SRC_DIR=/go/src/github.com/shuricksumy/openvpn-ui
+COPY --from=app_builder $SRC_DIR/openvpn-ui.tar.gz /opt/openvpn-gui/openvpn-ui.tar.gz
 
 COPY ./build/assets/EasyRSA-3.2.0.tgz /root/EasyRSA-3.2.0.tgz
 COPY ./build/assets/start.sh /opt/start.sh
@@ -26,10 +42,8 @@ RUN apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 
-COPY ./dist/openvpn-ui-${TARGETOS}-${TARGETARCH}${TARGETVARIANT}/openvpn-ui.tar.gz /opt/openvpn-gui/
 RUN tar -zxf /opt/openvpn-gui/openvpn-ui.tar.gz --directory /opt/openvpn-gui/
 RUN rm -f /opt/openvpn-gui/openvpn-ui.tar.gz /opt/openvpn-gui/data.db
-# COPY ./build/assets/app.conf /opt/openvpn-gui/conf/app.conf
 
 #ADD BUILD NUMBER
 RUN date +"%d%m%Y-%H%M%S" > /opt/openvpn-gui/static/build.txt
@@ -42,3 +56,4 @@ EXPOSE 1194/udp 8080/tcp
 WORKDIR /etc/openvpn/easy-rsa
 
 CMD /opt/start.sh
+

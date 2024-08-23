@@ -9,34 +9,33 @@ networks:
             config:
                 - subnet: 172.18.0.0/24
 services:
-  gui:
-      image: shuricksumy/openvpn-ui:beta
-#      build:
-#        context: .
-#        dockerfile: Dockerfile-latestvpn
-#        args:
-#          TARGETOS: linux
-#          TARGETARCH: amd64
-      container_name: openvpn-ui-beta
-      working_dir: /etc/openvpn/easy-rsa
-      environment:
-          - OPENVPN_ADMIN_USERNAME=admin # Leave this default as-is and update on first-run
-          - OPENVPN_ADMIN_PASSWORD=admin # Leave this default as-is and update on first-run
-          - SITE_NAME=Admin
-          # - URL_PREFIX=/ovpn
-          # - APP_PORT=8080 # Use if need to specify the custom one
-      ports:
-          - "8080:8080/tcp"
-          - "1194:1194/udp"
-      restart: always
-      networks:
-          npm_proxy:
-              ipv4_address: 172.18.0.10
-      devices:
-          - /dev/net/tun
-      cap_add:
-          - NET_ADMIN
-      volumes:
-          - /var/run/docker.sock:/var/run/docker.sock
-          - ./openvpn/conf:/etc/openvpn
-          - ./openvpn/db:/opt/openvpn-gui/db
+    gui:
+        image: shuricksumy/openvpn-ui:beta
+        #      build:
+        #        context: .
+        #        dockerfile: Dockerfile-latestvpn
+        #        args:
+        #          TARGETOS: linux
+        #          TARGETARCH: amd64
+        container_name: openvpn-ui-beta
+        environment:
+            - OPENVPN_ADMIN_USERNAME=admin # Leave this default as-is and update on first-run
+            - OPENVPN_ADMIN_PASSWORD=admin # Leave this default as-is and update on first-run
+            - SITE_NAME=Admin
+            # - URL_PREFIX=/ovpn
+            # - APP_PORT=8080 # Use if need to specify the custom one
+        ports:
+            - "8080:8080/tcp"
+            - "1194:1194/udp"
+        restart: always
+        networks:
+            npm_proxy:
+                ipv4_address: 172.18.0.10
+        devices:
+            - /dev/net/tun
+        cap_add:
+            - NET_ADMIN
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - ./example/conf:/etc/openvpn
+            - ./example/db:/opt/openvpn-gui/db

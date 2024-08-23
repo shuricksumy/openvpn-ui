@@ -1,6 +1,4 @@
 FROM debian:stable
-WORKDIR /opt
-EXPOSE 8080
 
 ARG TARGETOS
 ARG TARGETARCH
@@ -34,7 +32,11 @@ RUN rm -f /opt/openvpn-gui/openvpn-ui.tar.gz /opt/openvpn-gui/data.db
 #ADD BUILD NUMBER
 RUN date +"%d%m%Y-%H%M%S" > /opt/openvpn-gui/static/build.txt
 
+VOLUME /etc/openvpn
+VOLUME /opt/openvpn-gui/db
+
 # Advise to open necassary ports
 EXPOSE 1194/udp 8080/tcp
+WORKDIR /etc/openvpn/easy-rsa
 
 CMD /opt/start.sh
