@@ -1,3 +1,5 @@
+[![Build and Deploy Docker Images](https://github.com/shuricksumy/openvpn-ui/actions/workflows/docker-image.yml/badge.svg?branch=my_main)](https://github.com/shuricksumy/openvpn-ui/actions/workflows/docker-image.yml)
+
 # OpenVPN WEB UI
 
 [![Watch the video](/screenshots/main.png)](https://github.com/shuricksumy/openvpn-ui/assets/12009686/06d96239-c7f8-4dc2-ab27-f3e4e2b0b6bf)

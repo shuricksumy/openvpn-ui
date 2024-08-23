@@ -6,6 +6,7 @@ on:
       - main
     paths-ignore:
       - '.github/**'
+      - '*.md'
   release:
     types: [published]
   workflow_dispatch: ~
@@ -48,7 +49,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: |
             ghcr.io/${{ github.repository }}:latestvpn
-            # ${{ github.event_name == 'release' && format('ghcr.io/{0}:{1}', github.repository, github.event.release.tag_name) || '' }}
+            ${{ github.event_name == 'release' && format('ghcr.io/{0}:{1}_latestvpn', github.repository, github.event.release.tag_name) || '' }}
 
       - name: Build and Push Docker Image for Docker Hub
         uses: docker/build-push-action@v5
@@ -59,5 +60,5 @@ jobs:
           provenance: false
           platforms: linux/amd64,linux/arm64
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/wgdasboard:latestvpn
-            # ${{ github.event_name == 'release' && format('{0}/{1}:{2}', secrets.DOCKER_USERNAME, github.repository, github.event.release.tag_name) || '' }}
+            ${{ secrets.DOCKER_USERNAME }}/openvpn-ui:latestvpn
+            ${{ github.event_name == 'release' && format('{0}/openvpn-ui:{1}_latestvpn', secrets.DOCKER_USERNAME, github.event.release.tag_name) || '' }}
