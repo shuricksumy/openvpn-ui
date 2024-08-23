@@ -1,0 +1,63 @@
+name: Build and Deploy Docker Images
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '.github/**'
+  release:
+    types: [published]
+  workflow_dispatch: ~
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          submodules: false
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_PAT }}
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and Push Docker Image for GitHub Container Registry
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./DockerfileGitHub
+          push: true
+          provenance: false
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ghcr.io/${{ github.repository }}:latestvpn
+            # ${{ github.event_name == 'release' && format('ghcr.io/{0}:{1}', github.repository, github.event.release.tag_name) || '' }}
+
+      - name: Build and Push Docker Image for Docker Hub
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./DockerfileGitHub
+          push: true
+          provenance: false
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/wgdasboard:latestvpn
+            # ${{ github.event_name == 'release' && format('{0}/{1}:{2}', secrets.DOCKER_USERNAME, github.repository, github.event.release.tag_name) || '' }}
