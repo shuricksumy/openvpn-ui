@@ -3,7 +3,7 @@ name: Build and Deploy Docker Images
 on:
   push:
     branches:
-      - main
+      - my_main
     paths-ignore:
       - '.github/**'
       - '*.md'
