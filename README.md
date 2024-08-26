@@ -4,7 +4,90 @@
 
 [![Watch the video](/screenshots/main.png)](https://github.com/shuricksumy/openvpn-ui/assets/12009686/06d96239-c7f8-4dc2-ab27-f3e4e2b0b6bf)
 
-## Updates
+## Example docker-compose file
+
+```docker
+networks:
+    default:
+        driver: bridge
+    npm_proxy:
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 172.18.0.0/24
+services:
+  ovpn:
+        image: shuricksumy/openvpn-ui:latest
+        container_name: openvpn
+        working_dir: /etc/openvpn/easy-rsa
+        environment:
+            - OPENVPN_ADMIN_USERNAME=admin # Leave this default as-is and update on first-run
+            - OPENVPN_ADMIN_PASSWORD=admin # Leave this default as-is and update on first-run
+            - SITE_NAME=Admin
+            - APP_PORT=8080
+            # - URL_PREFIX=/ovpn
+        ports:
+            - "8080:8080/tcp"
+            - "1194:1194/udp"
+        restart: always
+        networks:
+            npm_proxy:
+                ipv4_address: 172.18.0.10
+        devices:
+            - /dev/net/tun
+        cap_add:
+            - NET_ADMIN
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - ./openvpn/conf:/etc/openvpn
+            - ./openvpn/db:/opt/openvpn-gui/db
+        # labels:
+        #    - traefik.enable=true
+        #    - traefik.http.routers.admin.rule=Host(`your_public_host`) && PathPrefix(`/ovpn`)  
+        #    - traefik.http.routers.admin.entrypoints=websecure
+        #    - traefik.http.routers.admin.tls=true
+        #    - traefik.http.services.admin.loadbalancer.server.port=8080
+```
+
+## Password/OTP/Passphrase usage
+
+<details>
+
+<summary>Password/OTP/Passphrase usage</summary>
+
+### 3 way implemented to protect connection:
+- protect certificate by passphrase
+- protect connection by static login/password
+- use One Time Password (OTP)
+
+All these methods can be used separately or simultaneously
+
+
+Add auth script usage to `server.conf`
+```editorconfig
+script-security 2
+auth-user-pass-verify /opt/scripts/auth_client.sh via-file
+```
+
+<img width="730px" alt="Pass Phrase" src="screenshots/passphrase.png">
+
+<img width="730px" alt="Pass OTP" src="screenshots/OTP_PASS.png">
+
+![Pass OTP](screenshots/ovpn-client-app.png)
+
+</details>
+
+## History
+
+#### August 2024 (v5.2)
+
+- Fix some minor front-end issues 
+
+### Previous versions
+<details>
+
+<summary>Previous versions details</summary>
+
 #### February 2024 (v5.2)
 
 - Improve start script to use env vars as is
@@ -23,12 +106,6 @@ There is no back compatibility with previous versions. Need to recreate service 
 - Redesigned UI a bit
 - Updated DB to use UUID for entities
 - Added Authorization layer: Static Password and/or OTP code
-
-
-### Previous versions
-<details>
-
-<summary>Previous versions details</summary>
 
 #### January 2024 (v4.2)
 - Small updates of UI interface: popups, colors, tables, etc..
@@ -94,87 +171,6 @@ There is no back compatibility with previous versions. Need to recreate service 
   
 </details>
 
-## Password/OTP/Passphrase usage
-
-<details>
-
-<summary>Password/OTP/Passphrase usage</summary>
-
-### 3 way implemented to protect connection:
-- protect certificate by passphrase
-- protect connection by static login/password
-- use One Time Password (OTP)
-
-All these methods can be used separately or simultaneously
-
-
-Add auth script usage to `server.conf`
-```editorconfig
-script-security 2
-auth-user-pass-verify /opt/scripts/auth_client.sh via-file
-```
-
-<img width="730px" alt="Pass Phrase" src="screenshots/passphrase.png">
-
-<img width="730px" alt="Pass OTP" src="screenshots/OTP_PASS.png">
-
-![Pass OTP](screenshots/ovpn-client-app.png)
-
-
-
-</details>
-
-
-## Example docker-compose file
-
-<details>
-
-<summary>Example docker-compose file</summary>
-
-```docker
-networks:
-    default:
-        driver: bridge
-    npm_proxy:
-        driver: bridge
-        ipam:
-            config:
-                - subnet: 172.18.0.0/24
-services:
-  ovpn:
-        image: shuricksumy/openvpn-ui:latest
-        container_name: openvpn
-        working_dir: /etc/openvpn/easy-rsa
-        environment:
-            - OPENVPN_ADMIN_USERNAME=admin # Leave this default as-is and update on first-run
-            - OPENVPN_ADMIN_PASSWORD=admin # Leave this default as-is and update on first-run
-            - SITE_NAME=Admin
-            - APP_PORT=8080
-            # - URL_PREFIX=/ovpn
-        ports:
-            - "8080:8080/tcp"
-            - "1194:1194/udp"
-        restart: always
-        networks:
-            npm_proxy:
-                ipv4_address: 172.18.0.10
-        devices:
-            - /dev/net/tun
-        cap_add:
-            - NET_ADMIN
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
-            - ./openvpn/conf:/etc/openvpn
-            - ./openvpn/db:/opt/openvpn-gui/db
-        # labels:
-        #    - traefik.enable=true
-        #    - traefik.http.routers.admin.rule=Host(`your_public_host`) && PathPrefix(`/ovpn`)  
-        #    - traefik.http.routers.admin.entrypoints=websecure
-        #    - traefik.http.routers.admin.tls=true
-        #    - traefik.http.services.admin.loadbalancer.server.port=8080
-```
-
-</details>
 
 References:
 - The project is originally based on [https://github.com/d3vilh/openvpn-ui](https://github.com/d3vilh/openvpn-ui)  - big thanks for a great job
