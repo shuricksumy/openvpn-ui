@@ -210,11 +210,11 @@ min-width: 60px;
   position:relative;
   margin-left: 30px;
 }
-.left-icon-holder .fa {
+.left-icon-holder .fa-lg {
   position:absolute;
   line-height: 24px;
   top:50%;
-  margin-top: -12px; /* Half of line height to keep left middle postion of container */
+  margin-top: -8px; /* Half of line height to keep left middle postion of container */
   left: 10px;
 }
 
@@ -222,11 +222,11 @@ min-width: 60px;
     position:relative;
 }
 
-.right-icon-holder-rel .fa {
+.right-icon-holder-rel .fa-lg {
     position:absolute;
     line-height: 24px;
     top:50%;
-    margin-top: -12px; /* Half of line height to keep left middle postion of container */
+    margin-top: -8px; /* Half of line height to keep left middle postion of container */
     right: 10px;
 }
 
@@ -235,11 +235,11 @@ min-width: 60px;
   margin-right: 50px;
 }
 
-.right-icon-holder .fa {
+.right-icon-holder .fa-lg {
   position:absolute;
   line-height: 24px;
   top:50%;
-  margin-top: -12px; /* Half of line height to keep left middle postion of container */
+  margin-top: -8px; /* Half of line height to keep left middle postion of container */
   right: 10px;
 }
 
