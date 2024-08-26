@@ -271,9 +271,9 @@ pre.mypre {
     </div>
 </div>
 
-<script type="text/javascript">
+<script>
 
-    $(function(){
+    $(document).ready(function() {
 
             togglePasswordVisibility("show_hide_modal_password");
             commonFunctionConfirmPopUp();
@@ -313,13 +313,15 @@ pre.mypre {
 
             $('.select2').select2();
 
-        // Function to initialize popover
-        $(function(){
-            $('[data-toggle="popover"]').popover({
-                html: true,
-                trigger: 'hover'
-            });
-        });
+            $(document).ready(function() {
+                    $('[data-toggle="popover"]').popover({
+                        html: true,
+                        trigger: 'hover'
+                    });
 
+                    $('[data-toggle="popover"]').on("mouseenter", function() {
+                        $(this).popover('show');
+                    });
+            });
     });
 </script>
