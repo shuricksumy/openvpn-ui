@@ -36,21 +36,21 @@
     <!-- /.card-header -->
     <!-- form start -->
     <div id="newClient" class="collapse">
-      <form id="form-create-client" autocomplete="off" role="form" action="{{urlfor "ClientsController.NewClient"}}" method="post">
+      <form id="form-create-client" autocomplete="nope" role="form" action="{{urlfor "ClientsController.NewClient"}}" method="post">
         <div class="card-body">
     
             <div class="form-row">
     
               <div class="form-group col-md-4">
                 <label for="client_name">Client Name*</label>
-                <input type="text" class="form-control" placeholder="Set user name" id="client_name"
+                <input type="text" autocomplete="nope" class="form-control" placeholder="Set user name" id="client_name"
                   name="client_name" data-mask-text required onfocusout="this.value = this.value.trim()">
                 <span class="help-block font75">The unique User Name</span>
               </div>
 
                 <div class="form-group col-md-8">
                     <label for="description">Description</label>
-                    <input type="text" class="form-control" placeholder="Add description" id="description"
+                    <input type="text" autocomplete="nope" class="form-control" placeholder="Add description" id="description"
                            name="description" onfocusout="this.value = this.value.trim()">
                     <span class="help-block font75">Describe the client details</span>
                 </div>
@@ -58,7 +58,7 @@
                 <div class="form-group col-md-4">
                     <label for="new_static_pass">User Password</label>
                     <div class="input-group" id="show_hide_user_password">
-                      <input type="password" autocomplete="off" role="presentation" class="form-control" placeholder="Password" id="new_static_pass"
+                      <input type="password" autocomplete="nope" role="presentation" class="form-control" placeholder="Password" id="new_static_pass"
                         name="new_static_pass" data-mask-text onfocusout="this.value = this.value.trim()">
                       <span class="input-group-btn">
                         <button class="btn btn-default reveal" type="button">
@@ -70,7 +70,7 @@
 
                 <div class="form-group col-md-4">
                     <label for="static_ip">Static IP</label>
-                    <input class="form-control" name="static_ip" id="static_ip"
+                    <input class="form-control" autocomplete="nope" name="static_ip" id="static_ip"
                            data-inputmask="'alias': 'ip'" data-mask
                            pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$"
                            placeholder="Enter Static IP" onfocusout="this.value = this.value.trim()">
