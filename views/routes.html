@@ -36,7 +36,7 @@
     <!-- form start -->
 
     <div id="newCert" class="collapse">
-    <form id="form-create-route" autocomplete="off" role="form" action="{{urlfor "RoutesController.NewRoute"}}" method="post">
+    <form id="form-create-route" autocomplete="nope" role="form" action="{{urlfor "RoutesController.NewRoute"}}" method="post">
       <div class="card-body">
 
           <div class="form-row">
@@ -54,7 +54,7 @@
 
               <div class="form-group col-md-4">        
                 <label for="route_ip">Route IP*</label>
-                <input id="route_ip" class="form-control" name="route_ip" value="{{.RouteIP}}"
+                <input id="route_ip" class="form-control" name="route_ip" value="{{.RouteIP}}" autocomplete="nope"
                                 data-inputmask="'alias': 'ip'" data-mask 
                                 pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" 
                                     placeholder="Enter Static IP" onfocusout="this.value = this.value.trim()">
@@ -63,7 +63,7 @@
 
               <div class="form-group col-md-4">        
                 <label for="route_mask">Route Mask*</label>
-                <input id="route_mask" class="form-control" name="route_mask" value="{{.RouteMask}}"
+                <input id="route_mask" class="form-control" name="route_mask" value="{{.RouteMask}}" autocomplete="nope"
                                 data-inputmask="'alias': 'ip'" data-mask 
                                 pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" 
                                     placeholder="Enter Static IP" onfocusout="this.value = this.value.trim()">
@@ -72,7 +72,7 @@
 
               <div class="form-group col-md-12">
                     <label for="description">Description</label>
-                    <input type="text" class="form-control" placeholder="Add description" id="description" 
+                    <input type="text" class="form-control" placeholder="Add description" id="description"  autocomplete="nope"
                       name="description" onfocusout="this.value = this.value.trim()">
                     <span class="help-block font75">Describe the route details</span>
               </div>

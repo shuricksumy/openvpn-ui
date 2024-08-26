@@ -47,7 +47,7 @@ pre.mypre {
             {{else}}
 
                 <!-- FORM START -->
-                <form id="editForm" autocomplete="off" action="{{urlfor "ClientsController.SaveClientDetailsData"}}" method="post">
+                <form id="editForm" autocomplete="nope" action="{{urlfor "ClientsController.SaveClientDetailsData"}}" method="post">
                     
                     <!-- Hidden fields for proper form usage -->
                     <input type="hidden" name="client_id" id="client_id" value="{{$c.Id}}">
@@ -90,7 +90,7 @@ pre.mypre {
                                 <i class="fa fa-info-circle" data-toggle="popover" data-html="true" data-placement="bottom"
                                     data-content=" Use this phrase to import Certificate on clien side"></i>
                                 <div class="input-group" id="show_hide_modal_password">
-                                  <input type="password" autocomplete="off" role="presentation" class="form-control" placeholder="Passphrase" id="passphrase"
+                                  <input type="password" autocomplete="nope" role="presentation" class="form-control" placeholder="Passphrase" id="passphrase"
                                     name="passphrase" data-mask-text onfocusout="this.value = this.value.trim()" 
                                         value="{{$c.Passphrase}}" disabled="disabled">
                                   <span class="input-group-btn">

@@ -166,7 +166,7 @@
       <div class="card-body p-0">
         {{if .ovstatus}}
         <div class="table-responsive">
-          <table class="table table-sm m-0" id="connections" style="width:100%">
+          <table class="table-sm table-bordered table-striped m-0" id="connections" style="width:100%">
             <thead>
             <tr class="font90">
               <th>Common Name</th>
@@ -312,6 +312,10 @@
             numbers: 3
           }
         }
+      },
+      drawCallback: function (settings) {
+        // Call the common function
+        // commonFunctionConfirmPopUp();
       }
     });
   });
