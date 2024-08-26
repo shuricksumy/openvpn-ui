@@ -489,3 +489,7 @@ ul.pagination {
     margin-top: 3px !important;
     margin-bottom: 3px !important;
 }
+
+table.dataTable {
+     border-collapse: collapse !important;
+}

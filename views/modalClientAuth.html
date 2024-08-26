@@ -248,7 +248,7 @@
 </div>
 
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(function(){
         togglePasswordVisibility("show_hide_static_pass");
         replaceElementVisibility("otp_is_enabled","qr-image-mock","qr-image")
         disableElementOnCheckboxUncheck("static_pass_is_enabled", "static_pass")
@@ -257,7 +257,7 @@
         customConfirmPopUpByIdForm('on_auth','editFormAuth',"Are you sure? This has a huge impact on client.");
 
         // Function to initialize input masks
-        function initializeInputMasks() {
+        $(function(){
             $('[data-mask]').inputmask();
             $('[data-mask-text]').inputmask({
                 mask: "*",
@@ -269,8 +269,6 @@
                     }
                 }
             });
-        }
-        initializeInputMasks();
-
+        });
     });
 </script>
