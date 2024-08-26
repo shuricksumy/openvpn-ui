@@ -121,7 +121,7 @@
                 <tr>
 
                   <!-- 2 sell -->
-                  <td> 
+                  <td class="my-centered">
                     {{$isUsedBy := RouteIsUsedBy $r.Id}}
                         {{ if not $r.RouterName }}
                           <span class="badge bg-red btn80">NO ROUTER</span>
@@ -285,6 +285,11 @@
             ],
             paging: true,
             // scrollY: 500,
+            responsive: {
+                details: {
+                    renderer: DataTable.Responsive.renderer.listHiddenNodes(),
+                }
+            },
             columnDefs: [
                 { targets: [1, 2, 3, 4], searchable: true },
                 { targets: '_all', type: 'html', searchable: false }
