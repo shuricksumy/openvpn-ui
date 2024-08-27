@@ -100,7 +100,8 @@
          <table class="table-sm table-bordered table-striped m-0" id="certTable" style="width:100%">
             <thead>
             <tr class="font90 textcenter">
-              <th class="first-sm" style="width:25%">Name</th>
+              <th class="first-sm" style="width:1%"></th>
+              <th style="width:25%">Name</th>
               <th style="width:5%">State</th>
               <th style="width:45%">Description</th>
               <th style="width:15%">Expiration</th>
@@ -114,9 +115,12 @@
             {{range $c := .certificates}}
                 {{ $client := GetClientDetailsByName .Details.CN }}
               <tr>
+                  <!-- 0 sell -->
+                  <td class="my-centered first-sm"></td>
+
                   <!-- 1 sell -->
                   {{if eq .EntryType "V"}}
-                  <td class="first-sm">
+                  <td class="my-centered">
                     <a href="{{urlfor "CertificatesController.Download" ":key" .Details.CN}}" 
                       class="btn btn-sm btn-group-sm btn-block bg-gradient-lightblue right-icon-holder font75" title="{{ .Details.CN }}">
                       {{ .Details.CN }}.ovpn<i class="fa fa-download fa-lg"></i>
@@ -348,7 +352,7 @@ $(document).ready(function () {
     });
 
 
-    new DataTable('#certTable', {
+    var table = new DataTable('#certTable', {
         lengthMenu: [
             [10, 25, 50, -1],
             [10, 25, 50, "All"],
@@ -360,9 +364,15 @@ $(document).ready(function () {
             }
         },
         // scrollY: 500,
+        order: [[ 1, 'asc' ]],
         columnDefs: [
-            { targets: [0, 2, 3], searchable: true },
-            { targets: '_all', type: 'html', searchable: false }
+            { targets: [1, 3, 4], searchable: true },
+            { targets: '_all', type: 'html', searchable: false },
+            { targets: [0, 3], orderable: false },
+            { responsivePriority: 1, targets: 0 },
+            { responsivePriority: 2, targets: 1 },
+            { responsivePriority: 3, targets: 5 },
+            { responsivePriority: 4, targets: 6 }
         ],
         language: {
             "emptyTable": "No data available in table",
@@ -397,5 +407,15 @@ $(document).ready(function () {
         }
     });
 
+    function adjustColumnVisibility() {
+        var isResponsive = table.responsive.hasHidden();
+        table.column(0).visible(isResponsive);
+    }
+
+    adjustColumnVisibility();
+
+    $(window).resize(function() {
+        adjustColumnVisibility();
+    });
 });
 </script>
