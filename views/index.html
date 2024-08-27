@@ -169,20 +169,22 @@
           <table class="table-sm table-bordered table-striped m-0" id="connections" style="width:100%">
             <thead>
             <tr class="font90">
-              <th>Common Name</th>
-              <th>Real Address</th>
-              <th>Virtual Address</th>
-              <th>KB Received</th>
-              <th>KB Sent</th>
-              <th>Connected Since</th>
-              <th>Username</th>
-              <th>Disconnect</th>
+              <th class="first-sm" style="width:1%"></th>
+              <th style="width:10%">Common Name</th>
+              <th style="width:10%">Real Address</th>
+              <th style="width:10%">Virtual Address</th>
+              <th style="width:10%">KB Received</th>
+              <th style="width:10%">KB Sent</th>
+              <th style="width:10%">Connected Since</th>
+              <th style="width:10%">Username</th>
+              <th style="width:3%">Drop</th>
             </tr>
             </thead>
             <tbody>
 
             {{range .ovstatus.ClientList}}
             <tr>
+              <td></td>
               <td><span class="btn btn-xs btn-group-xs bg-lightblue btn120">{{.CommonName}}</span></td>
               <td><span class="badge bg-gray-light btn150">{{.RealAddress}}</span></td>
               <td>
@@ -275,7 +277,7 @@
 <script type="text/javascript">
   $(document).ready(function () {
 
-    new DataTable('#connections', {
+    var table = new DataTable('#connections', {
       lengthMenu: [
         [10, 25, 50, -1],
         [10, 25, 50, "All"],
@@ -287,9 +289,15 @@
         }
       },
       // scrollY: 500,
+      order: [[ 1, 'asc' ]],
       columnDefs: [
         { targets: [0, 1, 2, 6], searchable: true },
-        { targets: '_all', type: 'html', searchable: false }
+        { targets: '_all', type: 'html', searchable: false },
+        { targets: [0,8], orderable: false },
+        { responsivePriority: 1, targets: 0 },
+        { responsivePriority: 2, targets: 1 },
+        { responsivePriority: 3, targets: 3 },
+        { responsivePriority: 4, targets: 8 }
       ],
       language: {
         "emptyTable": "No data available in table",
@@ -323,5 +331,18 @@
         // commonFunctionConfirmPopUp();
       }
     });
+
+    function adjustColumnVisibility() {
+      var isResponsive = table.responsive.hasHidden();
+      table.column(0).visible(isResponsive);
+    }
+
+    adjustColumnVisibility();
+
+    $(window).resize(function() {
+      adjustColumnVisibility();
+    });
+
+
   });
 </script>

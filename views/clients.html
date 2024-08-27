@@ -126,7 +126,8 @@
           <table class="table-sm table-bordered table-striped m-0" style="width:100%" id="clientTable">
             <thead>
             <tr class="font75 textcenter">
-              <th class="first-sm" style="width:10%">Client Name</th>
+              <th class="first-sm" style="width:1%"></th>
+              <th style="width:10%">Client Name</th>
               <th style="width:5%">Cert</th>
               <th style="width:5%">Route</th>
               <th style="width:5%">Static IP</th>
@@ -144,8 +145,10 @@
                 {{$c := $ce.ClientDetails}}
                 <!-- <tr data-widget="expandable-table" aria-expanded="false"> -->
                 <tr> 
+                  <!-- 0 sell -->
+                  <td class="my-centered first-sm"></td>
                   <!-- 1 sell -->
-                  <td class="my-centered first-sm">
+                  <td class="my-centered">
                       {{ $col := "btn-sm btn-group-sm btn-block bg-gradient-lightblue" }}
                       {{ $comment := $c.ClientName }}
                       {{ $icon := "fa fa-edit fa-lg" }}
@@ -387,7 +390,7 @@ $(document).ready(function () {
     });
 
 
-    new DataTable('#clientTable', {
+    var table = new DataTable('#clientTable', {
         lengthMenu: [
             [10, 25, 50, -1],
             [10, 25, 50, "All"],
@@ -399,9 +402,15 @@ $(document).ready(function () {
             }
         },
         // scrollY: 500,
+        order: [[ 1, 'asc' ]],
         columnDefs: [
-            { targets: [0, 3, 5], searchable: true },
-            { targets: '_all', type: 'html', searchable: false }
+            { targets: [1, 4, 6], searchable: true },
+            { targets: '_all', type: 'html', searchable: false },
+            { targets: [0, 6], orderable: false },
+            { responsivePriority: 1, targets: 0 },
+            { responsivePriority: 2, targets: 1 },
+            { responsivePriority: 3, targets: 7 },
+            { responsivePriority: 4, targets: 9 }
         ],
         language: {
             "emptyTable": "No data available in table",
@@ -434,6 +443,17 @@ $(document).ready(function () {
             // Call the common function
             // commonFunctionConfirmPopUp();
         }
+    });
+
+    function adjustColumnVisibility() {
+        var isResponsive = table.responsive.hasHidden();
+        table.column(0).visible(isResponsive);
+    }
+
+    adjustColumnVisibility();
+
+    $(window).resize(function() {
+        adjustColumnVisibility();
     });
 
 });
