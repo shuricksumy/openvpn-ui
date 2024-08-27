@@ -291,13 +291,13 @@
       // scrollY: 500,
       order: [[ 1, 'asc' ]],
       columnDefs: [
-        { targets: [0, 1, 2, 6], searchable: true },
+        { targets: [1, 2, 3, 7], searchable: true },
         { targets: '_all', type: 'html', searchable: false },
         { targets: [0,8], orderable: false },
         { responsivePriority: 1, targets: 0 },
         { responsivePriority: 2, targets: 1 },
-        { responsivePriority: 3, targets: 3 },
-        { responsivePriority: 4, targets: 8 }
+        { responsivePriority: 4, targets: 3 },
+        { responsivePriority: 3, targets: 8 }
       ],
       language: {
         "emptyTable": "No data available in table",

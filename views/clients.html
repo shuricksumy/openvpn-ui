@@ -13,26 +13,29 @@
 <div class="col-xs-12">
   <div class="card card-outline card-lightblue">
     <!-- card-header -->
-    <div class="card-header with-border table-responsive">
-      <table>
-        <tr>
-          <td class="col-md-1 text-left">
-            <button class="btn btn-sm bg-gradient-navy btn150" data-toggle="collapse" href="#newClient" role="button"  aria-expanded="false"
-                  aria-controls="newClient" style="margin-left: 0.5%;">Add New Client</button>
+      <div class="card-header with-border">
+          <div class="row align-items-center">
+              <div class="col-md-2 text-sm-left">
+                  <button class="btn btn-sm bg-gradient-navy btn150" data-toggle="collapse" href="#newClient" role="button" aria-expanded="false"
+                          aria-controls="newClient">Add New Client</button>
                   {{template "common/fvalid.html" field_error_message .validation "Name" }}
-          </td>
-          <td class="col-md-10 text-right font90 sb"><i>You shuld start from creating a new client and then certificate</i></td>
-          <td class="col-md-1 text-right">
-            <a href="{{urlfor "ClientsController.UpdateFiles"}}" class="btn btn-warning btn-sm btn-group-sm bg-gradient-yellow btn150"
-            data-title="Update ALL Clients?" title="Apply Clients Configuration" style="margin-right: 23px;">Apply Configurations</a>
-          </td>
-          <td class="col-md-1 text-right">
-            <a href="{{urlfor "LogsController.RestartLocalService"}}" class="btn btn-danger btn-sm btn-group-sm bg-gradient-red btn150"
-              data-title="Restart OpenVPN server?" title="Restart OpenVPN server" id="start" style="margin-right: 23px;">Restart Server</a>
-          </td>
-        </tr>
-      </table>
-    </div>
+              </div>
+
+              <div class="col-md-6 text-sm-center font90 sb">
+                  <i>You should start by creating a new client and then certificate</i>
+              </div>
+
+              <div class="col-md-2 text-sm-right">
+                  <a href="{{urlfor "ClientsController.UpdateFiles"}}" class="btn btn-warning btn-sm bg-gradient-yellow btn150"
+                  data-title="Update ALL Clients?" title="Apply Clients Configuration">Apply Configurations</a>
+              </div>
+
+              <div class="col-md-2 text-sm-right">
+                  <a href="{{urlfor "LogsController.RestartLocalService"}}" class="btn btn-danger btn-sm bg-gradient-red btn150"
+                  data-title="Restart OpenVPN server?" title="Restart OpenVPN server" id="start">Restart Server</a>
+              </div>
+          </div>
+      </div>
     <!-- /.card-header -->
     <!-- form start -->
     <div id="newClient" class="collapse">
@@ -406,11 +409,11 @@ $(document).ready(function () {
         columnDefs: [
             { targets: [1, 4, 6], searchable: true },
             { targets: '_all', type: 'html', searchable: false },
-            { targets: [0, 6], orderable: false },
+            { targets: [0, 6, 7, 8, 9], orderable: false },
             { responsivePriority: 1, targets: 0 },
             { responsivePriority: 2, targets: 1 },
-            { responsivePriority: 3, targets: 7 },
-            { responsivePriority: 4, targets: 9 }
+            { responsivePriority: 4, targets: 7 },
+            { responsivePriority: 3, targets: 9 }
         ],
         language: {
             "emptyTable": "No data available in table",
