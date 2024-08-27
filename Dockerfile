@@ -17,8 +17,7 @@ COPY ./build/assets/renew.sh /opt/scripts/renew.sh
 COPY ./build/assets/install_latest_openvpn.sh /opt/scripts/install_latest_openvpn.sh
 COPY ./build/assets/auth_client.sh /opt/scripts/auth_client.sh
 
-RUN /opt/scripts/install_pkg.sh
-
+RUN bash -c '/opt/scripts/install_pkg.sh'
 
 RUN apt-get autoremove -y \
     && apt-get clean -y \
@@ -26,8 +25,8 @@ RUN apt-get autoremove -y \
 
 COPY ./dist/openvpn-ui-${TARGETOS}-${TARGETARCH}${TARGETVARIANT}/openvpn-ui.tar.gz /opt/openvpn-gui/
 RUN tar -zxf /opt/openvpn-gui/openvpn-ui.tar.gz --directory /opt/openvpn-gui/
-RUN rm -f /opt/openvpn-gui/openvpn-ui.tar.gz /opt/openvpn-gui/data.db
-# COPY ./build/assets/app.conf /opt/openvpn-gui/conf/app.conf
+RUN rm -f /opt/openvpn-gui/openvpn-ui.tar.gz
+RUN rm -f /opt/openvpn-gui/data.db
 
 #ADD BUILD NUMBER
 RUN date +"%d%m%Y-%H%M%S" > /opt/openvpn-gui/static/build.txt
@@ -39,4 +38,4 @@ VOLUME /opt/openvpn-gui/db
 EXPOSE 1194/udp 8080/tcp
 WORKDIR /etc/openvpn/easy-rsa
 
-CMD /opt/start.sh
+ENTRYPOINT ["/bin/bash", "/opt/start.sh"]
