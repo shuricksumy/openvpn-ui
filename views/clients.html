@@ -393,6 +393,11 @@ $(document).ready(function () {
             [10, 25, 50, "All"],
         ],
         paging: true,
+        responsive: {
+            details: {
+                renderer: DataTable.Responsive.renderer.listHiddenNodes(),
+            }
+        },
         // scrollY: 500,
         columnDefs: [
             { targets: [0, 3, 5], searchable: true },
