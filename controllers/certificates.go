@@ -142,6 +142,14 @@ func (c *CertificatesController) Post() {
 	clientId := c.GetString("client_name")
 	passphrase := c.GetString("cert_pass")
 
+	// Validate the passphrase with a regular expression
+	validPassphrase := regexp.MustCompile(`^[a-zA-Z0-9_\-\.]+$`)
+	if !validPassphrase.MatchString(passphrase) {
+		flash.Error("Invalid " + passphrase + " passphrase !")
+		flash.Store(&c.Controller)
+		return
+	}
+
 	client, err_cl := models.GetClientDetailsById(clientId)
 	if err_cl != nil {
 		logs.Error(err_cl)
@@ -265,6 +273,14 @@ func (c *CertificatesController) Burn() {
 	flash := web.NewFlash()
 	CN := c.GetString(":key")
 	serial := c.GetString(":serial")
+
+	// Validate the CN with a regular expression
+	validCN := regexp.MustCompile(`^[a-zA-Z0-9_\-\.]+$`)
+	if !validCN.MatchString(CN) {
+		flash.Error("Invalid " + CN + " CN name !")
+		flash.Store(&c.Controller)
+		return
+	}
 
 	clientDetails, err_cl := models.GetClientDetailsByCertificate(CN)
 	if err_cl != nil {
