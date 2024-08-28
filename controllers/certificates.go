@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"path/filepath"
+	"regexp"
 	"text/template"
 
 	"github.com/beego/beego/v2/core/logs"
@@ -50,6 +51,14 @@ func (c *CertificatesController) Download() {
 
 	name := c.GetString(":key")
 	filename := fmt.Sprintf("%s.ovpn", name)
+
+	// Validate the certName with a regular expression
+	validCertName := regexp.MustCompile(`^[a-zA-Z0-9_\-\.]+$`)
+	if !validCertName.MatchString(name) {
+		flash.Error("Invalid certificate " + name + " !")
+		flash.Store(&c.Controller)
+		return
+	}
 
 	//keysPath := filepath.Join(state.GlobalCfg.OVConfigPath, "easy-rsa/pki/issued")
 
@@ -314,6 +323,14 @@ func (c *CertificatesController) SaveClientRawData() {
 	flash := web.NewFlash()
 	clientName := c.GetString("client_name")
 	clientData := c.GetString("client_data")
+
+	// Validate the clientName with a regular expression
+	validClientName := regexp.MustCompile(`^[a-zA-Z0-9_\-\.]+$`)
+	if !validClientName.MatchString(clientName) {
+		flash.Error("Invalid " + clientName + " name !")
+		flash.Store(&c.Controller)
+		return
+	}
 
 	// Save the data to the client-name.txt file.
 	destPathClientConfig := filepath.Join(state.GlobalCfg.OVConfigPath, "ccd", clientName)
