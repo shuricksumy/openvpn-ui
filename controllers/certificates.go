@@ -143,8 +143,8 @@ func (c *CertificatesController) Post() {
 	passphrase := c.GetString("cert_pass")
 
 	// Validate the passphrase with a regular expression
-	validPassphrase := regexp.MustCompile(`^[a-zA-Z0-9_\-\.]+$`)
-	if !validPassphrase.MatchString(passphrase) && passphrase != "" {
+	validPassphrase := regexp.MustCompile(`^(\s*|[a-zA-Z0-9_\-\.]+)$`)
+	if !validPassphrase.MatchString(passphrase) {
 		flash.Error("Invalid " + passphrase + " passphrase !")
 		flash.Store(&c.Controller)
 		return
