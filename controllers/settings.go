@@ -52,6 +52,10 @@ func (c *SettingsController) Post() {
 		flash.Store(&c.Controller)
 		return
 	}
+
+	settings.OVConfigPath = "/etc/openvpn"
+	settings.MINetwork = "tcp"
+
 	c.Data["Settings"] = &settings
 
 	o := orm.NewOrm()
