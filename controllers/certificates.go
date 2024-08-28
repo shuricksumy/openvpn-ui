@@ -351,6 +351,14 @@ func (c *CertificatesController) Renew() {
 		return
 	}
 
+	// Validate the serial with a regular expression
+	validSerial := regexp.MustCompile(`^[a-zA-Z0-9_\-\.]+$`)
+	if !validSerial.MatchString(serial) {
+		flash.Error("Invalid " + serial + " serial !")
+		flash.Store(&c.Controller)
+		return
+	}
+
 	if err := lib.RenewCertificate(name, serial); err != nil {
 		logs.Error(err)
 		flash.Error(err.Error())
