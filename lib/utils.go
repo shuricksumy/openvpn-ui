@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"crypto/md5"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"math/rand"
@@ -12,6 +13,7 @@ import (
 	"os/exec"
 	"path"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"time"
 
@@ -123,6 +125,13 @@ func Backup() (string, error) {
 
 	siteName := state.GlobalCfg.ServerName
 	siteName = strings.ReplaceAll(siteName, " ", "")
+
+	// Validate the imageName with a regular expression
+	validSiteName := regexp.MustCompile(`^[a-zA-Z0-9_\-\.]+$`)
+	if !validSiteName.MatchString(siteName) {
+		logs.Error("Invalid site name")
+		return "", errors.New("invalid site name")
+	}
 
 	timestamp := time.Now().Format("20060102150405")
 	backupFileName := fmt.Sprintf("backup_%s_%s.tar.bz2", siteName, timestamp)

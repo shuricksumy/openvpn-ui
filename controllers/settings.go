@@ -4,7 +4,6 @@ import (
 	"html/template"
 
 	"github.com/beego/beego/v2/client/orm"
-	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
 	"github.com/shuricksumy/openvpn-ui/models"
 	"github.com/shuricksumy/openvpn-ui/state"
@@ -46,15 +45,14 @@ func (c *SettingsController) Post() {
 	flash := web.NewFlash()
 	settings := models.Settings{Profile: "default"}
 	_ = settings.Read("Profile")
-	if err := c.ParseForm(&settings); err != nil {
-		logs.Warning(err)
-		flash.Error(err.Error())
-		flash.Store(&c.Controller)
-		return
-	}
+
+	settings.MIAddress = c.GetString("MIAddress")
+	settings.ServerName = c.GetString("ServerName")
+	settings.SiteName = c.GetString("SiteName")
 
 	settings.OVConfigPath = "/etc/openvpn"
 	settings.MINetwork = "tcp"
+	settings.Profile = "default"
 
 	c.Data["Settings"] = &settings
 
