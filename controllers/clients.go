@@ -10,6 +10,7 @@ import (
 	"github.com/shuricksumy/openvpn-ui/state"
 	"image/png"
 	"path/filepath"
+	"regexp"
 )
 
 type ClientsController struct {
@@ -253,6 +254,14 @@ func (c *ClientsController) SaveClientRawData() {
 	flash := web.NewFlash()
 	clientName := c.GetString("client_name")
 	clientData := c.GetString("client_data")
+
+	// Validate the clientName with a regular expression
+	validClientName := regexp.MustCompile(`^[a-zA-Z0-9_\-\.]+$`)
+	if !validClientName.MatchString(clientName) {
+		flash.Error("Invalid " + clientName + " name !")
+		flash.Store(&c.Controller)
+		return
+	}
 
 	// Save the data to the client-name.txt file.
 	destPathClientConfig := filepath.Join(state.GlobalCfg.OVConfigPath, "ccd", clientName)
