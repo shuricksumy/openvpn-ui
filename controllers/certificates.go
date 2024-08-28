@@ -144,7 +144,7 @@ func (c *CertificatesController) Post() {
 
 	// Validate the passphrase with a regular expression
 	validPassphrase := regexp.MustCompile(`^[a-zA-Z0-9_\-\.]+$`)
-	if !validPassphrase.MatchString(passphrase) {
+	if !validPassphrase.MatchString(passphrase) && passphrase != "" {
 		flash.Error("Invalid " + passphrase + " passphrase !")
 		flash.Store(&c.Controller)
 		return
@@ -188,6 +188,14 @@ func (c *CertificatesController) Revoke() {
 	flash := web.NewFlash()
 	name := c.GetString(":key")
 
+	// Validate the name with a regular expression
+	validName := regexp.MustCompile(`^[a-zA-Z0-9_\-\.]+$`)
+	if !validName.MatchString(name) {
+		flash.Error("Invalid " + name + " name !")
+		flash.Store(&c.Controller)
+		return
+	}
+
 	clientDetails, err_cl := models.GetClientDetailsByCertificate(name)
 	if err_cl != nil {
 		logs.Error(err_cl)
@@ -224,6 +232,14 @@ func (c *CertificatesController) UnRevoke() {
 	c.TplName = "certificates.html"
 	flash := web.NewFlash()
 	name := c.GetString(":key")
+
+	// Validate the name with a regular expression
+	validName := regexp.MustCompile(`^[a-zA-Z0-9_\-\.]+$`)
+	if !validName.MatchString(name) {
+		flash.Error("Invalid " + name + " name !")
+		flash.Store(&c.Controller)
+		return
+	}
 
 	clientDetails, err_cl := models.GetClientDetailsByCertificate(name)
 	if err_cl != nil {
@@ -282,6 +298,14 @@ func (c *CertificatesController) Burn() {
 		return
 	}
 
+	// Validate the serial with a regular expression
+	validSerial := regexp.MustCompile(`^[a-zA-Z0-9_\-\.]+$`)
+	if !validSerial.MatchString(serial) {
+		flash.Error("Invalid " + serial + " serial !")
+		flash.Store(&c.Controller)
+		return
+	}
+
 	clientDetails, err_cl := models.GetClientDetailsByCertificate(CN)
 	if err_cl != nil {
 		logs.Error(err_cl)
@@ -318,6 +342,15 @@ func (c *CertificatesController) Renew() {
 	flash := web.NewFlash()
 	name := c.GetString(":key")
 	serial := c.GetString(":serial")
+
+	// Validate the name with a regular expression
+	validName := regexp.MustCompile(`^[a-zA-Z0-9_\-\.]+$`)
+	if !validName.MatchString(name) {
+		flash.Error("Invalid " + name + " name !")
+		flash.Store(&c.Controller)
+		return
+	}
+
 	if err := lib.RenewCertificate(name, serial); err != nil {
 		logs.Error(err)
 		flash.Error(err.Error())
