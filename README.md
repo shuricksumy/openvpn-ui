@@ -81,10 +81,11 @@ auth-user-pass-verify /opt/scripts/auth_client.sh via-file
 
 ## History
 
-#### August 2024 (v5.3, v5.4)
+#### August 2024 (v5.3, v5.4, v5.5)
 
 - Fixed some minor front-end issues
 - Improved adaptive design for tables
+- Fixed security issues
 
 ### Previous versions
 <details>
