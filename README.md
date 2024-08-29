@@ -51,11 +51,11 @@ services:
         #    - traefik.http.services.admin.loadbalancer.server.port=8080
 ```
 
-## Password/OTP/Passphrase usage
+## ⤵️ Password/OTP/Passphrase usage
 
 <details>
 
-<summary>Password/OTP/Passphrase usage</summary>
+<summary>⤵️ Password/OTP/Passphrase usage</summary>
 
 ### 3 way implemented to protect connection:
 - protect certificate by passphrase
@@ -87,10 +87,10 @@ auth-user-pass-verify /opt/scripts/auth_client.sh via-file
 - Improved adaptive design for tables
 - Fixed security issues
 
-### Previous versions
+### ⤵️ Previous versions
 <details>
 
-<summary>Previous versions details</summary>
+<summary>⤵️ Previous versions details</summary>
 
 #### February 2024 (v5.2)
 
