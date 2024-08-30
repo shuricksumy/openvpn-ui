@@ -493,3 +493,8 @@ ul.pagination {
 table.dataTable {
      border-collapse: collapse !important;
 }
+
+td .dtr-title {
+    font-size: 75% !important;
+
+}

@@ -159,9 +159,9 @@
   <div class="col-md-12">
       <div class="card card-lightblue card-tabs">
 
-        <div class="card-header with-border p-sm-0 pt-sm-0">
+        <div class="card-header with-border p-0 pt-0">
             <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
-              <li class="pt-sm-2 px-sm-3">
+              <li class="pt-2 px-3">
                 <h3 class="card-title">Status:</h3>
               </li>
               <li class="nav-item">
@@ -187,16 +187,16 @@
                   <div class="table-responsive">
                     <table class="table-sm table-bordered table-striped m-0" id="connections" style="width:100%">
                       <thead>
-                      <tr class="font90">
-                        <th class="first-sm" style="width:1%"></th>
-                        <th style="width:10%">Common Name</th>
-                        <th style="width:10%">Real Address</th>
-                        <th style="width:10%">Virtual Address</th>
-                        <th style="width:10%">KB Received</th>
-                        <th style="width:10%">KB Sent</th>
-                        <th style="width:10%">Connected Since</th>
-                        <th style="width:10%">Username</th>
-                        <th style="width:3%">Drop</th>
+                      <tr class="font75">
+                        <th style="width:1%;text-align: center;" class="first-sm" ></th>
+                        <th style="width:10%;text-align: center;">Common Name</th>
+                        <th style="width:10%;text-align: center;">Real Address</th>
+                        <th style="width:10%;text-align: center;">Virtual Address</th>
+                        <th style="width:10%;text-align: center;">KB Received</th>
+                        <th style="width:10%;text-align: center;">KB Sent</th>
+                        <th style="width:10%;text-align: center;">Connected Since</th>
+                        <th style="width:10%;text-align: center;">Username</th>
+                        <th style="width:3%;text-align: center;">Drop</th>
                       </tr>
                       </thead>
                       <tbody>
@@ -250,13 +250,13 @@
                   <div class="table-responsive">
                     <table class="table-sm table-bordered table-striped m-0" id="routes" style="width:100%">
                       <thead>
-                      <tr class="font90">
-                        <th class="first-sm" style="width:1%"></th>
-                        <th class="textcenter" style="width:10%">Route to</th>
-                        <th style="width:10%">Using client</th>
-                        <th style="width:10%">Real client address</th>
-                        <th style="width:10%">Connected since</th>
-                        <th style="width:3%">Drop</th>
+                      <tr class="font75">
+                        <th style="width:1%;text-align: center;" class="first-sm"></th>
+                        <th style="width:10%;text-align: center;" class="textcenter">Route to</th>
+                        <th style="width:10%;text-align: center;">Using client</th>
+                        <th style="width:10%; text-align: center;">Real client address</th>
+                        <th style="width:10%;text-align: center;">Connected since</th>
+                        <th style="width:3%;text-align: center;">Drop</th>
                       </tr>
                       </thead>
                       <tbody>
@@ -264,7 +264,7 @@
                       {{range .ovstatus.RoutingTable}}
                       <tr>
                         <td class="my-centered"></td>
-                        <td class="my-centered"><span class="badge bg-olive btn100">{{.VirtualAddress}}</span></td>
+                        <td class="my-centered"><span class="badge bg-purple btn100">{{.VirtualAddress}}</span></td>
                         <td class="my-centered"><span class="btn btn-xs btn-group-xs bg-lightblue btn120">{{.CommonName}}</span></td>
 
                         <td class="my-centered"><span class="badge bg-gray-light btn150">{{.RealAddress}}</span></td>
@@ -347,141 +347,139 @@
 
 {{end}}
 
-<script type="text/javascript">
-  $(document).ready(function () {
+    <script type="text/javascript">
+      $(document).ready(function () {
 
-    var table = new DataTable('#connections', {
-      lengthMenu: [
-        [10, 25, 50, -1],
-        [10, 25, 50, "All"],
-      ],
-      paging: true,
-      responsive: {
-        details: {
-          renderer: DataTable.Responsive.renderer.listHiddenNodes(),
-        }
-      },
-      // scrollY: 500,
-      order: [[ 1, 'asc' ]],
-      columnDefs: [
-        { targets: [1, 2, 3, 7], searchable: true },
-        { targets: '_all', type: 'html', searchable: false },
-        { targets: [0,8], orderable: false },
-        { responsivePriority: 1, targets: 0 },
-        { responsivePriority: 2, targets: 1 },
-        { responsivePriority: 4, targets: 3 },
-        { responsivePriority: 3, targets: 8 }
-      ],
-      language: {
-        "emptyTable": "No data available in table",
-        "lengthMenu": "_MENU_ items on a page",
-        "info": "Showing _START_ to _END_ of _TOTAL_ entries",
-        "infoEmpty": "Showing 0 to 0 of 0 entries",
-        "search": "",
-        "paginate": {
-          "first": "<<",
-          "last": ">>",
-          "next": ">",
-          "previous": "<"
-        },
-      },
-      layout: {
-        topEnd: 'info',
-        topStart: {
-          search: {
-            placeholder: 'Type search here'
+        // Initialize DataTable for connections table
+        var t1 = new DataTable('#connections', {
+          lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, "All"],
+          ],
+          paging: true,
+          responsive: {
+            details: {
+              renderer: DataTable.Responsive.renderer.listHiddenNodes(),
+            }
+          },
+          order: [[ 1, 'asc' ]],
+          columnDefs: [
+            { targets: [1, 2, 3, 7], searchable: true },
+            { targets: '_all', type: 'html', searchable: false },
+            { targets: [0,8], orderable: false },
+            { responsivePriority: 1, targets: 0 },
+            { responsivePriority: 2, targets: 1 },
+            { responsivePriority: 4, targets: 3 },
+            { responsivePriority: 3, targets: 8 }
+          ],
+          language: {
+            "emptyTable": "No data available in table",
+            "lengthMenu": "_MENU_ items on a page",
+            "info": "Showing _START_ to _END_ of _TOTAL_ entries",
+            "infoEmpty": "Showing 0 to 0 of 0 entries",
+            "search": "",
+            "paginate": {
+              "first": "<<",
+              "last": ">>",
+              "next": ">",
+              "previous": "<"
+            },
+          },
+          layout: {
+            topEnd: 'info',
+            topStart: {
+              search: {
+                placeholder: 'Type search here'
+              }
+            },
+            bottomStart: 'pageLength',
+            bottomEnd: {
+              paging: {
+                numbers: 3
+              }
+            }
           }
-        },
-        bottomStart: 'pageLength',
-        bottomEnd: {
-          paging: {
-            numbers: 3
+        });
+
+        // Initialize DataTable for routes table
+        var t2 = new DataTable('#routes', {
+          lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, "All"],
+          ],
+          paging: true,
+          responsive: {
+            details: {
+              renderer: DataTable.Responsive.renderer.listHiddenNodes(),
+            }
+          },
+          order: [[ 1, 'asc' ]],
+          columnDefs: [
+            { targets: [1, 2, 3], searchable: true },
+            { targets: '_all', type: 'html', searchable: false },
+            { targets: [0], orderable: false },
+            { responsivePriority: 1, targets: 0 },
+            { responsivePriority: 2, targets: 1 },
+            { responsivePriority: 3, targets: 2 },
+            { responsivePriority: 4, targets: 5 }
+          ],
+          language: {
+            "emptyTable": "No data available in table",
+            "lengthMenu": "_MENU_ items on a page",
+            "info": "Showing _START_ to _END_ of _TOTAL_ entries",
+            "infoEmpty": "Showing 0 to 0 of 0 entries",
+            "search": "",
+            "paginate": {
+              "first": "<<",
+              "last": ">>",
+              "next": ">",
+              "previous": "<"
+            },
+          },
+          layout: {
+            topEnd: 'info',
+            topStart: {
+              search: {
+                placeholder: 'Type search here'
+              }
+            },
+            bottomStart: 'pageLength',
+            bottomEnd: {
+              paging: {
+                numbers: 3
+              }
+            }
           }
+        });
+
+        function adjustColumnVisibility(table) {
+          setTimeout(function() {
+            var isResponsive = table.responsive.hasHidden();
+            table.column(0).visible(isResponsive);
+            table.columns.adjust().draw();
+          }, 50);
         }
-      },
-      drawCallback: function (settings) {
-        // Call the common function
-        // commonFunctionConfirmPopUp();
-      }
-    });
 
-    var table2 = new DataTable('#routes', {
-      lengthMenu: [
-        [10, 25, 50, -1],
-        [10, 25, 50, "All"],
-      ],
-      paging: true,
-      responsive: {
-        details: {
-          renderer: DataTable.Responsive.renderer.listHiddenNodes(),
-        }
-      },
-      // scrollY: 500,
-      order: [[ 1, 'asc' ]],
-      columnDefs: [
-        { targets: [1, 2, 3], searchable: true },
-        { targets: '_all', type: 'html', searchable: false },
-        { targets: [0], orderable: false },
-        { responsivePriority: 1, targets: 0 },
-        { responsivePriority: 2, targets: 1 },
-        { responsivePriority: 3, targets: 3 },
-      ],
-      language: {
-        "emptyTable": "No data available in table",
-        "lengthMenu": "_MENU_ items on a page",
-        "info": "Showing _START_ to _END_ of _TOTAL_ entries",
-        "infoEmpty": "Showing 0 to 0 of 0 entries",
-        "search": "",
-        "paginate": {
-          "first": "<<",
-          "last": ">>",
-          "next": ">",
-          "previous": "<"
-        },
-      },
-      layout: {
-        topEnd: 'info',
-        topStart: {
-          search: {
-            placeholder: 'Type search here'
-          }
-        },
-        bottomStart: 'pageLength',
-        bottomEnd: {
-          paging: {
-            numbers: 3
-          }
-        }
-      },
-      drawCallback: function (settings) {
-        // Call the common function
-        // commonFunctionConfirmPopUp();
-      }
-    });
+        // Initial adjustment
+        adjustColumnVisibility(t1);
+        // adjustColumnVisibility(t2);
 
-    function adjustColumnVisibility() {
-      var isResponsive = table.responsive.hasHidden();
-      table.column(0).visible(isResponsive);
-    }
+        // Adjust visibility on window resize
+        $(window).resize(function() {
+          adjustColumnVisibility(t1);
+          adjustColumnVisibility(t2);
+        });
 
-    function adjustColumnVisibility2() {
-      var isResponsive = table2.responsive.hasHidden();
-      table2.column(0).visible(isResponsive);
-    }
+        // Adjust visibility on nav-link click, triggering twice
+        $(document).on('click', '.nav-link', function(event) {
+          adjustColumnVisibility(t1);
+          adjustColumnVisibility(t2);
 
-    adjustColumnVisibility();
-    adjustColumnVisibility2();
+          setTimeout(function() {
+            adjustColumnVisibility(t1);
+            adjustColumnVisibility(t2);
+          }, 50);
+        });
 
-    $(window).resize(function() {
-      adjustColumnVisibility();
-      adjustColumnVisibility2();
-    });
-
-    $('.nav-link').on('click', function(event) {
-      adjustColumnVisibility();
-      adjustColumnVisibility2();
-    });
-
-
-  });
-</script>
+      });
+    </script>
