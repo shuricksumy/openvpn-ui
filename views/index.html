@@ -157,77 +157,150 @@
 
 <div class="row">
   <div class="col-md-12">
-    <div class="card card-lightblue">
-      <div class="card-header with-border">
-        <h3 class="card-title">Connected clients</h3>
-      </div>
-      <!-- /.card-header -->
+      <div class="card card-lightblue card-tabs">
 
-      <div class="card-body p-0">
-        {{if .ovstatus}}
-        <div class="table-responsive">
-          <table class="table-sm table-bordered table-striped m-0" id="connections" style="width:100%">
-            <thead>
-            <tr class="font90">
-              <th class="first-sm" style="width:1%"></th>
-              <th style="width:10%">Common Name</th>
-              <th style="width:10%">Real Address</th>
-              <th style="width:10%">Virtual Address</th>
-              <th style="width:10%">KB Received</th>
-              <th style="width:10%">KB Sent</th>
-              <th style="width:10%">Connected Since</th>
-              <th style="width:10%">Username</th>
-              <th style="width:3%">Drop</th>
-            </tr>
-            </thead>
-            <tbody>
-
-            {{range .ovstatus.ClientList}}
-            <tr>
-              <td></td>
-              <td><span class="btn btn-xs btn-group-xs bg-lightblue btn120">{{.CommonName}}</span></td>
-              <td><span class="badge bg-gray-light btn150">{{.RealAddress}}</span></td>
-              <td>
-                <span class="badge bg-olive btn100">{{.VirtualAddress}}</span>
-              </td>
-              <td>
-                <span class="badge bg-gray-light btn100">{{printkb .BytesReceived}}</span>
-              </td>
-              <td>
-                <span class="badge bg-gray-light btn100">{{printkb .BytesSent}}</span>
-              </td>
-              <td><span class="badge bg-gray-light btn120">{{.ConnectedSince}}</span></td>
-              <td><span class="badge bg-gray-light btn120">
-                  {{if eq .Username "UNDEF"}}
-                    -
-                  {{else}}
-                    {{.Username}}
-                  {{end}}
-                </span></td>
-              <td class="textcenter">
-                <a href="javascript:$.MyAPP.Disconnect('{{.CommonName}}','{{$prefixURL}}')"
-                   data-title="Disconect {{.CommonName}} client ?"
-                   class="btn btn-xs btn-group-xs btn-danger bg-red-gradient btn24"
-                   title="Disconnect">X</a>
-              </td>
-            </tr>
-            {{end}}
-
-            </tbody>
-          </table>
+        <div class="card-header with-border p-sm-0 pt-sm-0">
+            <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+              <li class="pt-sm-2 px-sm-3">
+                <h3 class="card-title">Status:</h3>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home"
+                   role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Clients</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile"
+                   role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Routes</a>
+              </li>
+            </ul>
         </div>
-        <!-- /.table-responsive -->
-      {{else}}
-        <a href="{{urlfor "SystemController.Get"}}" class="col-md-12 btn btn-md btn-group-xs bg-gradient-red">Fix your configuration or restart OpenVPN</a>
-      {{end}}
+        <!-- /.card-header -->
+
+        <div class="card-body">
+            <!-- .tab-content -->
+            <div class="tab-content" id="custom-tabs-one-tabContent">
+
+              <!-- .tab1 -->
+              <div class="tab-pane fade active show" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+                <div class="card-body p-0">
+                  {{if .ovstatus}}
+                  <div class="table-responsive">
+                    <table class="table-sm table-bordered table-striped m-0" id="connections" style="width:100%">
+                      <thead>
+                      <tr class="font90">
+                        <th class="first-sm" style="width:1%"></th>
+                        <th style="width:10%">Common Name</th>
+                        <th style="width:10%">Real Address</th>
+                        <th style="width:10%">Virtual Address</th>
+                        <th style="width:10%">KB Received</th>
+                        <th style="width:10%">KB Sent</th>
+                        <th style="width:10%">Connected Since</th>
+                        <th style="width:10%">Username</th>
+                        <th style="width:3%">Drop</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+
+                      {{range .ovstatus.ClientList}}
+                      <tr>
+                        <td class="my-centered"></td>
+                        <td class="my-centered"><span class="btn btn-xs btn-group-xs bg-lightblue btn120">{{.CommonName}}</span></td>
+                        <td class="my-centered"><span class="badge bg-gray-light btn150">{{.RealAddress}}</span></td>
+                        <td class="my-centered">
+                          <span class="badge bg-olive btn100">{{.VirtualAddress}}</span>
+                        </td>
+                        <td class="my-centered">
+                          <span class="badge bg-gray-light btn100">{{printkb .BytesReceived}}</span>
+                        </td>
+                        <td class="my-centered">
+                          <span class="badge bg-gray-light btn100">{{printkb .BytesSent}}</span>
+                        </td>
+                        <td class="my-centered"><span class="badge bg-gray-light btn120">{{.ConnectedSince}}</span></td>
+                        <td class="my-centered"><span class="badge bg-gray-light btn120">
+                            {{if eq .Username "UNDEF"}}
+                              -
+                            {{else}}
+                              {{.Username}}
+                            {{end}}
+                          </span></td>
+                        <td class="textcenter">
+                          <a href="javascript:$.MyAPP.Disconnect('{{.CommonName}}','{{$prefixURL}}')"
+                             data-title="Disconect {{.CommonName}} client ?"
+                             class="btn btn-xs btn-group-xs btn-danger bg-red-gradient btn24"
+                             title="Disconnect">X</a>
+                        </td>
+                      </tr>
+                      {{end}}
+
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- /.table-responsive -->
+                {{else}}
+                  <a href="{{urlfor "SystemController.Get"}}" class="col-md-12 btn btn-md btn-group-xs bg-gradient-red">Fix your configuration or restart OpenVPN</a>
+                {{end}}
+                </div>
+              </div>
+              <!-- /.tab1 -->
+
+              <!-- .tab2 -->
+              <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
+                <div class="card-body p-0">
+                  {{if .ovstatus}}
+                  <div class="table-responsive">
+                    <table class="table-sm table-bordered table-striped m-0" id="routes" style="width:100%">
+                      <thead>
+                      <tr class="font90">
+                        <th class="first-sm" style="width:1%"></th>
+                        <th class="textcenter" style="width:10%">Route to</th>
+                        <th style="width:10%">Using client</th>
+                        <th style="width:10%">Real client address</th>
+                        <th style="width:10%">Connected since</th>
+                        <th style="width:3%">Drop</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+
+                      {{range .ovstatus.RoutingTable}}
+                      <tr>
+                        <td class="my-centered"></td>
+                        <td class="my-centered"><span class="badge bg-olive btn100">{{.VirtualAddress}}</span></td>
+                        <td class="my-centered"><span class="btn btn-xs btn-group-xs bg-lightblue btn120">{{.CommonName}}</span></td>
+
+                        <td class="my-centered"><span class="badge bg-gray-light btn150">{{.RealAddress}}</span></td>
+                        <td class="my-centered"><span class="badge bg-gray-light btn120">{{.LastRef}}</span></td>
+                        <td class="textcenter">
+                          <a href="javascript:$.MyAPP.Disconnect('{{.CommonName}}','{{$prefixURL}}')"
+                             data-title="Disconect {{.CommonName}} client ?"
+                             class="btn btn-xs btn-group-xs btn-danger bg-red-gradient btn24"
+                             title="Disconnect">X</a>
+                        </td>
+                      </tr>
+                      {{end}}
+
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- /.table-responsive -->
+                  {{else}}
+                    <a href="{{urlfor "SystemController.Get"}}" class="col-md-12 btn btn-md btn-group-xs bg-gradient-red">Fix your configuration or restart OpenVPN</a>
+                  {{end}}
+                </div>
+              </div>
+              <!-- /.tab2 -->
+
+            </div>
+            <!-- /.tab-content -->
+        </div>
+        <!-- /.card-body -->
+
       </div>
-      <!-- /.card-footer -->
-    </div>
     <!-- /.card -->
+
   </div>
 </div>
-<!-- /.col -->
-<!-- /.card-body -->
+<!-- /.row -->
+
 
 <div class="row">
   <div class="col-md-6 col-sm-12 col-xs-12">
@@ -332,15 +405,81 @@
       }
     });
 
+    var table2 = new DataTable('#routes', {
+      lengthMenu: [
+        [10, 25, 50, -1],
+        [10, 25, 50, "All"],
+      ],
+      paging: true,
+      responsive: {
+        details: {
+          renderer: DataTable.Responsive.renderer.listHiddenNodes(),
+        }
+      },
+      // scrollY: 500,
+      order: [[ 1, 'asc' ]],
+      columnDefs: [
+        { targets: [1, 2, 3], searchable: true },
+        { targets: '_all', type: 'html', searchable: false },
+        { targets: [0], orderable: false },
+        { responsivePriority: 1, targets: 0 },
+        { responsivePriority: 2, targets: 1 },
+        { responsivePriority: 3, targets: 3 },
+      ],
+      language: {
+        "emptyTable": "No data available in table",
+        "lengthMenu": "_MENU_ items on a page",
+        "info": "Showing _START_ to _END_ of _TOTAL_ entries",
+        "infoEmpty": "Showing 0 to 0 of 0 entries",
+        "search": "",
+        "paginate": {
+          "first": "<<",
+          "last": ">>",
+          "next": ">",
+          "previous": "<"
+        },
+      },
+      layout: {
+        topEnd: 'info',
+        topStart: {
+          search: {
+            placeholder: 'Type search here'
+          }
+        },
+        bottomStart: 'pageLength',
+        bottomEnd: {
+          paging: {
+            numbers: 3
+          }
+        }
+      },
+      drawCallback: function (settings) {
+        // Call the common function
+        // commonFunctionConfirmPopUp();
+      }
+    });
+
     function adjustColumnVisibility() {
       var isResponsive = table.responsive.hasHidden();
       table.column(0).visible(isResponsive);
     }
 
+    function adjustColumnVisibility2() {
+      var isResponsive = table2.responsive.hasHidden();
+      table2.column(0).visible(isResponsive);
+    }
+
     adjustColumnVisibility();
+    adjustColumnVisibility2();
 
     $(window).resize(function() {
       adjustColumnVisibility();
+      adjustColumnVisibility2();
+    });
+
+    $('.nav-link').on('click', function(event) {
+      adjustColumnVisibility();
+      adjustColumnVisibility2();
     });
 
 
