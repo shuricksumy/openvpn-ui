@@ -4,11 +4,11 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"github.com/shuricksumy/openvpn-ui/pkg/openvpn-server-config/server/mi"
+	"github.com/shuricksumy/openvpn-ui/state"
 	"os/exec"
 	"path/filepath"
 	"regexp"
-	"strconv"
-	"strings"
 	"sync"
 	"time"
 
@@ -17,7 +17,7 @@ import (
 )
 
 var (
-	OpenVPNProcessID int
+	OpenVPNProcessID int64
 	ProcessMutex     sync.Mutex
 )
 
@@ -99,40 +99,16 @@ func StopOpenVPN() error {
 	return nil
 }
 
-func GetOpenVPNProcessIDFromPS() (int, error) {
-	cmd := exec.Command("bash", "-c", "/bin/ps -ef | /bin/grep openvpnserver | /bin/grep -v grep")
-	// logs.Error("CMD:", cmd)
+func GetOpenVPNProcessIDFromPS() (int64, error) {
+	client := mi.NewClient(state.GlobalCfg.MINetwork, state.GlobalCfg.MIAddress)
+	pid, err := client.GetPid()
 
-	output, err := cmd.CombinedOutput()
-	// logs.Error("OUTPUT:", output)
 	if err != nil {
 		logs.Error(err)
-		logs.Error(output)
-		return 0, fmt.Errorf("Error getting OpenVPN PID: %s\n%s", err, output)
-	}
-
-	// Extract the PID from the output
-	pid, err := ExtractPIDFromPSOutput(string(output))
-	if err != nil {
-		logs.Error(err)
-		logs.Error(output)
-		return 0, fmt.Errorf("Error extracting OpenVPN PID: %s\n%s", err, output)
+		return 0, fmt.Errorf("Error getting OpenVPN PID: %s\n", err)
 	}
 
 	return pid, nil
-}
-
-func ExtractPIDFromPSOutput(output string) (int, error) {
-	lines := strings.Split(output, "\n")
-	for _, line := range lines {
-		fields := strings.Fields(line)
-		if len(fields) > 1 {
-			pid := fields[1]
-			return strconv.Atoi(pid)
-		}
-	}
-	logs.Error("PID not found in PS output")
-	return 0, fmt.Errorf("PID not found in PS output")
 }
 
 func EnableFWRules() error {
