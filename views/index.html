@@ -460,25 +460,24 @@
           }, 50);
         }
 
+
+        function reloadTables(){
+            adjustColumnVisibility(t1);
+            adjustColumnVisibility(t2);
+        }
+
         // Initial adjustment
-        adjustColumnVisibility(t1);
-        // adjustColumnVisibility(t2);
+        reloadTables();
 
         // Adjust visibility on window resize
         $(window).resize(function() {
-          adjustColumnVisibility(t1);
-          adjustColumnVisibility(t2);
+          reloadTables();
         });
 
         // Adjust visibility on nav-link click, triggering twice
         $(document).on('click', '.nav-link', function(event) {
-          adjustColumnVisibility(t1);
-          adjustColumnVisibility(t2);
-
-          setTimeout(function() {
-            adjustColumnVisibility(t1);
-            adjustColumnVisibility(t2);
-          }, 50);
+          reloadTables();
+          reloadTables();
         });
 
       });
