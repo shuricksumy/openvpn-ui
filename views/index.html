@@ -23,62 +23,62 @@
 
 <div class="row">
 
-  <div class="col-md-3 col-sm-6 col-xs-12">
+  <div class="col-lg-3 col-6">
     <div class="small-box bg-gradient-lightblue font90">
       <div class="inner">
-        <span>Traffic In/Out:</span>
-        <h5 class="info-box-content ellipsis">
+        <span class="font-sd-2">Traffic In/Out:</span>
+        <h5 class="info-box-content ellipsis font-sd-1">
           {{ printmb .ovstats.BytesIn }} / {{ printmb .ovstats.BytesOut }} MB </h5>
       </div>
-      <div class="icon" >
-        <i style="font-size: 1.5rem;" class="fa-solid fa-satellite-dish"></i>
+      <div class="icon2" >
+        <i class="fa-solid fa-satellite-dish"></i>
       </div>
-      <span  class="small-box-footer">Clients count: {{ .ovstats.NClients }}</span>
+      <span  class="small-box-footer font-sd-1">Clients count: {{ .ovstats.NClients }}</span>
     </div>
   </div>
 
-  <div class="col-md-3 col-sm-6 col-xs-12">
+  <div class="col-lg-3 col-6">
     <div class="small-box bg-gradient-lightblue font90">
       <div class="inner">
-        <span> Load Average:</span>
-        <h5 class="info-box-content ellipsis">
+        <span class="font-sd-2"> Load Average:</span>
+        <h5 class="info-box-content ellipsis font-sd-1">
             {{ .sysinfo.LoadAvg.One }}, {{ .sysinfo.LoadAvg.Five }}, {{ .sysinfo.LoadAvg.Fifteen }}
         </h5>
       </div>
-      <div class="icon" >
-        <i style="font-size: 1.5rem;" class="fa-solid fa-chart-simple"></i>
+      <div class="icon2" >
+        <i class="fa-solid fa-chart-simple"></i>
       </div>
-      <span  class="small-box-footer">CPU count: {{ .sysinfo.CPUList.List | len }}</span>
+      <span  class="small-box-footer font-sd-1">CPU count: {{ .sysinfo.CPUList.List | len }}</span>
     </div>
   </div>
 
-  <div class="col-md-3 col-sm-6 col-xs-12">
-    <div class="small-box bg-gradient-lightblue font90">
+  <div class="col-lg-3 col-6">
+    <div class="small-box bg-gradient-lightblue font90 ">
       <div class="inner">
-        <span>OS Uptime:</span>
-        <h5 class="info-box-content ellipsis">
+        <span class="font-sd-2">OS Uptime:</span>
+        <h5 class="info-box-content ellipsis font-sd-1">
            {{ .sysinfo.UptimeS }}
         </h5>
       </div>
-      <div class="icon" >
-        <i style="font-size: 1.5rem;" class="fa-regular fa-clock"></i>
+      <div class="icon2" >
+        <i class="fa-regular fa-clock"></i>
       </div>
-      <span  class="small-box-footer">{{ dateformat .sysinfo.CurrentTime "2006-01-02 15:04:05"}}</span>
+      <span  class="small-box-footer font-sd-1">{{ dateformat .sysinfo.CurrentTime "2006-01-02 15:04:05"}}</span>
     </div>
   </div>
 
-  <div class="col-md-3 col-sm-6 col-xs-12">
+  <div class="col-lg-3 col-6">
     <div class="small-box bg-gradient-lightblue font90">
       <div class="inner" >
-        <span>Version:</span>
-        <h5 class="info-box-content ellipsis">
+        <span class="font-sd-2">Version:</span>
+        <h5 class="info-box-content ellipsis font-sd-1" style="width: 85% !important;">
            {{ .ovversion }}
         </h5>
       </div>
-      <div class="icon" >
-        <i style="font-size: 1.5rem;" class="fa-solid fa-info"></i>
+      <div class="icon2" >
+        <i class="fa-solid fa-info"></i>
       </div>
-      <span  class="small-box-footer">{{ .sysinfo.Os }} ({{ .sysinfo.Arch }})</span>
+      <span  class="small-box-footer font-sd-1">{{ .sysinfo.Os }} ({{ .sysinfo.Arch }})</span>
     </div>
   </div>
 
@@ -92,7 +92,7 @@
         <div class="float-container">
           <div class="float-child-no-border">
             <div class="col-md-12">
-              <div class="progress-group">
+              <div class="progress-group ellipsis">
                 <span class="progress-text">Memory</span>
                 <span class="progress-number">
                   <b>{{ printmb .sysinfo.Memory.Used }}</b> / {{ printmb .sysinfo.Memory.Total }} MB - {{percent .sysinfo.Memory.Used .sysinfo.Memory.Total}}%
@@ -140,7 +140,7 @@
         <div class="card-header with-border p-0 pt-0">
             <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
               <li class="pt-2 px-3">
-                <h3 class="card-title">Status:</h3>
+                <h3 class="card-title font-sd-1">Status:</h3>
               </li>
               <li class="nav-item">
                 <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home"
