@@ -8,14 +8,14 @@
 
 {{template "common/alert.html" .}}
 
-<div class="card card-lightblue card-outline">
+<div class="card card-lightblue card-outline window-shd">
   <div class="card-header with-border">
     <table>
       <tr>
         <td class="col-md-10 text-left">
           <h3 class="card-title font-sd-1">Last 500 lines of OpenVPN Log</h3>
         </td>
-        <td class="col-md-1 text-right">
+        <td class="col-md-1 text-right btn-shd">
           <a href="{{urlfor "LogsController.RestartLocalService"}}" class="btn btn-danger btn-sm btn-group-sm bg-gradient-red btn150" 
             data-title="Restart OpenVPN server?" title="Restart OpenVPN server" id="start" style="margin-right: 23px;">Restart Server</a>
         </td>

@@ -1,5 +1,29 @@
+table.dataTable.table-bordered th:last-child,table.dataTable.table-bordered td:last-child {
+    border-right: 2px solid rgba(0, 0, 0, 0.5) !important;
+}
+
+table.dataTable.table-bordered tbody tr:last-child {
+    border-bottom: 2px solid rgba(0, 0, 0, 0.5) !important;
+}
+
+table.dataTable.table-bordered tr:last-child {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.5) !important;
+}
+
+.window-shd{
+    filter: drop-shadow(1px 3px 4px rgba(0, 0, 0, 0.65));
+}
+
+.btn-shd{
+    filter: drop-shadow(1px 3px 5px rgba(0, 0, 0, 0.65));
+}
+
+.btn-tb-shd{
+    filter: drop-shadow(2px 3px 3px rgba(0, 0, 0, 0.55));
+}
+
 .font-sd-1{
-    filter: drop-shadow(-1px 3px 4px rgba(0, 0, 0, 0.65));
+    filter: drop-shadow(1px 3px 4px rgba(0, 0, 0, 0.65));
 }
 
 .font-sd-2{
@@ -72,7 +96,7 @@ div.small-box:hover {
     -ms-text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
-    width: 100%;
+    width: 85%;
 }
 
 my-textarea {
