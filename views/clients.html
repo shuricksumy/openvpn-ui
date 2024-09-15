@@ -10,13 +10,13 @@
 {{template "common/alert.html" .}}
 
 <!-- NEW CLIENT -->
-<div class="col-xs-12">
+<div class="col-xs-12 window-shd">
   <div class="card card-outline card-lightblue">
     <!-- card-header -->
       <div class="card-header with-border">
           <div class="row align-items-center">
               <div class="col-md-2 text-sm-left">
-                  <button class="btn btn-sm bg-gradient-navy btn150" data-toggle="collapse" href="#newClient" role="button" aria-expanded="false"
+                  <button class="btn btn-sm bg-gradient-navy btn150 btn-shd" data-toggle="collapse" href="#newClient" role="button" aria-expanded="false"
                           aria-controls="newClient">Add New Client</button>
                   {{template "common/fvalid.html" field_error_message .validation "Name" }}
               </div>
@@ -25,12 +25,12 @@
                   <i>You should start by creating a new client and then certificate</i>
               </div>
 
-              <div class="col-md-2 text-sm-right">
+              <div class="col-md-2 text-sm-right btn-shd">
                   <a href="{{urlfor "ClientsController.UpdateFiles"}}" class="btn btn-warning btn-sm bg-gradient-yellow btn150"
                   data-title="Update ALL Clients?" title="Apply Clients Configuration">Apply Configurations</a>
               </div>
 
-              <div class="col-md-2 text-sm-right">
+              <div class="col-md-2 text-sm-right btn-shd">
                   <a href="{{urlfor "LogsController.RestartLocalService"}}" class="btn btn-danger btn-sm bg-gradient-red btn150"
                   data-title="Restart OpenVPN server?" title="Restart OpenVPN server" id="start">Restart Server</a>
               </div>
@@ -118,7 +118,7 @@
 <!-- END NEW CLIENT -->
 
 <!-- <div class="row"> -->
-  <div class="col-xs-12">
+  <div class="col-xs-12 window-shd">
     <div class="card card-lightblue">
       <div class="card-header with-border">
         <h3 class="card-title font-sd-1">Clients details</h3>
@@ -164,7 +164,7 @@
                         {{ $col = "btn-default btn-sm btn-group-sm btn-block disabled" }}
                       {{end}}
                        <button id="openModalEditClientRaw" data-target="#editClientModalRaw" data-client-id="{{ $c.Id }}"
-                        class="btn {{ $col }} right-icon-holder font75" 
+                        class="btn {{ $col }} right-icon-holder font75 btn-tb-shd"
                         title="{{ $comment }}">{{ $c.ClientName }}<i class="{{ $icon }}"></i>
                       </button>
                   </td>
@@ -230,11 +230,11 @@
                     <div  class="btn-group" role="group">
                         <button id="openModalEditClientAuth" data-client-id="{{ $c.Id }}" data-target="#editClientAuthModal"
                             {{ if $c.OTPIsEnabled  }}
-                                class="btn btn-sm btn-group-sm bg-gradient-olive btn60 font75">
+                                class="btn btn-sm btn-group-sm bg-gradient-olive btn60 font75 btn-tb-shd">
                             {{ else if $c.StaticPassIsUsed }}
-                                class="btn btn-sm btn-group-sm bg-gradient-lightblue btn60 font75">
+                                class="btn btn-sm btn-group-sm bg-gradient-lightblue btn60 font75 btn-tb-shd">
                             {{ else }}
-                                class="btn btn-sm btn-group-sm bg-gradient-red btn60 font75">
+                                class="btn btn-sm btn-group-sm bg-gradient-red btn60 font75 btn-tb-shd">
                             {{ end }}
                             <i class="fa-solid fa-unlock fa-lg"></i>
                         </button>
@@ -245,7 +245,7 @@
                   <td class="textcenter my-centered">
                       <div  class="btn-group" role="group">
                           <button type="button" id="openModalClientRouting" data-target="#modalClientRouting" data-client-id="{{ $c.Id }}"
-                                  class="btn btn-sm btn-group-sm bg-gradient-lightblue btn60 font75" title="Routing">
+                                  class="btn btn-sm btn-group-sm bg-gradient-lightblue btn60 font75 btn-tb-shd" title="Routing">
                               <i class="fa-solid fa-shuffle fa-lg"></i>
                           </button>
                         </div>
@@ -255,7 +255,7 @@
                   <td class="textcenter my-centered">
                     <div class="btn-group" role="group">
                         <button  id="openModalEditClientDetails" data-target="#editClientDetailsModal" data-client-id="{{ $c.Id }}"
-                        class="btn btn-sm btn-group-sm bg-gradient-lightblue btn60 font75" title="Edit">Edit</button>
+                        class="btn btn-sm btn-group-sm bg-gradient-lightblue btn60 font75 btn-tb-shd" title="Edit">Edit</button>
                     </div>
                   </td>
                   

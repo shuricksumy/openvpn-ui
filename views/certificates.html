@@ -8,13 +8,13 @@
 
 {{template "common/alert.html" .}}  
 
-<div class="col-xs-12">
+<div class="col-xs-12 window-shd">
   <div class="card card-outline card-lightblue">
       <!-- card-header -->
       <div class="card-header with-border">
           <div class="row align-items-center">
               <div class="col-md-2 text-sm-left">
-                  <button class="btn btn-sm bg-gradient-navy btn150"
+                  <button class="btn btn-sm bg-gradient-navy btn150 btn-shd"
                           data-toggle="collapse" href="#newCert" role="button"  aria-expanded="false"
                           aria-controls="newCert" style="margin-left: 0.5%;">New Certificate</button>
                   {{template "common/fvalid.html" field_error_message .validation "Name" }}
@@ -24,12 +24,12 @@
                   <i>Restart server after revocation!</i>
               </div>
 
-              <div class="col-md-2 text-sm-right">
+              <div class="col-md-2 text-sm-right btn-shd">
                   <a href="{{urlfor "CertificatesController.UpdateFiles"}}" class="btn btn-warning btn-sm btn-group-sm bg-gradient-yellow btn150"
                   data-title="Update ALL Clients?" title="Apply Clients Configuration" style="margin-right: 23px;">Apply Configurations</a>
               </div>
 
-              <div class="col-md-2 text-sm-right">
+              <div class="col-md-2 text-sm-right btn-shd">
                   <a href="{{urlfor "LogsController.RestartLocalService"}}"
                   class="btn btn-danger btn-sm btn-group-sm bg-gradient-red btn150" data-title="Restart OpenVPN server?"
                   title="Restart OpenVPN server" style="margin-right: 23px;">Restart Server</a>
@@ -81,7 +81,7 @@
       <!-- /.card-body -->
 
       <div class="card-footer">
-        <button type="submit" class="btn btn-sm bg-gradient-lightblue btn80" 
+        <button type="submit" class="btn btn-sm bg-gradient-lightblue btn80"
           style="margin-right: 23px; float: right;" data-title="Create new client?" id="create_crt">Create</button>
       </div>
 
@@ -94,7 +94,7 @@
 
 
 
-  <div class="col-xs-12">
+  <div class="col-xs-12 window-shd">
     <div class="card card-lightblue">
       <div class="card-header with-border">
         <h3 class="card-title font-sd-1">Clients certificates</h3>
@@ -120,7 +120,7 @@
 
             {{$MD5 := .MD5}}  
             {{range $c := .certificates}}
-                {{ $client := GetClientDetailsByName .Details.CN }}
+            {{ $client := GetClientDetailsByName .Details.CN }}
               <tr>
                   <!-- 0 sell -->
                   <td class="my-centered first-sm"></td>
@@ -129,14 +129,14 @@
                   {{if eq .EntryType "V"}}
                   <td class="my-centered">
                     <a href="{{urlfor "CertificatesController.Download" ":key" .Details.CN}}" 
-                      class="btn btn-sm btn-group-sm btn-block bg-gradient-lightblue right-icon-holder font75" title="{{ .Details.CN }}">
-                      {{ .Details.CN }}.ovpn<i class="fa fa-download fa-lg"></i>
+                      class="btn btn-sm btn-group-sm btn-block bg-gradient-lightblue right-icon-holder font75 btn-tb-shd"
+                      title="{{ .Details.CN }}"> {{ .Details.CN }}.ovpn<i class="fa fa-download fa-lg"></i>
                     </a>
                   </td>
                   {{else}}
                   <td class="first-sm">
-                    <a href="" class="btn btn-default btn-sm btn-group-sm disabled btn-block font75" title="Download">
-                      {{ .Details.CN }}
+                    <a href="" class="btn btn-default btn-sm btn-group-sm disabled btn-block font75 btn-tb-shd"
+                       title="Download">{{ .Details.CN }}
                     </a>
                   </td>
                   {{end}}
@@ -144,21 +144,21 @@
                    <!-- 2 sell -->
                   {{if eq .EntryType "V"}}
                     <td class="my-centered">
-                      <button type="button" class="btn btn-success btn-sm btn-group-sm bg-gradient-olive font75" 
+                      <button type="button" class="btn btn-success btn-sm btn-group-sm bg-gradient-olive font75 btn-tb-shd"
                         data-toggle="modal" data-target="#popup-{{ .Details.CN }}">
                         <i class="fa-solid fa-circle-info"></i>
                       </button>
                     </td>
                   {{else if eq .EntryType "R"}}
                     <td class="my-centered">
-                       <button type="button" class="btn btn-warning btn-sm btn-group-sm bg-yellow-gradient font75" 
+                       <button type="button" class="btn btn-warning btn-sm btn-group-sm bg-yellow-gradient font75 btn-tb-shd"
                         data-toggle="modal" data-target="#popup-{{ .Details.CN }}">
                         <i class="fa-solid fa-circle-info"></i>
                         </button>
                     </td>
                    {{else}}
                      <td class="my-centered">
-                         <button type="button" class="btn btn-danger btn-sm btn-group-sm bg-gradient-red font75" 
+                         <button type="button" class="btn btn-danger btn-sm btn-group-sm bg-gradient-red font75 btn-tb-shd"
                           data-toggle="modal" data-target="#popup-{{ .Details.CN }}">
                             <span class="fa-solid fa-circle-info">
                         </button>
@@ -179,13 +179,13 @@
                   {{if eq .EntryType "V"}}
                     <td class="textcenter">
                       <a href="{{urlfor "CertificatesController.Revoke" ":key" .Details.CN}}" data-title="Disable access for user?" 
-                        class="btn btn-warning btn-sm btn-group-sm bg-gradient-yellow btn80 font75" title="Revoke">Revoke</a>
+                        class="btn btn-warning btn-sm btn-group-sm bg-gradient-yellow btn80 font75 btn-tb-shd" title="Revoke">Revoke</a>
                       <!-- <a href="{{urlfor "CertificatesController.Renew" ":key" .Details.CN ":serial" .Serial}}" 
                           data-title="Restore certificates?" class="btn btn-warning btn-sm bg-yellow-gradient btn80" title="Burn">Renew</a> -->
                     </td>
                   {{else if eq .EntryType "R"}}
                     <td class="textcenter">
-                      <div class="btn-group" role="group">
+                      <div class="btn-group btn-tb-shd" role="group">
                           <a href="{{urlfor "CertificatesController.Burn" ":key" .Details.CN ":serial" .Serial}}" 
                             data-title="Remove certificates ?" class="btn btn-danger btn-sm btn-group-sm bg-gradient-red btn40 font75" title="Remove">RM</a>
                           <a href="{{urlfor "CertificatesController.UnRevoke" ":key" .Details.CN}}" style="border-color: #d73925;"
@@ -196,17 +196,17 @@
                     </td>
                   {{else}}
                     <td>
-                      <a href="" class="btn btn-default btn-sm btn-group-sm disabled btn-block font75" title="Fix">Fix manualy</a>
+                      <a href="" class="btn btn-default btn-sm btn-group-sm disabled btn-block font75 btn-tb-shd" title="Fix">Fix manualy</a>
                     </td>
                   {{end}}
 
 
                   <!-- 7 sell -->
-                  {{ $col := "btn btn-sm btn-group-sm bg-gradient-lightblue" }}  
+                  {{ $col := "btn btn-sm btn-group-sm bg-gradient-lightblue btn-tb-shd" }}
                   {{ $comment := "Edit" }} 
                   {{ $isValid := true }}
                           {{ if not (GetBoolValueByKey $c.Details.CN $MD5) }} 
-                              {{ $col = "btn-danger btn-sm btn-group-sm bg-gradient-red" }}
+                              {{ $col = "btn-danger btn-sm btn-group-sm bg-gradient-red btn-tb-shd" }}
                               {{ $comment = "Config was changed but not applied !" }}
                               {{ $isValid = false }} 
                           {{ end }}
@@ -214,7 +214,7 @@
                     <td class="textcenter last-sm">
                       <button  id="openModalEditClientRaw" data-target="#editClientModalRaw"
                                data-client-id="{{ if $client }}{{ $client.Id }}{{ else }}no-user-in-db{{end}}"
-                        class="btn {{ $col }} btn80 but-center right-icon-holder font75" title="{{ $comment }}">Edit
+                        class="btn {{ $col }} btn80 but-center right-icon-holder font75 btn-tb-shd" title="{{ $comment }}">Edit
                       {{if not $isValid }} <i class='fa fa-warning fa-lg'></i> {{end}}
                       </button>
                     </td>
@@ -222,64 +222,15 @@
                     <td class="textcenter last-sm">
                       <button  id="openModalEditClientRaw" data-target="#editClientModalRaw"
                                data-client-id="{{ if $client }}{{ $client.Id }}{{ else }}no-user-in-db{{end}}"
-                        class="btn btn-default btn-sm btn-group-sm edit-button btn80 but-center right-icon-holder font75" title="{{ $comment }}">Edit
+                        class="btn btn-default btn-sm btn-group-sm edit-button btn80 but-center right-icon-holder font75 btn-tb-shd"
+                               title="{{ $comment }}">Edit
                         {{if not $isValid }} <i class='fa fa-warning fa-lg'></i> {{end}}
                       </button>
                     </td>
                   {{end}}
-
                   </tr>
 
-                  <div id="popup-{{ .Details.CN }}" class="modal fade" role="dialog">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
 
-                          <div class="modal-header">
-                            <h5 class="modal-title">Certificate details</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-form-type="" data-dashlane-label="true">
-                              <span aria-hidden="true">×</span>
-                            </button>
-                          </div>
-
-                          <div class="modal-body font90">
-                              <span class="param-name"><b>Name:</b></span>
-                              <span class="param-value"> {{ .Details.CN }}</span><br>
-
-                              <span class="param-name"><b>Type:</b>
-                              </span><span class="param-value"> {{ .EntryType }}</span><br>
-
-                              <span class="param-name"><b>Status:</b>
-                              </span><span class="param-value">
-                                {{if eq .EntryType "V"}}  Active {{else if eq .EntryType "R"}} Revoked {{else}} Unknown {{end}}</span><br>
-
-                              <span class="param-name"><b>Serial:</b></span>
-                              <span class="param-value"> {{ .Serial }}</span><br>
-
-                              <span class="param-name"><b>Expiration Date:</b></span>
-                              <span class="param-value"> {{ dateformat .ExpirationT "2006-01-02 15:04"}}</span><br>
-
-                              <span class="param-name"><b>Revoke Date:</b></span>
-                              <span class="param-value">
-                                  {{if ne .Revocation ""}} {{ dateformat .RevocationT "2006-01-02 15:04"}} {{else}} none {{end}}</span><br>
-
-                              <span class="param-name"><b>Passphrase:</b></span>
-                              <span class="param-value">
-                                  {{ if $client }}
-                                    {{if eq $client.Passphrase ""}} none {{else}} set {{end}}
-                                  {{ else }}
-                                    error
-                                  {{ end }}
-                              </span><br>
-                          </div>
-
-                          <div class="modal-footer">   
-                             <!-- Copy button -->
-                             <button class="btn bg-gradient-lightblue btn80" data-dismiss="modal">Close</button>
-                          </div>
-
-                        </div>
-                     </div>
-                  </div>
             {{end}}
             </tbody>
           </table>
@@ -292,13 +243,66 @@
     <!-- /.card -->
   </div>
 
+    {{range $c := .certificates}}
+    {{ $client := GetClientDetailsByName .Details.CN }}
+        <div id="popup-{{ .Details.CN }}" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
 
-<!-- Add an empty modal container -->
-<div id="modal-edit-client-raw">
-    <script>
-        var actionURL={{urlfor "CertificatesController.SaveClientRawData"}}
-    </script>
-</div>
+                <div class="modal-header">
+                    <h5 class="modal-title">Certificate details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-form-type="" data-dashlane-label="true">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+
+                <div class="modal-body font90">
+                    <span class="param-name"><b>Name:</b></span>
+                    <span class="param-value"> {{ .Details.CN }}</span><br>
+
+                    <span class="param-name"><b>Type:</b>
+                                  </span><span class="param-value"> {{ .EntryType }}</span><br>
+
+                    <span class="param-name"><b>Status:</b>
+                                  </span><span class="param-value">
+                                    {{if eq .EntryType "V"}}  Active {{else if eq .EntryType "R"}} Revoked {{else}} Unknown {{end}}</span><br>
+
+                    <span class="param-name"><b>Serial:</b></span>
+                    <span class="param-value"> {{ .Serial }}</span><br>
+
+                    <span class="param-name"><b>Expiration Date:</b></span>
+                    <span class="param-value"> {{ dateformat .ExpirationT "2006-01-02 15:04"}}</span><br>
+
+                    <span class="param-name"><b>Revoke Date:</b></span>
+                    <span class="param-value">
+                                      {{if ne .Revocation ""}} {{ dateformat .RevocationT "2006-01-02 15:04"}} {{else}} none {{end}}</span><br>
+
+                    <span class="param-name"><b>Passphrase:</b></span>
+                    <span class="param-value">
+                                      {{ if $client }}
+                                        {{if eq $client.Passphrase ""}} none {{else}} set {{end}}
+                                      {{ else }}
+                                        error
+                                      {{ end }}
+                                  </span><br>
+                </div>
+
+                <div class="modal-footer">
+                    <!-- Copy button -->
+                    <button class="btn bg-gradient-lightblue btn80" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    {{end}}
+
+    <!-- Add an empty modal container -->
+    <div id="modal-edit-client-raw">
+        <script>
+            var actionURL={{urlfor "CertificatesController.SaveClientRawData"}}
+        </script>
+    </div>
 {{end}}
 
 

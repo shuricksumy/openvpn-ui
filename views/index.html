@@ -10,7 +10,7 @@
 {{$prefixURL := .PrefixURL}}
 
 {{ if not .IsVPNSetup }}
-<div class="row">
+<div class="row window-shd">
   <div class="col-md-12 col-sm-18 col-xs-36">
     <div class="info-box" style="min-height: 50px;">
     <a href="{{urlfor "WizardController.Step1Get"}}"  
@@ -21,7 +21,7 @@
 </div>
 {{end}}
 
-<div class="row">
+<div class="row window-shd">
 
   <div class="col-lg-3 col-6">
     <div class="small-box bg-gradient-lightblue font90">
@@ -71,7 +71,7 @@
     <div class="small-box bg-gradient-lightblue font90">
       <div class="inner" >
         <span class="font-sd-2">Version:</span>
-        <h5 class="info-box-content ellipsis font-sd-1" style="width: 85% !important;">
+        <h5 class="info-box-content ellipsis font-sd-1">
            {{ .ovversion }}
         </h5>
       </div>
@@ -85,7 +85,7 @@
 </div>
 <!-- /.row -->
 
-<div class="row">
+<div class="row window-shd">
   <div class="col-md-12">
     <div class="card card-default">
       <!-- <div class="card-body">-->
@@ -107,7 +107,7 @@
               <!-- /.col -->
           <div class="float-child-no-border">
             <div class="col-md-12">
-              <div class="progress-group">
+              <div class="progress-group ellipsis">
                 <span class="progress-text">Swap</span>
                 <span class="progress-number">
                   <b>{{ printmb .sysinfo.Swap.Used }}</b> / {{ printmb .sysinfo.Swap.Total }} MB - {{percent .sysinfo.Swap.Used .sysinfo.Swap.Total}}%
@@ -133,162 +133,162 @@
   <!-- /.col -->
 </div>
 
-<div class="row">
-  <div class="col-md-12">
-      <div class="card card-lightblue card-tabs">
+  <div class="row">
+    <div class="col-md-12">
+        <div class="card card-lightblue card-tabs">
 
-        <div class="card-header with-border p-0 pt-0">
-            <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
-              <li class="pt-2 px-3">
-                <h3 class="card-title font-sd-1">Status:</h3>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home"
-                   role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Clients</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile"
-                   role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Routes</a>
-              </li>
-            </ul>
-        </div>
-        <!-- /.card-header -->
+          <div class="card-header with-border p-0 pt-0">
+              <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                <li class="pt-2 px-3">
+                  <h3 class="card-title font-sd-1">Status:</h3>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home"
+                     role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Clients</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile"
+                     role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Routes</a>
+                </li>
+              </ul>
+          </div>
+          <!-- /.card-header -->
 
-        <div class="card-body">
-            <!-- .tab-content -->
-            <div class="tab-content" id="custom-tabs-one-tabContent">
+          <div class="card-body">
+              <!-- .tab-content -->
+              <div class="tab-content" id="custom-tabs-one-tabContent">
 
-              <!-- .tab1 -->
-              <div class="tab-pane fade active show" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
-                <div class="card-body p-0">
-                  {{if .ovstatus}}
-                  <div class="table-responsive">
-                    <table class="table-sm table-bordered table-striped m-0" id="connections" style="width:100%">
-                      <thead>
-                      <tr class="font75">
-                        <th style="width:1%;text-align: center;" class="first-sm" ></th>
-                        <th style="width:10%;text-align: center;">Common Name</th>
-                        <th style="width:10%;text-align: center;">Real Address</th>
-                        <th style="width:10%;text-align: center;">Virtual Address</th>
-                        <th style="width:10%;text-align: center;">KB Received</th>
-                        <th style="width:10%;text-align: center;">KB Sent</th>
-                        <th style="width:10%;text-align: center;">Connected Since</th>
-                        <th style="width:10%;text-align: center;">Username</th>
-                        <th style="width:3%;text-align: center;">Drop</th>
-                      </tr>
-                      </thead>
-                      <tbody>
+                <!-- .tab1 -->
+                <div class="tab-pane fade active show" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+                  <div class="card-body p-0">
+                    {{if .ovstatus}}
+                    <div class="table-responsive">
+                      <table class="table-sm table-bordered table-striped m-0" id="connections" style="width:100%">
+                        <thead>
+                        <tr class="font75">
+                          <th style="width:1%;text-align: center;" class="first-sm" ></th>
+                          <th style="width:10%;text-align: center;">Common Name</th>
+                          <th style="width:10%;text-align: center;">Real Address</th>
+                          <th style="width:10%;text-align: center;">Virtual Address</th>
+                          <th style="width:10%;text-align: center;">KB Received</th>
+                          <th style="width:10%;text-align: center;">KB Sent</th>
+                          <th style="width:10%;text-align: center;">Connected Since</th>
+                          <th style="width:10%;text-align: center;">Username</th>
+                          <th style="width:3%;text-align: center;">Drop</th>
+                        </tr>
+                        </thead>
+                        <tbody>
 
-                      {{range .ovstatus.ClientList}}
-                      <tr>
-                        <td class="my-centered"></td>
-                        <td class="my-centered"><span class="btn btn-xs btn-group-xs bg-lightblue btn120">{{.CommonName}}</span></td>
-                        <td class="my-centered"><span class="badge bg-gray-light btn150">{{.RealAddress}}</span></td>
-                        <td class="my-centered">
-                          <span class="badge bg-olive btn100">{{.VirtualAddress}}</span>
-                        </td>
-                        <td class="my-centered">
-                          <span class="badge bg-gray-light btn100">{{printkb .BytesReceived}}</span>
-                        </td>
-                        <td class="my-centered">
-                          <span class="badge bg-gray-light btn100">{{printkb .BytesSent}}</span>
-                        </td>
-                        <td class="my-centered"><span class="badge bg-gray-light btn120">{{.ConnectedSince}}</span></td>
-                        <td class="my-centered"><span class="badge bg-gray-light btn120">
-                            {{if eq .Username "UNDEF"}}
-                              -
-                            {{else}}
-                              {{.Username}}
-                            {{end}}
-                          </span></td>
-                        <td class="textcenter">
-                          <a href="javascript:$.MyAPP.Disconnect('{{.CommonName}}','{{$prefixURL}}')"
-                             data-title="Disconect {{.CommonName}} client ?"
-                             class="btn btn-xs btn-group-xs btn-danger bg-red-gradient btn24"
-                             title="Disconnect">X</a>
-                        </td>
-                      </tr>
-                      {{end}}
+                        {{range .ovstatus.ClientList}}
+                        <tr>
+                          <td class="my-centered"></td>
+                          <td class="my-centered"><span class="btn btn-xs btn-group-xs bg-lightblue btn120">{{.CommonName}}</span></td>
+                          <td class="my-centered"><span class="badge bg-gray-light btn150">{{.RealAddress}}</span></td>
+                          <td class="my-centered">
+                            <span class="badge bg-olive btn100">{{.VirtualAddress}}</span>
+                          </td>
+                          <td class="my-centered">
+                            <span class="badge bg-gray-light btn100">{{printkb .BytesReceived}}</span>
+                          </td>
+                          <td class="my-centered">
+                            <span class="badge bg-gray-light btn100">{{printkb .BytesSent}}</span>
+                          </td>
+                          <td class="my-centered"><span class="badge bg-gray-light btn120">{{.ConnectedSince}}</span></td>
+                          <td class="my-centered"><span class="badge bg-gray-light btn120">
+                              {{if eq .Username "UNDEF"}}
+                                -
+                              {{else}}
+                                {{.Username}}
+                              {{end}}
+                            </span></td>
+                          <td class="textcenter">
+                            <a href="javascript:$.MyAPP.Disconnect('{{.CommonName}}','{{$prefixURL}}')"
+                               data-title="Disconect {{.CommonName}} client ?"
+                               class="btn btn-xs btn-group-xs btn-danger bg-red-gradient btn24"
+                               title="Disconnect">X</a>
+                          </td>
+                        </tr>
+                        {{end}}
 
-                      </tbody>
-                    </table>
-                  </div>
-                  <!-- /.table-responsive -->
-                {{else}}
-                  <a href="{{urlfor "SystemController.Get"}}" class="col-md-12 btn btn-md btn-group-xs bg-gradient-red">Fix your configuration or restart OpenVPN</a>
-                {{end}}
-                </div>
-              </div>
-              <!-- /.tab1 -->
-
-              <!-- .tab2 -->
-              <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
-                <div class="card-body p-0">
-                  {{if .ovstatus}}
-                  <div class="table-responsive">
-                    <table class="table-sm table-bordered table-striped m-0" id="routes" style="width:100%">
-                      <thead>
-                      <tr class="font75">
-                        <th style="width:1%;text-align: center;" class="first-sm"></th>
-                        <th style="width:10%;text-align: center;" class="textcenter">Route to</th>
-                        <th style="width:10%;text-align: center;">Using client</th>
-                        <th style="width:10%; text-align: center;">Real client address</th>
-                        <th style="width:10%;text-align: center;">Connected since</th>
-                        <th style="width:3%;text-align: center;">Drop</th>
-                      </tr>
-                      </thead>
-                      <tbody>
-
-                      {{range .ovstatus.RoutingTable}}
-                      <tr>
-                        <td class="my-centered"></td>
-                        <td class="my-centered"><span class="badge bg-purple btn100">{{.VirtualAddress}}</span></td>
-                        <td class="my-centered"><span class="btn btn-xs btn-group-xs bg-lightblue btn120">{{.CommonName}}</span></td>
-
-                        <td class="my-centered"><span class="badge bg-gray-light btn150">{{.RealAddress}}</span></td>
-                        <td class="my-centered"><span class="badge bg-gray-light btn120">{{.LastRef}}</span></td>
-                        <td class="textcenter">
-                          <a href="javascript:$.MyAPP.Disconnect('{{.CommonName}}','{{$prefixURL}}')"
-                             data-title="Disconect {{.CommonName}} client ?"
-                             class="btn btn-xs btn-group-xs btn-danger bg-red-gradient btn24"
-                             title="Disconnect">X</a>
-                        </td>
-                      </tr>
-                      {{end}}
-
-                      </tbody>
-                    </table>
-                  </div>
-                  <!-- /.table-responsive -->
+                        </tbody>
+                      </table>
+                    </div>
+                    <!-- /.table-responsive -->
                   {{else}}
                     <a href="{{urlfor "SystemController.Get"}}" class="col-md-12 btn btn-md btn-group-xs bg-gradient-red">Fix your configuration or restart OpenVPN</a>
                   {{end}}
+                  </div>
                 </div>
+                <!-- /.tab1 -->
+
+                <!-- .tab2 -->
+                <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
+                  <div class="card-body p-0">
+                    {{if .ovstatus}}
+                    <div class="table-responsive">
+                      <table class="table-sm table-bordered table-striped m-0" id="routes" style="width:100%">
+                        <thead>
+                        <tr class="font75">
+                          <th style="width:1%;text-align: center;" class="first-sm"></th>
+                          <th style="width:10%;text-align: center;" class="textcenter">Route to</th>
+                          <th style="width:10%;text-align: center;">Using client</th>
+                          <th style="width:10%; text-align: center;">Real client address</th>
+                          <th style="width:10%;text-align: center;">Connected since</th>
+                          <th style="width:3%;text-align: center;">Drop</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {{range .ovstatus.RoutingTable}}
+                        <tr>
+                          <td class="my-centered"></td>
+                          <td class="my-centered"><span class="badge bg-purple btn100">{{.VirtualAddress}}</span></td>
+                          <td class="my-centered"><span class="btn btn-xs btn-group-xs bg-lightblue btn120">{{.CommonName}}</span></td>
+
+                          <td class="my-centered"><span class="badge bg-gray-light btn150">{{.RealAddress}}</span></td>
+                          <td class="my-centered"><span class="badge bg-gray-light btn120">{{.LastRef}}</span></td>
+                          <td class="textcenter">
+                            <a href="javascript:$.MyAPP.Disconnect('{{.CommonName}}','{{$prefixURL}}')"
+                               data-title="Disconect {{.CommonName}} client ?"
+                               class="btn btn-xs btn-group-xs btn-danger bg-red-gradient btn24"
+                               title="Disconnect">X</a>
+                          </td>
+                        </tr>
+                        {{end}}
+
+                        </tbody>
+                      </table>
+                    </div>
+                    <!-- /.table-responsive -->
+                    {{else}}
+                      <a href="{{urlfor "SystemController.Get"}}" class="col-md-12 btn btn-md btn-group-xs bg-gradient-red">Fix your configuration or restart OpenVPN</a>
+                    {{end}}
+                  </div>
+                </div>
+                <!-- /.tab2 -->
+
               </div>
-              <!-- /.tab2 -->
+              <!-- /.tab-content -->
+          </div>
+          <!-- /.card-body -->
 
-            </div>
-            <!-- /.tab-content -->
         </div>
-        <!-- /.card-body -->
+      <!-- /.card -->
 
-      </div>
-    <!-- /.card -->
-
+    </div>
   </div>
-</div>
-<!-- /.row -->
+  <!-- /.row -->
 
 
-<div class="row">
+  <div class="row">
 
 
 
-  <!-- fix for small devices only -->
-  <div class="clearfix visible-sm-block"></div>
-  <!-- /.col -->
-</div>
-<!-- /.row -->
+    <!-- fix for small devices only -->
+    <div class="clearfix visible-sm-block"></div>
+    <!-- /.col -->
+  </div>
+  <!-- /.row -->
 
 {{end}}
 
