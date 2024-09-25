@@ -27,7 +27,7 @@
     <div class="small-box bg-gradient-lightblue font90">
       <div class="inner">
         <span class="font-sd-2">Traffic In/Out:</span>
-        <h5 class="info-box-content ellipsis font-sd-1">
+        <h5 class="info-box-content ellipsis widget-sd-1">
           {{ printmb .ovstats.BytesIn }} / {{ printmb .ovstats.BytesOut }} MB </h5>
       </div>
       <div class="icon2" >
@@ -41,7 +41,7 @@
     <div class="small-box bg-gradient-lightblue font90">
       <div class="inner">
         <span class="font-sd-2"> Load Average:</span>
-        <h5 class="info-box-content ellipsis font-sd-1">
+        <h5 class="info-box-content ellipsis widget-sd-1">
             {{ .sysinfo.LoadAvg.One }}, {{ .sysinfo.LoadAvg.Five }}, {{ .sysinfo.LoadAvg.Fifteen }}
         </h5>
       </div>
@@ -56,7 +56,7 @@
     <div class="small-box bg-gradient-lightblue font90 ">
       <div class="inner">
         <span class="font-sd-2">OS Uptime:</span>
-        <h5 class="info-box-content ellipsis font-sd-1">
+        <h5 class="info-box-content ellipsis widget-sd-1">
            {{ .sysinfo.UptimeS }}
         </h5>
       </div>
@@ -71,7 +71,7 @@
     <div class="small-box bg-gradient-lightblue font90">
       <div class="inner" >
         <span class="font-sd-2">Version:</span>
-        <h5 class="info-box-content ellipsis font-sd-1">
+        <h5 class="info-box-content ellipsis widget-sd-1">
            {{ .ovversion }}
         </h5>
       </div>

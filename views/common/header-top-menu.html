@@ -1,26 +1,26 @@
 <ul class="navbar-nav">
 
-  <li class="nav-item font-sd-1">
-    <a href="{{urlfor "MainController.Get"}}" class="nav-link {{if compare .RouterPattern "/"}}active{{end}}">Dashboard<span class="sr-only">(current)</span></a>
+  <li class="nav-item">
+    <a href="{{urlfor "MainController.Get"}}" class="nav-link {{if compare .RouterPattern "/"}}active font-sd-light{{end}}">Dashboard<span class="sr-only">(current)</span></a>
   </li>
 
-  <li class="nav-item font-sd-1">
-    <a href="{{urlfor "ClientsController.Get"}}" class="nav-link {{if compare .RouterPattern "/clients"}}active{{end}}">Clients</a>
+  <li class="nav-item">
+    <a href="{{urlfor "ClientsController.Get"}}" class="nav-link {{if compare .RouterPattern "/clients"}}active font-sd-light{{end}}">Clients</a>
   </li>
 
-  <li class="nav-item font-sd-1">
-    <a href="{{urlfor "CertificatesController.Get"}}" class="nav-link {{if compare .RouterPattern "/certificates"}}active{{end}}">Certificates</a>
+  <li class="nav-item">
+    <a href="{{urlfor "CertificatesController.Get"}}" class="nav-link {{if compare .RouterPattern "/certificates"}}active font-sd-light{{end}}">Certificates</a>
   </li>
 
-  <li class="nav-item font-sd-1">
-    <a href="{{urlfor "RoutesController.Get"}}" class="nav-link {{if compare .RouterPattern "/routes"}}active{{end}}">Routes</a>
+  <li class="nav-item">
+    <a href="{{urlfor "RoutesController.Get"}}" class="nav-link {{if compare .RouterPattern "/routes"}}active font-sd-light{{end}}">Routes</a>
   </li>
 
-  <li class="nav-item font-sd-1">
-    <a href="{{urlfor "LogsController.Get"}}" class="nav-link {{if compare .RouterPattern "/logs"}}active{{end}}">Logs</a>
+  <li class="nav-item">
+    <a href="{{urlfor "LogsController.Get"}}" class="nav-link {{if compare .RouterPattern "/logs"}}active font-sd-light{{end}}">Logs</a>
   </li>
 
-  <li class="dropdown font-sd-1">
+  <li class="dropdown">
     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
       <span class="caret">Configuration</span>
     </a>
