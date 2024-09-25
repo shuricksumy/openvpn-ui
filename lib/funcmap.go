@@ -3,6 +3,7 @@ package lib
 import (
 	"bytes"
 	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -87,6 +88,16 @@ func AddFuncMaps() {
 	// Register the custom function "contains" to check if A contains B
 	_ = web.AddFuncMap("contains", func(A string, B string) bool {
 		return strings.Contains(A, B)
+	})
+	// Register the custom function "regexp_match" to check if a string matches a regular expression
+	_ = web.AddFuncMap("regexp_match", func(pattern string, s string) bool {
+		// Compile the regular expression
+		matched, err := regexp.MatchString(pattern, s)
+		// Return false if there is an error (e.g., invalid regex)
+		if err != nil {
+			return false
+		}
+		return matched
 	})
 }
 
