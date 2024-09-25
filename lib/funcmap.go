@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
@@ -82,6 +83,10 @@ func AddFuncMaps() {
 			logs.Error("Unknown type:", v)
 		}
 		return "Mapping error"
+	})
+	// Register the custom function "contains" to check if A contains B
+	_ = web.AddFuncMap("contains", func(A string, B string) bool {
+		return strings.Contains(A, B)
 	})
 }
 
