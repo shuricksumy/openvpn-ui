@@ -62,3 +62,22 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/openvpn-ui:latestvpn
             ${{ github.event_name == 'release' && format('{0}/openvpn-ui:{1}_latestvpn', secrets.DOCKER_USERNAME, github.event.release.tag_name) || '' }}
+
+      - name: Pull Docker Image from GitHub Packages
+        run: |
+          docker pull ghcr.io/shuricksumy/openvpn-ui:latestvpn
+
+      - name: Analyze for critical and high CVEs
+        uses: docker/scout-action@v1
+        id: docker-scout-cves
+        with:
+          command: cves,recommendations
+          image: ghcr.io/shuricksumy/openvpn-ui:latestvpn
+          sarif-file: sarif.output.json
+          summary: true
+  
+      - name: Upload Scan Report as Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: vulnerability-scan-report
+          path: sarif.output.json
