@@ -1,4 +1,4 @@
-FROM golang:1.23.0-bookworm
+FROM golang:1.23.1-bookworm
 
 ENV WORK_DIR=$GOPATH/src/github.com/shuricksumy/openvpn-ui
 ENV CGO_ENABLED=1
