@@ -1,6 +1,8 @@
 name: Docker Image Vulnerability Scan
 
 on:
+  schedule:
+    - cron: '30 1 */5 * *'
   workflow_dispatch: ~
 
 jobs:
