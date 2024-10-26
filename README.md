@@ -2,6 +2,10 @@
 |---|---|
 | [![Build and Deploy Docker Images](https://github.com/shuricksumy/openvpn-ui/actions/workflows/docker-image.yml/badge.svg)](https://github.com/shuricksumy/openvpn-ui/actions/workflows/docker-image.yml) | [![Build and Deploy Docker Images](https://github.com/shuricksumy/openvpn-ui/actions/workflows/docker-image.yml/badge.svg?event=release)](https://github.com/shuricksumy/openvpn-ui/actions/workflows/docker-image.yml) |
 
+### Secruty report 
+- Reprot is inside the build job.
+- Regular checks here [Docker Image Vulnerability Scan](https://github.com/shuricksumy/openvpn-ui/actions/workflows/scan.yml)
+
 # OpenVPN WEB UI
 
 [![Watch the video](/screenshots/main.png)](https://github.com/shuricksumy/openvpn-ui/assets/12009686/06d96239-c7f8-4dc2-ab27-f3e4e2b0b6bf)
