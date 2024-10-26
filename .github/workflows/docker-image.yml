@@ -48,8 +48,8 @@ jobs:
           provenance: false
           platforms: linux/amd64,linux/arm64
           tags: |
-            ghcr.io/${{ github.repository }}:latestvpn
-            ${{ github.event_name == 'release' && format('ghcr.io/{0}:{1}_latestvpn', github.repository, github.event.release.tag_name) || '' }}
+            ghcr.io/${{ github.repository }}:latest
+            ${{ github.event_name == 'release' && format('ghcr.io/{0}:{1}', github.repository, github.event.release.tag_name) || '' }}
 
       - name: Build and Push Docker Image for Docker Hub
         uses: docker/build-push-action@v5
@@ -60,19 +60,19 @@ jobs:
           provenance: false
           platforms: linux/amd64,linux/arm64
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/openvpn-ui:latestvpn
-            ${{ github.event_name == 'release' && format('{0}/openvpn-ui:{1}_latestvpn', secrets.DOCKER_USERNAME, github.event.release.tag_name) || '' }}
+            ${{ secrets.DOCKER_USERNAME }}/openvpn-ui:latest
+            ${{ github.event_name == 'release' && format('{0}/openvpn-ui:{1}', secrets.DOCKER_USERNAME, github.event.release.tag_name) || '' }}
 
       - name: Pull Docker Image from GitHub Packages
         run: |
-          docker pull ghcr.io/shuricksumy/openvpn-ui:latestvpn
+          docker pull ghcr.io/shuricksumy/openvpn-ui:latest
 
       - name: Analyze for critical and high CVEs
         uses: docker/scout-action@v1
         id: docker-scout-cves
         with:
           command: cves,recommendations
-          image: ghcr.io/shuricksumy/openvpn-ui:latestvpn
+          image: ghcr.io/shuricksumy/openvpn-ui:latest
           sarif-file: sarif.output.json
           summary: true
   

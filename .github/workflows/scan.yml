@@ -24,7 +24,7 @@ jobs:
     # Step 3: Pull the image from GitHub Packages
     - name: Pull Docker Image from GitHub Packages
       run: |
-        docker pull ghcr.io/shuricksumy/openvpn-ui:latestvpn
+        docker pull ghcr.io/shuricksumy/openvpn-ui:latest
 
     # Step 4: Run Docker Scout to scan the image
     - name: Analyze for critical and high CVEs
@@ -32,7 +32,7 @@ jobs:
       id: docker-scout-cves
       with:
         command: cves,recommendations
-        image: ghcr.io/shuricksumy/openvpn-ui:latestvpn
+        image: ghcr.io/shuricksumy/openvpn-ui:latest
         severity-cutoff: medium  # Adjust this as needed
         sarif-file: sarif.output.json
         summary: true
