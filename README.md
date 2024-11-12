@@ -44,7 +44,6 @@ services:
         cap_add:
             - NET_ADMIN
         volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
             - ./openvpn/conf:/etc/openvpn
             - ./openvpn/db:/opt/openvpn-gui/db
         # labels:
