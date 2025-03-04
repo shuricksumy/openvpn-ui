@@ -14,7 +14,7 @@ type LoginController struct {
 
 func (c *LoginController) Login() {
 	if c.IsLogin {
-		c.Ctx.Redirect(302, c.URLFor("MainController.Get"))
+		c.Ctx.Redirect(302, c.URLFor("MainController.Get")+"/")
 		return
 	}
 
@@ -53,7 +53,7 @@ func (c *LoginController) Login() {
 
 	c.SetLogin(user)
 
-	c.Redirect(c.URLFor("MainController.Get"), 303)
+	c.Redirect(c.URLFor("MainController.Get")+"/", 303)
 }
 
 func (c *LoginController) Logout() {
