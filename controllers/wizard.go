@@ -101,7 +101,7 @@ func (c *WizardController) Step1Post() {
 	c.SetSession("ovpnWizardData", a.Bytes())
 	// lib.Dump(ovpnWizardData)
 
-	c.Redirect("/wizard/step2", 302)
+	c.Redirect(c.URLFor("MainController.Get")+"/wizard/step2", 302)
 }
 
 func (c *WizardController) Step2Get() {
@@ -168,7 +168,7 @@ func (c *WizardController) Step2Post() {
 	c.SetSession("ovpnWizardData", a.Bytes())
 	// lib.Dump(ovpnWizardData)
 
-	c.Redirect("/wizard/step3", 302)
+	c.Redirect(c.URLFor("MainController.Get")+"/wizard/step3", 302)
 }
 
 func (c *WizardController) Step3Get() {
