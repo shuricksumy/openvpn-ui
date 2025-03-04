@@ -483,7 +483,7 @@ func ParsePrefixURL() string {
 		prefixURL = "/" + prefixURL
 	}
 	if !strings.HasSuffix(prefixURL, "/") {
-		prefixURL = prefixURL + "/"
+		prefixURL = strings.TrimSuffix(prefixURL, "/")
 	}
 
 	prefixURL = strings.ReplaceAll(prefixURL, "//", "/")

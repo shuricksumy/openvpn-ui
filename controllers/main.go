@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/shuricksumy/openvpn-ui/lib"
@@ -17,7 +18,7 @@ type MainController struct {
 func (c *MainController) NestPrepare() {
 	if !c.IsLogin {
 		c.Ctx.Redirect(302, c.LoginPath())
-		return
+		c.StopRun()
 	}
 	c.Data["breadcrumbs"] = &BreadCrumbs{
 		Title: "",
@@ -25,6 +26,13 @@ func (c *MainController) NestPrepare() {
 }
 
 func (c *MainController) Get() {
+	// Ensure trailing slash
+	if !strings.HasSuffix(c.Ctx.Request.URL.Path, "/") {
+		c.Ctx.Redirect(302, c.Ctx.Request.URL.Path+"/")
+		c.StopRun()
+		return
+	}
+
 	c.Data["sysinfo"] = lib.GetSystemInfo()
 	//lib.Dump(lib.GetSystemInfo())
 	client := mi.NewClient(state.GlobalCfg.MINetwork, state.GlobalCfg.MIAddress)

@@ -14,7 +14,8 @@ import (
 
 func Init(configDir string, prefixURL string) {
 
-	web.Router(prefixURL+"/", &controllers.MainController{})
+	web.Router(prefixURL+"/", &controllers.MainController{}, "get:Get")
+	web.Router(prefixURL, &controllers.MainController{}, "get:Get")
 	web.SetStaticPath(prefixURL+"/static", "static")
 	web.SetStaticPath(prefixURL+"/swagger", "swagger")
 
