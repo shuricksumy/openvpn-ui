@@ -250,9 +250,12 @@ function installQuestions() {
 		echo "It seems this server is behind NAT. What is its public IPv4 address or hostname?"
 		echo "We need it for the clients to connect to the server."
 
-		PUBLICIP=$(curl -s https://api.ipify.org)
+    if [[ -z $ENDPOINT ]]; then
+      DEFAULT_ENDPOINT=$(resolvePublicIP)
+    fi
+
 		until [[ $ENDPOINT != "" ]]; do
-			read -rp "Public IPv4 address or hostname: " -e -i "$PUBLICIP" ENDPOINT
+			read -rp "Public IPv4 address or hostname: " -e -i "$DEFAULT_ENDPOINT" ENDPOINT
 		done
 	fi
 
@@ -637,6 +640,46 @@ function installQuestions() {
 	fi
 }
 
+function resolvePublicIP() {
+	# IP version flags, we'll use as default the IPv4
+	CURL_IP_VERSION_FLAG="-4"
+	DIG_IP_VERSION_FLAG="-4"
+
+	# Behind NAT, we'll default to the publicly reachable IPv4/IPv6.
+	if [[ $IPV6_SUPPORT == "y" ]]; then
+		CURL_IP_VERSION_FLAG=""
+		DIG_IP_VERSION_FLAG="-6"
+	fi
+
+	# If there is no public ip yet, we'll try to solve it using: https://api.seeip.org
+	if [[ -z $PUBLIC_IP ]]; then
+		PUBLIC_IP=$(curl -f -m 5 -sS --retry 2 --retry-connrefused "$CURL_IP_VERSION_FLAG" https://api.seeip.org 2>/dev/null)
+	fi
+
+	# If there is no public ip yet, we'll try to solve it using: https://ifconfig.me
+	if [[ -z $PUBLIC_IP ]]; then
+		PUBLIC_IP=$(curl -f -m 5 -sS --retry 2 --retry-connrefused "$CURL_IP_VERSION_FLAG" https://ifconfig.me 2>/dev/null)
+	fi
+
+	# If there is no public ip yet, we'll try to solve it using: https://api.ipify.org
+	if [[ -z $PUBLIC_IP ]]; then
+		PUBLIC_IP=$(curl -f -m 5 -sS --retry 2 --retry-connrefused "$CURL_IP_VERSION_FLAG" https://api.ipify.org 2>/dev/null)
+	fi
+
+	# If there is no public ip yet, we'll try to solve it using: ns1.google.com
+	if [[ -z $PUBLIC_IP ]]; then
+		PUBLIC_IP=$(dig $DIG_IP_VERSION_FLAG TXT +short o-o.myaddr.l.google.com @ns1.google.com | tr -d '"')
+	fi
+
+	if [[ -z $PUBLIC_IP ]]; then
+		echo >&2 echo "Couldn't solve the public IP"
+		exit 1
+	fi
+
+	echo "$PUBLIC_IP"
+}
+
+
 function installPKG() {
     if [[ $OS =~ (debian|ubuntu) ]]; then
 			apt-get update
@@ -684,17 +727,9 @@ function installOpenVPN() {
 		PASS=${PASS:-1}
 		CONTINUE=${CONTINUE:-y}
 
-		# Behind NAT, we'll default to the publicly reachable IPv4/IPv6.
-		if [[ $IPV6_SUPPORT == "y" ]]; then
-			if ! PUBLIC_IP=$(curl -f --retry 5 --retry-connrefused https://ip.seeip.org); then
-				PUBLIC_IP=$(dig -6 TXT +short o-o.myaddr.l.google.com @ns1.google.com | tr -d '"')
-			fi
-		else
-			if ! PUBLIC_IP=$(curl -f --retry 5 --retry-connrefused -4 https://ip.seeip.org); then
-				PUBLIC_IP=$(dig -4 TXT +short o-o.myaddr.l.google.com @ns1.google.com | tr -d '"')
-			fi
+		if [[ -z $ENDPOINT ]]; then
+			ENDPOINT=$(resolvePublicIP)
 		fi
-		ENDPOINT=${ENDPOINT:-$PUBLIC_IP}
 	fi
 
 	# Run setup questions first, and set other variables if auto-install
@@ -724,7 +759,7 @@ function installOpenVPN() {
 
 	# Install the latest version of easy-rsa from source, if not already installed.
 	if [[ ! -f ${OVPN_PATH}/easy-rsa/SERVER_NAME_GENERATED ]]; then
-		local version="3.2.0"
+		local version="3.2.2"
 		local easyrsa_file_name="EasyRSA-${version}.tgz"
 
 		if [[ ! -f ~/${easyrsa_file_name} ]]; then

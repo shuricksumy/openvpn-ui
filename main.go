@@ -57,6 +57,7 @@ func main() {
 	web.AddFuncMap("GetDisConnectedRoutes", models.GetDisConnectedRoutes)
 	web.AddFuncMap("GetBoolValueByKey", models.GetBoolValueByKey)
 	web.AddFuncMap("GetClientDetailsByName", models.GetClientDetailsByCertificate)
+	web.AddFuncMap("NormalizeURL", models.NormalizeURL)
 
 	web.Run()
 }

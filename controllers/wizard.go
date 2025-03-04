@@ -2,16 +2,14 @@ package controllers
 
 import (
 	"bytes"
-	"context"
 	"encoding/gob"
 	"fmt"
-	"os/exec"
-	"path/filepath"
-	"time"
-
 	"github.com/shuricksumy/openvpn-ui/lib"
 	"github.com/shuricksumy/openvpn-ui/models"
 	"github.com/shuricksumy/openvpn-ui/state"
+	"os/exec"
+	"path/filepath"
+	"time"
 )
 
 type WizardController struct {
@@ -205,13 +203,19 @@ func (c *WizardController) Setup() {
 		return
 	}
 
-	// Create a new HTTP client with a custom timeout
-	ctx, cancel := context.WithTimeout(context.Background(), 660*time.Second)
-	defer cancel()
+	//// Create a new HTTP client with a custom timeout
+	//ctx, cancel := context.WithTimeout(context.Background(), 660*time.Second)
+	//defer cancel()
 
-	// Run the Bash script within the context
-	cmd := exec.CommandContext(ctx, "/bin/bash", "-c",
-		fmt.Sprintf("cd /tmp/ && bash ./setup.sh"))
+	//// Run the Bash script within the context
+	//cmd := exec.CommandContext(ctx, "/bin/bash", "-c",
+	//	fmt.Sprintf("cd /tmp/ && bash ./setup.sh"))
+
+	time.Sleep(10 * time.Second)
+	script := "./setupScript.sh"
+	path := state.GlobalCfg.OVConfigPath
+	logFile := "./openvpn.log"
+	cmd := exec.Command("/bin/bash", "-c", fmt.Sprintf("cd %s && nohup bash %s > %s 2>&1 &", path, script, logFile))
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		// If there is an error, return 500 Internal Server Error with details
@@ -220,6 +224,7 @@ func (c *WizardController) Setup() {
 		// If successful, return 200 OK with the script output
 		c.Data["json"] = map[string]string{"output": string(output)}
 		c.ServeJSON()
+		c.Redirect(c.URLFor("LogsController.Get"), 302)
 	}
 }
 

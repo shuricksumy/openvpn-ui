@@ -7,6 +7,7 @@ import (
 	"github.com/beego/beego/v2/core/validation"
 	"github.com/google/uuid"
 	_ "github.com/mattn/go-sqlite3"
+	"strings"
 )
 
 type RouteDetails struct {
@@ -177,4 +178,22 @@ func GetAllRoutesProvided(routerID string) ([]*RouteDetails, error) {
 	}
 
 	return routes, nil
+}
+
+// Custom function defined in the controller to normalize url
+func NormalizeURL(inputURL string) string {
+	if inputURL == "/" {
+		return "/"
+	}
+	if inputURL == "" {
+		return "/"
+	}
+	if !strings.HasPrefix(inputURL, "/") {
+		inputURL = "/" + inputURL
+	}
+	if !strings.HasSuffix(inputURL, "/") {
+		inputURL = inputURL + "/"
+	}
+	strings.ReplaceAll(inputURL, "//", "/")
+	return inputURL
 }
