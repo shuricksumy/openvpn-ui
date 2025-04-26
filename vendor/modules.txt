@@ -40,11 +40,11 @@ github.com/cloudfoundry/gosigar/sys/windows
 # github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc
 ## explicit
 github.com/davecgh/go-spew/spew
-# github.com/go-asn1-ber/asn1-ber v1.5.7
+# github.com/go-asn1-ber/asn1-ber v1.5.8-0.20250403174932-29230038a667
 ## explicit; go 1.13
 github.com/go-asn1-ber/asn1-ber
-# github.com/go-ldap/ldap/v3 v3.4.10
-## explicit; go 1.14
+# github.com/go-ldap/ldap/v3 v3.4.11
+## explicit; go 1.23.0
 github.com/go-ldap/ldap/v3
 # github.com/google/uuid v1.6.0
 ## explicit
@@ -57,7 +57,7 @@ github.com/hashicorp/golang-lru/simplelru
 ## explicit
 # github.com/lib/pq v1.10.9
 ## explicit; go 1.13
-# github.com/mattn/go-sqlite3 v1.14.27
+# github.com/mattn/go-sqlite3 v1.14.28
 ## explicit; go 1.19
 github.com/mattn/go-sqlite3
 # github.com/mitchellh/mapstructure v1.5.0
@@ -93,8 +93,8 @@ github.com/prometheus/client_model/go
 ## explicit; go 1.21
 github.com/prometheus/common/expfmt
 github.com/prometheus/common/model
-# github.com/prometheus/procfs v0.16.0
-## explicit; go 1.21
+# github.com/prometheus/procfs v0.16.1
+## explicit; go 1.23.0
 github.com/prometheus/procfs
 github.com/prometheus/procfs/internal/fs
 github.com/prometheus/procfs/internal/util
