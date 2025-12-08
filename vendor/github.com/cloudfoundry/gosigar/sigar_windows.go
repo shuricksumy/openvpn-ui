@@ -1,16 +1,13 @@
 package sigar
 
 import (
-	"bytes"
+	"errors"
 	"fmt"
-	"os/exec"
-	"strconv"
 	"syscall"
 	"time"
 	"unsafe"
 
 	"github.com/cloudfoundry/gosigar/sys/windows"
-	"github.com/pkg/errors"
 )
 
 var (
@@ -27,11 +24,11 @@ var (
 	processQueryLimitedInfoAccess = windows.PROCESS_QUERY_LIMITED_INFORMATION
 )
 
-func (self *LoadAverage) Get() error {
+func (la *LoadAverage) Get() error { //nolint:staticcheck
 	return ErrNotImplemented
 }
 
-func (u *Uptime) Get() error {
+func (u *Uptime) Get() error { //nolint:staticcheck
 	r1, _, e1 := syscall.SyscallN(procGetTickCount64.Addr())
 	if e1 != 0 {
 		return error(e1)
@@ -52,7 +49,7 @@ type memorystatusex struct {
 	AvailExtendedVirtual uint64
 }
 
-func (m *Mem) Get() error {
+func (m *Mem) Get() error { //nolint:staticcheck
 	var x memorystatusex
 	x.Length = uint32(unsafe.Sizeof(x))
 	r1, _, e1 := syscall.SyscallN(procGlobalMemoryStatusEx.Addr(),
@@ -69,43 +66,23 @@ func (m *Mem) Get() error {
 	return nil
 }
 
-func (m *Mem) GetIgnoringCGroups() error {
+func (m *Mem) GetIgnoringCGroups() error { //nolint:staticcheck
 	return m.Get()
 }
 
-func (s *Swap) Get() error {
-	const MB = 1024 * 1024
-	out, err := exec.Command("wmic", "pagefile", "list", "full").Output()
+func (s *Swap) Get() error { //nolint:staticcheck
+	memoryStatusEx, err := windows.GlobalMemoryStatusEx()
 	if err != nil {
-		return err
+		return fmt.Errorf("GlobalMemoryStatusEx: %w", err)
 	}
-	total, err := parseWmicOutput(out, []byte("AllocatedBaseSize"))
-	if err != nil {
-		return err
-	}
-	used, err := parseWmicOutput(out, []byte("CurrentUsage"))
-	if err != nil {
-		return err
-	}
-	s.Total = total * MB
-	s.Used = used * MB
-	s.Free = s.Total - s.Used
+
+	s.Total = memoryStatusEx.TotalPageFile
+	s.Free = memoryStatusEx.AvailPageFile
+	s.Used = s.Total - s.Free
 	return nil
 }
 
-func parseWmicOutput(s, sep []byte) (uint64, error) {
-	bb := bytes.Split(s, []byte("\n"))
-	for i := 0; i < len(bb); i++ {
-		b := bytes.TrimSpace(bb[i])
-		n := bytes.IndexByte(b, '=')
-		if n > 0 && bytes.Equal(sep, b[:n]) {
-			return strconv.ParseUint(string(b[n+1:]), 10, 64)
-		}
-	}
-	return 0, errors.New("parseWmicOutput: missing field: " + string(sep))
-}
-
-func (c *Cpu) Get() error {
+func (c *Cpu) Get() error { //nolint:staticcheck
 	var (
 		idleTime   syscall.Filetime
 		kernelTime syscall.Filetime // Includes kernel and idle time.
@@ -126,73 +103,93 @@ func (c *Cpu) Get() error {
 	return nil
 }
 
-func (self *CpuList) Get() error {
+func (cl *CpuList) Get() error { //nolint:staticcheck
 	return ErrNotImplemented
 }
 
-func (self *FileSystemList) Get() error {
+func (fsl *FileSystemList) Get() error { //nolint:staticcheck
 	return ErrNotImplemented
 }
 
-func (self *ProcList) Get() error {
+func (pl *ProcList) Get() error { //nolint:staticcheck
 	return ErrNotImplemented
 }
 
-func (self *ProcState) Get(pid int) error {
+func (ps *ProcState) Get(pid int) error { //nolint:staticcheck
 	return ErrNotImplemented
 }
 
-func (self *ProcMem) Get(pid int) error {
+func (pm *ProcMem) Get(pid int) error { //nolint:staticcheck
 	handle, err := syscall.OpenProcess(processQueryLimitedInfoAccess|windows.PROCESS_VM_READ, false, uint32(pid))
 	if err != nil {
-		return errors.Wrapf(err, "OpenProcess failed for pid=%v", pid)
+		return fmt.Errorf("OpenProcess failed for pid=%v %w", pid, err)
 	}
-	defer syscall.CloseHandle(handle)
+	defer syscall.CloseHandle(handle) //nolint:errcheck
 
 	counters, err := windows.GetProcessMemoryInfo(handle)
 	if err != nil {
-		return errors.Wrapf(err, "GetProcessMemoryInfo failed for pid=%v", pid)
+		return fmt.Errorf("GetProcessMemoryInfo failed for pid=%v %w", pid, err)
 	}
 
-	self.Resident = uint64(counters.WorkingSetSize)
-	self.Size = uint64(counters.PrivateUsage)
+	pm.Resident = uint64(counters.WorkingSetSize)
+	pm.Size = uint64(counters.PrivateUsage)
 	return nil
 }
 
-func (self *ProcTime) Get(pid int) error {
+func (pt *ProcTime) Get(pid int) error { //nolint:staticcheck
 	handle, err := syscall.OpenProcess(processQueryLimitedInfoAccess, false, uint32(pid))
 	if err != nil {
-		return errors.Wrapf(err, "OpenProcess failed for pid=%v", pid)
+		return fmt.Errorf("OpenProcess failed for pid=%v %w", pid, err)
 	}
-	defer syscall.CloseHandle(handle)
+	defer syscall.CloseHandle(handle) //nolint:errcheck
 
 	var CPU syscall.Rusage
 	if err := syscall.GetProcessTimes(handle, &CPU.CreationTime, &CPU.ExitTime, &CPU.KernelTime, &CPU.UserTime); err != nil {
-		return errors.Wrapf(err, "GetProcessTimes failed for pid=%v", pid)
+		return fmt.Errorf("GetProcessTimes failed for pid=%v %w", pid, err)
 	}
 
 	// Windows epoch times are expressed as time elapsed since midnight on
-	// January 1, 1601 at Greenwich, England. This converts the Filetime to
+	// January 1, 1601, at Greenwich, England. This converts the Filetime to
 	// unix epoch in milliseconds.
-	self.StartTime = uint64(CPU.CreationTime.Nanoseconds() / 1e6)
+	pt.StartTime = uint64(CPU.CreationTime.Nanoseconds() / 1e6)
 
 	// Convert to millis.
-	self.User = uint64(windows.FiletimeToDuration(&CPU.UserTime).Nanoseconds() / 1e6)
-	self.Sys = uint64(windows.FiletimeToDuration(&CPU.KernelTime).Nanoseconds() / 1e6)
-	self.Total = self.User + self.Sys
+	pt.User = uint64(windows.FiletimeToDuration(&CPU.UserTime).Nanoseconds() / 1e6)
+	pt.Sys = uint64(windows.FiletimeToDuration(&CPU.KernelTime).Nanoseconds() / 1e6)
+	pt.Total = pt.User + pt.Sys
 
 	return nil
 }
 
-func (self *ProcArgs) Get(pid int) error {
+func (pa *ProcArgs) Get(pid int) error { //nolint:staticcheck
+	handle, err := syscall.OpenProcess(processQueryLimitedInfoAccess|windows.PROCESS_VM_READ, false, uint32(pid))
+	if err != nil {
+		return fmt.Errorf("OpenProcess failed for pid=%v %w", pid, err)
+	}
+	defer syscall.CloseHandle(handle) //nolint:errcheck
+	pbi, err := windows.NtQueryProcessBasicInformation(handle)
+	if err != nil {
+		return fmt.Errorf("NtQueryProcessBasicInformation failed for pid=%v %w", pid, err)
+	}
+	userProcParams, err := windows.GetUserProcessParams(handle, pbi)
+	if err != nil {
+		return nil
+	}
+	argsW, err := windows.ReadProcessUnicodeString(handle, &userProcParams.CommandLine)
+	if err == nil {
+		pa.List, err = windows.ByteSliceToStringSlice(argsW)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (pe *ProcExe) Get(pid int) error { //nolint:staticcheck
 	return ErrNotImplemented
 }
 
-func (self *ProcExe) Get(pid int) error {
-	return ErrNotImplemented
-}
-
-func (fs *FileSystemUsage) Get(path string) error {
+func (fs *FileSystemUsage) Get(path string) error { //nolint:staticcheck
 	root, err := syscall.UTF16PtrFromString(path)
 	if err != nil {
 		return fmt.Errorf("FileSystemUsage (%s): %s", path, err)
@@ -201,13 +198,9 @@ func (fs *FileSystemUsage) Get(path string) error {
 	var (
 		SectorsPerCluster uint32
 		BytesPerSector    uint32
-
-		// Free clusters available to the user
-		// associated with the calling thread.
+		// NumberOfFreeClusters available to the user associated with the calling thread.
 		NumberOfFreeClusters uint32
-
-		// Total clusters available to the user
-		// associated with the calling thread.
+		// TotalNumberOfClusters available to the user associated with the calling thread.
 		TotalNumberOfClusters uint32
 	)
 	r1, _, e1 := syscall.SyscallN(procGetDiskFreeSpace.Addr(),
@@ -232,7 +225,8 @@ func (fs *FileSystemUsage) Get(path string) error {
 
 func checkErrno(r1 uintptr, e1 error) error {
 	if r1 == 0 {
-		if e, ok := e1.(syscall.Errno); ok && e != 0 {
+		var e syscall.Errno
+		if errors.As(e1, &e) && e != 0 {
 			return e1
 		}
 		return syscall.EINVAL

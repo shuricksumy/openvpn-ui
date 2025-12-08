@@ -759,7 +759,7 @@ function installOpenVPN() {
 
 	# Install the latest version of easy-rsa from source, if not already installed.
 	if [[ ! -f ${OVPN_PATH}/easy-rsa/SERVER_NAME_GENERATED ]]; then
-		local version="3.2.2"
+		local version="3.2.4"
 		local easyrsa_file_name="EasyRSA-${version}.tgz"
 
 		if [[ ! -f ~/${easyrsa_file_name} ]]; then
