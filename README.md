@@ -5,7 +5,7 @@
 ### Secruty report 
 - Reprot is inside the build job.
 - Regular checks here [Docker Image Vulnerability Scan](https://github.com/shuricksumy/openvpn-ui/actions/workflows/scan.yml)
-- [Latest OpenVPN release](https://openvpn.net/community-downloads) 
+- [Latest OpenVPN release](https://community.openvpn.net/ReleaseHistory)
 
 # OpenVPN WEB UI
 
