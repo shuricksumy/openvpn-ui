@@ -2,7 +2,7 @@
 ## explicit; go 1.24
 github.com/Azure/go-ntlmssp
 github.com/Azure/go-ntlmssp/internal/md4
-# github.com/beego/beego/v2 v2.3.9
+# github.com/beego/beego/v2 v2.3.10
 ## explicit; go 1.24.2
 github.com/beego/beego/v2
 github.com/beego/beego/v2/client/orm
