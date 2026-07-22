@@ -7,7 +7,7 @@ require (
 	github.com/cloudfoundry/gosigar v1.3.117
 	github.com/go-ldap/ldap/v3 v3.4.13
 	github.com/google/uuid v1.6.0
-	github.com/mattn/go-sqlite3 v1.14.39
+	github.com/mattn/go-sqlite3 v1.14.48
 	github.com/pquerna/otp v1.5.0
 	github.com/sirupsen/logrus v1.9.4
 	github.com/stretchr/testify v1.11.1
