@@ -1,17 +1,19 @@
-name: GHCR package cleanup (dry run)
+name: GHCR package cleanup
 
-# Manual-trigger only, dry-run only, for now. Replaces the old cleanup.yml (which only ever
-# deleted untagged package versions, via snok/container-retention-policy). docker-image.yml only
-# tags `latest` (repointed every push) plus a release tag on a published GitHub Release, so there's
-# no per-push sha-tag accumulation here -- this mainly sweeps orphaned untagged multi-arch layers
-# left behind whenever `latest` gets repointed. Release tag naming here has been genuinely
-# inconsistent over time (v5.7-secFix, v5.7-secFix2, v.5.8, ...), not strict semver, so the
-# exclude-tags list below explicitly keeps every release tag currently live in the registry by
-# exact name, plus a general vX.Y(.Z) pattern for future well-formed tags -- double check the
-# dry-run output doesn't catch a real release tag in yet another one-off format before ever going
-# live.
+# Replaces the old cleanup.yml (which only ever deleted untagged package versions, via
+# snok/container-retention-policy). docker-image.yml only tags `latest` (repointed every push)
+# plus a release tag on a published GitHub Release, so there's no per-push sha-tag accumulation
+# here -- this mainly sweeps orphaned untagged multi-arch layers left behind whenever `latest`
+# gets repointed. Release tag naming here has been genuinely inconsistent over time (v5.7-secFix,
+# v5.7-secFix2, v.5.8, ...), not strict semver, so the exclude-tags list below explicitly keeps
+# every release tag live in the registry at the time this went live, plus a general vX.Y(.Z)
+# pattern for future well-formed tags. Ran dry-run/manual-only first, reviewed the "would delete"
+# output (9 orphaned digests, no release/latest tags touched), then went live here. Still runnable
+# on demand via workflow_dispatch alongside the schedule.
 on:
   workflow_dispatch: {}
+  schedule:
+    - cron: "17 3 * * 0" # Sundays 03:17 UTC
 
 permissions:
   packages: write
@@ -34,5 +36,5 @@ jobs:
           exclude-tags: '^latest$|^v5\.7-secFix$|^v5\.7-secFix2$|^v\.5\.8$|^v[0-9]+\.[0-9]+$|^v[0-9]+\.[0-9]+\.[0-9]+$'
           use-regex: true
           delete-untagged: true
-          dry-run: true
+          dry-run: false
           log-level: info
