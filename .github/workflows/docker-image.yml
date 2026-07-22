@@ -2,6 +2,7 @@ name: Build and Deploy Docker Images
 permissions:
   contents: read
   pull-requests: write
+  security-events: write # for github/codeql-action/upload-sarif to upload the Docker Scout report
 
 on:
   push:
@@ -84,3 +85,13 @@ jobs:
         with:
           name: vulnerability-scan-report
           path: sarif.output.json
+
+      # Docker Scout's sarif-file output was only ever archived as a downloadable artifact --
+      # findings never reached the Security tab, so nobody would see a new CVE without manually
+      # opening a workflow run and downloading the file. This surfaces them like hadolint.yml
+      # already does for its own SARIF output.
+      - name: Upload Docker Scout results to the Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: sarif.output.json
+          category: docker-scout

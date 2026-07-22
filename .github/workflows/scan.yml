@@ -2,6 +2,7 @@ name: Docker Image Vulnerability Scan
 permissions:
   contents: read
   pull-requests: write
+  security-events: write # for github/codeql-action/upload-sarif to upload the Docker Scout report
 
 on:
   schedule:
@@ -45,3 +46,12 @@ jobs:
       with:
         name: vulnerability-scan-report
         path: sarif.output.json
+
+    # Docker Scout's sarif-file output was only ever archived as a downloadable artifact --
+    # findings never reached the Security tab, so a new CVE surfacing on this workflow's 5-day
+    # schedule would go unnoticed without manually opening a run and downloading the file.
+    - name: Upload Docker Scout results to the Security tab
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: sarif.output.json
+        category: docker-scout-scheduled

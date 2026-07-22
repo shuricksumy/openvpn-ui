@@ -1,0 +1,38 @@
+name: GHCR package cleanup (dry run)
+
+# Manual-trigger only, dry-run only, for now. Replaces the old cleanup.yml (which only ever
+# deleted untagged package versions, via snok/container-retention-policy). docker-image.yml only
+# tags `latest` (repointed every push) plus a release tag on a published GitHub Release, so there's
+# no per-push sha-tag accumulation here -- this mainly sweeps orphaned untagged multi-arch layers
+# left behind whenever `latest` gets repointed. Release tag naming here has been genuinely
+# inconsistent over time (v5.7-secFix, v5.7-secFix2, v.5.8, ...), not strict semver, so the
+# exclude-tags list below explicitly keeps every release tag currently live in the registry by
+# exact name, plus a general vX.Y(.Z) pattern for future well-formed tags -- double check the
+# dry-run output doesn't catch a real release tag in yet another one-off format before ever going
+# live.
+on:
+  workflow_dispatch: {}
+
+permissions:
+  packages: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete old ghcr.io package versions
+        uses: dataaxiom/ghcr-cleanup-action@v1.2.2
+        with:
+          owner: shuricksumy
+          package: "openvpn-ui"
+          # Keep `latest`, every release tag currently live (exact match), and any future
+          # well-formed vX.Y/vX.Y.Z tag; delete everything else plus orphaned untagged multi-arch
+          # layers. Flat alternation, no nested quantifiers -- a nested-quantifier pattern trips
+          # this action's own ReDoS safety heuristic (confirmed on every other repo this was set
+          # up on).
+          delete-tags: ".*"
+          exclude-tags: '^latest$|^v5\.7-secFix$|^v5\.7-secFix2$|^v\.5\.8$|^v[0-9]+\.[0-9]+$|^v[0-9]+\.[0-9]+\.[0-9]+$'
+          use-regex: true
+          delete-untagged: true
+          dry-run: true
+          log-level: info
