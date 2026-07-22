@@ -3,7 +3,7 @@ module github.com/shuricksumy/openvpn-ui
 go 1.26.1
 
 require (
-	github.com/beego/beego/v2 v2.3.9
+	github.com/beego/beego/v2 v2.3.10
 	github.com/cloudfoundry/gosigar v1.3.117
 	github.com/go-ldap/ldap/v3 v3.4.13
 	github.com/google/uuid v1.6.0
