@@ -50,8 +50,13 @@ jobs:
     # Docker Scout's sarif-file output was only ever archived as a downloadable artifact --
     # findings never reached the Security tab, so a new CVE surfacing on this workflow's 5-day
     # schedule would go unnoticed without manually opening a run and downloading the file.
+    # continue-on-error: true -- confirmed live that Scout's SARIF for this image can trip
+    # GitHub's own per-result related-locations cap ("rejecting SARIF, as there are more related
+    # locations per result than allowed (2427 > 1000)"); the scan and artifact upload above still
+    # ran regardless, this is just a best-effort mirror to the Security tab.
     - name: Upload Docker Scout results to the Security tab
       uses: github/codeql-action/upload-sarif@v3
+      continue-on-error: true
       with:
         sarif_file: sarif.output.json
         category: docker-scout-scheduled
