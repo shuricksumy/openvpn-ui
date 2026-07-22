@@ -44,7 +44,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and Push Docker Image for GitHub Container Registry
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./DockerfileGitHub
@@ -56,7 +56,7 @@ jobs:
             ${{ github.event_name == 'release' && format('ghcr.io/{0}:{1}', github.repository, github.event.release.tag_name) || '' }}
 
       - name: Build and Push Docker Image for Docker Hub
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./DockerfileGitHub
