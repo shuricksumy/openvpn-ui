@@ -55,7 +55,7 @@ jobs:
     # locations per result than allowed (2427 > 1000)"); the scan and artifact upload above still
     # ran regardless, this is just a best-effort mirror to the Security tab.
     - name: Upload Docker Scout results to the Security tab
-      uses: github/codeql-action/upload-sarif@v4
+      uses: github/codeql-action/upload-sarif@v4.37.3
       continue-on-error: true
       with:
         sarif_file: sarif.output.json
