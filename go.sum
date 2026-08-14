@@ -15,8 +15,8 @@ github.com/boombuler/barcode v1.1.0 h1:ChaYjBR63fr4LFyGn8E8nt7dBSt3MiU3zMOZqFvVk
 github.com/boombuler/barcode v1.1.0/go.mod h1:paBWMcWSl3LHKBqUq+rly7CNSldXjb2rDl3JlRe0mD8=
 github.com/cespare/xxhash/v2 v2.3.0 h1:UL815xU9SqsFlibzuggzjXhog7bL6oX9BbNZnL2UFvs=
 github.com/cespare/xxhash/v2 v2.3.0/go.mod h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XLFGgcrjCOs=
-github.com/cloudfoundry/gosigar v1.3.125 h1:MFdFBLdXT0Bf2AP8LdJnzJIHjGIn75wt7hPr7n1Egw0=
-github.com/cloudfoundry/gosigar v1.3.125/go.mod h1:qAvqa9Mps1bhNAJnbpgbXwsa7QUIYriwEQnOTaIywxI=
+github.com/cloudfoundry/gosigar v1.3.126 h1:cYMx0IYrEgRGeCQaJCan0dCA6kzi1GszZiR9gpK8PD8=
+github.com/cloudfoundry/gosigar v1.3.126/go.mod h1:Qnc5jKejNsbl4YpzTZMsbTLoy85VXGVlcNYZWoMiPyU=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc h1:U9qPSI2PIWSS1VwoXQT9A3Wy9MM3WgvqSxFWenqJduM=
