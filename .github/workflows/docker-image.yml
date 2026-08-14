@@ -72,7 +72,7 @@ jobs:
           docker pull ghcr.io/shuricksumy/openvpn-ui:latest
 
       - name: Analyze for critical and high CVEs
-        uses: docker/scout-action@v1.23.1
+        uses: docker/scout-action@v1.24.0
         id: docker-scout-cves
         with:
           command: cves,recommendations
