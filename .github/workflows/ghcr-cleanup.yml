@@ -27,6 +27,14 @@ jobs:
         with:
           owner: shuricksumy
           package: "openvpn-ui"
+          # A repository GITHUB_TOKEN cannot delete versions of this
+          # user-scoped package (/users/shuricksumy/packages/...): the API
+          # answers 404, which this action logs as "already deleted" and counts
+          # as a success, so every scheduled run went green having deleted
+          # nothing (confirmed in the 2026-08-16 run - 30 DELETEs, 30 404s,
+          # "total images deleted = 30", package still at 42 versions). Needs a
+          # PAT carrying delete:packages.
+          token: ${{ secrets.GHCR_PAT }}
           # Keep `latest`, every release tag currently live (exact match), and any future
           # well-formed vX.Y/vX.Y.Z tag; delete everything else plus orphaned untagged multi-arch
           # layers. Flat alternation, no nested quantifiers -- a nested-quantifier pattern trips
