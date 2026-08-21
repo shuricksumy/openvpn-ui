@@ -97,8 +97,8 @@ github.com/prometheus/procfs/internal/util
 # github.com/shiena/ansicolor v0.0.0-20230509054315-a9deabde6e02
 ## explicit; go 1.20
 github.com/shiena/ansicolor
-# github.com/sirupsen/logrus v1.9.4
-## explicit; go 1.17
+# github.com/sirupsen/logrus v1.10.0
+## explicit; go 1.23
 github.com/sirupsen/logrus
 # github.com/stretchr/testify v1.11.1
 ## explicit; go 1.17
