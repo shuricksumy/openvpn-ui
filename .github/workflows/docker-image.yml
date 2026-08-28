@@ -97,7 +97,7 @@ jobs:
       # regardless; this step is a best-effort mirror to the Security tab, not something that
       # should fail the build when GitHub's own ingestion limit is hit.
       - name: Upload Docker Scout results to the Security tab
-        uses: github/codeql-action/upload-sarif@v4.37.7
+        uses: github/codeql-action/upload-sarif@v4.37.8
         continue-on-error: true
         with:
           sarif_file: sarif.output.json
