@@ -4,7 +4,7 @@ go 1.26.1
 
 require (
 	github.com/beego/beego/v2 v2.3.10
-	github.com/cloudfoundry/gosigar v1.3.126
+	github.com/cloudfoundry/gosigar v1.3.127
 	github.com/go-ldap/ldap/v3 v3.4.14
 	github.com/google/uuid v1.6.0
 	github.com/mattn/go-sqlite3 v1.14.52
@@ -34,7 +34,7 @@ require (
 	go.yaml.in/yaml/v3 v3.0.5 // indirect
 	golang.org/x/crypto v0.54.0 // indirect
 	golang.org/x/net v0.57.0 // indirect
-	golang.org/x/sys v0.47.0 // indirect
+	golang.org/x/sys v0.48.0 // indirect
 	golang.org/x/text v0.40.0 // indirect
 	google.golang.org/protobuf v1.36.11 // indirect
 	gopkg.in/hlandau/easymetric.v1 v1.0.0 // indirect
