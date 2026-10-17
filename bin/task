@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Runs Task (https://taskfile.dev) on any OS/arch: uses an installed `task`,
+# a matching bundled binary, or falls back to `go run`.
+set -euo pipefail
+
+TASK_VERSION="v3.42.1"
+dir="$(cd "$(dirname "$0")" && pwd)"
+
+if command -v task >/dev/null 2>&1; then
+	exec task "$@"
+fi
+
+case "$(uname -s)/$(uname -m)" in
+Darwin/arm64) bundled="$dir/task_arm64" ;;
+Linux/x86_64) bundled="$dir/task_amd64" ;;
+*) bundled="" ;;
+esac
+
+if [[ -n "$bundled" && -x "$bundled" ]]; then
+	exec "$bundled" "$@"
+fi
+
+exec go run "github.com/go-task/task/v3/cmd/task@$TASK_VERSION" "$@"

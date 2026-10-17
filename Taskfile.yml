@@ -24,11 +24,9 @@ tasks:
   install:
     desc: Installs the required dependencies on pull.
     cmds:
-      - go mod vendor
+      - go mod download
     sources:
       - go.{sum,mod}
-    generates:
-      - "vendor/**"
 
   format:
     desc: Formats the current code base.
@@ -44,10 +42,20 @@ tasks:
       - "**/*.go"
 
   update:
-    desc: Updates all the dependencies to their latest minor version.
+    desc: Updates EasyRSA, Go version and all Go dependencies.
     cmds:
-      - go get -u all
-      - task: tidy
+      - task: update:easyrsa
+      - task: update:go
+
+  update:easyrsa:
+    desc: Updates bundled EasyRSA to the latest release (or `-- <version>`).
+    cmds:
+      - ./bin/update-easyrsa.sh {{ .CLI_ARGS }}
+
+  update:go:
+    desc: Bumps go.mod Go version to latest (or `-- <version>`) and all libs.
+    cmds:
+      - ./bin/update-go.sh {{ .CLI_ARGS }}
 
   tidy:
     desc: Tidies the go.mod file.
