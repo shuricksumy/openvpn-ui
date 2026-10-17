@@ -1,4 +1,4 @@
-FROM debian:stable
+FROM debian:trixie-20261005
 
 ARG TARGETOS
 ARG TARGETARCH
