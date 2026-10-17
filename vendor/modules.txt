@@ -41,8 +41,8 @@ github.com/cloudfoundry/gosigar/sys/windows
 # github.com/go-asn1-ber/asn1-ber v1.5.8
 ## explicit; go 1.13
 github.com/go-asn1-ber/asn1-ber
-# github.com/go-ldap/ldap/v3 v3.4.14
-## explicit; go 1.25.0
+# github.com/go-ldap/ldap/v3 v3.4.15
+## explicit; go 1.26.0
 github.com/go-ldap/ldap/v3
 # github.com/google/uuid v1.6.0
 ## explicit
