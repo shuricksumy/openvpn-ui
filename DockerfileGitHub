@@ -1,5 +1,5 @@
 # Stage 1: Build app
-FROM golang:1.27-bookworm AS app_builder
+FROM golang:1.27-bookworm@sha256:5cf287a799e6b94384bad13d16b14904c531f51ba65792237e122ce42b392f61 AS app_builder
 
 ENV WORK_DIR=$GOPATH/src/github.com/shuricksumy/openvpn-ui
 ENV CGO_ENABLED=1
@@ -15,7 +15,7 @@ RUN go mod tidy && go mod vendor && bee pack bee pack  \
 RUN ls -lah $WORK_DIR
 
 # Stage 2: Build OpenVPN server
-FROM debian:trixie-20261005 AS server
+FROM debian:trixie-20261005@sha256:913f6706df59a68922d1dd08f78c2476560a8d367897200a6005b00e5f67c2d5 AS server
 
 RUN apt-get update && apt-get upgrade -y && apt-get install -y curl bzip2 jq git wget openvpn iptables openssl oathtool \
     wget ca-certificates iproute2 sqlite3 procps
