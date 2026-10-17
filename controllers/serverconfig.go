@@ -38,7 +38,7 @@ func (c *ServerConfigController) Get() {
 	serverConfig, err := os.ReadFile(destPathServerConfig)
 	if err != nil {
 		logs.Error(err)
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 		return
 	}
@@ -60,7 +60,7 @@ func (c *ServerConfigController) Post() {
 	err1 := lib.BackupFile(destPathServerConfig)
 	if err1 != nil {
 		logs.Error(err1)
-		flash.Error("Error creating backup file: ", err1)
+		flash.Error("Error creating backup file: %v", err1)
 		flash.Store(&c.Controller)
 		return
 	}
@@ -68,7 +68,7 @@ func (c *ServerConfigController) Post() {
 	err2 := lib.RawSaveToFile(destPathServerConfig, c.GetString("ServerConfig"))
 	if err2 != nil {
 		logs.Error(err2)
-		flash.Error("Error saving config file: ", err2)
+		flash.Error("Error saving config file: %v", err2)
 		flash.Store(&c.Controller)
 		return
 	}
@@ -76,7 +76,7 @@ func (c *ServerConfigController) Post() {
 	serverConfig, err := os.ReadFile(destPathServerConfig)
 	if err != nil {
 		logs.Error(err)
-		flash.Error("Error with reading new config file: ", err)
+		flash.Error("Error with reading new config file: %v", err)
 		flash.Store(&c.Controller)
 		return
 	}

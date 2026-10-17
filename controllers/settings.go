@@ -58,7 +58,7 @@ func (c *SettingsController) Post() {
 
 	o := orm.NewOrm()
 	if _, err := o.Update(&settings); err != nil {
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 	} else {
 		flash.Success("Settings has been updated")
 		state.GlobalCfg = settings

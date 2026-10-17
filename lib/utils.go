@@ -108,9 +108,8 @@ func Restart() error {
 		return err
 	}
 	cmd := exec.Command("/bin/bash", "-c",
-		fmt.Sprintf(
-			"cd /opt/scripts/ && export OPENVPN_SERVER_DOCKER_NAME="+
-				dockerName+" && ./restart.sh"))
+		"cd /opt/scripts/ && export OPENVPN_SERVER_DOCKER_NAME="+
+			dockerName+" && ./restart.sh")
 	cmd.Dir = state.GlobalCfg.OVConfigPath
 	output, err := cmd.CombinedOutput()
 	if err != nil {

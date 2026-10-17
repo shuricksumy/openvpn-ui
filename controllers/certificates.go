@@ -55,7 +55,7 @@ func (c *CertificatesController) Download() {
 	// Validate the certName with a regular expression
 	validCertName := regexp.MustCompile(`^[a-zA-Z0-9_\-\.]+$`)
 	if !validCertName.MatchString(name) {
-		flash.Error("Invalid certificate " + name + " !")
+		flash.Error("%s", "Invalid certificate "+name+" !")
 		flash.Store(&c.Controller)
 		return
 	}
@@ -65,7 +65,7 @@ func (c *CertificatesController) Download() {
 	cfgPath, err := c.saveClientConfig(name)
 	if err != nil {
 		logs.Error(err)
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 		c.showCerts()
 		return
@@ -73,7 +73,7 @@ func (c *CertificatesController) Download() {
 	data, err := lib.RawReadFile(cfgPath)
 	if err != nil {
 		logs.Error(err)
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 		c.showCerts()
 		return
@@ -83,7 +83,7 @@ func (c *CertificatesController) Download() {
 	c.Ctx.Output.Header("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"", filename))
 	if _, err = c.Controller.Ctx.ResponseWriter.Write([]byte(data)); err != nil {
 		logs.Error(err)
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 		c.showCerts()
 	}
@@ -106,7 +106,7 @@ func (c *CertificatesController) showCerts() {
 	certs, err := lib.ReadCerts(path)
 	if err != nil {
 		logs.Error(err)
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 	}
 
@@ -118,7 +118,7 @@ func (c *CertificatesController) showCerts() {
 	}
 	if err != nil {
 		logs.Error(err)
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 	}
 
@@ -145,7 +145,7 @@ func (c *CertificatesController) Post() {
 	// Validate the passphrase with a regular expression
 	validPassphrase := regexp.MustCompile(`^(\s*|[a-zA-Z0-9_\-\.]+)$`)
 	if !validPassphrase.MatchString(passphrase) {
-		flash.Error("Invalid " + passphrase + " passphrase !")
+		flash.Error("%s", "Invalid "+passphrase+" passphrase !")
 		flash.Store(&c.Controller)
 		return
 	}
@@ -153,24 +153,24 @@ func (c *CertificatesController) Post() {
 	client, err_cl := models.GetClientDetailsById(clientId)
 	if err_cl != nil {
 		logs.Error(err_cl)
-		flash.Error(err_cl.Error())
+		flash.Error("%s", err_cl.Error())
 		flash.Store(&c.Controller)
 	} else {
 		if err := lib.CreateCertificate(client.ClientName, passphrase); err != nil {
 			logs.Error(err)
-			flash.Error(err.Error())
+			flash.Error("%s", err.Error())
 			flash.Store(&c.Controller)
 		} else {
 			clName := lib.StringToNilString(client.ClientName)
 			err_upd_cl := models.UpdateClientCertificateById(clientId, clName, passphrase)
 			if err_upd_cl != nil {
 				logs.Error(err_cl)
-				flash.Error(err_cl.Error())
+				flash.Error("%s", err_cl.Error())
 				flash.Store(&c.Controller)
 			} else {
 				status := "Active"
 				models.UpdateClientCertificateStatusById(clientId, &status)
-				flash.Success("Success! Certificate for the name \"" + client.ClientName + "\" has been created")
+				flash.Success("%s", "Success! Certificate for the name \""+client.ClientName+"\" has been created")
 				flash.Store(&c.Controller)
 			}
 		}
@@ -191,7 +191,7 @@ func (c *CertificatesController) Revoke() {
 	// Validate the name with a regular expression
 	validName := regexp.MustCompile(`^[a-zA-Z0-9_\-\.]+$`)
 	if !validName.MatchString(name) {
-		flash.Error("Invalid " + name + " name !")
+		flash.Error("%s", "Invalid "+name+" name !")
 		flash.Store(&c.Controller)
 		return
 	}
@@ -199,13 +199,13 @@ func (c *CertificatesController) Revoke() {
 	clientDetails, err_cl := models.GetClientDetailsByCertificate(name)
 	if err_cl != nil {
 		logs.Error(err_cl)
-		flash.Error(err_cl.Error())
+		flash.Error("%s", err_cl.Error())
 		flash.Store(&c.Controller)
 	}
 
 	if err := lib.RevokeCertificate(name); err != nil {
 		logs.Error(err)
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 	} else {
 		if clientDetails != nil {
@@ -213,11 +213,11 @@ func (c *CertificatesController) Revoke() {
 			err_upd := models.UpdateClientCertificateStatusById(clientDetails.Id, &status)
 			if err_upd != nil {
 				logs.Error(err_upd)
-				flash.Error(err_upd.Error())
+				flash.Error("%s", err_upd.Error())
 				flash.Store(&c.Controller)
 			}
 		}
-		flash.Warning("Success! Certificate for the name \"" + name + "\" has been revoked")
+		flash.Warning("%s", "Success! Certificate for the name \""+name+"\" has been revoked")
 		flash.Store(&c.Controller)
 	}
 	c.showCerts()
@@ -236,7 +236,7 @@ func (c *CertificatesController) UnRevoke() {
 	// Validate the name with a regular expression
 	validName := regexp.MustCompile(`^[a-zA-Z0-9_\-\.]+$`)
 	if !validName.MatchString(name) {
-		flash.Error("Invalid " + name + " name !")
+		flash.Error("%s", "Invalid "+name+" name !")
 		flash.Store(&c.Controller)
 		return
 	}
@@ -244,13 +244,13 @@ func (c *CertificatesController) UnRevoke() {
 	clientDetails, err_cl := models.GetClientDetailsByCertificate(name)
 	if err_cl != nil {
 		logs.Error(err_cl)
-		flash.Error(err_cl.Error())
+		flash.Error("%s", err_cl.Error())
 		flash.Store(&c.Controller)
 	}
 
 	if err := lib.UnRevokeCertificate(name); err != nil {
 		logs.Error(err)
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 	} else {
 		if clientDetails != nil {
@@ -258,11 +258,11 @@ func (c *CertificatesController) UnRevoke() {
 			err_upd := models.UpdateClientCertificateStatusById(clientDetails.Id, &status)
 			if err_upd != nil {
 				logs.Error(err_upd)
-				flash.Error(err_upd.Error())
+				flash.Error("%s", err_upd.Error())
 				flash.Store(&c.Controller)
 			}
 		}
-		flash.Warning("Success! Certificate for the name \"" + name + "\" has been UNrevoked")
+		flash.Warning("%s", "Success! Certificate for the name \""+name+"\" has been UNrevoked")
 		flash.Store(&c.Controller)
 	}
 	c.showCerts()
@@ -293,7 +293,7 @@ func (c *CertificatesController) Burn() {
 	// Validate the CN with a regular expression
 	validCN := regexp.MustCompile(`^[a-zA-Z0-9_\-\.]+$`)
 	if !validCN.MatchString(CN) {
-		flash.Error("Invalid " + CN + " CN name !")
+		flash.Error("%s", "Invalid "+CN+" CN name !")
 		flash.Store(&c.Controller)
 		return
 	}
@@ -301,7 +301,7 @@ func (c *CertificatesController) Burn() {
 	// Validate the serial with a regular expression
 	validSerial := regexp.MustCompile(`^[a-zA-Z0-9_\-\.]+$`)
 	if !validSerial.MatchString(serial) {
-		flash.Error("Invalid " + serial + " serial !")
+		flash.Error("%s", "Invalid "+serial+" serial !")
 		flash.Store(&c.Controller)
 		return
 	}
@@ -309,23 +309,23 @@ func (c *CertificatesController) Burn() {
 	clientDetails, err_cl := models.GetClientDetailsByCertificate(CN)
 	if err_cl != nil {
 		logs.Error(err_cl)
-		flash.Error(err_cl.Error())
+		flash.Error("%s", err_cl.Error())
 		flash.Store(&c.Controller)
 	}
 	if err := lib.BurnCertificate(CN, serial); err != nil {
 		logs.Error(err)
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 	} else {
 		if clientDetails != nil {
 			err_upd := models.ClearClientCertificateById(clientDetails.Id)
 			if err_upd != nil {
 				logs.Error(err_upd)
-				flash.Error(err_upd.Error())
+				flash.Error("%s", err_upd.Error())
 				flash.Store(&c.Controller)
 			}
 		}
-		flash.Success("Success! Certificate for the name \"" + CN + "\" has been removed")
+		flash.Success("%s", "Success! Certificate for the name \""+CN+"\" has been removed")
 		flash.Store(&c.Controller)
 	}
 	c.showCerts()
@@ -346,7 +346,7 @@ func (c *CertificatesController) Renew() {
 	// Validate the name with a regular expression
 	validName := regexp.MustCompile(`^[a-zA-Z0-9_\-\.]+$`)
 	if !validName.MatchString(name) {
-		flash.Error("Invalid " + name + " name !")
+		flash.Error("%s", "Invalid "+name+" name !")
 		flash.Store(&c.Controller)
 		return
 	}
@@ -354,17 +354,17 @@ func (c *CertificatesController) Renew() {
 	// Validate the serial with a regular expression
 	validSerial := regexp.MustCompile(`^[a-zA-Z0-9_\-\.]+$`)
 	if !validSerial.MatchString(serial) {
-		flash.Error("Invalid " + serial + " serial !")
+		flash.Error("%s", "Invalid "+serial+" serial !")
 		flash.Store(&c.Controller)
 		return
 	}
 
 	if err := lib.RenewCertificate(name, serial); err != nil {
 		logs.Error(err)
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 	} else {
-		flash.Success("Success! Certificate for the name \"" + name + "\"  and \"" + serial + "\" has been renewed")
+		flash.Success("%s", "Success! Certificate for the name \""+name+"\"  and \""+serial+"\" has been renewed")
 		flash.Store(&c.Controller)
 	}
 	c.showCerts()
@@ -384,7 +384,7 @@ func (c *CertificatesController) SaveClientRawData() {
 	// Validate the clientName with a regular expression
 	validClientName := regexp.MustCompile(`^[a-zA-Z0-9_\-\.]+$`)
 	if !validClientName.MatchString(clientName) {
-		flash.Error("Invalid " + clientName + " name !")
+		flash.Error("%s", "Invalid "+clientName+" name !")
 		flash.Store(&c.Controller)
 		return
 	}
@@ -394,13 +394,13 @@ func (c *CertificatesController) SaveClientRawData() {
 	err := lib.RawSaveToFile(destPathClientConfig, clientData)
 	if err != nil {
 		logs.Error(err)
-		flash.Error("Cannot save " + clientName + " file !")
+		flash.Error("%s", "Cannot save "+clientName+" file !")
 		flash.Store(&c.Controller)
 		return
 	}
 
 	// Redirect to the main page after successful file save.
-	flash.Success("Settings are saved for " + clientName + " to file.")
+	flash.Success("%s", "Settings are saved for "+clientName+" to file.")
 	flash.Store(&c.Controller)
 
 	c.TplName = "certificates.html"
@@ -432,11 +432,11 @@ func (c *CertificatesController) saveClientConfig(name string) (string, error) {
 
 	if err := lib.CreateOVPNFile(name); err != nil {
 		logs.Error(err)
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 		return "", err
 	} else {
-		flash.Success("Success! Certificate for the name \"" + name + "\" has been created")
+		flash.Success("%s", "Success! Certificate for the name \""+name+"\" has been created")
 		flash.Store(&c.Controller)
 	}
 
@@ -506,7 +506,7 @@ func (c *CertificatesController) UpdateFiles() {
 	err_upd_md5 := lib.UpdateDBWithLatestMD5()
 	if err_upd_md5 != nil {
 		logs.Error(err_upd_md5)
-		flash.Error("ERROR UPATING MD5 TO JSON ! ", err_upd_md5)
+		flash.Error("ERROR UPATING MD5 TO JSON ! %v", err_upd_md5)
 		flash.Store(&c.Controller)
 		wasError = true
 	}

@@ -52,7 +52,7 @@ func (c *ProfileController) Post() {
 	user := models.User{}
 	if err := c.ParseForm(&user); err != nil {
 		logs.Error(err)
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 		return
 	}
@@ -75,7 +75,7 @@ func (c *ProfileController) Post() {
 	c.Userinfo.Password = hash
 	o := orm.NewOrm()
 	if _, err := o.Update(c.Userinfo); err != nil {
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 	} else {
 		flash.Success("Profile has been updated")
 	}

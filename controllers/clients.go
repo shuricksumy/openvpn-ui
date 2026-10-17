@@ -99,7 +99,7 @@ func (c *ClientsController) NewClient() {
 		flash.Success("New client added successfully")
 		flash.Store(&c.Controller)
 	} else {
-		flash.Error("Failed to add new client: ", err)
+		flash.Error("Failed to add new client: %v", err)
 		flash.Store(&c.Controller)
 	}
 
@@ -184,7 +184,7 @@ func (c *ClientsController) SaveClientDetailsData() {
 		models.UpdateMD5SumForClientDetailsByID(clientID, "edited")
 		flash.Success("New client added successfully")
 	} else {
-		flash.Error("Failed to add new client: ", err)
+		flash.Error("Failed to add new client: %v", err)
 		flash.Store(&c.Controller)
 	}
 
@@ -192,7 +192,7 @@ func (c *ClientsController) SaveClientDetailsData() {
 		flash.Success("New client added successfully")
 		flash.Store(&c.Controller)
 	} else {
-		flash.Error("Failed to delete routes ", err)
+		flash.Error("Failed to delete routes: %v", err)
 		flash.Store(&c.Controller)
 	}
 
@@ -200,7 +200,7 @@ func (c *ClientsController) SaveClientDetailsData() {
 		flash.Success("New client added successfully")
 		flash.Store(&c.Controller)
 	} else {
-		flash.Error("Failed to add routes ", err)
+		flash.Error("Failed to add routes: %v", err)
 		flash.Store(&c.Controller)
 	}
 
@@ -225,7 +225,7 @@ func (c *ClientsController) RenderModalRaw() {
 		data, err := lib.RawReadClientFile(client.ClientName)
 		if err != nil {
 			logs.Error(err)
-			flash.Error("Cannot read " + client.ClientName + " file !")
+			flash.Error("%s", "Cannot read "+client.ClientName+" file !")
 			flash.Store(&c.Controller)
 		}
 		c.Data["ClientData"] = string(data)
@@ -258,7 +258,7 @@ func (c *ClientsController) SaveClientRawData() {
 	// Validate the clientName with a regular expression
 	validClientName := regexp.MustCompile(`^[a-zA-Z0-9_\-\.]+$`)
 	if !validClientName.MatchString(clientName) {
-		flash.Error("Invalid " + clientName + " name !")
+		flash.Error("%s", "Invalid "+clientName+" name !")
 		flash.Store(&c.Controller)
 		return
 	}
@@ -268,13 +268,13 @@ func (c *ClientsController) SaveClientRawData() {
 	err := lib.RawSaveToFile(destPathClientConfig, clientData)
 	if err != nil {
 		logs.Error(err)
-		flash.Error("Cannot save " + clientName + " file !")
+		flash.Error("%s", "Cannot save "+clientName+" file !")
 		flash.Store(&c.Controller)
 		return
 	}
 
 	// Redirect to the main page after successful file save.
-	flash.Success("Settings are saved for " + clientName + " to file.")
+	flash.Success("%s", "Settings are saved for "+clientName+" to file.")
 	flash.Store(&c.Controller)
 
 	c.TplName = "clients.html"
@@ -331,13 +331,13 @@ func (c *ClientsController) DelClient() {
 	err_del := models.DeleteClientDetailsByID(clientID)
 	if err_del != nil {
 		logs.Error("Error while deleteing client", err_del)
-		flash.Error("Error while deleteing client", err_del)
+		flash.Error("Error while deleteing client: %v", err_del)
 		flash.Store(&c.Controller)
 		c.ShowClients()
 		return
 	}
 
-	flash.Success("Client was successfuly deleted:" + clientID)
+	flash.Success("%s", "Client was successfuly deleted:"+clientID)
 	flash.Store(&c.Controller)
 
 	c.ShowClients()
@@ -365,7 +365,7 @@ func (c *ClientsController) UpdateFiles() {
 	err_upd_md5 := lib.UpdateDBWithLatestMD5()
 	if err_upd_md5 != nil {
 		logs.Error(err_upd_md5)
-		flash.Error("ERROR UPATING MD5 TO JSON ! ", err_upd_md5)
+		flash.Error("ERROR UPATING MD5 TO JSON ! %v", err_upd_md5)
 		flash.Store(&c.Controller)
 		wasError = true
 	}
@@ -440,14 +440,14 @@ func (c *ClientsController) SaveClientAuthData() {
 	err_upd_otp := models.UpdateOTPDataByClientId(clientID, OTPIsEnabled, StaticPassIsUsed, otpKey, staticPass, otpUserName)
 	if err_upd_otp != nil {
 		logs.Error(err_upd_otp)
-		flash.Error("Error while enabling Auth for " + otpUserName)
+		flash.Error("%s", "Error while enabling Auth for "+otpUserName)
 		flash.Store(&c.Controller)
 		c.ShowClients()
 		return
 	}
 
 	// Redirect to the main page after successful file save.
-	flash.Warning("Auth enabled successfully to " + otpUserName + ". Don not forget apply configuration.")
+	flash.Warning("%s", "Auth enabled successfully to "+otpUserName+". Don not forget apply configuration.")
 	flash.Store(&c.Controller)
 
 	c.TplName = "clients.html"
@@ -469,14 +469,14 @@ func (c *ClientsController) DeleteClientAuthData() {
 	err_upd_otp := models.DisableOTPDataByClientId(clientID)
 	if err_upd_otp != nil {
 		logs.Error("Error while disabling Auth for", err_upd_otp)
-		flash.Error("Error while disabling Auth for " + otpUserName)
+		flash.Error("%s", "Error while disabling Auth for "+otpUserName)
 		flash.Store(&c.Controller)
 		c.ShowClients()
 		return
 	}
 
 	// Redirect to the main page after successful file save.
-	flash.Warning("Auth disabled successfully to " + otpUserName + ". Don not forget apply configuration.")
+	flash.Warning("%s", "Auth disabled successfully to "+otpUserName+". Don not forget apply configuration.")
 	flash.Store(&c.Controller)
 
 	c.TplName = "clients.html"
@@ -527,7 +527,7 @@ func (c *ClientsController) ResetCertificate() {
 		return
 	}
 
-	flash.Success("Client certificate was successfully reset:" + clientID)
+	flash.Success("%s", "Client certificate was successfully reset:"+clientID)
 	flash.Store(&c.Controller)
 
 	c.ShowClients()

@@ -103,7 +103,7 @@ func (c *RoutesController) NewRoute() {
 		flash.Success("New route added successfully")
 		flash.Store(&c.Controller)
 	} else {
-		flash.Error("Failed to add new route: ", err)
+		flash.Error("Failed to add new route: %v", err)
 		flash.Store(&c.Controller)
 	}
 	c.showRoutes()
@@ -122,7 +122,7 @@ func (c *RoutesController) GetRouteDetails() {
 
 	if route == nil {
 		c.TplName = "routes.html"
-		flash.Error("Route: " + routeID + " was found. ")
+		flash.Error("%s", "Route: "+routeID+" was found. ")
 		flash.Store(&c.Controller)
 		c.showRoutes()
 	} else {
@@ -149,7 +149,7 @@ func (c *RoutesController) Post() {
 
 	err := models.UpdateRouteDetails(routeID, routeIP, routeMask, description)
 	if err != nil {
-		flash.Error("Error updating route details", err)
+		flash.Error("Error updating route details: %v", err)
 		flash.Store(&c.Controller)
 		c.showRoutes()
 	} else {
@@ -170,15 +170,15 @@ func (c *RoutesController) Delete() {
 
 	routeIsUsed := models.RouteIsUsedBy(routeID)
 	if len(routeIsUsed) != 0 {
-		flash.Error("Route: " + routeID + " was NOT deleted. It's Used !")
+		flash.Error("%s", "Route: "+routeID+" was NOT deleted. It's Used !")
 		flash.Store(&c.Controller)
 	} else {
 		err_del := models.DeleteRouteDetailsById(routeID)
 		if err_del != nil {
-			flash.Error("Route: " + routeID + " was NOT deleted. " + string(err_del.Error()))
+			flash.Error("%s", "Route: "+routeID+" was NOT deleted. "+string(err_del.Error()))
 			flash.Store(&c.Controller)
 		} else {
-			flash.Success("Route: " + routeID + " was successfully deleted. Please do not forget apply new config at the end of configuration!")
+			flash.Success("%s", "Route: "+routeID+" was successfully deleted. Please do not forget apply new config at the end of configuration!")
 			flash.Store(&c.Controller)
 		}
 	}
@@ -209,7 +209,7 @@ func (c *RoutesController) UpdateFiles() {
 	err_upd_md5 := lib.UpdateDBWithLatestMD5()
 	if err_upd_md5 != nil {
 		logs.Error(err_upd_md5)
-		flash.Error("ERROR UPATING MD5 TO JSON ! ", err_upd_md5)
+		flash.Error("ERROR UPATING MD5 TO JSON ! %v", err_upd_md5)
 		flash.Store(&c.Controller)
 		wasError = true
 	}

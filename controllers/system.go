@@ -45,13 +45,13 @@ func (c *SystemController) Backup() {
 	destFile, err := lib.Backup()
 	if err != nil {
 		logs.Error(err)
-		flash.Error("Backup process has been broken: ", err)
+		flash.Error("Backup process has been broken: %v", err)
 		flash.Store(&c.Controller)
 		return
 	}
 
 	if _, err := os.Stat(destFile); err != nil {
-		flash.Error("File not found to download:", err)
+		flash.Error("File not found to download: %v", err)
 		flash.Store(&c.Controller)
 		return
 	}
@@ -82,10 +82,10 @@ func (c *SystemController) RestartLocalService() {
 	msg, err_r := lib.RestartOpenVpnUI()
 	if err_r != nil {
 		logs.Error(msg)
-		flash.Error(msg)
+		flash.Error("%s", msg)
 		flash.Store(&c.Controller)
 	} else {
-		flash.Success(msg)
+		flash.Success("%s", msg)
 		flash.Store(&c.Controller)
 	}
 

@@ -39,7 +39,7 @@ func (c *ClientConfigController) Get() {
 	clientTemplate, err := os.ReadFile(destPathClientTempl)
 	if err != nil {
 		logs.Error(err)
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 		return
 	}
@@ -62,7 +62,7 @@ func (c *ClientConfigController) Post() {
 	err1 := lib.BackupFile(destPathClientTempl)
 	if err1 != nil {
 		logs.Error(err1)
-		flash.Error("Error with creating backup file: ", err1)
+		flash.Error("Error with creating backup file: %v", err1)
 		flash.Store(&c.Controller)
 		return
 	}
@@ -70,7 +70,7 @@ func (c *ClientConfigController) Post() {
 	err2 := lib.RawSaveToFile(destPathClientTempl, c.GetString("ClientTemplate"))
 	if err2 != nil {
 		logs.Error(err2)
-		flash.Error("Error with updating file: ", err2)
+		flash.Error("Error with updating file: %v", err2)
 		flash.Store(&c.Controller)
 		return
 	}
@@ -78,7 +78,7 @@ func (c *ClientConfigController) Post() {
 	clientTemplate, err := os.ReadFile(destPathClientTempl)
 	if err != nil {
 		logs.Error(err)
-		flash.Error("Error with reading new file: ", err)
+		flash.Error("Error with reading new file: %v", err)
 		flash.Store(&c.Controller)
 		return
 	}

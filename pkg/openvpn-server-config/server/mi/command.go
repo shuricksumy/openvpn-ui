@@ -12,7 +12,7 @@ import (
 // SendCommand passes command to a given connection (adds logging and EOL character)
 func SendCommand(conn net.Conn, cmd string) error {
 	log.Debug("Sending command: " + cmd)
-	if _, err := fmt.Fprintf(conn, cmd+"\n"); err != nil {
+	if _, err := fmt.Fprint(conn, cmd+"\n"); err != nil {
 		return err
 	}
 	log.Debug("Command ", cmd, " successfuly send")

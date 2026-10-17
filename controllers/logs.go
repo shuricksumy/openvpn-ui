@@ -47,7 +47,7 @@ func ShowLogs(c *LogsController) {
 	file, err := os.Open(fName)
 	if err != nil {
 		logs.Error(err)
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 	}
 	defer file.Close()
@@ -96,10 +96,10 @@ func (c *LogsController) RestartLocalService() {
 	msg, err_r := lib.RestartOpenVpnUI()
 	if err_r != nil {
 		logs.Error(msg)
-		flash.Error(msg)
+		flash.Error("%s", msg)
 		flash.Store(&c.Controller)
 	} else {
-		flash.Success(msg)
+		flash.Success("%s", msg)
 		flash.Store(&c.Controller)
 	}
 

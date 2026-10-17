@@ -72,13 +72,14 @@ func ParseStatus(input string) (*Status, error) {
 	for _, line := range a {
 		fields := strings.Split(trim(line), ",")
 		c := fields[0]
+		// Skip malformed lines instead of panicking on missing fields
 		switch {
-		case c == "TITLE":
+		case c == "TITLE" && len(fields) >= 2:
 			s.Title = fields[1]
-		case c == "TIME":
+		case c == "TIME" && len(fields) >= 3:
 			s.Time = fields[1]
 			s.TimeT = fields[2]
-		case c == "ROUTING_TABLE":
+		case c == "ROUTING_TABLE" && len(fields) >= 6:
 			item := &RoutingPath{
 				VirtualAddress: fields[1],
 				CommonName:     fields[2],
@@ -87,7 +88,7 @@ func ParseStatus(input string) (*Status, error) {
 				LastRefT:       fields[5],
 			}
 			s.RoutingTable = append(s.RoutingTable, item)
-		case c == "CLIENT_LIST":
+		case c == "CLIENT_LIST" && len(fields) >= 12:
 			bytesR, _ := strconv.ParseUint(fields[5], 10, 64)
 			bytesS, _ := strconv.ParseUint(fields[6], 10, 64)
 			item := &OVClient{

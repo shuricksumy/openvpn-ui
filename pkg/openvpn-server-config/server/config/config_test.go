@@ -10,7 +10,7 @@ import (
 
 func TestNewConfig(t *testing.T) {
 	c := config.New()
-	assert.Equal(t, c.Auth, "SHA256")
+	assert.Equal(t, "SHA512", c.Auth)
 }
 
 func TestTemplateGeneration(t *testing.T) {

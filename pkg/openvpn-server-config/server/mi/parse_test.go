@@ -23,9 +23,9 @@ var responseLoadStatsBroken = `SUCCESS: nclients=12,bytesin,bytesout=1589364037
 `
 var responseStatus = `TITLE,OpenVPN 2.3.2 x86_64-pc-linux-gnu [SSL (OpenSSL)] [LZO] [EPOLL] [PKCS11] [eurephia] [MH] [IPv6] built on Dec  1 2014
 TIME,Mon Dec 26 21:02:26 2016,1482782546
-HEADER,CLIENT_LIST,Common Name,Real Address,Virtual Address,Bytes Received,Bytes Sent,Connected Since,Connected Since (time_t),Username
-CLIENT_LIST,democlient1.example.com,11.112.113.114:58978,10.8.0.30,131180,414251,Mon Dec 26 20:57:17 2016,1482782237,UNDEF
-CLIENT_LIST,rpi-v3,11.112.113.114:35331,10.8.0.14,5107,6909,Mon Dec 26 20:59:42 2016,1482782382,UNDEF
+HEADER,CLIENT_LIST,Common Name,Real Address,Virtual Address,Virtual IPv6 Address,Bytes Received,Bytes Sent,Connected Since,Connected Since (time_t),Username,Client ID,Peer ID,Data Channel Cipher
+CLIENT_LIST,democlient1.example.com,11.112.113.114:58978,10.8.0.30,,131180,414251,Mon Dec 26 20:57:17 2016,1482782237,UNDEF,0,0,AES-256-GCM
+CLIENT_LIST,rpi-v3,11.112.113.114:35331,10.8.0.14,,5107,6909,Mon Dec 26 20:59:42 2016,1482782382,UNDEF,1,1,AES-256-GCM
 HEADER,ROUTING_TABLE,Virtual Address,Common Name,Real Address,Last Ref,Last Ref (time_t)
 ROUTING_TABLE,10.8.0.30,democlient1.example.com,11.112.113.114:58978,Mon Dec 26 21:02:25 2016,1482782545
 ROUTING_TABLE,10.8.0.14,rpi-v3,11.112.113.114:35331,Mon Dec 26 20:59:43 2016,1482782383
@@ -117,6 +117,8 @@ func TestStatusParser(t *testing.T) {
 				ConnectedSince:  "Mon Dec 26 20:57:17 2016",
 				ConnectedSinceT: "1482782237",
 				Username:        "UNDEF",
+				ClientID:        "0",
+				PeerID:          "0",
 			},
 			{
 				CommonName:      "rpi-v3",
@@ -127,6 +129,8 @@ func TestStatusParser(t *testing.T) {
 				ConnectedSince:  "Mon Dec 26 20:59:42 2016",
 				ConnectedSinceT: "1482782382",
 				Username:        "UNDEF",
+				ClientID:        "1",
+				PeerID:          "1",
 			},
 		},
 		RoutingTable: []*mi.RoutingPath{
@@ -147,6 +151,13 @@ func TestStatusParser(t *testing.T) {
 		},
 	}
 	assert.Equal(t, sExpected, s)
+}
+
+func TestStatusParserMalformedLines(t *testing.T) {
+	s, err := mi.ParseStatus("TITLE\nTIME,x\nCLIENT_LIST,a,b\nROUTING_TABLE,a\nEND")
+	assert.Nil(t, err)
+	assert.Empty(t, s.ClientList)
+	assert.Empty(t, s.RoutingTable)
 }
 
 func TestKillSessionParser(t *testing.T) {

@@ -30,21 +30,21 @@ func (c *LoginController) Login() {
 
 	authType, err := web.AppConfig.String("AuthType")
 	if err != nil {
-		flash.Warning(err.Error())
+		flash.Warning("%s", err.Error())
 		flash.Store(&c.Controller)
 		return
 	}
 	user, err := lib.Authenticate(login, password, authType)
 
 	if err != nil {
-		flash.Warning(err.Error())
+		flash.Warning("%s", err.Error())
 		flash.Store(&c.Controller)
 		return
 	}
 	user.Lastlogintime = time.Now()
 	err = user.Update("Lastlogintime")
 	if err != nil {
-		flash.Warning(err.Error())
+		flash.Warning("%s", err.Error())
 		flash.Store(&c.Controller)
 		return
 	}
