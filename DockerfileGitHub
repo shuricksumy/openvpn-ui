@@ -15,7 +15,7 @@ RUN go mod tidy && go mod vendor && bee pack bee pack  \
 RUN ls -lah $WORK_DIR
 
 # Stage 2: Build OpenVPN server
-FROM debian:stable AS server
+FROM debian:trixie-20261005 AS server
 
 RUN apt-get update && apt-get upgrade -y && apt-get install -y curl bzip2 jq git wget openvpn iptables openssl oathtool \
     wget ca-certificates iproute2 sqlite3 procps
