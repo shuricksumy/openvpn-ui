@@ -16,11 +16,11 @@ jobs:
     steps:
     # Step 1: Checkout the repository
     - name: Checkout Repository
-      uses: actions/checkout@v7
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       
     # Step 2: Log in to Docker Hub with Docker Hub credentials
     - name: Log in to Docker Hub
-      uses: docker/login-action@v4.6.0
+      uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
@@ -32,7 +32,7 @@ jobs:
 
     # Step 4: Run Docker Scout to scan the image
     - name: Analyze for critical and high CVEs
-      uses: docker/scout-action@v1.26.0
+      uses: docker/scout-action@221e7f4860634eeb1579e3bd7ca232e577bd1864 # v1.26.0
       id: docker-scout-cves
       with:
         command: cves,recommendations
@@ -42,7 +42,7 @@ jobs:
         summary: true
 
     - name: Upload Scan Report as Artifact
-      uses: actions/upload-artifact@v7
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
       with:
         name: vulnerability-scan-report
         path: sarif.output.json
@@ -55,7 +55,7 @@ jobs:
     # locations per result than allowed (2427 > 1000)"); the scan and artifact upload above still
     # ran regardless, this is just a best-effort mirror to the Security tab.
     - name: Upload Docker Scout results to the Security tab
-      uses: github/codeql-action/upload-sarif@v4.39.0
+      uses: github/codeql-action/upload-sarif@6f2ac81f5cd81fe351a197ba0b00d91d03cd2aee # v4.39.0
       continue-on-error: true
       with:
         sarif_file: sarif.output.json
