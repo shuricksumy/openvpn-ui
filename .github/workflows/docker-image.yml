@@ -11,6 +11,12 @@ on:
     paths-ignore:
       - '.github/**'
       - '*.md'
+  # Renovate and Dependabot merge their own PRs once this build passes
+  # (required by the my_main ruleset), so PRs build the image too - without
+  # logging in, pushing or scanning.
+  pull_request:
+    branches:
+      - my_main
   release:
     types: [published]
   workflow_dispatch: ~
@@ -31,6 +37,7 @@ jobs:
         uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4
 
       - name: Login to GitHub Container Registry
+        if: github.event_name != 'pull_request'
         uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
         with:
           registry: ghcr.io
@@ -38,6 +45,7 @@ jobs:
           password: ${{ secrets.GHCR_PAT }}
 
       - name: Login to Docker Hub
+        if: github.event_name != 'pull_request'
         uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
@@ -48,7 +56,7 @@ jobs:
         with:
           context: .
           file: ./DockerfileGitHub
-          push: true
+          push: ${{ github.event_name != 'pull_request' }}
           provenance: false
           platforms: linux/amd64,linux/arm64
           tags: |
@@ -56,6 +64,7 @@ jobs:
             ${{ github.event_name == 'release' && format('ghcr.io/{0}:{1}', github.repository, github.event.release.tag_name) || '' }}
 
       - name: Build and Push Docker Image for Docker Hub
+        if: github.event_name != 'pull_request'
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7
         with:
           context: .
@@ -68,10 +77,12 @@ jobs:
             ${{ github.event_name == 'release' && format('{0}/openvpn-ui:{1}', secrets.DOCKER_USERNAME, github.event.release.tag_name) || '' }}
 
       - name: Pull Docker Image from GitHub Packages
+        if: github.event_name != 'pull_request'
         run: |
           docker pull ghcr.io/shuricksumy/openvpn-ui:latest
 
       - name: Analyze for critical and high CVEs
+        if: github.event_name != 'pull_request'
         uses: docker/scout-action@e7e2a72bf1485d10a58f30696b6c513b261ce4fa # v1.29.0
         id: docker-scout-cves
         with:
@@ -81,6 +92,7 @@ jobs:
           summary: true
   
       - name: Upload Scan Report as Artifact
+        if: github.event_name != 'pull_request'
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: vulnerability-scan-report
@@ -97,6 +109,7 @@ jobs:
       # regardless; this step is a best-effort mirror to the Security tab, not something that
       # should fail the build when GitHub's own ingestion limit is hit.
       - name: Upload Docker Scout results to the Security tab
+        if: github.event_name != 'pull_request'
         uses: github/codeql-action/upload-sarif@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
         continue-on-error: true
         with:
