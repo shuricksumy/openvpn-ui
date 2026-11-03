@@ -4,7 +4,7 @@ go 1.27.0
 
 require (
 	github.com/beego/beego/v2 v2.3.10
-	github.com/cloudfoundry/gosigar v1.3.130
+	github.com/cloudfoundry/gosigar v1.3.131
 	github.com/go-ldap/ldap/v3 v3.4.15
 	github.com/google/uuid v1.6.0
 	github.com/mattn/go-sqlite3 v1.14.52
