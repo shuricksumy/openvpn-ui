@@ -19,6 +19,8 @@ github.com/cloudfoundry/gosigar v1.3.128 h1:dHb+WciPCffNtEC2TE9RYZ4R+FT3ecKYTH2x
 github.com/cloudfoundry/gosigar v1.3.128/go.mod h1:5Gud9NQ4KZ2WYKIjp+cmVH/5fPmfkBlKD+I4Rj5wCEA=
 github.com/cloudfoundry/gosigar v1.3.130 h1:xb+eN48IUopfH0RVmKvuLLsu9F/pdsqLxbmSprwYig4=
 github.com/cloudfoundry/gosigar v1.3.130/go.mod h1:OAEB2SpNqsEkG3D86tPy0xYiPqNAwxgOgF+UjvvpK7c=
+github.com/cloudfoundry/gosigar v1.3.131 h1:1yVHzkeskth2NVWS6EAyIU4h9/heCt4mKImMI7VxVN0=
+github.com/cloudfoundry/gosigar v1.3.131/go.mod h1:OAEB2SpNqsEkG3D86tPy0xYiPqNAwxgOgF+UjvvpK7c=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/elazarl/go-bindata-assetfs v1.0.1 h1:m0kkaHRKEu7tUIUFVwhGGGYClXvyl4RE03qmvRTNfbw=
